@@ -58,7 +58,9 @@ body {
 .ant-upload-wrapper {
   width: 350px;
 }
-
+::-webkit-scrollbar {
+  width: 1px;
+}
 .ant-upload,
 .ant-upload-drag {
   height: 200px;
@@ -93,4 +95,10 @@ body {
   background-repeat: no-repeat;
   background-position: right;
   background-image: url("../assets/wound-background.svg");
+}
+#watermark-wound {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right;
+  background-image: url("../assets/draft_wound_bg.svg");
 }

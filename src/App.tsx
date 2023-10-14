@@ -7,6 +7,7 @@ import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
 
 import UploadImage from "@pages/line/UploadImage";
+import Equipment from "@pages/website/Equipment";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function AuthRoutes() {
       <Route path="/" element={<AuthLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
+        <Route path="equipment" element={<Equipment />} />
       </Route>
     </Routes>
   );

@@ -1,9 +1,9 @@
 
-export default function Patient() {
+export default function Equipment() {
   return (
     <>
       <div className="">
-        Patient
+        equipment
       </div>
     </>
   )
