@@ -1,0 +1,96 @@
+/* global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply styles to the body element */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #eeeeee;
+}
+
+:root {
+  --brown-light: #d8c290;
+  --black: #424241;
+  --brown: #a3802d;
+}
+
+@font-face {
+  font-family: jura;
+  src: url("../font/Jura-Bold.ttf");
+}
+
+@font-face {
+  font-family: michroma;
+  src: url("../font/Michroma-Regular.ttf");
+}
+
+@font-face {
+  font-family: prompt;
+  src: url("../font/Prompt-Regular.ttf");
+}
+
+.jura {
+  font-family: jura;
+}
+
+.michroma {
+  font-family: michroma;
+}
+
+.prompt {
+  font-family: prompt;
+}
+
+.font-brown {
+  color: var(--brown);
+}
+
+.font-blackbean {
+  color: var(--black);
+}
+
+.ant-upload-wrapper {
+  width: 350px;
+}
+
+.ant-upload,
+.ant-upload-drag {
+  height: 200px;
+  border-radius: 20px !important;
+  background: white !important;
+}
+
+/* .ant-upload-drag-container{
+} */
+.ant-upload-list-item {
+  border: 1px dashed #d9d9d9 !important;
+}
+
+.ant-progress-text {
+  display: none !important;
+}
+.bg-homepage {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("../assets/bg-homepage.svg");
+}
+
+.btn-homepage {
+  color: var(--black);
+  border: 1px solid var(--black);
+  background-color: var(--brown-light);
+  border-radius: 30px;
+}
+
+.wound-background {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  background-image: url("../assets/wound-background.svg");
+}
