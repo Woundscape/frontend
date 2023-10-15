@@ -55,22 +55,21 @@ export default function Menu() {
           </div>
         </div>
         <ul className="space-y-2 px-6">
-          {menus &&
-            menus.map((item, index) => (
-              <li className=" text-de" key={index}>
-                <NavLink
-                  to={item.pathname}
-                  className={`flex py-3 px-4 rounded-lg ${
-                    location.pathname === item.pathname
-                      ? "bg-[#D2D7EB]"
-                      : "hover:bg-[#EEEEEE]"
-                  }`}
-                >
-                  <img src={item.icon} width={20} alt="" />
-                  <span className="ml-3 text-sm jura">{item.title}</span>
-                </NavLink>
-              </li>
-            ))}
+          {menus?.map((item, index) => (
+            <li className=" text-de" key={index}>
+              <NavLink
+                to={item.pathname}
+                className={`flex py-3 px-4 rounded-lg ${
+                  location.pathname === item.pathname
+                    ? "bg-[#D2D7EB]"
+                    : "hover:bg-[#EEEEEE]"
+                }`}
+              >
+                <img src={item.icon} width={20} alt="" />
+                <span className="ml-3 text-sm jura">{item.title}</span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </>

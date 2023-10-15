@@ -5,6 +5,7 @@ import Signup from "@pages/website/Signup";
 import SignIn from "@pages/website/SignIn";
 import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
+import EditImage from "@pages/website/Test";
 
 import UploadImage from "@pages/line/UploadImage";
 import Equipment from "@pages/website/Equipment";
@@ -36,6 +37,7 @@ function AuthRoutes() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
         <Route path="equipment" element={<Equipment />} />
+        <Route path="test" element={<EditImage />} />
       </Route>
     </Routes>
   );
