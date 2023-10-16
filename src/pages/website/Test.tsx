@@ -137,20 +137,20 @@ const SVGPath = () => {
     fetchData();
   }, []);
 
-  const handleMouseDown = (index: any) => (event: any) => {
+  const handleMouseDown = (index: any) => () => {
     activePointRef.current = index;
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleMouseMove = (event: any) => {
+  const handleMouseMove = (events: any) => {
     if (activePointRef.current !== null) {
       const updatedGroupedPoints: any = [...groupedPoints];
       updatedGroupedPoints[activePointRef.current.group][
         activePointRef.current.point
       ] = {
-        x: event.clientX,
-        y: event.clientY,
+        x: events.clientX,
+        y: events.clientY,
       };
       setGroupedPoints(updatedGroupedPoints);
     }

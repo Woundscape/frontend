@@ -2,8 +2,8 @@
 export default function Patient() {
   return (
     <>
-      <div className="">
-        Patient
+      <div className="w-full h-screen relative">
+        .
       </div>
     </>
   )

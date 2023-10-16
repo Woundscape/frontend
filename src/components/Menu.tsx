@@ -48,7 +48,7 @@ export default function Menu() {
   return (
     <>
       <nav id="nav">
-        <div className="py-6">
+        <div className="w-[16rem] py-6">
           <div className="flex justify-center items-center">
             <img height={40} width={40} src={Logo_Wound} alt="" />
             <p className="michroma text-lg">Woundscape</p>

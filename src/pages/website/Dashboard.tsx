@@ -1,23 +1,33 @@
 import type { MenuProps } from "antd";
-import { useState } from "react";
-import { Tag, Dropdown, List, Skeleton, Divider } from "antd";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { Dropdown, Divider, List, Avatar } from "antd";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
 import UndefinedProfile from "@assets/undefined-profile-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
+import PatientTable from "@components/PatientTable";
 import Calendar from "react-calendar";
-interface TableType {
-  id: Number;
-  hn_id: String;
-  admit_no: String;
-  status: String;
-  disease: String;
-  last_updated: String;
+import { useEffect, useState } from "react";
+import ListNotification from "@components/ListNotification";
+
+export interface CardPatient {
+  title: string;
+  value: string;
 }
 export default function Dashboard() {
-  function openModal() {
-    return false;
-  }
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+  const hours = time.getHours();
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -56,58 +66,30 @@ export default function Dashboard() {
       ),
     },
   ];
-  const tableData: TableType[] = [
+  const card: CardPatient[] = [
     {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
+      title: "Total",
+      value: "22",
     },
     {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
+      title: "Follow-up",
+      value: "19",
     },
     {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
+      title: "Unread",
+      value: "3",
     },
   ];
   return (
     <>
       <div className="w-full h-screen relative">
-        <div className="grid grid-cols-8 gap-5 h-full relative">
+        <div className="flex gap-3 h-full relative">
           {/* Body */}
-          <div className="col-span-6 w-full bg-white px-6">
-            <div className="flex flex-col items-center py-10">
-              <div id="content" className="w-full">
-                <div className="h-full space-y-4">
-                  <div id="body-content-dashboard" className="h-1/2 space-y-4">
+          <div className="grow w-full bg-white px-6">
+            <div className="flex flex-col items-center h-full py-10">
+              <div id="content" className="w-full h-full">
+                <div className="h-full flex flex-col space-y-2">
+                  <div id="body-content-dashboard" className="space-y-6">
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex justify-between items-center">
                         <h1 className="jura">Dashboard</h1>
@@ -134,90 +116,29 @@ export default function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    <div id="card-patient" className="grid grid-cols-3 gap-8">
-                      <div
-                        id="box-dashboard"
-                        className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
-                      >
-                        <p className="text-6xl text-[#9198AF] jura">22</p>
-                        <p className="text-lg text-[#4C577C] prompt">Total</p>
-                      </div>
-                      <div
-                        id="box-dashboard"
-                        className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
-                      >
-                        <p className="text-6xl text-[#9198AF] jura">15</p>
-                        <p className="text-lg text-[#4C577C] prompt">
-                          Follow up
-                        </p>
-                      </div>
-                      <div
-                        id="box-dashboard"
-                        className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
-                      >
-                        <p className="text-6xl text-[#9198AF] jura">7</p>
-                        <p className="text-lg text-[#4C577C] prompt">Unread</p>
-                      </div>
-                    </div>
+                    <List
+                      grid={{ gutter: 16, column: 3 }}
+                      dataSource={card}
+                      renderItem={(item, index) => (
+                        <List.Item>
+                          <div
+                            key={index}
+                            id="box-dashboard"
+                            className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
+                          >
+                            <p className="text-5xl text-[#9198AF] jura">
+                              {item.value}
+                            </p>
+                            <p className="text-lg text-[#4C577C] prompt">
+                              {item.title}
+                            </p>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
                   </div>
-                  <div className="h-64 py-4">
-                    <div
-                      id="footer-content-dashboard"
-                      className="relative rounded-xl"
-                      style={{ boxShadow: "0px 0px 10px 0px #D2D7EB" }}
-                    >
-                      <table className="w-full text-center jura text-[#4C577C]">
-                        <thead className="text-md w-full">
-                          <tr className="flex border-b-2 py-4 border-[#E9EBF5]">
-                            <th scope="col" className="w-1/6">
-                              Hospital No.
-                            </th>
-                            <th scope="col" className="w-1/6">
-                              Admit No.
-                            </th>
-                            <th scope="col" className="w-1/6">
-                              Status
-                            </th>
-                            <th scope="col" className="w-1/6">
-                              Disease
-                            </th>
-                            <th scope="col" className="w-1/6">
-                              Last updated
-                            </th>
-                            <th scope="col" className="w-1/6">
-                              Action
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-grey-light flex flex-col items-center overflow-y-scroll w-full h-48">
-                          {tableData?.map((item, index) => {
-                            return (
-                              <tr
-                                key={index}
-                                className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
-                              >
-                                <td className="w-1/6">{item.hn_id}</td>
-                                <td className="w-1/6">{item.admit_no}</td>
-                                <td className="w-1/6">{item.status}</td>
-                                <td className="w-1/6">
-                                  <Tag
-                                    color="#EBD2DD"
-                                    style={{
-                                      color: "#4C577C",
-                                      fontFamily: "jura",
-                                    }}
-                                  >
-                                    {item.disease}
-                                  </Tag>
-                                </td>
-                                <td className="w-1/6">{item.last_updated}</td>
-                                <td className="w-1/6">$2999</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                  <div id="footer-content-dashboard" className="pb-6 grow">
+                    <PatientTable />
                   </div>
                 </div>
               </div>
@@ -227,10 +148,10 @@ export default function Dashboard() {
             </div>
           </div>
           {/* Right Sidebar */}
-          <div className="col-span-2 relative py-4 px-4 ">
-            <div className="relative w-full h-full">
-              <div className="h-2/5 space-y-3">
-                <div id="user-respond" className="px-4">
+          <div className="w-[30rem] relative py-4 px-4">
+            <div className="relative w-full h-full flex">
+              <div className="flex flex-col w-full h-full space-y-3">
+                <div id="user-respond" className="px-4 ">
                   <div className="flex justify-end items-center space-x-3">
                     <img src={NotificationIcon} width={45} height={45} alt="" />
                     <img src={UndefinedProfile} width={40} height={40} alt="" />
@@ -247,32 +168,42 @@ export default function Dashboard() {
                     </Dropdown>
                   </div>
                 </div>
+                <ListNotification />
                 <div
-                  id="notification-box"
-                  className="jura select-none bg-white rounded-xl"
+                  id="time"
+                  className="relative flex flex-col space-y-2 justify-center items-center jura bg-white rounded-xl py-4"
                 >
-                  <div
-                    id="header-notification"
-                    className="py-4 px-4 flex justify-between items-center"
-                  >
-                    <h1 className=" text-md text-[#4C577C]">Notification</h1>
-                    <p
-                      className="cursor-pointer text-sm text-[#9198AF]"
-                      onClick={openModal}
-                    >
-                      View all
-                    </p>
+                  <p className="top-1 absolute text-xs text-[#868686]">Time</p>
+                  <div className="flex justify-center items-center">
+                    <div className="flex flex-col items-center space-y-1">
+                      <h1 className="px-4 py-2 bg-[#EDEFFF] text-[#626060] rounded-lg text-2xl">
+                        {hours < 10 ? `0${hours}` : hours}{" "}
+                      </h1>
+                      <h2 className="text-[#4C577C] text-xs">HOURS</h2>
+                    </div>
+                    <Divider className="" type="vertical" />
+                    <div className="flex flex-col items-center space-y-1">
+                      <h1 className="px-4 py-2 bg-[#EDEFFF] text-[#626060] rounded-lg text-2xl">
+                        {minutes < 10 ? `0${minutes}` : minutes}
+                      </h1>
+                      <h2 className="text-[#4C577C] text-xs">MINUTES</h2>
+                    </div>
+                    <Divider type="vertical" />
+                    <div className="flex flex-col items-center space-y-1">
+                      <h1 className="px-4 py-2 bg-[#EDEFFF] text-[#626060] rounded-lg text-2xl">
+                        {seconds < 10 ? `0${seconds}` : seconds}
+                      </h1>
+                      <h2 className="text-[#4C577C] text-xs">SECONDS</h2>
+                    </div>
                   </div>
-                  <Divider className="m-0" />
-                  <div id="body-notification" className=""></div>
                 </div>
-              </div>
-              <div className="h-3/5 ">
-                <Calendar
-                  formatShortWeekday={(locale, value) =>
-                    ["Su","Mo", "Tu", "We", "Th", "Fr", "Sa",][value.getDay()]
-                  }
-                />
+                <div id="calendar">
+                  <Calendar
+                    formatShortWeekday={(_, value) =>
+                      ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][value.getDay()]
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>
