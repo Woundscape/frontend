@@ -8,6 +8,7 @@ import Patient from "@pages/website/Patient";
 import EditImage from "@pages/website/Test";
 
 import UploadImage from "@pages/line/UploadImage";
+import SignUpLine from "@pages/line/SignUp"
 import Equipment from "@pages/website/Equipment";
 
 function App() {
@@ -27,6 +28,7 @@ function LineRoutes(){
   return (
     <Routes>
       <Route path="uploadImage" element={<UploadImage />} />
+      <Route path="signup" element={<SignUpLine />} />
     </Routes>
   );
 }

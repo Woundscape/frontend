@@ -1,5 +1,5 @@
 import type { MenuProps } from "antd";
-import { Dropdown, Divider, List, Avatar } from "antd";
+import { Dropdown, Divider, List} from "antd";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
 import UndefinedProfile from "@assets/undefined-profile-icon.svg";
@@ -199,7 +199,7 @@ export default function Dashboard() {
                 </div>
                 <div id="calendar">
                   <Calendar
-                    formatShortWeekday={(_, value) =>
+                    formatShortWeekday={(_, value: any) =>
                       ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][value.getDay()]
                     }
                   />
