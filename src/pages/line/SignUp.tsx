@@ -12,18 +12,13 @@ export default function SignUp() {
       .init({
         liffId: "2001180435-mZ7YAEj4",
       })
-      .then(() => {
-        if (liff.isLoggedIn()) {
-          alert("dsds");
-        }
-      })
       .catch((err) => {
         alert(`error ${err}`);
       });
   });
   return (
-    <div className="w-full min-h-screen flex flex-col justify-between bg-white prompt relative">
-      <div className="container mx-auto flex items-center relative">
+    <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative">
+      <div className="container mx-auto h-full flex items-center relative">
         <div className="w-full flex flex-col items-center justify-center p-10">
           <div className="w-full space-y-2 flex flex-col">
             <img className="w-12" src={logo_wound} alt="" />

@@ -11,7 +11,7 @@ export default function UploadImage() {
             <div className="w-full flex flex-col justify-center items-center space-y-4">
                 <div className="logo-box flex flex-col items-center space-y-2 py-4">
                     <img className="w-20" src={Logo_Wound} alt="" />
-                    <h1 className="text-2xl michroma">Woundscape</h1>
+                    <h1 className="text-lg michroma">Woundscape</h1>
                 </div>
                 <Upload.Dragger
                     multiple
@@ -54,7 +54,7 @@ export default function UploadImage() {
                     </div>
                     <br />
                 </Upload.Dragger>
-                <h1 className="prompt font-brown select-none">กรุณาอัปโหลดรูปเพื่อวินิจฉัยชั้นแผล</h1>
+                <h1 className="prompt font-brown select-none text-sm">กรุณาอัปโหลดรูปเพื่อวินิจฉัยชั้นแผล</h1>
                 <Upload.Dragger
                     multiple
                     listType="picture"
@@ -96,7 +96,7 @@ export default function UploadImage() {
                     </div>
                     <br />
                 </Upload.Dragger>
-                <h1 className="prompt font-brown select-none">กรุณาอัปโหลดรูปอุปกรณ์ที่ใช้ทำแผล </h1>
+                <h1 className="prompt font-brown select-none text-sm">กรุณาอัปโหลดรูปอุปกรณ์ที่ใช้ทำแผล </h1>
                 <div className="w-80 flex px-4 py-1.5 justify-between btn-homepage cursor-pointer">
                     <div className="text-xl jura font-bold">NEXT</div>
                     <img className="w-14" src={Arrow_Start} alt="" />
