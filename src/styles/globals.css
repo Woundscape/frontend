@@ -11,7 +11,7 @@
 }
 
 body {
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
 }
 
 :root {
@@ -84,7 +84,7 @@ body {
   border-radius: 0.9375rem;
   font-family: Prompt;
   line-height: 1.5em;
-  padding: 10px 15px; 
+  padding: 10px 15px;
 }
 .react-calendar__navigation {
   display: flex;
@@ -116,7 +116,7 @@ abbr[title] {
   color: #6f48eb;
   border-radius: 6px;
 }
-.react-calendar__tile{
+.react-calendar__tile {
   padding: 0;
   margin: 10px 0px;
 }

@@ -199,7 +199,7 @@ export default function Dashboard() {
                 </div>
                 <div id="calendar">
                   <Calendar
-                    formatShortWeekday={(_, value: any) =>
+                    formatShortWeekday={(_ : any, value: any) =>
                       ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][value.getDay()]
                     }
                   />
