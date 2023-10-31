@@ -7,6 +7,9 @@ import Account_LOGO from "@assets/account_logo.svg";
 import Contact_LOGO from "@assets/contact_logo.svg";
 import Logo_Wound from "@assets/logo-wound.svg";
 
+import ImageMenu from "./ImageMenu";
+import { List } from "antd";
+
 export interface IMenu {
   title: string;
   pathname: string;
@@ -44,33 +47,36 @@ const defaultMenuRoutes: IMenu[] = [
 export default function Menu() {
   const [menus] = useState<IMenu[]>(defaultMenuRoutes);
   const location = useLocation();
-  console.log(location);
+  const pathName = location?.pathname;
+  function ListMenu() {
+    return menus?.map((item, index) => (
+      <List.Item className="" key={index}>
+        <NavLink
+          to={item.pathname}
+          className={`flex py-3 px-4 rounded-lg ${
+            pathName === item.pathname ? "bg-[#D2D7EB]" : "hover:bg-[#EEEEEE]"
+          }`}
+        >
+          <img src={item.icon} width={20} alt="" />
+          <span className="ml-3 text-sm jura">{item.title}</span>
+        </NavLink>
+      </List.Item>
+    ));
+  }
   return (
     <>
-      <nav id="nav">
-        <div className="w-[16rem] py-6">
-          <div className="flex justify-center items-center">
+      <nav id="nav" className="w-[16rem] h-full flex flex-col justify-center select-none">
+        <div className="py-6">
+          <NavLink to={'/dashboard'} className="flex justify-center items-center">
             <img height={40} width={40} src={Logo_Wound} alt="" />
             <p className="michroma text-lg">Woundscape</p>
-          </div>
+          </NavLink>
         </div>
-        <ul className="space-y-2 px-6">
-          {menus?.map((item, index) => (
-            <li className=" text-de" key={index}>
-              <NavLink
-                to={item.pathname}
-                className={`flex py-3 px-4 rounded-lg ${
-                  location.pathname === item.pathname
-                    ? "bg-[#D2D7EB]"
-                    : "hover:bg-[#EEEEEE]"
-                }`}
-              >
-                <img src={item.icon} width={20} alt="" />
-                <span className="ml-3 text-sm jura">{item.title}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+        <div className="grow pb-6 overflow-y-auto">
+          <ul className="space-y-2 px-6">
+            {pathName != "/wound" ? ListMenu() : <ImageMenu />}
+          </ul>
+        </div>
       </nav>
     </>
   );

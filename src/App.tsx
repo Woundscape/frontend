@@ -1,11 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthLayout from "@components/AuthLayout";
+import AuthLayout from "@layouts/AuthLayout";
 import Homepage from "@pages/website/Homepage";
 import Signup from "@pages/website/Signup";
 import SignIn from "@pages/website/SignIn";
 import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
 import EditImage from "@pages/website/Test";
+import WoundAnalysis from "@pages/website/WoundAnalysis";
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
@@ -42,6 +43,7 @@ function AuthRoutes() {
         <Route path="patient" element={<Patient />} />
         <Route path="equipment" element={<Equipment />} />
         <Route path="test" element={<EditImage />} />
+        <Route path="wound" element={<WoundAnalysis />} />
       </Route>
     </Routes>
   );

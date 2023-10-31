@@ -77,6 +77,50 @@ body {
 .ant-progress-text {
   display: none !important;
 }
+
+/* .ant-tabs-nav-list{
+  width: 100%;
+  .ant-tabs-tab{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+} */
+.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap{
+  background-color: #EEE !important;
+  border-radius: 0.8125rem;
+  padding:5px
+}
+.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list{
+  width: 100%;
+  justify-content: space-between;
+}
+.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list > .ant-tabs-tab{
+  width: 50%;
+  display: flex;
+  padding: 4px;
+  justify-content: center;
+}
+.tabs-container__navigation > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
+  background: #bbb;
+}
+.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav::before {
+  display: none;
+}
+.tabs-container__navigation > .ant-tabs-card .ant-tabs-tab,
+[data-theme='compact'] .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab {
+  background: transparent;
+  border-color: transparent;
+}
+.tabs-container__navigation > .ant-tabs-card .ant-tabs-tab-active,
+[data-theme='compact'] .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab-active {
+  background: #fff;
+  border-color: #fff;
+  border-radius: 8px !important;
+}
+
+
+/* Calendar */
 .react-calendar {
   width: 100%;
   background-color: #fff;

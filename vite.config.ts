@@ -11,6 +11,8 @@ export default defineConfig({
       "@pages": "/src/pages",
       "@components": "/src/components",
       "@api": "/src/api",
+      "@layouts": "/src/layouts",
+      "@features": "/src/features"
     },
   },
 });

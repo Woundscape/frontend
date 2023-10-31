@@ -5,7 +5,7 @@ import bitmaskToPath from "@pictogrammers/bitmask-to-svg";
 
 const SVGPath = () => {
   const activePointRef: any = useRef(null);
-  const [groupedPoints, setGroupedPoints] : any = useState([]);
+  const [groupedPoints, setGroupedPoints]: any = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -124,7 +124,7 @@ const SVGPath = () => {
         // Example: Convert path to points
         const pathDataSVG =
           "M26,14H27V12H25V13H26ZM27,17V39L26,16H25V14H20V16H21L20,40L17,17V16H18V14H14L8,32L11,15V5H12V4H13V5H26L68,11V38L24,7H13V12H24V8H26V11H28V12H29V13L51,27L28,15H27Z";
-        const points : any = pathToPoints(pathDataSVG);
+        const points: any = pathToPoints(pathDataSVG);
 
         // Update the state with the processed data
         setGroupedPoints(points);
@@ -251,13 +251,13 @@ const SVGPath = () => {
         height="1500"
         style={{ position: "absolute", top: "0", left: "0" }}
       >
-        {groupedPoints.map((group : any, groupIndex : Number) => (
+        {groupedPoints.map((group: any, groupIndex: Number) => (
           <>
             <path
               d={
                 group
                   .map(
-                    (point :any, pointIndex : any) =>
+                    (point: any, pointIndex: any) =>
                       `${pointIndex === 0 ? "M" : "L"} ${point.x} ${point.y}`
                   )
                   .join(" ") + " Z"
