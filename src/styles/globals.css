@@ -118,7 +118,10 @@ body {
   border-color: #fff;
   border-radius: 8px !important;
 }
-
+.react-sketch-canvas {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 /* Calendar */
 .react-calendar {

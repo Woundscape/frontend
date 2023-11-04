@@ -1,4 +1,4 @@
-import { Layout, List } from "antd";
+import { Layout, List, Statistic } from "antd";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
 import PatientTable from "@features/PatientTable";
