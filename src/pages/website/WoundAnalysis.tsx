@@ -1,28 +1,92 @@
 import { List, Tabs, Button, Card, Typography } from "antd";
 import UserProfile from "@features/UserProfile";
-import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { Content, Header } from "antd/es/layout/layout";
+import {
+  EyeOutlined,
+  LeftOutlined,
+  LockOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Content} from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
 import CanvasIconExport from "@assets/icons/canvas_icon_export.svg";
 import CanvasIconAdd from "@assets/icons/canvas_icon_add.svg";
 import CanvasIconSelect from "@assets/icons/canvas_icon_select.svg";
 
-import { useEffect, useRef, useState } from "react";
+import LoadPath from "@libs/images_2.json";
+
+import { RefObject, useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
+interface TissueType {
+  title: String;
+  value: Number;
+  color: String;
+}
 export default function WoundAnalysis() {
+  const tissueData: TissueType[] = [
+    {
+      title: "eschar",
+      value: 10,
+      color: "#EEEEEE",
+    },
+    {
+      title: "slough",
+      value: 14,
+      color: "#CFEDD9",
+    },
+    {
+      title: "epithelization",
+      value: 0,
+      color: "#E0FCC5",
+    },
+    {
+      title: "callus",
+      value: 23,
+      color: "#FFFDC5",
+    },
+    {
+      title: "periwound",
+      value: 7,
+      color: "#FFE8BF",
+    },
+    {
+      title: "wound",
+      value: 28,
+      color: "#FFE1E1",
+    },
+    {
+      title: "granulation",
+      value: 10,
+      color: "#E6D1ED",
+    },
+    {
+      title: "deep structure",
+      value: 8,
+      color: "#D3DDFF",
+    },
+    {
+      title: "marceration",
+      value: 0,
+      color: "#D4F3F3",
+    },
+  ];
   const { TabPane } = Tabs;
   const [colorPaint, setColorPaint] = useState("black");
   const [canvasRef, setCanvasRef] = useState(
     useRef<ReactSketchCanvasRef | null>(null)
   );
   const [editable, setEditable] = useState(false);
-  // useEffect(() => {
-  //   if (canvasRef.current) {
-  //     // console.log(canvasRef.current.exportPaths());
-      
-  //   }
-  // });
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.loadPaths(LoadPath.data);
+      // console.log(canvasRef.current.exportPaths());
+    }
+  });
+  const handleClick =
+    (isEraser: boolean, canvasRef: RefObject<ReactSketchCanvasRef>) => () => {
+      canvasRef.current?.eraseMode(isEraser);
+    };
   async function handleSave() {
     if (canvasRef.current) {
       const test = await canvasRef.current.exportPaths();
@@ -31,7 +95,7 @@ export default function WoundAnalysis() {
   }
   return (
     <>
-      <div className="w-full h-screen relative">
+      <body className="w-full h-screen relative">
         <div className="h-full relative flex gap-3">
           <div className="w-full bg-white grow px-10">
             <div className="flex flex-col items-center h-full py-10">
@@ -77,8 +141,18 @@ export default function WoundAnalysis() {
                         id="canvas_editor___tools"
                         className="w-12 h-full flex flex-col justify-center items-center space-y-4"
                       >
-                        <img src={CanvasIconSelect} width={24} alt="" />
-                        <img src={CanvasIconAdd} width={30} alt="" />
+                        <img
+                          src={CanvasIconSelect}
+                          onClick={handleClick(false, canvasRef)}
+                          width={24}
+                          alt=""
+                        />
+                        <img
+                          src={CanvasIconAdd}
+                          onClick={handleClick(true, canvasRef)}
+                          width={30}
+                          alt=""
+                        />
                       </div>
                     )}
 
@@ -139,7 +213,26 @@ export default function WoundAnalysis() {
                     }
                     key="1"
                   >
-                    <List>ds</List>
+                    <Content className="space-y-3">
+                      {tissueData?.map((item, index) => (
+                        <div
+                          key={index}
+                          className={`w-full p-2.5 flex justify-center items-center rounded-xl space-x-2`}
+                          style={{backgroundColor: item.color+''}}
+                        >
+                          <Typography className="text-xl jura">{index+1}</Typography>
+                          <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 jura bg-white">
+                            <p>{item.title}</p>
+                            <p>{item.value+''}%</p>
+                          </div>
+                          <div className="tools-tissue space-x-2">
+                            <EyeOutlined style={{ fontSize: 18 }} />
+                            <LockOutlined style={{ fontSize: 18 }} />
+                          </div>
+                        </div>
+                      ))}
+                      <List>dsdsd</List>
+                    </Content>
                   </TabPane>
                   <TabPane
                     tab={
@@ -158,7 +251,7 @@ export default function WoundAnalysis() {
             </div>
           </div>
         </div>
-      </div>
+      </body>
     </>
   );
 }

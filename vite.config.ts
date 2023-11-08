@@ -12,7 +12,8 @@ export default defineConfig({
       "@components": "/src/components",
       "@api": "/src/api",
       "@layouts": "/src/layouts",
-      "@features": "/src/features"
+      "@features": "/src/features",
+      "@libs": "/src/libs"
     },
   },
 });

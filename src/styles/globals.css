@@ -102,7 +102,7 @@ body {
   justify-content: center;
 }
 .tabs-container__navigation > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-  background: #bbb;
+  /* background: #bbb; */
 }
 .tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav::before {
   display: none;
