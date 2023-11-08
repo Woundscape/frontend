@@ -13,6 +13,8 @@ import SignUpLine from "@pages/line/SignUp"
 import SignInLine from "@pages/line/SignIn"
 import Equipment from "@pages/website/Equipment";
 
+import TestPred from "@pages/website/testPred";
+
 function App() {
   return (
     <BrowserRouter>
@@ -44,6 +46,7 @@ function AuthRoutes() {
         <Route path="equipment" element={<Equipment />} />
         <Route path="test" element={<EditImage />} />
         <Route path="wound" element={<WoundAnalysis />} />
+        <Route path="pred" element={<TestPred />} />
       </Route>
     </Routes>
   );

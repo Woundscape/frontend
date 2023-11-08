@@ -17,10 +17,10 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@*": ["./src/*"]
+      "@*": ["./src/*", "../*.ts", "../*.tsx", "../*.json"]
     }
   },
   "include": ["src"],
