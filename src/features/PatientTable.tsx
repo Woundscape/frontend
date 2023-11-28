@@ -1,4 +1,5 @@
-import { Tag } from "antd";
+import { Popover, Tag } from "antd";
+import { useMemo, useState } from "react";
 interface TableType {
   id: Number;
   hn_id: String;
@@ -90,6 +91,21 @@ export default function PatientTable() {
       last_updated: "21 Minutes ago",
     },
   ];
+  const [arrow, setArrow] = useState("Show");
+
+  const mergedArrow = useMemo(() => {
+    if (arrow === "Hide") {
+      return false;
+    }
+
+    if (arrow === "Show") {
+      return true;
+    }
+
+    return {
+      pointAtCenter: true,
+    };
+  }, [arrow]);
   return (
     <>
       <div
@@ -141,7 +157,15 @@ export default function PatientTable() {
                     </Tag>
                   </td>
                   <td className="w-1/6">{item.last_updated}</td>
-                  <td className="w-1/6">$2999</td>
+                  <td className="w-1/6">
+                    <Popover
+                      placement="left"
+                      content={<div>ds</div>}
+                      arrow={mergedArrow}
+                    >
+                      ds
+                      </Popover>
+                  </td>
                 </tr>
               );
             })}

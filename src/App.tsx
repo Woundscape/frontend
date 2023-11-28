@@ -11,8 +11,9 @@ import WoundAnalysis from "@pages/website/WoundAnalysis";
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
 import SignInLine from "@pages/line/SignIn"
-import Equipment from "@pages/website/Equipment";
+import HistoryLine from "@pages/line/History"
 
+import Equipment from "@pages/website/Equipment";
 import TestPred from "@pages/website/testPred";
 
 function App() {
@@ -34,6 +35,8 @@ function LineRoutes(){
       <Route path="uploadImage" element={<UploadImage />} />
       <Route path="signup" element={<SignUpLine />} />
       <Route path="signin" element={<SignInLine />} />
+      <Route path="history" element={<HistoryLine />} />
+
     </Routes>
   );
 }

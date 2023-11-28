@@ -1,4 +1,12 @@
-import { List, Tabs, Button, Card, Typography } from "antd";
+import {
+  List,
+  Tabs,
+  Button,
+  Card,
+  Typography,
+  Slider,
+  InputNumber,
+} from "antd";
 import UserProfile from "@features/UserProfile";
 import {
   EyeOutlined,
@@ -6,7 +14,9 @@ import {
   LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Content} from "antd/es/layout/layout";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import { Pie } from "react-chartjs-2";
+import { Content } from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
 import CanvasIconExport from "@assets/icons/canvas_icon_export.svg";
 import CanvasIconAdd from "@assets/icons/canvas_icon_add.svg";
@@ -14,14 +24,15 @@ import CanvasIconSelect from "@assets/icons/canvas_icon_select.svg";
 
 import LoadPath from "@libs/images_2.json";
 
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
 interface TissueType {
   title: String;
-  value: Number;
+  value: number;
   color: String;
 }
+ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
   const tissueData: TissueType[] = [
     {
@@ -70,7 +81,24 @@ export default function WoundAnalysis() {
       color: "#D4F3F3",
     },
   ];
+  const data = {
+    labels: tissueData
+      .filter((tissue) => tissue.value > 0)
+      .map((tissue) => tissue.title),
+    datasets: [
+      {
+        label: "Data is",
+        data: tissueData
+          .filter((tissue) => tissue.value > 0)
+          .map((tissue) => tissue.value),
+        backgroundColor: tissueData
+          .filter((tissue) => tissue.value > 0)
+          .map((tissue) => tissue.color),
+      },
+    ],
+  };
   const { TabPane } = Tabs;
+  const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [canvasRef, setCanvasRef] = useState(
     useRef<ReactSketchCanvasRef | null>(null)
@@ -93,12 +121,20 @@ export default function WoundAnalysis() {
       console.log(test);
     }
   }
+  function handleOpacity(val: number){
+    setOpacityVal(val);
+  };
+  function test(val:any){
+    console.log(val);
+    setOpacityVal(val)
+    
+  }
   return (
     <>
       <body className="w-full h-screen relative">
         <div className="h-full relative flex gap-3">
           <div className="w-full bg-white grow px-10">
-            <div className="flex flex-col items-center h-full py-10">
+            <div className="flex flex-col items-center h-full py-12">
               <div className="w-full h-full flex flex-col justify-between space-y-4">
                 <div id="button" className="flex justify-between">
                   <Button
@@ -200,8 +236,8 @@ export default function WoundAnalysis() {
               </p>
             </div>
           </div>
-          <div className="w-[30rem] bg-white relative py-4 px-4">
-            <div className="flex flex-col">
+          <div className="w-[30rem] bg-white relative py-4 px-4 overflow-y-auto">
+            <div className="flex flex-col space-y-3">
               <UserProfile />
               <div className="tabs-container__navigation">
                 <Tabs type="card">
@@ -218,12 +254,14 @@ export default function WoundAnalysis() {
                         <div
                           key={index}
                           className={`w-full p-2.5 flex justify-center items-center rounded-xl space-x-2`}
-                          style={{backgroundColor: item.color+''}}
+                          style={{ backgroundColor: item.color + "" }}
                         >
-                          <Typography className="text-xl jura">{index+1}</Typography>
+                          <Typography className="text-xl text-[#535352] jura">
+                            {index + 1}
+                          </Typography>
                           <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 jura bg-white">
                             <p>{item.title}</p>
-                            <p>{item.value+''}%</p>
+                            <p>{item.value + ""}%</p>
                           </div>
                           <div className="tools-tissue space-x-2">
                             <EyeOutlined style={{ fontSize: 18 }} />
@@ -231,7 +269,40 @@ export default function WoundAnalysis() {
                           </div>
                         </div>
                       ))}
-                      <List>dsdsd</List>
+                      <List>
+                        <div className="flex justify-between">
+                          <Typography className="jura">Opacity</Typography>
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            value={opacityVal}
+                            onChange={handleOpacity}
+                          />
+                        </div>
+                        <Slider
+                          min={0}
+                          max={100}
+                          defaultValue={100}
+                          handleStyle={{}}
+                          railStyle={{ padding: 10, borderRadius: "0.625rem" }}
+                          trackStyle={{
+                            padding: 10,
+                            borderRadius: "0.625rem",
+                            backgroundColor: "#D8C290",
+                          }}
+                          onAfterChange={test}
+                        />
+                      </List>
+                      <Pie
+                        data={data}
+                        options={{
+                          plugins: {
+                            legend: {
+                              display: false, // Set display to false to hide the labels
+                            },
+                          },
+                        }}
+                      />
                     </Content>
                   </TabPane>
                   <TabPane
