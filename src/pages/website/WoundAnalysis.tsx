@@ -1,12 +1,12 @@
-import { List, Tabs, Button, Card, Typography } from "antd";
-import UserProfile from "@features/UserProfile";
+import { List, Tabs, Button, Card, Typography, Slider, InputNumber } from "antd";
+import UserProfile from "@components/UserProfile";
 import {
   EyeOutlined,
   LeftOutlined,
   LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Content} from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
 import CanvasIconExport from "@assets/icons/canvas_icon_export.svg";
 import CanvasIconAdd from "@assets/icons/canvas_icon_add.svg";
@@ -76,7 +76,7 @@ export default function WoundAnalysis() {
     useRef<ReactSketchCanvasRef | null>(null)
   );
   const [editable, setEditable] = useState(false);
-
+  const [opacityVal, setOpacityVal] = useState(0);
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef.current.loadPaths(LoadPath.data);
@@ -195,9 +195,6 @@ export default function WoundAnalysis() {
                   </div>
                 </Card>
               </div>
-              <p className="absolute bottom-5 michroma text-sm select-none text-[#626060]">
-                © 2023 Copyright – Woundscape – All Rights Reserved.
-              </p>
             </div>
           </div>
           <div className="w-[30rem] bg-white relative py-4 px-4">
@@ -218,12 +215,14 @@ export default function WoundAnalysis() {
                         <div
                           key={index}
                           className={`w-full p-2.5 flex justify-center items-center rounded-xl space-x-2`}
-                          style={{backgroundColor: item.color+''}}
+                          style={{ backgroundColor: item.color + "" }}
                         >
-                          <Typography className="text-xl jura">{index+1}</Typography>
+                          <Typography className="text-xl jura">
+                            {index + 1}
+                          </Typography>
                           <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 jura bg-white">
                             <p>{item.title}</p>
-                            <p>{item.value+''}%</p>
+                            <p>{item.value + ""}%</p>
                           </div>
                           <div className="tools-tissue space-x-2">
                             <EyeOutlined style={{ fontSize: 18 }} />
@@ -231,6 +230,20 @@ export default function WoundAnalysis() {
                           </div>
                         </div>
                       ))}
+                      <InputNumber
+          min={0}
+          max={100}
+          style={{ margin: '0 16px' }}
+          value={opacityVal}
+          // onChange={onChange}
+        />
+                      <Slider
+                        min={0}
+                        max={100}
+                        disabled={false}
+                        onChange={(e) => setOpacityVal(e)}
+                        value={typeof opacityVal === "number" ? opacityVal : 0}
+                      />
                       <List>dsdsd</List>
                     </Content>
                   </TabPane>
