@@ -3,19 +3,8 @@ import footer_watermark from "@assets/footer_watermark.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Input } from "antd";
-import liff from "@line/liff";
-import { useEffect } from "react";
 
 export default function SignUp() {
-  useEffect(() => {
-    liff
-      .init({
-        liffId: "2001180435-mZ7YAEj4",
-      })
-      .catch((err) => {
-        alert(`error ${err}`);
-      });
-  });
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative">
       <div className="container mx-auto h-full flex items-center relative">
@@ -24,7 +13,7 @@ export default function SignUp() {
             <img className="w-12" src={logo_wound} alt="" />
             <h1 className="michroma text-md">SIGN UP</h1>
           </div>
-          <form className="w-full flex flex-col justify-center items-center mt-5 space-y-6">
+          <form action="/line/signin" className="w-full flex flex-col justify-center items-center mt-5 space-y-6">
             <Input
               className="w-full py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] border-1 rounded-[50px] outline-none"
               type="text"
@@ -70,7 +59,7 @@ export default function SignUp() {
               placeholder="Referral Code"
             />
             <div className="w-full flex px-4 py-1.5 justify-between btn-homepage cursor-pointer">
-              <button type="submit" className="text-md jura font-bold">
+              <button type="submit" className="w-full h-full text-left text-md jura font-bold">
                 SIGN UP
               </button>
               <img className="w-10" src={arrow_start} alt="" />

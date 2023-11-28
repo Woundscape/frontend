@@ -1,5 +1,5 @@
 import { LeftOutlined } from "@ant-design/icons";
-import UserProfile from "@components/UserProfile";
+import UserProfile from "@features/UserProfile";
 
 export default function Patient() {
   return (

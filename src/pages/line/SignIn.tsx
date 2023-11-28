@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Input, Divider } from "antd";
+import { useGoogleLogin } from "@react-oauth/google";
 import liff from "@line/liff";
 import { getInstance } from "@api/apiClient";
+import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 import logo_wound from "@assets/logo-wound.svg";
@@ -12,19 +14,6 @@ import line_icon from "@assets/icons/line_icon.svg";
 
 export default function SignIn() {
   const [userId, setUserId] = useState("");
-  async function handleSubmit() {
-    if (userId != "") {
-      getInstance()
-        .post(`/signin`, {
-          user: userId,
-        })
-        .then(() => {
-          liff.closeWindow();
-        });
-    } else {
-      liff.login();
-    }
-  }
   useEffect(() => {
     liff
       .init({
@@ -34,13 +23,50 @@ export default function SignIn() {
         if (liff.isLoggedIn()) {
           liff.getProfile().then((profile) => {
             setUserId(profile.userId);
-            console.log(profile);
           });
         }
       })
       .catch((err) => {
-        alert(`error ${err}`);
+        console.log(`error ${err}`);
       });
+  });
+  function handleSubmit() {
+    liff.getProfile().then((profile) => {
+      console.log(profile);
+      getInstance()
+        .post(`/signin`, {
+          user: profile,
+        })
+        .then((res) => {
+          console.log(res.data);
+          liff.closeWindow();
+        })
+        .catch((error) => {
+          liff.closeWindow();
+          console.error("Error in API call:", error);
+        });
+    });
+  }
+  function loginLiff() {
+    if (liff.isLoggedIn()) {
+      handleSubmit();
+    } else {
+      liff.login();
+    }
+    // window.location.replace('https://liff.line.me/2001180435-eBkJB6ZQ')
+  }
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse);
+      getOAuthInstance().get(`/oauth2/v1/userinfo`, {
+        params:{
+          access_token: tokenResponse.access_token
+        }
+      }).then((res)=> {
+        console.log(res.data);
+        
+      })
+    },
   });
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative select-none">
@@ -51,15 +77,19 @@ export default function SignIn() {
             <h1 className="michroma text-lg">Woundscape</h1>
           </div>
           <div className="w-full flex flex-col justify-center items-center mt-10 space-y-6">
-            <button className="w-full flex py-2 px-4 text-sm border border-[#B4B4B4] rounded-[50px] text-center outline-none">
+            <button
+              onClick={() => login()}
+              className="w-full flex py-2 px-4 text-sm border border-[#B4B4B4] rounded-[50px] text-center outline-none"
+            >
               <img className="w-4 absolute" src={google_icon} alt="" />
               <div className="w-full text-sm flex justify-center space-x-4 jura text-[#626060]">
                 SIGN IN WITH GOOGLE
               </div>
             </button>
+            {/* <GoogleLogin onSuccess={OAuthGoogle} /> */}
             <button
               className="w-full flex py-2 px-4 text-sm border border-[#B4B4B4] rounded-[50px] text-center outline-none"
-              onClick={handleSubmit}
+              onClick={loginLiff}
             >
               <img className="w-4 absolute" src={line_icon} alt="" />
               <div className="w-full text-sm flex justify-center space-x-4 jura text-[#626060]">

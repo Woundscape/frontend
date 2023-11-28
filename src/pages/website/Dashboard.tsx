@@ -3,7 +3,7 @@ import { Layout, List, Statistic } from "antd";
 import DynamicTime from "@components/DynamicTime";
 import PatientTable from "@features/PatientTable";
 import ListNotification from "@features/ListNotification";
-import UserProfile from "@components/UserProfile";
+import UserProfile from "@features/UserProfile";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
 
@@ -88,7 +88,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
             </div>
           </Content>
           {/* Right Sidebar */}
