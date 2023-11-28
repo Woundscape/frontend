@@ -17,9 +17,6 @@ export default function ImageMenu() {
         setData(res.data.products); 
       });
   }, []);
-  const buildImageUrl = (fileName: string) => {
-    return `@assets/wound/${fileName}`; // Adjust the path as needed
-  };
   return (
     <>
       {data?.map((item, index) => {

@@ -88,9 +88,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-5 michroma text-sm select-none text-[#626060]">
-                © 2023 Copyright – Woundscape – All Rights Reserved.
-              </div>
             </div>
           </Content>
           {/* Right Sidebar */}

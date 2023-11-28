@@ -81,7 +81,7 @@ export default function WoundAnalysis() {
       color: "#D4F3F3",
     },
   ];
-  const data = {
+  const data : any = {
     labels: tissueData
       .filter((tissue) => tissue.value > 0)
       .map((tissue) => tissue.title),
@@ -98,13 +98,12 @@ export default function WoundAnalysis() {
     ],
   };
   const { TabPane } = Tabs;
-  const [opacityVal, setOpacityVal] = useState(100);
+  const [opacityVal, setOpacityVal] = useState(0);
   const [colorPaint, setColorPaint] = useState("black");
   const [canvasRef, setCanvasRef] = useState(
     useRef<ReactSketchCanvasRef | null>(null)
   );
   const [editable, setEditable] = useState(false);
-
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef.current.loadPaths(LoadPath.data);
@@ -121,8 +120,8 @@ export default function WoundAnalysis() {
       console.log(test);
     }
   }
-  function handleOpacity(val: number){
-    setOpacityVal(val);
+  function handleOpacity(val: number | null){
+    setOpacityVal(val || 100);
   };
   function test(val:any){
     console.log(val);
@@ -231,9 +230,6 @@ export default function WoundAnalysis() {
                   </div>
                 </Card>
               </div>
-              <p className="absolute bottom-5 michroma text-sm select-none text-[#626060]">
-                © 2023 Copyright – Woundscape – All Rights Reserved.
-              </p>
             </div>
           </div>
           <div className="w-[30rem] bg-white relative py-4 px-4 overflow-y-auto">
