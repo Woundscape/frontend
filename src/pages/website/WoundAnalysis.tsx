@@ -2,10 +2,10 @@ import {
   List,
   Tabs,
   Button,
-  Card,
   Typography,
   Slider,
   InputNumber,
+  Modal,
 } from "antd";
 import UserProfile from "@features/UserProfile";
 import {
@@ -14,7 +14,7 @@ import {
   LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
@@ -24,9 +24,9 @@ import CanvasIconSelect from "@assets/icons/canvas_icon_select.svg";
 
 import LoadPath from "@libs/images_2.json";
 
-import { RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
-
+import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 interface TissueType {
   title: String;
   value: number;
@@ -81,7 +81,7 @@ export default function WoundAnalysis() {
       color: "#D4F3F3",
     },
   ];
-  const data : any = {
+  const data: any = {
     labels: tissueData
       .filter((tissue) => tissue.value > 0)
       .map((tissue) => tissue.title),
@@ -104,6 +104,7 @@ export default function WoundAnalysis() {
     useRef<ReactSketchCanvasRef | null>(null)
   );
   const [editable, setEditable] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef.current.loadPaths(LoadPath.data);
@@ -120,14 +121,19 @@ export default function WoundAnalysis() {
       console.log(test);
     }
   }
-  function handleOpacity(val: number | null){
+  function handleOpacity(val: number | null) {
     setOpacityVal(val || 100);
-  };
-  function test(val:any){
-    console.log(val);
-    setOpacityVal(val)
-    
   }
+  function test(val: any) {
+    console.log(val);
+    setOpacityVal(val);
+  }
+  const showModal = () => {
+    setOpenModal(true);
+  }
+  const closeModal = () => {
+    setOpenModal(false);
+  };
   return (
     <>
       <body className="w-full h-screen relative">
@@ -223,20 +229,37 @@ export default function WoundAnalysis() {
                     </div>
                   </Content>
                 </Content>
-                <Card id="add-note" className="border-2 border-[#D9D9D9]">
+                <Button
+                  id="add-note"
+                  className="py-8 flex items-center border-2 border-[#D9D9D9]"
+                  onClick={showModal}
+                >
                   <div className="flex space-x-4 jura">
-                    <PlusOutlined style={{ color: "#4C577C" }} />
-                    <p className="text-md text-[#4C577C]">ADD NOTE</p>
+                    <PlusOutlined style={{ fontSize: 20, color: "#4C577C" }} />
+                    <p className="text-lg text-[#4C577C]">ADD NOTE</p>
                   </div>
-                </Card>
+                </Button>
+                <Modal
+                  title="Add Note"
+                  open={openModal}
+                  onOk={closeModal}
+                  onCancel={closeModal}
+                  width={1000}
+                  style={{
+                    borderRadius: '1.25rem'
+                  }}
+                >
+                  ds
+                </Modal>
               </div>
             </div>
           </div>
-          <div className="w-[30rem] bg-white relative py-4 px-4 overflow-y-auto">
-            <div className="flex flex-col space-y-3">
+          <div className="w-[30rem] h-full bg-white relative py-4 px-4 overflow-y-auto">
+            <div className="h-full flex flex-col space-y-3">
               <UserProfile />
-              <div className="tabs-container__navigation">
-                <Tabs type="card">
+              <div className="tabs-container__navigation h-full">
+                <Tabs type="card" className="h-full">
+                  {/* Summary Tissue Tab */}
                   <TabPane
                     tab={
                       <div className="text-[#424241] text-center select-none jura">
@@ -249,8 +272,11 @@ export default function WoundAnalysis() {
                       {tissueData?.map((item, index) => (
                         <div
                           key={index}
-                          className={`w-full p-2.5 flex justify-center items-center rounded-xl space-x-2`}
-                          style={{ backgroundColor: item.color + "" }}
+                          className={`w-full p-2.5 flex justify-center items-center space-x-2`}
+                          style={{
+                            borderRadius: "0.8125rem",
+                            backgroundColor: item.color + "",
+                          }}
                         >
                           <Typography className="text-xl text-[#535352] jura">
                             {index + 1}
@@ -301,6 +327,7 @@ export default function WoundAnalysis() {
                       />
                     </Content>
                   </TabPane>
+                  {/* Equipment Tab */}
                   <TabPane
                     tab={
                       <div className="text-[#424241] text-center select-none jura">
@@ -309,9 +336,7 @@ export default function WoundAnalysis() {
                     }
                     key="2"
                   >
-                    <p>Content of Tab Pane 2</p>
-                    <p>Content of Tab Pane 2</p>
-                    <p>Content of Tab Pane 2</p>
+                    <EquipmentTab />
                   </TabPane>
                 </Tabs>
               </div>
