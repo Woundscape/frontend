@@ -7,6 +7,7 @@ import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
 import EditImage from "@pages/website/Test";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
+import Compare from "@pages/website/Compare"
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
@@ -50,6 +51,7 @@ function AuthRoutes() {
         <Route path="test" element={<EditImage />} />
         <Route path="wound" element={<WoundAnalysis />} />
         <Route path="pred" element={<TestPred />} />
+        <Route path="compare" element={<Compare />} />
       </Route>
     </Routes>
   );
