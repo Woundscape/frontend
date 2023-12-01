@@ -95,7 +95,7 @@ export default function Patient() {
                       <img className="w-16 rounded-lg" src={WoundHist} alt="" />
                       <p className="text-[#4C577C] p-3.5">Jul 14, 2023 18:44</p>
                     </div>
-                    <div className="flex flex-row space-x-1.5">
+                    <div className="flex flex-row space-x-1.5 mt-1">
                       <div className="w-24 bg-[#F4DEE7] rounded mt-2">
                         <p className="text-center text-[#4C577C]">Diabetes</p>
                       </div>
@@ -106,7 +106,7 @@ export default function Patient() {
                         <p className="text-center text-[#4C577C]">Asthma</p>
                       </div>
                     </div>
-                    <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-2">
+                    <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
                         <p className="jura text-[#9198AF] p-1 pl-3">View result</p>
                         <img
                           className="pr-1"
