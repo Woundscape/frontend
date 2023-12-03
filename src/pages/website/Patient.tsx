@@ -11,6 +11,7 @@ import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
+import Typography from "antd/es/typography/Typography";
 
 const { RangePicker } = DatePicker;
 export default function Patient() {
@@ -30,14 +31,13 @@ export default function Patient() {
             </header>
             <Content className="px-6 pt-6">
               <div className="flex flex-row">
-                <div className="flex flex-col">
+                <div className="w-full flex flex-col">
                   {/* Input Filter */}
                   <div className="flex space-x-2">
                     <Input
                       size="middle"
                       placeholder="Search by hospital number"
                       prefix={<img src={SearchIcon} />}
-                      style={{ width: "20%" }}
                     />
                     <RangePicker size="middle" />
                     <Segmented
@@ -52,6 +52,7 @@ export default function Patient() {
                     />
                     <Select
                       defaultValue="lucy"
+                      prefixCls="ds"
                       bordered={false}
                       style={{ width: 120 }}
                       options={[{ value: "lucy", label: "Sort by :" }]}
@@ -78,7 +79,7 @@ export default function Patient() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col">
+                {/* <div id="history" className="flex flex-col">
                   <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
                     <p className="jura text-[#555554] text-lg p-3">History</p>
                   </div>
@@ -115,7 +116,7 @@ export default function Patient() {
                         />
                       </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </Content>
           </div>

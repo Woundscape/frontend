@@ -13,3 +13,15 @@ export function createInstance(config?: CreateAxiosDefaults) {
     ...config,
   });
 }
+
+export function getInstanceLocal(config?: CreateAxiosDefaults) {
+  if (!instance) createInstanceLocal(config);
+  return instance;
+}
+
+export function createInstanceLocal(config?: CreateAxiosDefaults) {
+  instance = axios.create({
+    baseURL: "http://localhost:3000",
+    ...config,
+  });
+}
