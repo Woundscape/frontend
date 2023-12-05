@@ -7,15 +7,16 @@ import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
 import EditImage from "@pages/website/Test";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
+import Equipment from "@pages/website/Equipment";
 import Compare from "@pages/website/Compare"
 import Management from "@pages/website/Management";
+import PatientDetail from "@pages/website/PatientDetail";
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
 import SignInLine from "@pages/line/SignIn"
 import HistoryLine from "@pages/line/History"
 
-import Equipment from "@pages/website/Equipment";
 import TestPred from "@pages/website/testPred";
 
 function App() {
@@ -48,6 +49,7 @@ function AuthRoutes() {
       <Route path="/" element={<AuthLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
+        <Route path="patient/:id" element={<PatientDetail />} />
         <Route path="equipment" element={<Equipment />} />
         <Route path="test" element={<EditImage />} />
         <Route path="wound" element={<WoundAnalysis />} />
