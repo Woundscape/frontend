@@ -20,47 +20,30 @@ export default function Patient() {
       <div className="w-full h-screen relative">
         <div className="w-full h-full py-8 bg-white">
           <div className="w-full h-full">
-            <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
-              <div className="flex items-center space-x-4">
-                <LeftOutlined />
-                <p className="jura text-xl">Patient</p>
+            <header id="head__patient" className="px-6 border-b-2 pb-5 border-[#E9EBF5]">
+              <div className="flex justify-between">
+                <div className="flex items-center space-x-4">
+                  <LeftOutlined />
+                  <p className="jura text-xl">Patient</p>
+                </div>
+                <div className="w-[30rem]">
+                  <UserProfile />
+                </div>
               </div>
-              <div className="w-[30rem]">
-                <UserProfile />
-              </div>
+              <Segmented
+                className="jura mt-4"
+                options={[
+                  "Overview",
+                  "Comparative Imaging",
+                  "Wound Progression",
+                ]}
+              />
             </header>
             <Content className="px-6 pt-6">
-              <div className="flex flex-row">
+              <div className="flex">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <div className="flex space-x-2">
-                    <Input
-                      size="middle"
-                      placeholder="Search by hospital number"
-                      prefix={<img src={SearchIcon} />}
-                    />
-                    <RangePicker size="middle" />
-                    <Segmented
-                      size="middle"
-                      options={[
-                        { value: "Kanban", icon: <AppstoreOutlined /> },
-                        { value: "List", icon: <BarsOutlined /> },
-                      ]}
-                      onChange={(e) => {
-                        console.log(e);
-                      }}
-                    />
-                    <Select
-                      defaultValue="lucy"
-                      prefixCls="ds"
-                      bordered={false}
-                      style={{ width: 120 }}
-                      options={[{ value: "lucy", label: "Sort by :" }]}
-                    />
-                    <Button className="button_add" icon={<UserAddOutlined />}>
-                      Add Patient
-                    </Button>
-                  </div>
+
                   {/* Body */}
                   <div className="flex pt-7">
                     <div className="flex flex-col w-64 h-44 patient_img p-3 justify-between">
@@ -79,7 +62,8 @@ export default function Patient() {
                     </div>
                   </div>
                 </div>
-                {/* <div id="history" className="flex flex-col">
+                <div className=""></div>
+                <div id="history" className="flex flex-col">
                   <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
                     <p className="jura text-[#555554] text-lg p-3">History</p>
                   </div>
@@ -108,15 +92,13 @@ export default function Patient() {
                       </div>
                     </div>
                     <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
-                        <p className="jura text-[#9198AF] p-1 pl-3">View result</p>
-                        <img
-                          className="pr-1"
-                          src={ViewResultHist}
-                          alt=""
-                        />
-                      </div>
+                      <p className="jura text-[#9198AF] p-1 pl-3">
+                        View result
+                      </p>
+                      <img className="pr-1" src={ViewResultHist} alt="" />
+                    </div>
                   </div>
-                </div> */}
+                </div>
               </div>
             </Content>
           </div>

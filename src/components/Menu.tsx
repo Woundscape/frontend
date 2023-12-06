@@ -34,7 +34,7 @@ const defaultMenuRoutes: IMenu[] = [
   },
   {
     title: "Account",
-    pathname: "/account",
+    pathname: "/management",
     icon: Account_LOGO,
   },
   {

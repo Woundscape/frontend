@@ -18,6 +18,7 @@ body {
   --brown-light: #d8c290;
   --black: #424241;
   --brown: #a3802d;
+  --gray: #E8EAF4;
 }
 
 @font-face {
@@ -86,35 +87,56 @@ body {
     justify-content: center;
   }
 } */
-.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap{
-  background-color: #EEE !important;
+.tabs-container__navigation
+  > .ant-tabs-card
+  > .ant-tabs-nav
+  > .ant-tabs-nav-wrap {
+  background-color: #eee !important;
   border-radius: 0.8125rem;
-  padding:5px
+  padding: 5px;
 }
-.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list{
+.tabs-container__navigation
+  > .ant-tabs-card
+  > .ant-tabs-nav
+  > .ant-tabs-nav-wrap
+  > .ant-tabs-nav-list {
   width: 100%;
   justify-content: space-between;
 }
-.tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list > .ant-tabs-tab{
+.tabs-container__navigation
+  > .ant-tabs-card
+  > .ant-tabs-nav
+  > .ant-tabs-nav-wrap
+  > .ant-tabs-nav-list
+  > .ant-tabs-tab {
   width: 50%;
   display: flex;
   padding: 4px;
   justify-content: center;
 }
-.tabs-container__navigation > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-  height:'100%'
+.tabs-container__navigation
+  > .ant-tabs-card
+  .ant-tabs-content
+  > .ant-tabs-tabpane {
+  height: "100%";
   /* background: #bbb; */
 }
 .tabs-container__navigation > .ant-tabs-card > .ant-tabs-nav::before {
   display: none;
 }
 .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab,
-[data-theme='compact'] .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab {
+[data-theme="compact"]
+  .tabs-container__navigation
+  > .ant-tabs-card
+  .ant-tabs-tab {
   background: transparent;
   border-color: transparent;
 }
 .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab-active,
-[data-theme='compact'] .tabs-container__navigation > .ant-tabs-card .ant-tabs-tab-active {
+[data-theme="compact"]
+  .tabs-container__navigation
+  > .ant-tabs-card
+  .ant-tabs-tab-active {
   background: #fff;
   border-color: #fff;
   border-radius: 8px !important;
@@ -250,16 +272,47 @@ abbr[title] {
 }
 
 /* page patient */
-.button_add{
-  background-color: #D2D4EB;
-  border-color: #8087A7;
+.button_add {
+  background-color: #d2d4eb;
+  border-color: #8087a7;
   border-width: 2px;
-  color: #4C577C;
+  color: #4c577c;
 }
-.patient_img{
+.patient_img {
   filter: saturate(50%);
   border-radius: 15px;
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url("../assets/wound/img_3.jpg");
+}
+
+/* management */
+#management__table__patient > .ant-table-container > .ant-table-content > table  {
+  border-spacing: 0 8px;
+  font-family: jura;
+}
+#management__table__patient > div > div > table > tbody > tr > td{
+  border-top: 1.5px solid var(--gray) !important;
+  border-bottom: 1.5px solid var(--gray) !important;
+}
+#management__table__patient > div > div > table > tbody > tr > td:first-child{
+  border-left: 1.5px solid var(--gray);
+  border-top-left-radius: 0.8125rem;
+  border-bottom-left-radius: 0.8125rem;
+}
+#management__table__patient > div > div > table > tbody > tr > td:last-child{
+  border-right: 1.5px solid var(--gray);
+  border-top-right-radius: 0.8125rem;
+  border-bottom-right-radius: 0.8125rem;
+}
+#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell {
+  background-color: #EDEFFF !important;
+}
+#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell:first-child {
+  border-top-left-radius: 0.8125rem;
+  border-bottom-left-radius: 0.8125rem;
+}
+#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell:last-child {
+  border-top-right-radius: 0.8125rem;
+  border-bottom-right-radius: 0.8125rem;
 }
