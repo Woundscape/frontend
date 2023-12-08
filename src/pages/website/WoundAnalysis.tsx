@@ -130,13 +130,13 @@ export default function WoundAnalysis() {
   }
   const showModal = () => {
     setOpenModal(true);
-  }
+  };
   const closeModal = () => {
     setOpenModal(false);
   };
   return (
     <>
-      <body className="w-full h-screen relative">
+      <div className="w-full h-screen relative">
         <div className="h-full relative flex gap-3">
           <div className="w-full bg-white grow px-10">
             <div className="flex flex-col items-center h-full py-12">
@@ -246,7 +246,7 @@ export default function WoundAnalysis() {
                   onCancel={closeModal}
                   width={1000}
                   style={{
-                    borderRadius: '1.25rem'
+                    borderRadius: "1.25rem",
                   }}
                 >
                   ds
@@ -343,7 +343,7 @@ export default function WoundAnalysis() {
             </div>
           </div>
         </div>
-      </body>
+      </div>
     </>
   );
 }

@@ -1,20 +1,12 @@
-import { LeftOutlined, UserAddOutlined } from "@ant-design/icons";
+import { LeftOutlined } from "@ant-design/icons";
 import { getInstanceLocal } from "@api/apiClient";
 import UserProfile from "@features/UserProfile";
-import {
-  Button,
-  DatePicker,
-  Input,
-  Select,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { DatePicker, Table, Tag, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { ColumnsType, TableProps } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 import { useState, useEffect } from "react";
 
-const { RangePicker } = DatePicker;
+// const { RangePicker } = DatePicker;
 interface ManagementType {
   hn_id: string;
   line_uid: string | null;
@@ -28,14 +20,15 @@ interface ManagementType {
 export default function Management() {
   useEffect(() => {
     getInstanceLocal()
-      .get("/api/patient")
+      .get("/patient")
       .then((res) => {
-        setData(res.data)
-        setLoading(false)
+        console.log(res.data);
+        setData(res.data);
+        setLoading(false);
       });
   }, []);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ManagementType[]>([])
+  const [data, setData] = useState<ManagementType[]>([]);
   const columns: ColumnsType<ManagementType> = [
     {
       title: "Hospital No.",
@@ -126,6 +119,7 @@ export default function Management() {
                     columns={columns}
                     loading={loading}
                     tableLayout={"fixed"}
+                    rowKey={(_, index) => `table__row__${index}`}
                   />
                 </div>
               </div>

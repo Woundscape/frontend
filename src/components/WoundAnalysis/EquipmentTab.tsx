@@ -1,17 +1,19 @@
-import useSWR from "swr";
 import { Image, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MockupEquipment from "@assets/mockup_equip_history.svg";
-import axios from "axios";
+import { getInstanceLocal } from "@api/apiClient";
 
 export default function EquipmentTab() {
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data, error } = useSWR(
-    "http://localhost:3000/api/equipment",
-    fetcher
-  );
-  console.log(data, error);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    getInstanceLocal()
+      .get("/equipment")
+      .then((res: any) => {
+        console.log(res.data);
+        setData(res.data);
+      });
+  }, []);
 
   const [btnEquip, setBtnEquip] = useState(false);
   function handleEquip() {
@@ -20,7 +22,7 @@ export default function EquipmentTab() {
   return (
     <>
       <Content className="space-y-3">
-        {data?.equipment?.map((item: any, index: number) => (
+        {data?.map((item: any, index: number) => (
           <div
             key={index}
             className="w-full px-4 py-1.5 flex items-center rounded-xl space-x-2"

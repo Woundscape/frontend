@@ -1,5 +1,5 @@
-import { Popover, Tag } from "antd";
-import { useMemo, useState } from "react";
+import { Dropdown, MenuProps, Tag } from "antd";
+import MoreIcon from "@assets/icons/more_icon.svg";
 interface TableType {
   id: Number;
   hn_id: String;
@@ -91,21 +91,44 @@ export default function PatientTable() {
       last_updated: "21 Minutes ago",
     },
   ];
-  const [arrow, setArrow] = useState("Show");
-
-  const mergedArrow = useMemo(() => {
-    if (arrow === "Hide") {
-      return false;
-    }
-
-    if (arrow === "Show") {
-      return true;
-    }
-
-    return {
-      pointAtCenter: true,
-    };
-  }, [arrow]);
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
+          Edit
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+        >
+          Consult
+        </a>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+        >
+          Delete
+        </a>
+      ),
+    },
+  ];
   return (
     <>
       <div
@@ -157,14 +180,11 @@ export default function PatientTable() {
                     </Tag>
                   </td>
                   <td className="w-1/6">{item.last_updated}</td>
-                  <td className="w-1/6">
-                    <Popover
-                      placement="left"
-                      content={<div>ds</div>}
-                      arrow={mergedArrow}
-                    >
-                      ds
-                      </Popover>
+                  <td className="w-1/6 flex justify-center items-center">
+                    <Dropdown menu={{ items }} trigger={["click"]}>
+                      <img src={MoreIcon} alt="" />
+                      {/* <EllipsisOutlined style={{fontSize:24}} /> */}
+                    </Dropdown>
                   </td>
                 </tr>
               );
