@@ -13,7 +13,7 @@ const items: MenuProps["items"] = [
         rel="noopener noreferrer"
         href="https://www.antgroup.com"
       >
-        1st menu item
+        Edit Profile
       </a>
     ),
   },
@@ -25,19 +25,7 @@ const items: MenuProps["items"] = [
         rel="noopener noreferrer"
         href="https://www.aliyun.com"
       >
-        2nd menu item
-      </a>
-    ),
-  },
-  {
-    key: "3",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.luohanacademy.com"
-      >
-        3rd menu item
+        Logout
       </a>
     ),
   },
