@@ -330,3 +330,11 @@ abbr[title] {
 .forgot_pass{
   text-decoration-line: underline;
 }
+
+/* contact page */
+.contact-background {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  background-image: url("../assets/contact_bg.svg");
+}

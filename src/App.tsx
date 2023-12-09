@@ -13,6 +13,7 @@ import Management from "@pages/website/Management";
 import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset"
+import ContactUs from "@pages/website/Contact"
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
@@ -31,6 +32,7 @@ function App() {
         <Route path="/line/*" element={<LineRoutes />} />
         <Route path="reset" element={<ResetPassword />} />
         <Route path="confirm" element={<ConfirmReset />} />
+        <Route path="contact" element={<ContactUs />} />
         <Route path="/*" element={<AuthRoutes />} />
       </Routes>
     </BrowserRouter>
