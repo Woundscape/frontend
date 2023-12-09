@@ -325,3 +325,8 @@ abbr[title] {
   border-top-right-radius: 0.8125rem;
   border-bottom-right-radius: 0.8125rem;
 }
+
+/* signin page */
+.forgot_pass{
+  text-decoration-line: underline;
+}
