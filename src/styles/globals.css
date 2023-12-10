@@ -386,3 +386,16 @@ input[type="range"]::-moz-range-thumb {
   border-top-right-radius: 0.8125rem;
   border-bottom-right-radius: 0.8125rem;
 }
+
+/* signin page */
+.forgot_pass{
+  text-decoration-line: underline;
+}
+
+/* contact page */
+.contact-background {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  background-image: url("../assets/contact_bg.svg");
+}
