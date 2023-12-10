@@ -11,6 +11,8 @@ import Equipment from "@pages/website/Equipment";
 import Compare from "@pages/website/Compare"
 import Management from "@pages/website/Management";
 import PatientDetail from "@pages/website/PatientDetail";
+import ResetPassword from "@pages/website/ResetPassword";
+import ConfirmReset from "@pages/website/ConfirmReset"
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp"
@@ -27,6 +29,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/line/*" element={<LineRoutes />} />
+        <Route path="reset" element={<ResetPassword />} />
+        <Route path="confirm" element={<ConfirmReset />} />
         <Route path="/*" element={<AuthRoutes />} />
       </Routes>
     </BrowserRouter>
@@ -39,6 +43,7 @@ function LineRoutes(){
       <Route path="signup" element={<SignUpLine />} />
       <Route path="signin" element={<SignInLine />} />
       <Route path="history" element={<HistoryLine />} />
+      
 
     </Routes>
   );
