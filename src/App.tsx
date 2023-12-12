@@ -8,17 +8,17 @@ import Patient from "@pages/website/Patient";
 import EditImage from "@pages/website/Test";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
 import Equipment from "@pages/website/Equipment";
-import Compare from "@pages/website/Compare"
+import Compare from "@pages/website/Compare";
 import Management from "@pages/website/Management";
 import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
-import ConfirmReset from "@pages/website/ConfirmReset"
-import ContactUs from "@pages/website/Contact"
+import ConfirmReset from "@pages/website/ConfirmReset";
+import ContactUs from "@pages/website/Contact";
 
 import UploadImage from "@pages/line/UploadImage";
-import SignUpLine from "@pages/line/SignUp"
-import SignInLine from "@pages/line/SignIn"
-import HistoryLine from "@pages/line/History"
+import SignUpLine from "@pages/line/SignUp";
+import SignInLine from "@pages/line/SignIn";
+import HistoryLine from "@pages/line/History";
 
 import TestPred from "@pages/website/testPred";
 
@@ -38,15 +38,13 @@ function App() {
     </BrowserRouter>
   );
 }
-function LineRoutes(){
+function LineRoutes() {
   return (
     <Routes>
       <Route path="uploadImage" element={<UploadImage />} />
       <Route path="signup" element={<SignUpLine />} />
       <Route path="signin" element={<SignInLine />} />
       <Route path="history" element={<HistoryLine />} />
-      
-
     </Routes>
   );
 }

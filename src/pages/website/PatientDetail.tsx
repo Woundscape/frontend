@@ -5,7 +5,7 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
-import { Input, DatePicker, Segmented, Button, Select } from "antd";
+import { Input, DatePicker, Segmented, Button, Select, Timeline } from "antd";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
@@ -15,12 +15,31 @@ import Typography from "antd/es/typography/Typography";
 
 const { RangePicker } = DatePicker;
 export default function Patient() {
+  function renderImage() {
+    return (
+      <div className="flex pt-4">
+        <div className="flex flex-col w-64 h-44 patient_img p-3 justify-between">
+          <div className="flex flex-row justify-between text-white jura border-b-2">
+            <p className="">HN.9877065</p>
+            <p className="">01/02/23</p>
+          </div>
+          <div className="flex flex-row justify-between h-8 border-2 rounded-full">
+            <p className="jura text-white p-1 pl-3">View result</p>
+            <img className="pt-0.5 pb-0.5" src={ViewResult} alt="" />
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="w-full h-screen relative">
         <div className="w-full h-full py-8 bg-white">
-          <div className="w-full h-full">
-            <header id="head__patient" className="px-6 border-b-2 pb-5 border-[#E9EBF5]">
+          <div className="w-full h-full flex flex-col">
+            <header
+              id="head__patient"
+              className="px-6 border-b-2 pb-5 border-[#E9EBF5]"
+            >
               <div className="flex justify-between">
                 <div className="flex items-center space-x-4">
                   <LeftOutlined />
@@ -39,31 +58,105 @@ export default function Patient() {
                 ]}
               />
             </header>
-            <Content className="px-6 pt-6">
-              <div className="flex">
-                <div className="w-full flex flex-col">
+            <Content className="grow p-6">
+              <div className="flex h-full">
+                <div className="w-full h-full flex flex-col space-y-2">
                   {/* Input Filter */}
-
+                  <div className="flex space-x-2 items-center">
+                    <Typography className="jura text-[#4C577C]">
+                      Progression Stage :{" "}
+                    </Typography>
+                    <Select
+                      showSearch
+                      style={{ width: 200 }}
+                      placeholder="Search to Select"
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "").includes(input)
+                      }
+                      filterSort={(optionA, optionB) =>
+                        (optionA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optionB?.label ?? "").toLowerCase())
+                      }
+                      options={[
+                        {
+                          value: "1",
+                          label: "Not Identified",
+                        },
+                        {
+                          value: "2",
+                          label: "Closed",
+                        },
+                        {
+                          value: "3",
+                          label: "Communicated",
+                        },
+                        {
+                          value: "4",
+                          label: "Identified",
+                        },
+                        {
+                          value: "5",
+                          label: "Resolved",
+                        },
+                        {
+                          value: "6",
+                          label: "Cancelled",
+                        },
+                      ]}
+                    />
+                  </div>
                   {/* Body */}
-                  <div className="flex pt-7">
-                    <div className="flex flex-col w-64 h-44 patient_img p-3 justify-between">
-                      <div className="flex flex-row justify-between text-white jura border-b-2">
-                        <p className="">HN.9877065</p>
-                        <p className="">01/02/23</p>
-                      </div>
-                      <div className="flex flex-row justify-between h-8 border-2 rounded-full">
-                        <p className="jura text-white p-1 pl-3">View result</p>
-                        <img
-                          className="pt-0.5 pb-0.5"
-                          src={ViewResult}
-                          alt=""
-                        />
-                      </div>
+                  <div
+                    id="timeline-container"
+                    className="h-full overflow-y-auto"
+                  >
+                    <div className="inner-container pt-4">
+                      <ul className="timeline pl-20">
+                        {/* <li id="test" /> */}
+                        <li
+                          className="timeline-item flex flex-wrap gap-3"
+                          data-date="17 Jan"
+                        >
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                          {renderImage()}
+                        </li>
+                        <li
+                          className="timeline-item flex flex-wrap gap-3"
+                          data-date="3 Feb"
+                        >
+                          {renderImage()}
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
-                <div className=""></div>
-                <div id="history" className="flex flex-col">
+                <div id="history" className="flex flex-col border-l-2">
                   <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
                     <p className="jura text-[#555554] text-lg p-3">History</p>
                   </div>

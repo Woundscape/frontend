@@ -20,8 +20,8 @@ export default function EquipmentTab() {
     setBtnEquip(!btnEquip);
   }
   return (
-    <>
-      <Content className="space-y-3">
+    <div className="w-full h-full overflow-y-auto">
+      <Content className="space-y-3 grow">
         {data?.map((item: any, index: number) => (
           <div
             key={index}
@@ -35,7 +35,7 @@ export default function EquipmentTab() {
               {" "}
               {index + 1}
             </Typography>
-            <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 bg-white">
+            <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 ">
               <p className="jura text-md text-[#61708C]">{item.equip_name}</p>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function EquipmentTab() {
           </div>
         )}
       </Content>
-      <div className="w-full grow flex flex-col space-y-4">
+      <div className="w-full flex flex-col space-y-4">
         <h2 className="jura text-md text-[#4C577C] pb-3 border-b-2 border-[#E9EBF5]">
           From patient
         </h2>
@@ -77,6 +77,6 @@ export default function EquipmentTab() {
           </Typography>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,9 +1,5 @@
 import logo_wound from "@assets/logo-wound.svg";
-import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
-import logo_google from "@assets/google_logo.svg";
-import logo_line from "@assets/line_logo.svg";
-import Eye from "@assets/eye_input.svg";
 function ResetPassword() {
   return (
     <div className="wound-background w-full bg-white h-screen">
