@@ -4,22 +4,19 @@
 @tailwind utilities;
 
 /* Apply styles to the body element */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  /* background-color: #eeeeee; */
-}
-
 :root {
   --brown-light: #D8C290;
   --black: #424241;
   --brown: #a3802d;
   --gray: #E8EAF4;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 
 @font-face {
   font-family: jura;
@@ -245,6 +242,8 @@ abbr[title] {
   background: #6f48eb;
   color: white;
 }
+
+/* Homepage */
 .bg-homepage {
   background-size: cover;
   background-repeat: no-repeat;
@@ -285,6 +284,7 @@ abbr[title] {
   background-repeat: no-repeat;
   background-image: url("../assets/wound/img_3.jpg");
 }
+
 /* Patient */
 .ant-segmegted-item{
   transition: all 0s;
@@ -296,16 +296,70 @@ abbr[title] {
   background-color: #D2DCEB;
 }
 
+#timeline-container .inner-container {
+  margin: 0 auto;
+}
+#timeline-container .inner-container .heading {
+  text-align: center;
+  font-family: var(--font-family-1);
+  font-weight: 700;
+  font-size: 3rem;
+  color: #DCD3D3;
+  margin-top: 0;
+}
+
+.timeline {
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline-item {
+  color: #DCD3D3;
+  font-family: var(--font-family-2);
+  text-align: center;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-left: 2px dashed #DCD3D3;
+  border-bottom: 2px dashed #E9EBF5;
+  position: relative;
+  list-style-type: none;
+  --item-width: calc(100%);
+}
+/* text timeline */
+.timeline-item::after {
+  content: attr(data-date);
+  position: absolute;
+  right: calc(var(--item-width) + 20px);
+  top: -20px;
+  color: #555554;
+  font-size: 20px;
+  float: right;
+  font-family: jura;
+  /* white-space:nowrap */
+}
+.timeline-item::before {
+  content: "";
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: #DCD3D3;
+  position: absolute;
+  left: -8px;
+  top: -8px;
+}
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+/* TIMELINE end */
+
 
 /* WoundAnalysis */
-.react-transform-wrapper {
-  width: 100% !important;
-  height: 100% !important;
+#react-sketch-canvas__canvas-background{
+  background-size:contain !important ;
 }
-.react-transform-component {
-  width: 100% !important;
-  height: 100% !important;
-}
+/* .ant-popover-inner{
+  border: 1.5px solid #D9D9D9 ;
+} */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none; 
