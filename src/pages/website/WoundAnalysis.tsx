@@ -9,12 +9,13 @@ import {
 } from "antd";
 import UserProfile from "@features/UserProfile";
 import {
+  EyeInvisibleOutlined,
   EyeOutlined,
   LeftOutlined,
   LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
@@ -28,16 +29,17 @@ import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
 
 import LoadPath from "@libs/images_2.json";
 
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import DefaultButton from "@components/DefaultButton";
+import { useLoading } from "@components/Loading";
 interface TissueType {
   title: string;
   value: number;
   color: string;
 }
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Legend);
 export default function WoundAnalysis() {
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
@@ -105,17 +107,19 @@ export default function WoundAnalysis() {
   const { TabPane } = Tabs;
   const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
-  const [strokeWidth, setStrokeWidth] = useState<number>(4)
+  const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
   const [openSelectSize, setOpenSelectSize] = useState(false);
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
   const [editable, setEditable] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [hideTissue, setHideTissue] = useState<string[]>([]);
   // const canvasDiv = useRef<HTMLDivElement | null>(null);
   // const [canvasHeight, setCanvasHeight] = useState(0);
   const [selectTools, setSelectTools] = useState("none");
   const [pointer, setPointer] = useState("none");
   const [original, setOriginal] = useState<any>();
+  // const { isLoading, changeLoading } = useLoading();
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef.current.loadPaths(LoadPath.data);
@@ -140,8 +144,8 @@ export default function WoundAnalysis() {
   function handleOpenSelectSize(newOpen: boolean) {
     setOpenSelectSize(newOpen);
   }
-  function handleStrokeWidth(size : number){
-    setStrokeWidth(size)
+  function handleStrokeWidth(size: number) {
+    setStrokeWidth(size);
     setOpenSelectSize(false);
   }
   async function handleCanvasExportImage() {
@@ -156,7 +160,9 @@ export default function WoundAnalysis() {
             type="text"
             key={index}
             onClick={() => handleCanvasEditor(item.color)}
-            className="w-full pb-.5 space-x-2 flex items-center"
+            className={`w-full pb-.5 space-x-2 flex items-center ${
+              colorPaint == item.color ? "bg-gray-200" : ""
+            }`}
           >
             <div
               className="w-2.5 h-2.5 rounded-full"
@@ -171,24 +177,40 @@ export default function WoundAnalysis() {
   function renderSelectSize() {
     return (
       <div id="popover__select__size">
-        <Button type="text" onClick={()=>handleStrokeWidth(1)} className="flex items-center space-x-2">
+        <Button
+          type="text"
+          onClick={() => handleStrokeWidth(1)}
+          className="flex items-center space-x-2"
+        >
           <p className="jura text-xs">1px</p>
           <div className="w-14 h-px bg-black"></div>
         </Button>
-        <Button type="text" onClick={()=>handleStrokeWidth(3)} className="flex items-center space-x-2">
+        <Button
+          type="text"
+          onClick={() => handleStrokeWidth(3)}
+          className="flex items-center space-x-2"
+        >
           <p className="jura text-xs">3px</p>
           <div className="w-14 h-0.5 bg-black"></div>
         </Button>
-        <Button type="text" onClick={()=>handleStrokeWidth(5)} className="flex items-center space-x-2">
+        <Button
+          type="text"
+          onClick={() => handleStrokeWidth(5)}
+          className="flex items-center space-x-2"
+        >
           <p className="jura text-xs">5px</p>
           <div className="w-14 h-1 bg-black"></div>
         </Button>
-        <Button type="text" onClick={()=>handleStrokeWidth(8)} className="flex items-center space-x-2">
+        <Button
+          type="text"
+          onClick={() => handleStrokeWidth(8)}
+          className="flex items-center space-x-2"
+        >
           <p className="jura text-xs">8px</p>
           <div className="w-14 h-2 bg-black"></div>
         </Button>
       </div>
-    )
+    );
   }
   async function renderTissueData(strokeColor: string) {
     if (canvasRef.current) {
@@ -208,28 +230,40 @@ export default function WoundAnalysis() {
     setColorPaint(value);
     setOpenSelectPaint(false);
   }
-  function handleCanvasEditor(value: any) {
-    switch (value) {
-      case "none":
-        setSelectTools(value);
-        setPointer(value);
-        canvasRef.current?.eraseMode(false);
-        break;
-      case "eraser":
-        setSelectTools(value);
-        canvasRef.current?.eraseMode(true);
-        break;
-      case "size":
-        break;
-      case "undo":
-        canvasRef.current?.undo();
-        break;
-      case "redo":
-        canvasRef.current?.redo();
-        break;
-      default:
-        handleColorPaint(value);
-        canvasRef.current?.eraseMode(false);
+
+  function handleNone() {
+    setSelectTools("none");
+    setPointer("none");
+    canvasRef.current?.eraseMode(false);
+  }
+
+  function handleEraser() {
+    setPointer("mouse");
+    setSelectTools("eraser");
+    canvasRef.current?.eraseMode(true);
+  }
+
+  function handleUndo() {
+    canvasRef.current?.undo();
+  }
+
+  function handleRedo() {
+    canvasRef.current?.redo();
+  }
+
+  const toolHandlers: any = {
+    none: handleNone,
+    eraser: handleEraser,
+    undo: handleUndo,
+    redo: handleRedo,
+  };
+  function handleCanvasEditor(value: string) {
+    const toolHandler = toolHandlers[value];
+    if (toolHandler) {
+      toolHandler();
+    } else {
+      handleColorPaint(value);
+      canvasRef.current?.eraseMode(false);
     }
   }
   const onCancel = () => {
@@ -237,15 +271,14 @@ export default function WoundAnalysis() {
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
   };
-  const onChange = async() => {
-    const paths = await canvasRef.current?.exportPaths()
-    setOriginal(paths)
+  const onChange = async () => {
+    const paths = await canvasRef.current?.exportPaths();
+    setOriginal(paths);
     setEditable(!editable);
   };
   const handleModal = () => {
     setOpenModal(!openModal);
   };
-
   return (
     <>
       <div className="w-full h-screen relative">
@@ -335,21 +368,20 @@ export default function WoundAnalysis() {
                         id="canvas_editor___tools"
                         className="w-12 h-full flex flex-col justify-center items-center space-y-4 relative"
                       >
-                        <div className="w-10 border border-[#D9D9D9] bg-[#FDFCFC] space-y-2 p-1 rounded-md">
+                        <div className="w-10 border border-[#D9D9D9] bg-[#FDFCFC] space-y-2 p-0.5 rounded-md">
                           <Button
                             type="text"
                             className={`flex justify-center p-1 h-auto rounded-md ${
                               selectTools == "none" ? "bg-[#F0ECEC]" : ""
                             }`}
+                            title="Cursor"
+                            onClick={() => handleCanvasEditor("none")}
                           >
-                            <img
-                              src={CanvasSelectIcon}
-                              onClick={() => handleCanvasEditor("none")}
-                              alt=""
-                            />
+                            <img src={CanvasSelectIcon} />
                           </Button>
                           <Button
                             type="text"
+                            title="Pen"
                             className={`flex justify-center p-1 h-auto rounded-md ${
                               selectTools == "pen" ? "bg-[#F0ECEC]" : ""
                             }`}
@@ -366,15 +398,13 @@ export default function WoundAnalysis() {
                           </Button>
                           <Button
                             type="text"
+                            title="Eraser"
                             className={`flex justify-center p-1 h-auto rounded-md ${
                               selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
                             }`}
+                            onClick={() => handleCanvasEditor("eraser")}
                           >
-                            <img
-                              src={CanvasEraserIcon}
-                              onClick={() => handleCanvasEditor("eraser")}
-                              alt=""
-                            />
+                            <img src={CanvasEraserIcon} alt="" />
                           </Button>
 
                           <Button
@@ -402,7 +432,9 @@ export default function WoundAnalysis() {
                     >
                       <div
                         id="canvas_editor___sketch"
-                        className="w-full h-full"
+                        className={`w-full h-full  ${
+                          selectTools == "pen" ? "canvas__cursor___paint" : ""
+                        }`}
                         style={{
                           backgroundImage: `url(${Wound})`,
                           backgroundSize: "cover",
@@ -469,7 +501,7 @@ export default function WoundAnalysis() {
                       {tissueData?.map((item, index) => (
                         <div
                           key={index}
-                          className={`w-full p-2.5 flex justify-center items-center space-x-2`}
+                          className={`w-full p-2.5 flex justify-center items-center space-x-3`}
                           style={{
                             borderRadius: "0.8125rem",
                             backgroundColor: item.color + "",
@@ -482,14 +514,27 @@ export default function WoundAnalysis() {
                             <p>{item.title}</p>
                             <p>{item.value + ""}%</p>
                           </div>
-                          <div className="tools-tissue space-x-2">
-                            <EyeOutlined
-                              style={{ fontSize: 18 }}
-                              onClick={() => {
-                                renderTissueData(item.color);
-                              }}
-                            />
-                            <LockOutlined style={{ fontSize: 18 }} />
+                          <div
+                            id="tools_tissue"
+                            onClick={() => {
+                              if (hideTissue.includes(item.title)) {
+                                let tissue = hideTissue.filter(
+                                  (e) => e !== item.title
+                                );
+                                setHideTissue(tissue);
+                              } else {
+                                setHideTissue([...hideTissue, item.title]);
+                              }
+                              renderTissueData(item.color);
+                            }}
+                            className="space-x-2 flex justify-center items-center cursor-pointer"
+                          >
+                            {hideTissue.includes(item.title) ? (
+                              <EyeInvisibleOutlined style={{ fontSize: 18 }} />
+                            ) : (
+                              <EyeOutlined style={{ fontSize: 18 }} />
+                            )}
+                            {/* <LockOutlined style={{ fontSize: 18 }} /> */}
                           </div>
                         </div>
                       ))}
