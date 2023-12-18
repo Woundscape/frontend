@@ -408,7 +408,9 @@ input[type="range"]::-moz-range-thumb {
   height: 4rem;
   background: #fff;
 }
-
+.canvas__cursor___paint {
+  cursor: url('../assets/icons/canvas_cursor_paint.svg') -20 40, auto;
+}
 
 /* management */
 #management__table__patient > .ant-table-container > .ant-table-content > table  {

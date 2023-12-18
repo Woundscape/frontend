@@ -57,7 +57,6 @@ export default function SignIn() {
   }
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log(tokenResponse);
       getOAuthInstance().get(`/oauth2/v1/userinfo`, {
         params:{
           access_token: tokenResponse.access_token

@@ -21,6 +21,7 @@ import SignInLine from "@pages/line/SignIn";
 import HistoryLine from "@pages/line/History";
 
 import TestPred from "@pages/website/testPred";
+import { LoadingProvider } from "@components/Loading";
 
 function App() {
   return (
