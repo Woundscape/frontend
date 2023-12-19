@@ -5,10 +5,10 @@
 
 /* Apply styles to the body element */
 :root {
-  --brown-light: #D8C290;
+  --brown-light: #d8c290;
   --black: #424241;
   --brown: #a3802d;
-  --gray: #E8EAF4;
+  --gray: #e8eaf4;
 }
 
 * {
@@ -16,7 +16,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 
 @font-face {
   font-family: jura;
@@ -51,6 +50,12 @@
 
 .font-blackbean {
   color: var(--black);
+}
+
+#text__primary {
+  font-family: jura;
+  color: #4C577C;
+  padding-right: 5px;
 }
 
 .ant-upload-wrapper {
@@ -286,14 +291,17 @@ abbr[title] {
 }
 
 /* Patient */
-.ant-segmegted-item{
+.ant-segmegted-item {
   transition: all 0s;
 }
-#head__patient > div.ant-segmented{
+#head__patient > div.ant-segmented {
   background-color: transparent;
 }
-#head__patient > div.ant-segmented.jura.mt-4.css-dev-only-do-not-override-pr0fja > div > label.ant-segmented-item.ant-segmented-item-selected{
-  background-color: #D2DCEB;
+#head__patient
+  > div.ant-segmented.jura.mt-4.css-dev-only-do-not-override-pr0fja
+  > div
+  > label.ant-segmented-item.ant-segmented-item-selected {
+  background-color: #d2dceb;
 }
 
 #timeline-container .inner-container {
@@ -304,7 +312,7 @@ abbr[title] {
   font-family: var(--font-family-1);
   font-weight: 700;
   font-size: 3rem;
-  color: #DCD3D3;
+  color: #dcd3d3;
   margin-top: 0;
 }
 
@@ -314,12 +322,12 @@ abbr[title] {
 }
 
 .timeline-item {
-  color: #DCD3D3;
+  color: #dcd3d3;
   font-family: var(--font-family-2);
   text-align: center;
   padding: 0 1.5rem 1.5rem 1.5rem;
-  border-left: 2px dashed #DCD3D3;
-  border-bottom: 2px dashed #E9EBF5;
+  border-left: 2px dashed #dcd3d3;
+  border-bottom: 2px dashed #e9ebf5;
   position: relative;
   list-style-type: none;
   --item-width: calc(100%);
@@ -341,7 +349,7 @@ abbr[title] {
   border-radius: 50%;
   width: 12px;
   height: 12px;
-  background-color: #DCD3D3;
+  background-color: #dcd3d3;
   position: absolute;
   left: -8px;
   top: -8px;
@@ -352,17 +360,16 @@ abbr[title] {
 
 /* TIMELINE end */
 
-
 /* WoundAnalysis */
-#react-sketch-canvas__canvas-background{
-  background-size:contain !important ;
+#react-sketch-canvas__canvas-background {
+  background-size: contain !important ;
 }
 /* .ant-popover-inner{
   border: 1.5px solid #D9D9D9 ;
 } */
 input[type="range"] {
   -webkit-appearance: none;
-  appearance: none; 
+  appearance: none;
   width: 100%;
   cursor: pointer;
   outline: none;
@@ -372,32 +379,32 @@ input[type="range"] {
 
 input[type="range"]::-webkit-slider-runnable-track {
   height: 20px;
-  background: #EEEEEE;
+  background: #eeeeee;
   border-radius: 16px;
 }
 
 input[type="range"]::-moz-range-track {
   height: 20px;
-  background: #EEEEEE;
+  background: #eeeeee;
   border-radius: 16px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none; 
+  appearance: none;
   height: 20px;
   width: 20px;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
   border-radius: 50%;
-  border: 2px solid #D8C290;
+  border: 2px solid var(--brown-light);
   box-shadow: -407px 0 0 400px var(--brown-light);
 }
 input[type="range"]::-moz-range-thumb {
   height: 15px;
   width: 15px;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
   border-radius: 50%;
-  border: 1px solid #D8C290;
+  border: 1px solid var(--brown-light);
   box-shadow: -407px 0 0 400px var(--brown-light);
 }
 
@@ -409,42 +416,63 @@ input[type="range"]::-moz-range-thumb {
   background: #fff;
 }
 .canvas__cursor___paint {
-  cursor: url('../assets/icons/canvas_cursor_paint.svg') -20 40, auto;
+  cursor: url("../assets/icons/canvas_cursor_paint.svg") -20 40, auto;
 }
 
 /* management */
-#management__table__patient > .ant-table-container > .ant-table-content > table  {
+#management__table__patient
+  > .ant-table-container
+  > .ant-table-content
+  > table {
   border-spacing: 0 8px;
   font-family: jura;
 }
-#management__table__patient > div > div > table > tbody > tr > td{
+#management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
   border-bottom: 1.5px solid var(--gray) !important;
 }
-#management__table__patient > div > div > table > tbody > tr > td:first-child{
+#management__table__patient > div > div > table > tbody > tr > td:first-child {
   border-left: 1.5px solid var(--gray);
   border-top-left-radius: 0.8125rem;
   border-bottom-left-radius: 0.8125rem;
 }
-#management__table__patient > div > div > table > tbody > tr > td:last-child{
+#management__table__patient > div > div > table > tbody > tr > td:last-child {
   border-right: 1.5px solid var(--gray);
   border-top-right-radius: 0.8125rem;
   border-bottom-right-radius: 0.8125rem;
 }
-#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell {
-  background-color: #EDEFFF !important;
+#management__table__patient
+  > .ant-table-container
+  > .ant-table-content
+  > table
+  > .ant-table-thead
+  > tr
+  > .ant-table-cell {
+  background-color: #edefff !important;
 }
-#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell:first-child {
+#management__table__patient
+  > .ant-table-container
+  > .ant-table-content
+  > table
+  > .ant-table-thead
+  > tr
+  > .ant-table-cell:first-child {
   border-top-left-radius: 0.8125rem;
   border-bottom-left-radius: 0.8125rem;
 }
-#management__table__patient > .ant-table-container > .ant-table-content > table > .ant-table-thead > tr > .ant-table-cell:last-child {
+#management__table__patient
+  > .ant-table-container
+  > .ant-table-content
+  > table
+  > .ant-table-thead
+  > tr
+  > .ant-table-cell:last-child {
   border-top-right-radius: 0.8125rem;
   border-bottom-right-radius: 0.8125rem;
 }
 
 /* signin page */
-.forgot_pass{
+.forgot_pass {
   text-decoration-line: underline;
 }
 

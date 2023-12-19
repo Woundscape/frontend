@@ -15,6 +15,7 @@ import {
   LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { FaPencil } from "react-icons/fa6";
 import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
@@ -29,11 +30,10 @@ import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
 
 import LoadPath from "@libs/images_2.json";
 
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import DefaultButton from "@components/DefaultButton";
-import { useLoading } from "@components/Loading";
 interface TissueType {
   title: string;
   value: number;
@@ -215,11 +215,13 @@ export default function WoundAnalysis() {
   async function renderTissueData(strokeColor: string) {
     if (canvasRef.current) {
       const test = await canvasRef.current.exportPaths();
-      console.log(test);
-      const newData = await test.filter(
-        (value) => value.strokeColor != strokeColor
-      );
-      console.log(newData);
+      let newData: any;
+      if (hideTissue.includes(strokeColor)) {
+      } else {
+        newData = await test.filter(
+          (value) => value.strokeColor != strokeColor
+        );
+      }
       canvasRef.current.clearCanvas();
       canvasRef.current.loadPaths(newData);
     }
@@ -517,19 +519,19 @@ export default function WoundAnalysis() {
                           <div
                             id="tools_tissue"
                             onClick={() => {
-                              if (hideTissue.includes(item.title)) {
+                              if (hideTissue.includes(item.color)) {
                                 let tissue = hideTissue.filter(
-                                  (e) => e !== item.title
+                                  (e) => e !== item.color
                                 );
                                 setHideTissue(tissue);
                               } else {
-                                setHideTissue([...hideTissue, item.title]);
+                                setHideTissue([...hideTissue, item.color]);
                               }
                               renderTissueData(item.color);
                             }}
                             className="space-x-2 flex justify-center items-center cursor-pointer"
                           >
-                            {hideTissue.includes(item.title) ? (
+                            {hideTissue.includes(item.color) ? (
                               <EyeInvisibleOutlined style={{ fontSize: 18 }} />
                             ) : (
                               <EyeOutlined style={{ fontSize: 18 }} />

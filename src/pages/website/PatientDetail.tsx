@@ -1,20 +1,97 @@
-import {
-  AppstoreOutlined,
-  BarsOutlined,
-  LeftOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
-import { Input, DatePicker, Segmented, Button, Select, Timeline } from "antd";
-import SearchIcon from "@assets/icon-search-upload.svg";
+import type { InputRef } from "antd";
+import {
+  Input,
+  DatePicker,
+  Segmented,
+  Button,
+  Select,
+  theme,
+  Space,
+  Tag,
+  Tooltip,
+  Modal,
+} from "antd";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
 import Typography from "antd/es/typography/Typography";
+import { useEffect, useRef, useState } from "react";
 
 const { RangePicker } = DatePicker;
 export default function Patient() {
+  const { token } = theme.useToken();
+  const [tags, setTags] = useState(["Tag 2", "Tag 3"]);
+  const [inputVisible, setInputVisible] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [editInputIndex, setEditInputIndex] = useState(-1);
+  const [editInputValue, setEditInputValue] = useState("");
+  const inputRef = useRef<InputRef>(null);
+  const editInputRef = useRef<InputRef>(null);
+
+  useEffect(() => {
+    if (inputVisible) {
+      inputRef.current?.focus();
+    }
+  }, [inputVisible]);
+
+  useEffect(() => {
+    editInputRef.current?.focus();
+  }, [editInputValue]);
+
+  const handleClose = (e: React.MouseEvent<HTMLElement>, value:string) => {
+    e.preventDefault();
+    showModal()    
+    console.log('Clicked! But prevent default.', value);
+  };
+  // const handleClose = (removedTag: string) => {
+    
+    // const newTags = tags.filter((tag) => tag !== removedTag);
+    // console.log(newTags);
+    // setTags(newTags);
+  // };
+
+  const showInput = () => {
+    setInputVisible(true);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputConfirm = () => {
+    if (inputValue && !tags.includes(inputValue)) {
+      setTags([...tags, inputValue]);
+    }
+    setInputVisible(false);
+    setInputValue("");
+  };
+
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditInputValue(e.target.value);
+  };
+
+  const handleEditInputConfirm = () => {
+    const newTags = [...tags];
+    newTags[editInputIndex] = editInputValue;
+    setTags(newTags);
+    setEditInputIndex(-1);
+    setEditInputValue("");
+  };
+
+  const tagInputStyle: React.CSSProperties = {
+    width: 64,
+    height: 22,
+    marginInlineEnd: 8,
+    verticalAlign: "top",
+  };
+
+  const tagPlusStyle: React.CSSProperties = {
+    background: token.colorBgContainer,
+    borderStyle: "dashed",
+  };
   function renderImage() {
     return (
       <div className="flex pt-4">
@@ -31,6 +108,19 @@ export default function Patient() {
       </div>
     );
   }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       <div className="w-full h-screen relative">
@@ -63,8 +153,8 @@ export default function Patient() {
                 <div className="w-full h-full flex flex-col space-y-2">
                   {/* Input Filter */}
                   <div className="flex space-x-2 items-center">
-                    <Typography className="jura text-[#4C577C]">
-                      Progression Stage :{" "}
+                    <Typography id="text__primary">
+                      Progression Stage :
                     </Typography>
                     <Select
                       showSearch
@@ -106,6 +196,88 @@ export default function Patient() {
                         },
                       ]}
                     />
+                    <Space size={[0, 8]} wrap>
+                      <Modal
+                        title="Basic Modal"
+                        open={isModalOpen}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                      >
+                        <p>Some contents...</p>
+                        <p>Some contents...</p>
+                        <p>Some contents...</p>
+                      </Modal>
+                      <Typography id="text__primary">Disease :</Typography>
+                      {tags.map((tag, index) => {
+                        if (editInputIndex === index) {
+                          return (
+                            <Input
+                              ref={editInputRef}
+                              key={tag}
+                              size="small"
+                              style={tagInputStyle}
+                              value={editInputValue}
+                              onChange={handleEditInputChange}
+                              onBlur={handleEditInputConfirm}
+                              onPressEnter={handleEditInputConfirm}
+                            />
+                          );
+                        }
+                        const isLongTag = tag.length > 20;
+                        const tagElem = (
+                          <Tag
+                            key={tag}
+                            closable
+                            style={{
+                              userSelect: "none",
+                              color: "#4C577C",
+                              fontFamily: "jura",
+                            }}
+                            color="#F4DEE7"
+                            onClose={(e)=> handleClose(e,tag)}
+                          >
+                            <span
+                              onDoubleClick={(e) => {
+                                if (index !== 0) {
+                                  setEditInputIndex(index);
+                                  setEditInputValue(tag);
+                                  e.preventDefault();
+                                }
+                              }}
+                            >
+                              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                            </span>
+                          </Tag>
+                        );
+                        return isLongTag ? (
+                          <Tooltip title={tag} key={tag}>
+                            {tagElem}
+                          </Tooltip>
+                        ) : (
+                          tagElem
+                        );
+                      })}
+                      {inputVisible ? (
+                        <Input
+                          ref={inputRef}
+                          type="text"
+                          size="small"
+                          style={tagInputStyle}
+                          value={inputValue}
+                          onChange={handleInputChange}
+                          onBlur={handleInputConfirm}
+                          onPressEnter={handleInputConfirm}
+                        />
+                      ) : (
+                        <Tag
+                          style={tagPlusStyle}
+                          icon={<PlusOutlined />}
+                          onClick={showInput}
+                        >
+                          Add tag
+                        </Tag>
+                      )}
+                    </Space>
                   </div>
                   {/* Body */}
                   <div
@@ -119,28 +291,6 @@ export default function Patient() {
                           className="timeline-item flex flex-wrap gap-3"
                           data-date="17 Jan"
                         >
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
-                          {renderImage()}
                           {renderImage()}
                           {renderImage()}
                           {renderImage()}
