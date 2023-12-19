@@ -13,7 +13,9 @@ export default defineConfig({
       "@api": "/src/api",
       "@layouts": "/src/layouts",
       "@features": "/src/features",
-      "@libs": "/src/libs"
+      "@libs": "/src/libs",
+      "@config": "/src/config",
+      "@constraint": "/src/constraint",
     },
   },
 });

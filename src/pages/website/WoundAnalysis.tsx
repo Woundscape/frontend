@@ -12,11 +12,9 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined,
   LeftOutlined,
-  LockOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { FaPencil } from "react-icons/fa6";
-import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
 import Wound from "@assets/wound/img_31.jpg";
@@ -39,7 +37,7 @@ interface TissueType {
   value: number;
   color: string;
 }
-ChartJS.register(ArcElement, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
@@ -408,7 +406,6 @@ export default function WoundAnalysis() {
                           >
                             <img src={CanvasEraserIcon} alt="" />
                           </Button>
-
                           <Button
                             type="text"
                             className={`flex justify-center p-0.5 h-auto rounded-md ${

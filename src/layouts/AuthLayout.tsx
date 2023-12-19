@@ -12,9 +12,9 @@ export default function AuthLayout() {
           <div className="relative grow">
             <Outlet />
           </div>
-            <div className="w-full absolute text-center bottom-5 michroma text-sm select-none text-[#626060]">
-                © 2023 Copyright – Woundscape – All Rights Reserved.
-              </div>
+          <div className="w-full absolute text-center bottom-5 michroma text-sm select-none text-[#626060]">
+            © 2023 Copyright – Woundscape – All Rights Reserved.
+          </div>
         </div>
       </div>
     </>

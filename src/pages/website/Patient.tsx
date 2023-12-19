@@ -1,7 +1,6 @@
 import {
   AppstoreOutlined,
   BarsOutlined,
-  LeftOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
@@ -29,7 +28,7 @@ export default function Patient() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <div className="flex space-x-2">
+                  <div id="react__patient__input" className="flex space-x-2">
                     <Input
                       size="middle"
                       placeholder="Search by hospital number"

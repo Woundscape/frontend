@@ -1,13 +1,13 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { getInstanceLocal } from "@api/apiClient";
 import UserProfile from "@features/UserProfile";
-import { DatePicker, Table, Tag, Typography } from "antd";
+import { Select, Table, Tag, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useState, useEffect } from "react";
 
 // const { RangePicker } = DatePicker;
-interface ManagementType {
+interface IManagement {
   hn_id: string;
   line_uid: string | null;
   doctor_assign: string | null;
@@ -17,19 +17,34 @@ interface ManagementType {
   updated_at: Date;
   disease?: string | null;
 }
+
+interface IDoctor {
+  user_id: string;
+  doctor_id: string;
+  doctor_firstname: string | null;
+  doctor_lastname: string | null;
+  doctor_type: string;
+  line_uid: string | null;
+}
 export default function Management() {
   useEffect(() => {
     getInstanceLocal()
       .get("/patient")
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
         setLoading(false);
       });
+    getInstanceLocal()
+      .get("/doctor")
+      .then((res) => {
+        setDoctor(res.data);
+        console.log(res.data);
+      });
   }, []);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ManagementType[]>([]);
-  const columns: ColumnsType<ManagementType> = [
+  const [data, setData] = useState<IManagement[]>([]);
+  const [doctor, setDoctor] = useState<IDoctor[]>([]);
+  const columns: ColumnsType<IManagement> = [
     {
       title: "Hospital No.",
       dataIndex: "hn_id",
@@ -41,9 +56,11 @@ export default function Management() {
       key: "line_uid",
       render(value, _, index) {
         return (
-          <Typography key={index} className="jura truncate">
-            {value}
-          </Typography>
+          <>
+            <Typography key={index} className="jura truncate">
+              {value}
+            </Typography>
+          </>
         );
       },
     },
@@ -51,6 +68,22 @@ export default function Management() {
       title: "Doctor",
       dataIndex: "doctor_assign",
       key: "doctor_assign",
+      render: (_, { doctor_assign }) => (
+        <>
+          <Select
+            showSearch
+            className="w-36"
+            placeholder="Select"
+            defaultValue={doctor_assign}
+            optionFilterProp="children"
+            options={doctor.map((doctor) => {
+              const label = `${doctor.doctor_firstname}  ${doctor.doctor_lastname}`;
+              const value = doctor.doctor_id;
+              return { label, value };
+            })}
+          />
+        </>
+      ),
     },
     {
       title: "Status",
@@ -76,21 +109,21 @@ export default function Management() {
       title: "Disease",
       dataIndex: "disease",
       key: "disease",
-      // render: (_, { disease }) => (
-      //   <>
-      //     {disease?.map((value: string, index: number) => {
-      //       let color = value.length > 5 ? "geekblue" : "green";
-      //       if (value === "loser") {
-      //         color = "volcano";
-      //       }
-      //       return (
-      //         <Tag color={color} key={`${value}-${index}`} className="jura">
-      //           {value}
-      //         </Tag>
-      //       );
-      //     })}
-      //   </>
-      // ),
+      render: (_, { disease }) => (
+        <>
+          {"123"?.split("")?.map((value: string, index: number) => {
+            let color = value.length > 5 ? "geekblue" : "green";
+            if (value === "loser") {
+              color = "volcano";
+            }
+            return (
+              <Tag color={color} key={`${value}-${index}`} className="jura">
+                {value}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
   ];
   return (
