@@ -4,12 +4,16 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
-import { Input, DatePicker, Segmented, Button, Select } from "antd";
-import SearchIcon from "@assets/icon-search-upload.svg";
+import { Input, DatePicker, Segmented, Button } from "antd";
+import SearchIcon from "@assets/icons/icon-search-upload.svg";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
+import SortBy from "@assets/icons/sortBy.svg";
+
 
 const { RangePicker } = DatePicker;
+
+
 export default function Patient() {
   return (
     <>
@@ -18,7 +22,7 @@ export default function Patient() {
           <div className="w-full h-full">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
-                <p className="jura text-xl text-[#424241">Patient</p>
+                <p className="jura text-xl text-[#424241]">Patient</p>
               </div>
               <div className="w-[30rem]">
                 <UserProfile />
@@ -28,13 +32,24 @@ export default function Patient() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <div id="react__patient__input" className="flex space-x-2">
+                  <div id="react__patient__input" className=" flex space-x-2">
                     <Input
+                    className="w-1/4"
                       size="middle"
                       placeholder="Search by hospital number"
                       prefix={<img src={SearchIcon} />}
                     />
                     <RangePicker size="middle" />
+                    
+                    <div className="flex items-center border jura rounded-lg px-3 space-x-1">
+                      <img className="w-5" src={SortBy} alt="" />
+                      <p className="text-[#BFBFBF] w-24">Sort by :</p>
+                      <select id="select__sortBy" className=" border-[white] text-[#868686]">
+                        <option style={{color:'#868686'}} value="All">All</option>
+                        <option style={{color:'#868686'}} value="Recent">Recent</option>
+                        <option style={{color:'#868686'}} value="A-Z">A-Z</option>
+                      </select>
+                    </div>
                     <Segmented
                       size="middle"
                       options={[
@@ -45,19 +60,15 @@ export default function Patient() {
                         console.log(e);
                       }}
                     />
-                    <Select
-                      defaultValue="lucy"
-                      prefixCls="ds"
-                      bordered={false}
-                      style={{ width: 120 }}
-                      options={[{ value: "lucy", label: "Sort by :" }]}
-                    />
                     <Button className="button_add" icon={<UserAddOutlined />}>
                       Add Patient
                     </Button>
                   </div>
                   {/* Body */}
-                  <Content id="content__patient" className="flex pt-7 flex-wrap gap-2">
+                  <Content
+                    id="content__patient"
+                    className="flex pt-7 flex-wrap gap-2"
+                  >
                     <div className="flex flex-col w-64 h-44 patient_img p-3 justify-between">
                       <div className="flex flex-row justify-between text-white jura border-b-2">
                         <p className="">HN.9877065</p>
