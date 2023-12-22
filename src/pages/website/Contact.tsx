@@ -16,7 +16,7 @@ function ContactUs() {
             <div className="border-b-2 h-5 mx-3 border-[#B4B4B4] w-full"></div>
           </div>
           <div className="relative flex flex-row ">
-            <div className="border-2 p-3 rounded-lg border-[#e7e2e2]">
+            <div className="w-52 card_background border-2 rounded-lg border-[#e7e2e2]">
               <img src={doctor_women} alt="" />
             </div>
             <div className="absolute w-52 bottom-2 left-2.5 rounded-full bg-white border-[#949CB6] border-2">
