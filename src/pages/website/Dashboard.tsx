@@ -38,12 +38,12 @@ export default function Dashboard() {
                   <div id="body-content-dashboard" className="space-y-6">
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <h1 className="jura">Dashboard</h1>
+                        <h1 className="jura text-xl">Dashboard</h1>
                         <div>
                           <input
                             type="text"
                             id="search_dashboard"
-                            className="bg-[#EFEFEF] text-gray-900 text-sm rounded-full border-none focus:outline-none block w-full p-2.5"
+                            className="bg-[#EFEFEF] text-gray-900 text-sm text-center rounded-full border-none focus:outline-none block w-72 p-2.5"
                             placeholder="Search HN, Disease, Doctor"
                           />
                         </div>
@@ -83,7 +83,14 @@ export default function Dashboard() {
                       )}
                     />
                   </div>
-                  <div id="footer-content-dashboard" className="pb-6 grow">
+                  <div className="relative flex justify-center items-center">
+                    <div className="w-24 border-2 rounded-xl absolute right-0">
+                      <p className="jura text-center text-[#9198AF]">
+                        View all
+                      </p>
+                    </div>
+                  </div>
+                  <div id="footer-content-dashboard" className="pt-3 pb-5 grow">
                     <PatientTable />
                   </div>
                 </div>
