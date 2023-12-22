@@ -11,11 +11,15 @@ import {
   Space,
   Tag,
   Tooltip,
-  Modal,
   Checkbox,
   Button,
 } from "antd";
-import { LeftOutlined, PlusOutlined, UserAddOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  LeftOutlined,
+  PlusOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
@@ -23,11 +27,12 @@ import Typography from "antd/es/typography/Typography";
 import UserProfile from "@features/UserProfile";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import { selectStage } from "@constraint/constraint";
+import ConfirmModal from "@components/ConfirmModal";
 
 const { RangePicker } = DatePicker;
 export default function Patient() {
   const { token } = theme.useToken();
-  const [tags, setTags] = useState(["Tag 2", "Tag 3"]);
+  const [tags, setTags] = useState(["Diabete", "Wound"]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -124,17 +129,11 @@ export default function Patient() {
     });
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const showModal = () => {
     setIsModalOpen(true);
   };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
   return (
     <>
@@ -157,9 +156,32 @@ export default function Patient() {
               <Segmented
                 className="jura mt-4"
                 options={[
-                  "Overview",
-                  "Comparative Imaging",
-                  "Wound Progression",
+                  {
+                    label: "Overview",
+                    value: "Overview",
+                  },
+                  {
+                    label: (
+                      <div id="text__primary" className="flex space-x-2">
+                        <p>Comparative Imaging</p>
+                        <Tooltip title="test">
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </div>
+                    ),
+                    value: "Comparative Imaging",
+                  },
+                  {
+                    label: (
+                      <div id="text__primary" className="flex space-x-2">
+                        <p>Wound Progression</p>
+                        <Tooltip title="test">
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </div>
+                    ),
+                    value: "Wound Progression",
+                  },
                 ]}
                 onChange={(stage: any) => setStageSegmented(stage)}
               />
@@ -177,13 +199,12 @@ export default function Patient() {
                     <RangePicker size="middle" />
                     <Select
                       defaultValue="lucy"
-                      prefixCls="ds"
                       bordered={false}
                       style={{ width: 120 }}
                       options={[{ value: "lucy", label: "Sort by :" }]}
                     />
                     <Button className="button_add" icon={<UserAddOutlined />}>
-                      Add Patient
+                      Add Image
                     </Button>
                   </div>
                   <div className="flex space-x-2 items-center">
@@ -193,21 +214,18 @@ export default function Patient() {
                     <Select
                       // showSearch
                       style={{ width: 200 }}
-                      placeholder="Search to Select"
-                      defaultValue={"Improved"}
+                      placeholder="Select"
                       options={selectStage}
                     />
                     <Space size={[0, 8]} wrap>
-                      <Modal
-                        title="Basic Modal"
-                        open={isModalOpen}
-                        onOk={handleOk}
-                        onCancel={handleCancel}
-                      >
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
-                      </Modal>
+                      <ConfirmModal
+                        title="Are you sure ?"
+                        description="Are you sure that the hospital number you entered is 9877069?"
+                        isOpen={isModalOpen}
+                        confirmLoading={true}
+                        onSubmit={handleModal}
+                        onCancel={handleModal}
+                      />
                       <Typography id="text__primary">Disease :</Typography>
                       {tags.map((tag, index) => {
                         if (editInputIndex === index) {
@@ -366,9 +384,14 @@ export default function Patient() {
               className="h-20 flex flex-col items-end justify-center px-8"
               style={{ boxShadow: "0px -4px 9px 0px rgba(0, 0, 0, 0.15)" }}
             >
-              <button className="px-8 py-0.5 jura text-[#424241] rounded-md border border-[#9198AF]">
-                Select
-              </button>
+              <div className="flex items-center space-x-6">
+                <Typography id="text__primary">
+                  Select {tags.length} Images
+                </Typography>
+                <button className="px-8 py-0.5 jura text-[#424241] rounded-md border border-[#9198AF]">
+                  {stageSegmented != "Overview" ? "Confirm" : "Select"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,31 +1,14 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { getInstanceLocal } from "@api/apiClient";
+import DropdownField from "@components/DropdownField";
+import { IDoctor, IManagement } from "@constraint/constraint";
 import UserProfile from "@features/UserProfile";
-import { Select, Table, Tag, Typography } from "antd";
+import { App, Select, Table, Tag, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useState, useEffect } from "react";
 
 // const { RangePicker } = DatePicker;
-interface IManagement {
-  hn_id: string;
-  line_uid: string | null;
-  doctor_assign: string | null;
-  status: string | null;
-  stage: string | null;
-  created_at: Date;
-  updated_at: Date;
-  disease?: string | null;
-}
-
-interface IDoctor {
-  user_id: string;
-  doctor_id: string;
-  doctor_firstname: string | null;
-  doctor_lastname: string | null;
-  doctor_type: string;
-  line_uid: string | null;
-}
 export default function Management() {
   useEffect(() => {
     getInstanceLocal()
@@ -33,17 +16,11 @@ export default function Management() {
       .then((res) => {
         setData(res.data);
         setLoading(false);
-      });
-    getInstanceLocal()
-      .get("/doctor")
-      .then((res) => {
-        setDoctor(res.data);
         console.log(res.data);
       });
   }, []);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IManagement[]>([]);
-  const [doctor, setDoctor] = useState<IDoctor[]>([]);
   const columns: ColumnsType<IManagement> = [
     {
       title: "Hospital No.",
@@ -69,20 +46,7 @@ export default function Management() {
       dataIndex: "doctor_assign",
       key: "doctor_assign",
       render: (_, { doctor_assign }) => (
-        <>
-          <Select
-            showSearch
-            className="w-36"
-            placeholder="Select"
-            defaultValue={doctor_assign}
-            optionFilterProp="children"
-            options={doctor.map((doctor) => {
-              const label = `${doctor.doctor_firstname}  ${doctor.doctor_lastname}`;
-              const value = doctor.doctor_id;
-              return { label, value };
-            })}
-          />
-        </>
+        <DropdownField data={doctor_assign} />
       ),
     },
     {
@@ -151,7 +115,7 @@ export default function Management() {
                     dataSource={data}
                     columns={columns}
                     loading={loading}
-                    tableLayout={"fixed"}
+                    tableLayout="fixed"
                     rowKey={(_, index) => `table__row__${index}`}
                   />
                 </div>

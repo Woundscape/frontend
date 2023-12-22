@@ -54,9 +54,9 @@ export default function Menu() {
         <NavLink
           to={item.pathname}
           className={`flex py-3 px-4 rounded-lg ${
-            pathName === item.pathname ? "bg-[#D2D7EB]" : "hover:bg-[#EEEEEE]"
+            pathName.startsWith(item.pathname) ? "bg-[#D2D7EB]" : "hover:bg-[#EEEEEE]"
           }`}
-        >
+          >
           <img src={item.icon} width={20} alt="" />
           <span className="ml-3 text-sm jura">{item.title}</span>
         </NavLink>

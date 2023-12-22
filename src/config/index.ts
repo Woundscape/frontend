@@ -15,8 +15,17 @@ export const themeConfig: ThemeConfig = {
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
     },
+    Button:{
+      colorPrimaryHover: 'none'
+    },
     Select:{
-      fontFamily: 'jura'
+      fontFamily: 'jura',
+      zIndexPopup:50,
+    },
+    Modal:{
+      titleColor:'#4C577C',
+      fontFamily:'jura',
+      wireframe:true,
     }
   },
 };

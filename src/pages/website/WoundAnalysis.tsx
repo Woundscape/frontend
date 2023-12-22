@@ -6,6 +6,7 @@ import {
   InputNumber,
   Modal,
   Popover,
+  Slider,
 } from "antd";
 import UserProfile from "@features/UserProfile";
 import {
@@ -169,6 +170,20 @@ export default function WoundAnalysis() {
             <p className="jura text-[#424241]">{item.title}</p>
           </Button>
         ))}
+        <Slider
+          min={0}
+          max={100}
+          value={opacityVal}
+          railStyle={{ height: 10, borderRadius: "0.625rem" }}
+          handleStyle={{
+            height: "100%",
+          }}
+          trackStyle={{
+            padding: 10,
+            borderRadius: "0.625rem",
+            backgroundColor: "#D8C290",
+          }}
+        />
       </div>
     );
   }
@@ -515,6 +530,7 @@ export default function WoundAnalysis() {
                           </div>
                           <div
                             id="tools_tissue"
+                            title="Hidden"
                             onClick={() => {
                               if (hideTissue.includes(item.color)) {
                                 let tissue = hideTissue.filter(
@@ -549,21 +565,7 @@ export default function WoundAnalysis() {
                             }}
                           />
                         </div>
-                        {/* <Slider
-                          min={0}
-                          max={100}
-                          value={opacityVal}
-                          railStyle={{ height: 10, borderRadius: "0.625rem" }}
-                          handleStyle={{
-                            height: "100%",
-                          }}
-                          trackStyle={{
-                            padding: 10,
-                            borderRadius: "0.625rem",
-                            backgroundColor: "#D8C290",
-                          }}
-                          onChange={handleOpacity}
-                        /> */}
+
                         <div className="canvas__slider___range">
                           <input
                             type="range"
