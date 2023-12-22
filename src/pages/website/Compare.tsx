@@ -1,11 +1,7 @@
 import {
-  AppstoreOutlined,
-  BarsOutlined,
   LeftOutlined,
-  UserAddOutlined,
 } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
-import { Input, DatePicker, Segmented, Button, Select } from "antd";
 import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import { Content } from "antd/es/layout/layout";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";

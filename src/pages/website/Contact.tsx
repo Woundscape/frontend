@@ -1,5 +1,4 @@
 import logo_wound from "@assets/logo-wound.svg";
-import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
 import doctor_women from "@assets/doctor_women.svg"
 function ContactUs() {

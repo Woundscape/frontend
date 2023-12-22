@@ -1,4 +1,4 @@
-import { Layout, List, Statistic } from "antd";
+import { Layout, List } from "antd";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
 import PatientTable from "@features/PatientTable";
@@ -39,6 +39,7 @@ export default function Dashboard() {
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex justify-between items-center">
                         <h1 className="jura text-xl">Dashboard</h1>
+                        
                         <div>
                           <input
                             type="text"
