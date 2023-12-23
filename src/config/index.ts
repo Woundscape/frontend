@@ -26,6 +26,6 @@ export const themeConfig: ThemeConfig = {
       titleColor:'#4C577C',
       fontFamily:'jura',
       wireframe:true,
-    }
+    },
   },
 };

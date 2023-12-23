@@ -10,7 +10,7 @@ import Logo_Wound from "@assets/logo-wound.svg";
 import ImageMenu from "./ImageMenu";
 import { List } from "antd";
 
-export interface IMenu {
+interface IMenu {
   title: string;
   pathname: string;
   icon: string;

@@ -54,7 +54,7 @@
 
 #text__primary {
   font-family: jura;
-  color: #4C577C;
+  color: #4c577c;
   padding-right: 5px;
 }
 
@@ -283,7 +283,7 @@ abbr[title] {
   border-width: 2px;
   color: #4c577c;
 }
-.patient_img {  
+.patient_img {
   filter: saturate(50%);
   border-radius: 15px;
   background-size: cover;

@@ -2,17 +2,14 @@ import { Image, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import MockupEquipment from "@assets/mockup_equip_history.svg";
-import { getInstanceLocal } from "@api/apiClient";
+import getAllEquipment from "@api-caller/equipApi";
 
 export default function EquipmentTab() {
   const [data, setData] = useState([]);
   useEffect(() => {
-    getInstanceLocal()
-      .get("/equipment")
-      .then((res: any) => {
-        console.log(res.data);
-        setData(res.data);
-      });
+    getAllEquipment().then((response: any) => {
+      setData(response);
+    });
   }, []);
 
   const [btnEquip, setBtnEquip] = useState(false);
