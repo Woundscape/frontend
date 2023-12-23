@@ -4,15 +4,20 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import UserProfile from "@features/UserProfile";
-import { Input, DatePicker, Segmented, Button } from "antd";
+import {
+  Input,
+  DatePicker,
+  Segmented,
+  Button,
+  Select,
+  ConfigProvider,
+} from "antd";
 import SearchIcon from "@assets/icons/icon-search-upload.svg";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 
-
 const { RangePicker } = DatePicker;
-
 
 export default function Patient() {
   return (
@@ -34,21 +39,33 @@ export default function Patient() {
                   {/* Input Filter */}
                   <div id="react__patient__input" className=" flex space-x-2">
                     <Input
-                    className="w-1/4"
+                      className="w-1/4"
                       size="middle"
                       placeholder="Search by hospital number"
                       prefix={<img src={SearchIcon} />}
                     />
                     <RangePicker size="middle" />
-                    
+
                     <div className="flex items-center border jura rounded-lg px-3 space-x-1">
                       <img className="w-5" src={SortBy} alt="" />
-                      <p className="text-[#BFBFBF] w-24">Sort by :</p>
-                      <select id="select__sortBy" className=" border-[white] text-[#868686]">
-                        <option style={{color:'#868686'}} value="All">All</option>
-                        <option style={{color:'#868686'}} value="Recent">Recent</option>
-                        <option style={{color:'#868686'}} value="A-Z">A-Z</option>
-                      </select>
+                      <p className="text-[#BFBFBF]">Sort by :</p>
+                      <ConfigProvider
+                        theme={{
+                          components: {
+                            Select: { colorBorder: "" },
+                          },
+                        }}
+                      >
+                        <Select
+                          id="select__sortBy"
+                          className="w-24 outline-none border-[white] text-[#868686]"
+                          defaultValue="All"
+                          bordered={false}
+                          placeholder=''
+                          options={[{ value: "All", label: "All" },
+                          { value: "Unread", label: "Unread" }]}
+                        />
+                      </ConfigProvider>
                     </div>
                     <Segmented
                       size="middle"
