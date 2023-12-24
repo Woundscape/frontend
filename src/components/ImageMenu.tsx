@@ -1,5 +1,5 @@
 import { getInstance } from "@api/apiTest";
-import { Image, List, Typography } from "antd";
+import { List, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 export interface IWound {

@@ -1,7 +1,14 @@
 import { DefaultOptionType } from "antd/es/select";
 
 
-export interface IManagement {
+export interface IFormattedErrorResponse {
+  message?: string;
+  infoMessage?: string;
+  status?: number;
+  statusText?: string;
+}
+
+export interface ICase {
   case_id: string;
   hn_id: string;
   line_uid: string | null;

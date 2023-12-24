@@ -1,31 +1,48 @@
 import { LeftOutlined } from "@ant-design/icons";
-import { getInstanceLocal } from "@api/apiClient";
-import DropdownField from "@components/DropdownField";
-import { IDoctor, IManagement } from "@constraint/constraint";
+import { getAllCase, updateCase } from "@api-caller/caseApi";
+import { DropdownField } from "@components/DropdownField";
+import { ICase, IFormattedErrorResponse } from "@constraint/constraint";
+import { formatTimeDifference } from "@features/FormatDate";
 import UserProfile from "@features/UserProfile";
-import { App, Select, Table, Tag, Typography } from "antd";
+import { UseMutationResult, useMutation } from "react-query";
+import { Table, Tag, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useState, useEffect } from "react";
 
 // const { RangePicker } = DatePicker;
 export default function Management() {
+  const updateMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    { params: string; body: any }
+  > = useMutation(updateCase);
   useEffect(() => {
-    getInstanceLocal()
-      .get("/patient")
-      .then((res) => {
-        setData(res.data);
-        setLoading(false);
-        console.log(res.data);
-      });
-  }, []);
+    getAllCase().then((data) => {
+      const sortedData = data.sort(
+        (a: any, b: any) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+      setData(sortedData);
+      setLoading(false);
+    });
+  }, [updateMutation.data]);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<IManagement[]>([]);
-  const columns: ColumnsType<IManagement> = [
+  const [data, setData] = useState<ICase[]>([]);
+  const columns: ColumnsType<ICase> = [
     {
       title: "Hospital No.",
       dataIndex: "hn_id",
       key: "hn_id",
+      render(value: string, _, index) {
+        return (
+          <>
+            <Typography key={index} className="jura truncate">
+              {value}
+            </Typography>
+          </>
+        );
+      },
     },
     {
       title: "User id.",
@@ -45,8 +62,12 @@ export default function Management() {
       title: "Doctor",
       dataIndex: "doctor_assign",
       key: "doctor_assign",
-      render: (_, { doctor_assign }) => (
-        <DropdownField data={doctor_assign} />
+      render: (_, data, index) => (
+        <DropdownField
+          key={index}
+          data={data}
+          updateMutation={updateMutation}
+        />
       ),
     },
     {
@@ -63,11 +84,21 @@ export default function Management() {
       title: "Last Updated",
       dataIndex: "updated_at",
       key: "updated_at",
+      render: (_, { updated_at }, index) => (
+        <Typography key={index} id="text__primary">
+          {formatTimeDifference(updated_at)}
+        </Typography>
+      ),
     },
     {
       title: "Start date & time",
       dataIndex: "created_at",
       key: "created_at",
+      render: (_, { created_at }, index) => (
+        <Typography key={index} id="text__primary">
+          {formatTimeDifference(created_at)}
+        </Typography>
+      ),
     },
     {
       title: "Disease",
