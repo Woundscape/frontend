@@ -1,9 +1,15 @@
 import UnreadIcon from "@assets/unread-noti-icon.svg";
-import { List, Avatar, Divider } from "antd";
+import { List, Avatar, Divider, Modal } from "antd";
+import { useState } from "react";
+import NotiAll from "@assets/icons/all_noti.svg";
+import PatientNote from "@assets/icons/patient_note_noti.svg";
+import SuggestNoti from "@assets/icons/sugggest_noti.svg";
+
 export default function ListNotification() {
-  function openModal() {
-    return false;
-  }
+  const [openModal, setOpenModal] = useState(false);
+  const handleModal = () => {
+    setOpenModal(!openModal);
+  };
   const data = [
     {
       id: "Consult #6643793",
@@ -49,10 +55,60 @@ export default function ListNotification() {
           <h1 className=" text-md text-[#4C577C]">Notification</h1>
           <p
             className="cursor-pointer text-sm text-[#9198AF]"
-            onClick={openModal}
+            onClick={handleModal}
           >
             View all
           </p>
+          <Modal
+            open={openModal}
+            onOk={handleModal}
+            onCancel={handleModal}
+            width={630}
+            style={{
+              borderRadius: "1.25rem",
+            }}
+          >
+            <div className="flex flex-col space-y-5 h-96">
+              <div className="w-full text-[#4C577C] text-lg">Notification</div>
+              <Divider className="m-0" />
+              <div className="flex text-[#4C577C] space-x-7">
+                <div className="flex justify-center items-center cursor-pointer rounded-full space-x-2 bg-[#EEEEEE] w-[4.5rem] ">
+                  <img src={NotiAll} className="w-5.5" alt="" />
+                  <p>All</p>
+                </div>
+                <div className="flex space-x-1.5 cursor-pointer">
+                  <img className="w-5" src={PatientNote} alt="" />
+                  <p className="w-24">Patient note</p>
+                </div>
+                <div className="flex space-x-1.5 cursor-pointer">
+                  <img className="w-5" src={SuggestNoti} alt="" />
+                  <p className="w-24">Suggestion</p>
+                </div>
+              </div>
+              <div className="flex flex-col h-24 overflow-y-auto grow">
+                <List
+                  dataSource={data}
+                  renderItem={(item, index) => (
+                    <List.Item key={index}>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar src={UnreadIcon} className="rounded-none" />
+                        }
+                        className="p-4 jura hover:bg-[#f2f1f1]"
+                        title={
+                          <p>
+                            {item.message}{" "}
+                            <span className="text-[#61708C]">{item.id}</span>
+                          </p>
+                        }
+                        description={item.time}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </div>
+            </div>
+          </Modal>
         </div>
         <Divider className="m-0" />
         <div className="flex flex-col h-24 overflow-y-auto grow">
