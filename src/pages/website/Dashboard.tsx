@@ -26,6 +26,7 @@ export default function Dashboard() {
       value: "3",
     },
   ];
+  
   return (
     <>
       <Layout className="w-full h-screen relative">
@@ -98,14 +99,14 @@ export default function Dashboard() {
               </div>
             </div>
           </Content>
-          {/* Right Sidebar */}
-          <div className="w-[30rem] relative py-4 px-4">
-            <div className="relative w-full h-full flex">
-              <div className="flex flex-col w-full h-full space-y-3">
-                <UserProfile />
-                <ListNotification />
-                <DynamicTime />
-                <div id="calendar">
+            {/* Right Sidebar */}
+            <div className="w-[30rem] relative py-4 px-4">
+              <div className="relative w-full h-full flex">
+                <div className="flex flex-col w-full h-full space-y-3">
+                  <UserProfile />
+                  <ListNotification />
+                  <DynamicTime />
+                  <div id="calendar">
                   <Calendar
                     formatShortWeekday={(_: any, value: any) =>
                       ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][value.getDay()]
