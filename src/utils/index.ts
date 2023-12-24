@@ -7,9 +7,8 @@ export function formattedError(
   if (isAxiosError(error)) {
     const response = error.response;
     if (response) {
-      const { message, info } = response.data;
-      const infoMessage = info?.message ?? '';
-
+      const { message, info, errors } = response.data;
+      const infoMessage = errors ?? '';
       return {
         message,
         infoMessage,

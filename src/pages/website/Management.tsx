@@ -1,14 +1,14 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { getAllCase, updateCase } from "@api-caller/caseApi";
-import { DropdownField } from "@components/DropdownField";
-import { ICase, IFormattedErrorResponse } from "@constraint/constraint";
-import { formatTimeDifference } from "@features/FormatDate";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constraint/constraint";
 import UserProfile from "@features/UserProfile";
 import { UseMutationResult, useMutation } from "react-query";
-import { Table, Tag, Typography } from "antd";
+import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useState, useEffect } from "react";
+import { getColumns } from "@components/Management/ColumnTable";
+import getAllDoctor from "@api-caller/doctorApi";
 
 // const { RangePicker } = DatePicker;
 export default function Management() {
@@ -24,103 +24,16 @@ export default function Management() {
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
       setData(sortedData);
-      setLoading(false);
+      getAllDoctor().then((doctors)=>{
+        setDoctors(doctors)
+        setLoading(false);
+      })
     });
   }, [updateMutation.data]);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ICase[]>([]);
-  const columns: ColumnsType<ICase> = [
-    {
-      title: "Hospital No.",
-      dataIndex: "hn_id",
-      key: "hn_id",
-      render(value: string, _, index) {
-        return (
-          <>
-            <Typography key={index} className="jura truncate">
-              {value}
-            </Typography>
-          </>
-        );
-      },
-    },
-    {
-      title: "User id.",
-      dataIndex: "line_uid",
-      key: "line_uid",
-      render(value, _, index) {
-        return (
-          <>
-            <Typography key={index} className="jura truncate">
-              {value}
-            </Typography>
-          </>
-        );
-      },
-    },
-    {
-      title: "Doctor",
-      dataIndex: "doctor_assign",
-      key: "doctor_assign",
-      render: (_, data, index) => (
-        <DropdownField
-          key={index}
-          data={data}
-          updateMutation={updateMutation}
-        />
-      ),
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
-    {
-      title: "Progression Stage",
-      dataIndex: "stage",
-      key: "stage",
-    },
-    {
-      title: "Last Updated",
-      dataIndex: "updated_at",
-      key: "updated_at",
-      render: (_, { updated_at }, index) => (
-        <Typography key={index} id="text__primary">
-          {formatTimeDifference(updated_at)}
-        </Typography>
-      ),
-    },
-    {
-      title: "Start date & time",
-      dataIndex: "created_at",
-      key: "created_at",
-      render: (_, { created_at }, index) => (
-        <Typography key={index} id="text__primary">
-          {formatTimeDifference(created_at)}
-        </Typography>
-      ),
-    },
-    {
-      title: "Disease",
-      dataIndex: "disease",
-      key: "disease",
-      render: (_, { disease }) => (
-        <>
-          {"123"?.split("")?.map((value: string, index: number) => {
-            let color = value.length > 5 ? "geekblue" : "green";
-            if (value === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={`${value}-${index}`} className="jura">
-                {value}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-  ];
+  const [doctors, setDoctors] = useState<IDoctor[]>([])
+  const columns: ColumnsType<ICase> = getColumns({ updateMutation, doctors });
   return (
     <>
       <div className="w-full h-screen relative">
@@ -139,7 +52,6 @@ export default function Management() {
               <div className="w-full flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-
                   {/* Body */}
                   <Table
                     id="management__table__patient"

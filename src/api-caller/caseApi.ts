@@ -2,7 +2,7 @@ import { ICase } from "@constraint/constraint";
 import { getInstanceLocal } from "../api/apiClient";
 import { formattedError } from "@utils";
 
-export const getAllCase = async (query = ""): Promise<ICase[]> => {
+export const getAllCase = async (): Promise<ICase[]> => {
   try {
     const { data } = await getInstanceLocal().get("/case");
     return data;
@@ -22,8 +22,6 @@ export const updateCase = async ({
     const { data } = await getInstanceLocal().put(`/case/assignee/${params}`, {
       doctor_id: body.doctor_id,
     });
-    console.log("update", data);
-
     return data === "Successfully";
   } catch (error) {
     throw formattedError(error);

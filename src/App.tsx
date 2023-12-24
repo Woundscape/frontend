@@ -54,7 +54,7 @@ function LineRoutes() {
 function AuthRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<AuthLayout />}>
+      <Route path="/" element={ <AuthLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
         <Route path="patient/:id" element={<PatientDetail />} />
