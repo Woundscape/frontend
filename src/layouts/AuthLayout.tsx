@@ -1,7 +1,9 @@
+import { useAuth } from "@components/AuthProvider";
 import Menu from "@components/Menu";
 import { Outlet } from "react-router-dom";
 
 export default function AuthLayout() {
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <div className="flex w-full bg-[#EEEEEE] relative">

@@ -6,12 +6,16 @@ import ListNotification from "@features/ListNotification";
 import UserProfile from "@features/UserProfile";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
+import { useLoading } from "@components/Loading";
 
 export interface CardPatient {
   title: string;
   value: string;
 }
+
 export default function Dashboard() {
+  // const { changeLoading } = useLoading();
+  // changeLoading(false)
   const card: CardPatient[] = [
     {
       title: "Total",
@@ -26,7 +30,7 @@ export default function Dashboard() {
       value: "3",
     },
   ];
-  
+
   return (
     <>
       <Layout className="w-full h-screen relative">
@@ -40,7 +44,7 @@ export default function Dashboard() {
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex justify-between items-center">
                         <h1 className="jura text-xl">Dashboard</h1>
-                        
+
                         <div>
                           <input
                             type="text"
@@ -99,14 +103,14 @@ export default function Dashboard() {
               </div>
             </div>
           </Content>
-            {/* Right Sidebar */}
-            <div className="w-[30rem] relative py-4 px-4">
-              <div className="relative w-full h-full flex">
-                <div className="flex flex-col w-full h-full space-y-3">
-                  <UserProfile />
-                  <ListNotification />
-                  <DynamicTime />
-                  <div id="calendar">
+          {/* Right Sidebar */}
+          <div className="w-[30rem] relative py-4 px-4">
+            <div className="relative w-full h-full flex">
+              <div className="flex flex-col w-full h-full space-y-3">
+                <UserProfile />
+                <ListNotification />
+                <DynamicTime />
+                <div id="calendar">
                   <Calendar
                     formatShortWeekday={(_: any, value: any) =>
                       ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][value.getDay()]

@@ -14,7 +14,7 @@ import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset";
 import ContactUs from "@pages/website/Contact";
-import NewPass from "@pages/website/NewPassword"
+import NewPass from "@pages/website/NewPassword";
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp";
@@ -23,6 +23,7 @@ import HistoryLine from "@pages/line/History";
 
 import TestPred from "@pages/website/testPred";
 import { LoadingProvider } from "@components/Loading";
+import { AuthProvider } from "@components/AuthProvider";
 
 function App() {
   return (
@@ -54,7 +55,14 @@ function LineRoutes() {
 function AuthRoutes() {
   return (
     <Routes>
-      <Route path="/" element={ <AuthLayout />}>
+      <Route
+        path="/"
+        element={
+          // <AuthProvider>
+            <AuthLayout />
+          // </AuthProvider>
+        }
+      >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
         <Route path="patient/:id" element={<PatientDetail />} />

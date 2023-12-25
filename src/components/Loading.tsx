@@ -16,7 +16,8 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  console.log('dsds');
+  
   const changeLoading = (loadingState: boolean) => {
     setIsLoading(loadingState);
   };
@@ -40,6 +41,7 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
             zIndex: 9999,
           }}
         >
+          {children}
           <Spin size="large" />
         </div>
       ) : (

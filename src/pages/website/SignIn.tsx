@@ -8,10 +8,21 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { useState } from "react";
-import { IFormInputsLogin, login } from "@api-caller/authenApi";
+import {
+  IFormInputsLogin,
+  LoginSuccessResponse,
+  login,
+} from "@api-caller/authenApi";
 import { useNavigate } from "react-router-dom";
+import { UseMutationResult, useMutation } from "react-query";
+import { IFormattedErrorResponse } from "@constraint/constraint";
 function Signin() {
-  const router = useNavigate()
+  const router = useNavigate();
+  const loginMutation: UseMutationResult<
+    LoginSuccessResponse,
+    IFormattedErrorResponse,
+    IFormInputsLogin
+  > = useMutation(login);
   const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
     user_email: "",
     user_password: "",
@@ -22,6 +33,15 @@ function Signin() {
       ...prevValues,
       [name]: value,
     }));
+  };
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    loginMutation.mutate(formInputs, {
+      onSuccess: (data) => {
+        sessionStorage.setItem('token', JSON.stringify(data.accessToken))
+        router('/dashboard')
+      },
+    });
   };
   const signInGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -36,11 +56,6 @@ function Signin() {
         });
     },
   });
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const response = await login(formInputs);
-    console.log(response);
-  };
   return (
     <div className="wound-background w-full bg-white h-screen">
       <div className="w-full h-full flex flex-row justify-between p-4">
