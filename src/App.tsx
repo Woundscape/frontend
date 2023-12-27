@@ -58,9 +58,11 @@ function AuthRoutes() {
       <Route
         path="/"
         element={
-          // <AuthProvider>
-            <AuthLayout />
-          // </AuthProvider>
+          <LoadingProvider>
+            <AuthProvider>
+              <AuthLayout />
+            </AuthProvider>
+          </LoadingProvider>
         }
       >
         <Route path="dashboard" element={<Dashboard />} />

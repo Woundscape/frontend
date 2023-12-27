@@ -16,8 +16,7 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  console.log('dsds');
-  
+
   const changeLoading = (loadingState: boolean) => {
     setIsLoading(loadingState);
   };
@@ -27,23 +26,25 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <LoadingContext.Provider value={contextValue}>
       {isLoading ? (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(255, 255, 255, 0.5)",
-            zIndex: 9999,
-          }}
-        >
-          {children}
-          <Spin size="large" />
-        </div>
+        <>
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(255, 255, 255, 0.1)",
+              zIndex: 9999,
+            }}
+          >
+            <Spin size="large" />
+            {children}
+          </div>
+        </>
       ) : (
         children
       )}
