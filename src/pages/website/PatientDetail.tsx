@@ -4,34 +4,27 @@ import { Content } from "antd/es/layout/layout";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import {
   Input,
-  DatePicker,
   Segmented,
   Select,
-  theme,
   Space,
   Tag,
   Tooltip,
   Checkbox,
   Button,
 } from "antd";
-import {
-  InfoCircleOutlined,
-  LeftOutlined,
-  PlusOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
 import Typography from "antd/es/typography/Typography";
 import UserProfile from "@features/UserProfile";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import { selectStage } from "@constraint/constraint";
 import ConfirmModal from "@components/ConfirmModal";
+import { optionSegmented } from "@utils/option";
+import DefaultInput from "@components/Patient/DefaultInput";
+import { tagInputStyle, tagPlusStyle } from "@config";
 
-const { RangePicker } = DatePicker;
 export default function Patient() {
-  const { token } = theme.useToken();
   const [tags, setTags] = useState(["Diabete", "Wound"]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -93,17 +86,7 @@ export default function Patient() {
     setEditInputValue("");
   };
 
-  const tagInputStyle: React.CSSProperties = {
-    width: 64,
-    height: 22,
-    marginInlineEnd: 8,
-    verticalAlign: "top",
-  };
-
-  const tagPlusStyle: React.CSSProperties = {
-    background: token.colorBgContainer,
-    borderStyle: "dashed",
-  };
+  const filterPatient = (e: any) => {};
   function renderImage() {
     return "abcderfg".split("").map((value, index) => {
       return (
@@ -154,35 +137,8 @@ export default function Patient() {
                 </div>
               </div>
               <Segmented
-                className="jura mt-4"
-                options={[
-                  {
-                    label: "Overview",
-                    value: "Overview",
-                  },
-                  {
-                    label: (
-                      <div id="text__primary" className="flex space-x-2">
-                        <p>Comparative Imaging</p>
-                        <Tooltip title="test">
-                          <InfoCircleOutlined />
-                        </Tooltip>
-                      </div>
-                    ),
-                    value: "Comparative Imaging",
-                  },
-                  {
-                    label: (
-                      <div id="text__primary" className="flex space-x-2">
-                        <p>Wound Progression</p>
-                        <Tooltip title="test">
-                          <InfoCircleOutlined />
-                        </Tooltip>
-                      </div>
-                    ),
-                    value: "Wound Progression",
-                  },
-                ]}
+                className="jura mt-4 select-none"
+                options={optionSegmented}
                 onChange={(stage: any) => setStageSegmented(stage)}
               />
             </header>
@@ -190,29 +146,12 @@ export default function Patient() {
               <div className="flex h-full space-x-6">
                 <div className="w-full h-full flex flex-col space-y-2">
                   {/* Input Filter */}
-                  <div id="react__patient__input" className="flex space-x-2">
-                    <Input
-                      size="middle"
-                      placeholder="Search by hospital number"
-                      prefix={<img src={SearchIcon} />}
-                    />
-                    <RangePicker size="middle" />
-                    <Select
-                      defaultValue="lucy"
-                      bordered={false}
-                      style={{ width: 120 }}
-                      options={[{ value: "lucy", label: "Sort by :" }]}
-                    />
-                    <Button className="button_add" icon={<UserAddOutlined />}>
-                      Add Image
-                    </Button>
-                  </div>
+                  <DefaultInput onFilter={filterPatient} images />
                   <div className="flex space-x-2 items-center">
                     <Typography id="text__primary">
                       Progression Stage :
                     </Typography>
                     <Select
-                      // showSearch
                       style={{ width: 200 }}
                       placeholder="Select"
                       options={selectStage}
@@ -312,7 +251,7 @@ export default function Patient() {
                           data-date="17 Jan"
                         >
                           <Checkbox.Group
-                            style={{ width: "100%" }}
+                            className="w-full"
                             onChange={onChange}
                           >
                             {renderImage()}
@@ -388,9 +327,9 @@ export default function Patient() {
                 <Typography id="text__primary">
                   Select {tags.length} Images
                 </Typography>
-                <button className="px-8 py-0.5 jura text-[#424241] rounded-md border border-[#9198AF]">
+                <Button className="w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF]">
                   {stageSegmented != "Overview" ? "Confirm" : "Select"}
-                </button>
+                </Button>
               </div>
             </div>
           </div>

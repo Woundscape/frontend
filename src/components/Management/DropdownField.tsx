@@ -82,7 +82,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           defaultActiveFirstOption
           className="w-full"
           placeholder="Select"
-          value={selectValue || null}
+          value={data.doctor_assign || null}
           loading={selectLoading}
           optionFilterProp="children"
           onDropdownVisibleChange={(open) => {}}

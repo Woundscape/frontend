@@ -44,3 +44,15 @@ export const themeConfig: ThemeConfig = {
     }
   },
 };
+
+export const tagInputStyle: React.CSSProperties = {
+  width: 64,
+  height: 22,
+  marginInlineEnd: 8,
+  verticalAlign: "top",
+};
+
+export const tagPlusStyle: React.CSSProperties = {
+  borderStyle: "dashed",
+};
+

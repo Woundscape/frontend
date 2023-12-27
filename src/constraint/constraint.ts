@@ -29,6 +29,16 @@ export interface IDoctor {
   line_uid: string | null;
 }
 
+export interface IPatient {
+  case_id: string;
+  hn_id: string;
+  status: string;
+  stage: string;
+  disease: any;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export enum IStage {
   SPECIAL = "Special",
   UNSTABLE = "Unstable",

@@ -198,6 +198,12 @@ abbr[title] {
   justify-content: center;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
   background: #f8f8fa;
@@ -465,6 +471,7 @@ input[type="range"]::-moz-range-thumb {
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
   border-bottom: 1.5px solid var(--gray) !important;
+  cursor: pointer;
 }
 
 #management__table__patient > div > div > table > tbody > tr > td:first-child {
