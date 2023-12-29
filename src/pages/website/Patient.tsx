@@ -1,7 +1,5 @@
 import UserProfile from "@features/UserProfile";
-import {
-  Table,
-} from "antd";
+import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import { useEffect, useState } from "react";
@@ -12,7 +10,6 @@ import { SegmentedValue } from "antd/es/segmented";
 import { useNavigate } from "react-router-dom";
 import { ICase, IPatient } from "@constraint/constraint";
 import DefaultInput from "@components/Patient/DefaultInput";
-
 
 export default function Patient() {
   const router = useNavigate();
@@ -37,9 +34,9 @@ export default function Patient() {
     );
     setPatient(filteredpatient);
   };
-  const onChangeView = (e: SegmentedValue) =>{
-    setView(e.toString())
-  }
+  const onChangeView = (e: SegmentedValue) => {
+    setView(e.toString());
+  };
   return (
     <>
       <div className="w-full h-screen relative">
@@ -57,7 +54,11 @@ export default function Patient() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <DefaultInput onFilter={filterPatient} onChangeView={onChangeView} segmented/>
+                  <DefaultInput
+                    onFilter={filterPatient}
+                    onChangeView={onChangeView}
+                    segmented
+                  />
                   {/* Body */}
                   <Content id="content__patient" className="pt-7">
                     {view == "Image" ? (
@@ -90,6 +91,10 @@ export default function Patient() {
                         onRow={(record: ICase) => ({
                           onClick: (e) => router(`/patient/${record.case_id}`),
                         })}
+                        pagination={{
+                          defaultPageSize: 2,
+                          showSizeChanger: false,
+                        }}
                       />
                     )}
                   </Content>

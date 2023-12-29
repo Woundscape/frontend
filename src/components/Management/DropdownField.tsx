@@ -64,8 +64,8 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
     );
   };
   useEffect(() => {
-    if (doctor){
-      setSelectLoading(false)
+    if (doctor) {
+      setSelectLoading(false);
     }
     setSelectValue(data.doctor_assign);
   }, [data]);

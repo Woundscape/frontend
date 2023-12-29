@@ -14,6 +14,8 @@ import {
 import SearchIcon from "@assets/icon-search-upload.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { SegmentedValue } from "antd/es/segmented";
+import UploadModal from "./UploadModal";
+import { useState } from "react";
 
 const { RangePicker } = DatePicker;
 
@@ -30,6 +32,14 @@ export default function DefaultInput({
   onFilter,
   onChangeView,
 }: IDefaultInputProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const onCancel = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  const onSubmit = () => {
+    setSubmitLoading(true);
+  };
   return (
     <>
       <div id="react__patient__input" className="flex space-x-2">
@@ -80,9 +90,25 @@ export default function DefaultInput({
             Add Patient
           </Button>
         ) : (
-          <Button className="button_add" icon={<UserAddOutlined />}>
-            Add Image
-          </Button>
+          <>
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              className="button_add"
+              icon={<UserAddOutlined />}
+            >
+              Add Image
+            </Button>
+            <UploadModal
+              title="Add Image"
+              description={
+                "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
+              }
+              isOpen={isModalOpen}
+              confirmLoading={submitLoading}
+              onSubmit={onSubmit}
+              onCancel={onCancel}
+            />
+          </>
         )}
       </div>
     </>

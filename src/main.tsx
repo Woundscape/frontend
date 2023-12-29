@@ -12,12 +12,12 @@ const clientId: string =
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId={clientId}>
-    <StrictMode>
+    {/* <StrictMode> */}
       <QueryClientProvider client={queryClient}>
         <ConfigProvider theme={themeConfig}>
           <MyApp />
         </ConfigProvider>
       </QueryClientProvider>
-    </StrictMode>
+    {/* </StrictMode> */}
   </GoogleOAuthProvider>
 );
