@@ -15,6 +15,7 @@ import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset";
 import ContactUs from "@pages/website/Contact";
 import NewPass from "@pages/website/NewPassword"
+import Progress from "@pages/website/Progress"
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp";
@@ -63,6 +64,7 @@ function AuthRoutes() {
         <Route path="wound" element={<WoundAnalysis />} />
         <Route path="pred" element={<TestPred />} />
         <Route path="compare" element={<Compare />} />
+        <Route path="progress" element={<Progress />} />
         <Route path="management" element={<Management />} />
       </Route>
     </Routes>
