@@ -67,7 +67,7 @@ function AuthRoutes() {
       >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
-        <Route path="patient/:id" element={<PatientDetail />} />
+        <Route path="patient/:case_id" element={<PatientDetail />} />
         <Route path="equipment" element={<Equipment />} />
         <Route path="test" element={<EditImage />} />
         <Route path="wound" element={<WoundAnalysis />} />

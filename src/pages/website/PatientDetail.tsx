@@ -23,8 +23,11 @@ import ConfirmModal from "@components/ConfirmModal";
 import { optionSegmented } from "@utils/option";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { tagInputStyle, tagPlusStyle } from "@config";
+import { getImageByCaseId } from "@api-caller/imageApi";
+import { useParams } from "react-router-dom";
 
-export default function Patient() {
+export default function PatientDetail() {
+  const { case_id } = useParams();
   const [tags, setTags] = useState(["Diabete", "Wound"]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -33,6 +36,7 @@ export default function Patient() {
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
   const [stageSegmented, setStageSegmented] = useState("Overview");
+  const [images, setImages] = useState<any>([]);
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -43,6 +47,17 @@ export default function Patient() {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
+  useEffect(() => {
+    async function getImage() {
+      if (case_id) {
+        const images = await getImageByCaseId(case_id as string);
+        setImages(images);
+        console.log("images", images);
+        return images;
+      }
+    }
+    getImage();
+  }, []);
   const handleClose = (e: React.MouseEvent<HTMLElement>, value: string) => {
     e.preventDefault();
     showModal();

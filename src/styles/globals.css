@@ -110,7 +110,7 @@
   > .ant-tabs-nav
   > .ant-tabs-nav-wrap
   > .ant-tabs-nav-list
-  > .ant-tabs-tab {
+  > .ant-tabs-tab { 
   width: 50%;
   display: flex;
   padding: 4px;
@@ -321,9 +321,6 @@ input::-webkit-inner-spin-button {
 }
 
 /* Patient */
-/* .ant-segmegted-item {
-  transition: all 0s;
-} */
 #head__patient > div.ant-segmented {
   background-color: transparent;
 }
@@ -455,6 +452,19 @@ input[type="range"]::-moz-range-thumb {
   cursor: url("../assets/icons/canvas_cursor_paint.svg") -20 40, auto;
 }
 
+/* Upload Modal */
+#upload__container_modal > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx > div.ant-upload-list.ant-upload-list-picture{
+  overflow-y:auto;
+  max-height: 200px;
+}
+
+#upload__container_modal > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx > div.css-dev-only-do-not-override-zakatx.ant-upload.ant-upload-drag > span > div{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 /* management */
 #management__table__patient
   > .ant-table-container

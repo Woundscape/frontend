@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   AppstoreOutlined,
   BarsOutlined,
@@ -14,8 +15,10 @@ import {
 import SearchIcon from "@assets/icon-search-upload.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { SegmentedValue } from "antd/es/segmented";
+import uploadImage from "@api-caller/imageApi";
+import { UseMutationResult, useMutation } from "react-query";
+import { IFormattedErrorResponse } from "@constraint/constraint";
 import UploadModal from "./UploadModal";
-import { useState } from "react";
 
 const { RangePicker } = DatePicker;
 
@@ -32,13 +35,18 @@ export default function DefaultInput({
   onFilter,
   onChangeView,
 }: IDefaultInputProps) {
+  const uploadMutation: UseMutationResult<
+    string,
+    IFormattedErrorResponse,
+    FormData
+  > = useMutation(uploadImage);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const onCancel = () => {
-    setIsModalOpen(!isModalOpen);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const setLoading = (value: boolean) => {
+    setConfirmLoading(value);
   };
-  const onSubmit = () => {
-    setSubmitLoading(true);
+  const setModal = (value: boolean) => {
+    setIsModalOpen(value);
   };
   return (
     <>
@@ -104,9 +112,10 @@ export default function DefaultInput({
                 "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
               }
               isOpen={isModalOpen}
-              confirmLoading={submitLoading}
-              onSubmit={onSubmit}
-              onCancel={onCancel}
+              confirmLoading={confirmLoading}
+              setModal={setModal}
+              setLoading={setLoading}
+              uploadMutate={uploadMutation}
             />
           </>
         )}
