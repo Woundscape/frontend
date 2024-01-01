@@ -41,6 +41,9 @@ export const themeConfig: ThemeConfig = {
   
       cellActiveWithRangeBg:'#E2EDFF',
       colorText:'#555554',
+    },
+    Collapse:{
+      headerBg:'white'
     }
   },
 };
