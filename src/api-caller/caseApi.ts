@@ -11,13 +11,26 @@ export const getAllCase = async (): Promise<ICase[]> => {
   }
 };
 
+export const getCaseByCaseId = async (params:string): Promise<any> => {
+  try {
+    const { data } = await getInstanceLocal().get(
+      `/case/getByCaseId/${params}`
+    );
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+};
+
 export const getCaseByDoctorId = async ({
   params,
 }: {
   params: string;
 }): Promise<any> => {
   try {
-    const { data } = await getInstanceLocal().get(`/case/${params}`);
+    const { data } = await getInstanceLocal().get(
+      `/case/getByDoctorId/${params}`
+    );
     return data;
   } catch (error) {
     throw formattedError(error);

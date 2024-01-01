@@ -47,8 +47,8 @@ export default function UploadModal({
             setFiles([]);
           },
         });
-      }else{
-        setModal(false)
+      } else {
+        setModal(false);
       }
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -99,7 +99,7 @@ export default function UploadModal({
           multiple
           listType="picture"
           action={"http://localhost:5173/"}
-          accept=".png,.jpeg"
+          accept="image/png, image/jpeg"
           fileList={files}
           beforeUpload={(_) => {
             return false;

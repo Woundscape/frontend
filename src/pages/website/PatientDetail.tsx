@@ -1,7 +1,9 @@
+import moment from "moment";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import type { InputRef } from "antd";
 import { Content } from "antd/es/layout/layout";
-import type { CheckboxValueType } from "antd/es/checkbox/Group";
+import Typography from "antd/es/typography/Typography";
 import {
   Input,
   Segmented,
@@ -11,23 +13,25 @@ import {
   Tooltip,
   Checkbox,
   Button,
+  List,
 } from "antd";
 import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import Typography from "antd/es/typography/Typography";
-import UserProfile from "@features/UserProfile";
-import { selectStage } from "@constraint/constraint";
-import ConfirmModal from "@components/ConfirmModal";
+import { IImage, selectStage } from "@constraint/constraint";
 import { optionSegmented } from "@utils/option";
-import DefaultInput from "@components/Patient/DefaultInput";
 import { tagInputStyle, tagPlusStyle } from "@config";
+import UserProfile from "@features/UserProfile";
+import ConfirmModal from "@components/ConfirmModal";
+import DefaultInput from "@components/Patient/DefaultInput";
 import { getImageByCaseId } from "@api-caller/imageApi";
-import { useParams } from "react-router-dom";
+import { getCaseByCaseId } from "@api-caller/caseApi";
 
 export default function PatientDetail() {
   const { case_id } = useParams();
+  const router = useNavigate();
+  const [images, setImages] = useState<any>([]);
   const [tags, setTags] = useState(["Diabete", "Wound"]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -36,7 +40,7 @@ export default function PatientDetail() {
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
   const [stageSegmented, setStageSegmented] = useState("Overview");
-  const [images, setImages] = useState<any>([]);
+  const [checkedList, setCheckList] = useState<string[]>([]);
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -48,23 +52,49 @@ export default function PatientDetail() {
   }, [editInputValue]);
 
   useEffect(() => {
+    async function formatDate(images: IImage[]) {
+      const sortImage: Record<string, IImage[]> = {};
+      images.forEach((image: IImage) => {
+        const updatedAtDate = moment(image.updated_at).format("DD MMM YYYY");
+        if (!sortImage[updatedAtDate]) {
+          sortImage[updatedAtDate] = [];
+        }
+        sortImage[updatedAtDate].push({ ...image });
+      });
+      return sortImage;
+    }
     async function getImage() {
       if (case_id) {
-        const images = await getImageByCaseId(case_id as string);
-        setImages(images);
-        console.log("images", images);
-        return images;
+        const _case =  await getCaseByCaseId(case_id as  string)
+        console.log(_case);
+        const images: IImage[] = await getImageByCaseId(case_id as string);
+        const format = await formatDate(images);
+        setImages(format);
       }
     }
     getImage();
   }, []);
+
+  useEffect(()=>{
+  },[])
   const handleClose = (e: React.MouseEvent<HTMLElement>, value: string) => {
     e.preventDefault();
     showModal();
     console.log("Clicked! But prevent default.", value);
   };
-  const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log("checked = ", checkedValues);
+  const handleImage = (image_id: string) => {
+    if (stageSegmented == "Overview") {
+      router(`/wound/${image_id}`);
+    } else {
+      checkedOnChange(image_id);
+    }
+  };
+  const checkedOnChange = (image_id: string) => {
+    if (checkedList.includes(image_id)) {
+      setCheckList(checkedList.filter((item) => item !== image_id));
+    } else {
+      setCheckList((previous) => [...previous, image_id]);
+    }
   };
   // const handleClose = (removedTag: string) => {
 
@@ -102,16 +132,26 @@ export default function PatientDetail() {
   };
 
   const filterPatient = (e: any) => {};
-  function renderImage() {
-    return "abcderfg".split("").map((value, index) => {
+  function renderImage(date: string) {
+    return images[date].map((image: IImage, index: number) => {
+      const imgPath = image.img_path.replace(/\\/g, "/");
       return (
-        <div key={index} className="flex pt-4">
-          <div className="w-64 h-44 patient_img p-3 flex justify-end items-start">
+        <div
+          key={index}
+          onClick={() => handleImage(image.img_id)}
+          className="flex mt-4 cursor-pointer"
+        >
+          <div
+            className="w-64 h-44 patient_img p-3 flex justify-end items-start"
+            style={{
+              backgroundImage: `url("http://localhost:3000/${imgPath}")`,
+            }}
+          >
             {stageSegmented == "Overview" ? (
               <div className="w-full h-full flex flex-col justify-between">
                 <div className="flex flex-row justify-between text-white jura border-b">
                   <p>HN.9877065</p>
-                  <p>01/02/23</p>
+                  <p>{new Date(image.updated_at).toLocaleTimeString()}</p>
                 </div>
                 <div className="flex flex-row justify-between h-8 border rounded-full">
                   <p className="jura text-white p-1 pl-3">Edit</p>
@@ -119,7 +159,11 @@ export default function PatientDetail() {
                 </div>
               </div>
             ) : (
-              <Checkbox value={value} />
+              <Checkbox
+                key={`checkbox__image__${index}`}
+                value={image.img_id}
+                checked={checkedList.includes(image.img_id)}
+              />
             )}
           </div>
         </div>
@@ -144,8 +188,8 @@ export default function PatientDetail() {
             >
               <div className="flex justify-between">
                 <div className="flex items-center space-x-4">
-                  <LeftOutlined />
-                  <p className="jura text-xl">Patient</p>
+                  <LeftOutlined onClick={() => router("/patient")} />
+                  <p className="jura text-xl">HN. {case_id}</p>
                 </div>
                 <div className="w-[30rem]">
                   <UserProfile />
@@ -154,7 +198,10 @@ export default function PatientDetail() {
               <Segmented
                 className="jura mt-4 select-none"
                 options={optionSegmented}
-                onChange={(stage: any) => setStageSegmented(stage)}
+                onChange={(stage: any) => {
+                  setStageSegmented(stage);
+                  setCheckList([]);
+                }}
               />
             </header>
             <Content className="grow p-6 pb-0">
@@ -259,30 +306,25 @@ export default function PatientDetail() {
                     className="h-full overflow-y-auto"
                   >
                     <div className="inner-container pt-4">
-                      <ul className="timeline pl-20">
-                        {/* <li id="test" /> */}
-                        <li
-                          className="timeline-item flex flex-wrap gap-3"
-                          data-date="17 Jan"
-                        >
-                          <Checkbox.Group
-                            className="w-full"
-                            onChange={onChange}
-                          >
-                            {renderImage()}
-                          </Checkbox.Group>
-                        </li>
-                        <li
-                          className="timeline-item flex flex-wrap gap-3"
-                          data-date="3 Feb"
-                        >
-                          {renderImage()}
-                        </li>
-                      </ul>
+                      <List
+                        className="timeline pl-20"
+                        dataSource={Object.keys(images)}
+                        renderItem={(item, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="timeline-item flex flex-wrap gap-3"
+                              data-date={item}
+                            >
+                              {renderImage(item)}
+                            </li>
+                          );
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
-                {stageSegmented != "Overview" && (
+                {stageSegmented != "Overview" && stageSegmented != "Delete" && (
                   <Content id="history" className="flex flex-col">
                     <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
                       <p className="jura text-[#555554] text-lg p-3">History</p>
@@ -335,15 +377,26 @@ export default function PatientDetail() {
               </div>
             </Content>
             <div
-              className="h-20 flex flex-col items-end justify-center px-8"
+              className="py-4 flex flex-col items-end justify-center px-8"
               style={{ boxShadow: "0px -4px 9px 0px rgba(0, 0, 0, 0.15)" }}
             >
               <div className="flex items-center space-x-6">
                 <Typography id="text__primary">
-                  Select {tags.length} Images
+                  Select {checkedList.length} Images
                 </Typography>
-                <Button className="w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF]">
-                  {stageSegmented != "Overview" ? "Confirm" : "Select"}
+                <Button
+                  onClick={() => setStageSegmented("Delete")}
+                  className={`w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF] 
+                  ${stageSegmented == "Delete" && "bg-[#F7AD9E]"}
+                  ${
+                    stageSegmented == "Comparative Imaging" && "bg-[#90A4D8]"
+                  } ${stageSegmented == "Wound Progression" && "bg-[#D8C290]"}`}
+                >
+                  {stageSegmented === "Overview"
+                    ? "Select"
+                    : stageSegmented === "Delete"
+                    ? "Delete"
+                    : "Confirm"}
                 </Button>
               </div>
             </div>

@@ -110,7 +110,7 @@
   > .ant-tabs-nav
   > .ant-tabs-nav-wrap
   > .ant-tabs-nav-list
-  > .ant-tabs-tab { 
+  > .ant-tabs-tab {
   width: 50%;
   display: flex;
   padding: 4px;
@@ -147,6 +147,17 @@
   border-color: #fff;
   border-radius: 8px !important;
 }
+
+
+/* #head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(1).ant-segmented-item-selected{
+  background-color: #EEEEEE !important;
+}
+#head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(2).ant-segmented-item-selected{
+  background-color: #D2DCEB !important;
+}
+#head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(3).ant-segmented-item-selected{
+  background-color: #F1E2BC !important;
+} */
 
 .react-sketch-canvas {
   background-size: cover;
@@ -317,7 +328,6 @@ input::-webkit-inner-spin-button {
   border-radius: 15px;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("../assets/wound/img_3.jpg");
 }
 
 /* Patient */
@@ -453,13 +463,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Upload Modal */
-#upload__container_modal > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx > div.ant-upload-list.ant-upload-list-picture{
-  overflow-y:auto;
+#upload__container_modal
+  > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx
+  > div.ant-upload-list.ant-upload-list-picture {
+  overflow-y: auto;
   max-height: 200px;
 }
 
-#upload__container_modal > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx > div.css-dev-only-do-not-override-zakatx.ant-upload.ant-upload-drag > span > div{
-  display:flex;
+#upload__container_modal
+  > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx
+  > div.css-dev-only-do-not-override-zakatx.ant-upload.ant-upload-drag
+  > span
+  > div {
+  display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 1rem;

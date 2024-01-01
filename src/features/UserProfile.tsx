@@ -17,6 +17,7 @@ const items: MenuProps["items"] = [
         target="_blank"
         rel="noopener noreferrer"
         href="https://www.antgroup.com"
+        className="jura"
       >
         Edit Profile
       </a>
@@ -29,6 +30,7 @@ const items: MenuProps["items"] = [
         target="_blank"
         rel="noopener noreferrer"
         href="https://www.aliyun.com"
+        className="jura"
       >
         Logout
       </a>
@@ -130,7 +132,6 @@ export default function UserProfile() {
                   </List.Item>
                 )}
               />
-
 
 
               {/* noti with button in Sugggestion Tab */}

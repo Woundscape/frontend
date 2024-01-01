@@ -15,12 +15,13 @@ export default function Patient() {
   const router = useNavigate();
   const [data, setData] = useState<IPatient[]>([]);
   const [patient, setPatient] = useState<IPatient[]>([]);
-  const [view, setView] = useState("Images");
+  const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getCaseByDoctorId({ params: "6dd9462c-0003-4ca6-b41d-ce16a8980feb" }).then(
       (response) => {
         setData(response);
+        console.log(response);
         setPatient(response);
         setLoading(false);
       }
@@ -87,9 +88,9 @@ export default function Patient() {
                         columns={columns}
                         loading={loading}
                         tableLayout="fixed"
-                        rowKey={(_, index) => `table__row__${index}`}
+                        rowKey={(record) => `row__patient__${record.case_id}`}
                         onRow={(record: ICase) => ({
-                          onClick: (e) => router(`/patient/${record.case_id}`),
+                          onClick: (_) => router(`/patient/${record.case_id}`),
                         })}
                         pagination={{
                           defaultPageSize: 2,
