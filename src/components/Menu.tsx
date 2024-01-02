@@ -74,7 +74,7 @@ export default function Menu() {
         </div>
         <div className="grow pb-6 overflow-y-auto">
           <ul className="space-y-2 px-6">
-            {pathName != "/wound" ? ListMenu() : <ImageMenu />}
+            {pathName.split('/')[1] != "wound" ? ListMenu() : <ImageMenu />}
           </ul>
         </div>
       </nav>

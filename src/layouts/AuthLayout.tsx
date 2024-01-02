@@ -1,7 +1,11 @@
+import { useAuth } from "@components/AuthProvider";
 import Menu from "@components/Menu";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 export default function AuthLayout() {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const checkParamsPatient = location.pathname.split("/patient/")[1];
   return (
     <>
       <div className="flex w-full bg-[#EEEEEE] relative">
@@ -12,9 +16,11 @@ export default function AuthLayout() {
           <div className="relative grow">
             <Outlet />
           </div>
-          <div className="w-full absolute text-center bottom-5 michroma text-sm select-none text-[#626060]">
-            © 2023 Copyright – Woundscape – All Rights Reserved.
-          </div>
+          {!checkParamsPatient && (
+            <div className="w-full absolute text-center bottom-5 michroma text-sm select-none text-[#626060]">
+              © 2023 Copyright – Woundscape – All Rights Reserved.
+            </div>
+          )}
         </div>
       </div>
     </>

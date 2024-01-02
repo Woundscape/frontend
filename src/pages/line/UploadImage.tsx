@@ -44,7 +44,7 @@ export default function UploadImage() {
   }
   return (
     <div className="w-full h-screen bg-white p-10">
-      <div className="w-full flex flex-col justify-center items-center space-y-4">
+      <div id="line__upload_container" className="w-full flex flex-col justify-center items-center space-y-4">
         <div className="logo-box flex flex-col items-center space-y-2 py-4">
           <img className="w-20" src={Logo_Wound} alt="" />
           <h1 className="text-lg michroma">Woundscape</h1>

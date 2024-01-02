@@ -8,7 +8,7 @@ interface TableType {
   disease: String;
   last_updated: String;
 }
-export default function PatientTable() {
+export default function DashboardTable() {
   const tableData: TableType[] = [
     {
       id: 1,

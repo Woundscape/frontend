@@ -24,6 +24,7 @@ import HistoryLine from "@pages/line/History";
 
 import TestPred from "@pages/website/testPred";
 import { LoadingProvider } from "@components/Loading";
+import { AuthProvider } from "@components/AuthProvider";
 
 function App() {
   return (
@@ -55,13 +56,22 @@ function LineRoutes() {
 function AuthRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<AuthLayout />}>
+      <Route
+        path="/"
+        element={
+          <LoadingProvider>
+            <AuthProvider>
+              <AuthLayout />
+            </AuthProvider>
+          </LoadingProvider>
+        }
+      >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patient" element={<Patient />} />
-        <Route path="patient/:id" element={<PatientDetail />} />
+        <Route path="patient/:case_id" element={<PatientDetail />} />
         <Route path="equipment" element={<Equipment />} />
         <Route path="test" element={<EditImage />} />
-        <Route path="wound" element={<WoundAnalysis />} />
+        <Route path="wound/:image_id" element={<WoundAnalysis />} />
         <Route path="pred" element={<TestPred />} />
         <Route path="compare" element={<Compare />} />
         <Route path="progress" element={<Progress />} />

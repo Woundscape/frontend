@@ -9,10 +9,10 @@ import { Select, notification } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
-import getAllDoctor from "@api-caller/doctorApi";
 
 interface DropdownFieldProps {
   data: ICase;
+  doctor: IDoctor[];
   updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -22,9 +22,10 @@ interface DropdownFieldProps {
 
 export const DropdownField: React.FC<DropdownFieldProps> = ({
   data,
+  doctor,
   updateMutation,
 }) => {
-  const [doctor, setDoctor] = useState<IDoctor[]>([]);
+  // const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectLoading, setSelectLoading] = useState(true);
@@ -63,11 +64,9 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
     );
   };
   useEffect(() => {
-    getAllDoctor().then((response) => {
-      setDoctor(response);
+    if (doctor) {
       setSelectLoading(false);
-      setIsModalOpen(false);
-    });
+    }
     setSelectValue(data.doctor_assign);
   }, [data]);
   return (
@@ -83,7 +82,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           defaultActiveFirstOption
           className="w-full"
           placeholder="Select"
-          value={selectValue || null}
+          value={data.doctor_assign || null}
           loading={selectLoading}
           optionFilterProp="children"
           onDropdownVisibleChange={(open) => {}}

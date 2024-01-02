@@ -58,7 +58,7 @@
   padding-right: 5px;
 }
 
-.ant-upload-wrapper {
+#line__upload_container > .ant-upload-wrapper {
   width: 350px;
 }
 
@@ -66,15 +66,11 @@
   width: 1px;
 }
 
-.ant-upload,
 .ant-upload-drag {
-  height: 200px;
   border-radius: 20px !important;
   background: white !important;
 }
 
-/* .ant-upload-drag-container{
-} */
 .ant-upload-list-item {
   border: 1px dashed #d9d9d9 !important;
 }
@@ -152,6 +148,17 @@
   border-radius: 8px !important;
 }
 
+
+/* #head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(1).ant-segmented-item-selected{
+  background-color: #EEEEEE !important;
+}
+#head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(2).ant-segmented-item-selected{
+  background-color: #D2DCEB !important;
+}
+#head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(3).ant-segmented-item-selected{
+  background-color: #F1E2BC !important;
+} */
+
 .react-sketch-canvas {
   background-size: cover;
   background-repeat: no-repeat;
@@ -196,6 +203,12 @@
 abbr[title] {
   text-decoration: none;
   justify-content: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .react-calendar__tile:enabled:hover,
@@ -315,13 +328,9 @@ abbr[title] {
   border-radius: 15px;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("../assets/wound/img_3.jpg");
 }
 
 /* Patient */
-/* .ant-segmegted-item {
-  transition: all 0s;
-} */
 #head__patient > div.ant-segmented {
   background-color: transparent;
 }
@@ -453,6 +462,25 @@ input[type="range"]::-moz-range-thumb {
   cursor: url("../assets/icons/canvas_cursor_paint.svg") -20 40, auto;
 }
 
+/* Upload Modal */
+#upload__container_modal
+  > span
+  > div.ant-upload-list.ant-upload-list-picture {
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+#upload__container_modal
+  > span
+  > div
+  > span
+  > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 /* management */
 #management__table__patient
   > .ant-table-container
@@ -465,6 +493,7 @@ input[type="range"]::-moz-range-thumb {
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
   border-bottom: 1.5px solid var(--gray) !important;
+  cursor: pointer;
 }
 
 #management__table__patient > div > div > table > tbody > tr > td:first-child {
