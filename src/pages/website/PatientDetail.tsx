@@ -1,87 +1,49 @@
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import type { InputRef } from "antd";
+import { useEffect, useState } from "react";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
-import {
-  Input,
-  Segmented,
-  Select,
-  Space,
-  Tag,
-  Tooltip,
-  Checkbox,
-  Button,
-  List,
-} from "antd";
-import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
+import { Segmented, Checkbox, Button, List } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
+import { IImage } from "@constraint/constraint";
+import { optionSegmented } from "@utils/option";
+import { deleteImage, getImageByCaseId } from "@api-caller/imageApi";
+import UserProfile from "@features/UserProfile";
+import DefaultInput from "@components/Patient/DefaultInput";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import { IImage, selectStage } from "@constraint/constraint";
-import { optionSegmented } from "@utils/option";
-import { tagInputStyle, tagPlusStyle } from "@config";
-import UserProfile from "@features/UserProfile";
-import ConfirmModal from "@components/ConfirmModal";
-import DefaultInput from "@components/Patient/DefaultInput";
-import { getImageByCaseId } from "@api-caller/imageApi";
-import { getCaseByCaseId } from "@api-caller/caseApi";
+import AdditionalData from "@components/Patient/AdditionalData";
 
 export default function PatientDetail() {
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
-  const [tags, setTags] = useState(["Diabete", "Wound"]);
-  const [inputVisible, setInputVisible] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [editInputIndex, setEditInputIndex] = useState(-1);
-  const [editInputValue, setEditInputValue] = useState("");
-  const inputRef = useRef<InputRef>(null);
-  const editInputRef = useRef<InputRef>(null);
+  const [casePatient, setCasePatient] = useState();
   const [stageSegmented, setStageSegmented] = useState("Overview");
   const [checkedList, setCheckList] = useState<string[]>([]);
-  useEffect(() => {
-    if (inputVisible) {
-      inputRef.current?.focus();
-    }
-  }, [inputVisible]);
 
-  useEffect(() => {
-    editInputRef.current?.focus();
-  }, [editInputValue]);
-
-  useEffect(() => {
-    async function formatDate(images: IImage[]) {
-      const sortImage: Record<string, IImage[]> = {};
-      images.forEach((image: IImage) => {
-        const updatedAtDate = moment(image.updated_at).format("DD MMM YYYY");
-        if (!sortImage[updatedAtDate]) {
-          sortImage[updatedAtDate] = [];
-        }
-        sortImage[updatedAtDate].push({ ...image });
-      });
-      return sortImage;
-    }
-    async function getImage() {
-      if (case_id) {
-        const _case =  await getCaseByCaseId(case_id as  string)
-        console.log(_case);
-        const images: IImage[] = await getImageByCaseId(case_id as string);
-        const format = await formatDate(images);
-        setImages(format);
+  async function formatDate(images: IImage[]) {
+    const sortImage: Record<string, IImage[]> = {};
+    images.forEach((image: IImage) => {
+      const updatedAtDate = moment(image.updated_at).format("DD MMM");
+      if (!sortImage[updatedAtDate]) {
+        sortImage[updatedAtDate] = [];
       }
+      sortImage[updatedAtDate].push({ ...image });
+    });
+    return sortImage;
+  }
+  async function getImage() {
+    if (case_id) {
+      const images: IImage[] = await getImageByCaseId(case_id as string);
+      const format = await formatDate(images);
+      setImages(format);
     }
+  }
+  useEffect(() => {
     getImage();
   }, []);
-
-  useEffect(()=>{
-  },[])
-  const handleClose = (e: React.MouseEvent<HTMLElement>, value: string) => {
-    e.preventDefault();
-    showModal();
-    console.log("Clicked! But prevent default.", value);
-  };
   const handleImage = (image_id: string) => {
     if (stageSegmented == "Overview") {
       router(`/wound/${image_id}`);
@@ -96,44 +58,11 @@ export default function PatientDetail() {
       setCheckList((previous) => [...previous, image_id]);
     }
   };
-  // const handleClose = (removedTag: string) => {
-
-  // const newTags = tags.filter((tag) => tag !== removedTag);
-  // console.log(newTags);
-  // setTags(newTags);
-  // };
-
-  const showInput = () => {
-    setInputVisible(true);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
-    }
-    setInputVisible(false);
-    setInputValue("");
-  };
-
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditInputValue(e.target.value);
-  };
-
-  const handleEditInputConfirm = () => {
-    const newTags = [...tags];
-    newTags[editInputIndex] = editInputValue;
-    setTags(newTags);
-    setEditInputIndex(-1);
-    setEditInputValue("");
-  };
 
   const filterPatient = (e: any) => {};
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
+      if (!image.img_status) return null;
       const imgPath = image.img_path.replace(/\\/g, "/");
       return (
         <div
@@ -170,12 +99,29 @@ export default function PatientDetail() {
       );
     });
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const onSubmit = async () => {
+    switch (stageSegmented) {
+      case "Overview":
+        setStageSegmented("Delete");
+        break;
+      case "Delete":
+        if (checkedList.length > 0){
+          const deleteResponse = await deleteImage(checkedList);
+          getImage();
+        }
+        setStageSegmented("Overview");
+        break;
+      case "Comparative Imaging":
+        router('/compare')
+        break;
+      case "Wound Progression":
+        router('/progress')
+        break;
+      default:
+        console.log(checkedList);
+        break;
+    }
+    setCheckList([]);
   };
   return (
     <>
@@ -206,100 +152,17 @@ export default function PatientDetail() {
             </header>
             <Content className="grow p-6 pb-0">
               <div className="flex h-full space-x-6">
+                {/* Input Filter */}
                 <div className="w-full h-full flex flex-col space-y-2">
-                  {/* Input Filter */}
-                  <DefaultInput onFilter={filterPatient} images />
-                  <div className="flex space-x-2 items-center">
-                    <Typography id="text__primary">
-                      Progression Stage :
-                    </Typography>
-                    <Select
-                      style={{ width: 200 }}
-                      placeholder="Select"
-                      options={selectStage}
-                    />
-                    <Space size={[0, 8]} wrap>
-                      <ConfirmModal
-                        title="Are you sure ?"
-                        description="Are you sure that the hospital number you entered is 9877069?"
-                        isOpen={isModalOpen}
-                        confirmLoading={true}
-                        onSubmit={handleModal}
-                        onCancel={handleModal}
-                      />
-                      <Typography id="text__primary">Disease :</Typography>
-                      {tags.map((tag, index) => {
-                        if (editInputIndex === index) {
-                          return (
-                            <Input
-                              ref={editInputRef}
-                              key={tag}
-                              size="small"
-                              style={tagInputStyle}
-                              value={editInputValue}
-                              onChange={handleEditInputChange}
-                              onBlur={handleEditInputConfirm}
-                              onPressEnter={handleEditInputConfirm}
-                            />
-                          );
-                        }
-                        const isLongTag = tag.length > 20;
-                        const tagElem = (
-                          <Tag
-                            key={tag}
-                            closable
-                            style={{
-                              userSelect: "none",
-                              color: "#4C577C",
-                              fontFamily: "jura",
-                            }}
-                            color="#F4DEE7"
-                            onClose={(e) => handleClose(e, tag)}
-                          >
-                            <span
-                              onDoubleClick={(e) => {
-                                if (index !== 0) {
-                                  setEditInputIndex(index);
-                                  setEditInputValue(tag);
-                                  e.preventDefault();
-                                }
-                              }}
-                            >
-                              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                            </span>
-                          </Tag>
-                        );
-                        return isLongTag ? (
-                          <Tooltip title={tag} key={tag}>
-                            {tagElem}
-                          </Tooltip>
-                        ) : (
-                          tagElem
-                        );
-                      })}
-                      {inputVisible ? (
-                        <Input
-                          ref={inputRef}
-                          type="text"
-                          size="small"
-                          style={tagInputStyle}
-                          value={inputValue}
-                          onChange={handleInputChange}
-                          onBlur={handleInputConfirm}
-                          onPressEnter={handleInputConfirm}
-                        />
-                      ) : (
-                        <Tag
-                          style={tagPlusStyle}
-                          icon={<PlusOutlined />}
-                          onClick={showInput}
-                          className="jura"
-                        >
-                          Add Tag
-                        </Tag>
-                      )}
-                    </Space>
-                  </div>
+                  <DefaultInput
+                    placeholder="Search by hospital number"
+                    onFilter={filterPatient}
+                    images
+                  />
+                  {
+                    stageSegmented == 'Overview' &&
+                  <AdditionalData case_id={case_id} />
+                  }
                   {/* Body */}
                   <div
                     id="timeline-container"
@@ -385,7 +248,7 @@ export default function PatientDetail() {
                   Select {checkedList.length} Images
                 </Typography>
                 <Button
-                  onClick={() => setStageSegmented("Delete")}
+                  onClick={onSubmit}
                   className={`w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF] 
                   ${stageSegmented == "Delete" && "bg-[#F7AD9E]"}
                   ${

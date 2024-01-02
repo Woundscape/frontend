@@ -27,7 +27,7 @@ export const getColumns = (): ColumnsType<any> => [
       return (
         <>
           <Typography key={index} className="jura truncate">
-            {value}
+            {value.toString().padStart(3,'0')}
           </Typography>
         </>
       );
@@ -85,5 +85,12 @@ export const getColumns = (): ColumnsType<any> => [
         {formatTimeDifference(created_at)}
       </Typography>
     ),
+  },
+  {
+    title: 'Action',
+    key: 'operation',
+    fixed: 'right',
+    width: 100,
+    render: () => <a>action</a>,
   },
 ];

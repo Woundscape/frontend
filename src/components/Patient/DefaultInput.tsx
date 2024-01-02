@@ -23,6 +23,7 @@ import UploadModal from "./UploadModal";
 const { RangePicker } = DatePicker;
 
 interface IDefaultInputProps {
+  placeholder?: string;
   segmented?: boolean;
   images?: boolean;
   onFilter: (e: any) => void;
@@ -30,6 +31,7 @@ interface IDefaultInputProps {
 }
 
 export default function DefaultInput({
+  placeholder,
   segmented,
   images,
   onFilter,
@@ -54,8 +56,8 @@ export default function DefaultInput({
         <Input
           className="w-1/4"
           size="middle"
-          type="number"
-          placeholder="Search by hospital number"
+          type="text"
+          placeholder={placeholder}
           prefix={<img className="pr-1" src={SearchIcon} />}
           onChange={onFilter}
         />

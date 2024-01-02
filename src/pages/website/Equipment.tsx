@@ -22,10 +22,10 @@ export default function Equipment() {
     });
   }, []);
   const columns: ColumnsType<any> = getColumnEquipment();
-  const filterPatient = (e: any) => {
+  const filterEquipmentId = (e: any) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredpatient = data.filter((item) =>
-      item.equip_id.toLowerCase().includes(searchTerm)
+      item.equip_name.toLowerCase().includes(searchTerm)
     );
     setEquipment(filteredpatient);
   };
@@ -36,7 +36,7 @@ export default function Equipment() {
           <div className="w-full h-full">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
-                <p className="jura text-xl text-[#424241]">Patient</p>
+                <p className="jura text-xl text-[#424241]">Equipment</p>
               </div>
               <div className="w-[30rem]">
                 <UserProfile />
@@ -46,7 +46,7 @@ export default function Equipment() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <DefaultInput onFilter={filterPatient} />
+                  <DefaultInput placeholder="Search by Equipment Name" onFilter={filterEquipmentId} />
                   {/* Body */}
                   <Content id="content__patient" className="pt-7">
                     <Table

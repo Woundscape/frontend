@@ -464,15 +464,15 @@ input[type="range"]::-moz-range-thumb {
 
 /* Upload Modal */
 #upload__container_modal
-  > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx
+  > span
   > div.ant-upload-list.ant-upload-list-picture {
   overflow-y: auto;
   max-height: 200px;
 }
 
 #upload__container_modal
-  > span.ant-upload-wrapper.css-dev-only-do-not-override-zakatx
-  > div.css-dev-only-do-not-override-zakatx.ant-upload.ant-upload-drag
+  > span
+  > div
   > span
   > div {
   display: flex;

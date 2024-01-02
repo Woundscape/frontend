@@ -1,12 +1,12 @@
 import { Layout, List } from "antd";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
-import PatientTable from "@features/PatientTable";
 import ListNotification from "@features/ListNotification";
 import UserProfile from "@features/UserProfile";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
 import { useLoading } from "@components/Loading";
+import DashboardTable from "@features/PatientTable";
 
 export interface CardPatient {
   title: string;
@@ -97,7 +97,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div id="footer-content-dashboard" className="pt-3 pb-5 grow">
-                    <PatientTable />
+                    <DashboardTable />
                   </div>
                 </div>
               </div>

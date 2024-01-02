@@ -16,7 +16,7 @@ export interface ICase {
   stage: string | null;
   created_at: Date;
   updated_at: Date;
-  disease?: string | null;
+  disease?: any | null;
 }
 
 export interface IDoctor {
@@ -36,6 +36,7 @@ export interface IPatient {
   disease: any;
   created_at: Date;
   updated_at: Date;
+  imagePreview: any;
 }
 
 export interface IMe {
