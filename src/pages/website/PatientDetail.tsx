@@ -105,17 +105,17 @@ export default function PatientDetail() {
         setStageSegmented("Delete");
         break;
       case "Delete":
-        if (checkedList.length > 0){
+        if (checkedList.length > 0) {
           const deleteResponse = await deleteImage(checkedList);
           getImage();
         }
         setStageSegmented("Overview");
         break;
       case "Comparative Imaging":
-        router('/compare')
+        router("/compare");
         break;
       case "Wound Progression":
-        router('/progress')
+        router("/progress");
         break;
       default:
         console.log(checkedList);
@@ -159,10 +159,9 @@ export default function PatientDetail() {
                     onFilter={filterPatient}
                     images
                   />
-                  {
-                    stageSegmented == 'Overview' &&
-                  <AdditionalData case_id={case_id} />
-                  }
+                  {stageSegmented == "Overview" && (
+                    <AdditionalData case_id={case_id} />
+                  )}
                   {/* Body */}
                   <div
                     id="timeline-container"
@@ -174,13 +173,15 @@ export default function PatientDetail() {
                         dataSource={Object.keys(images)}
                         renderItem={(item, index) => {
                           return (
-                            <li
-                              key={index}
-                              className="timeline-item flex flex-wrap gap-3"
-                              data-date={item}
-                            >
-                              {renderImage(item)}
-                            </li>
+                            <p className="test-item" aria-month={'2023'}>
+                              <li
+                                key={index}
+                                className="timeline-item flex flex-wrap gap-3"
+                                data-date={item}
+                              >
+                                {renderImage(item)}
+                              </li>
+                            </p>
                           );
                         }}
                       />

@@ -148,7 +148,6 @@
   border-radius: 8px !important;
 }
 
-
 /* #head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(1).ant-segmented-item-selected{
   background-color: #EEEEEE !important;
 }
@@ -385,6 +384,24 @@ input::-webkit-inner-spin-button {
   /* white-space:nowrap */
 }
 
+.test-item {
+  color: #dcd3d3;
+  text-align: center;
+  position: relative;
+  list-style-type: none;
+  --item-width: calc(100%);
+}
+.test-item::after {
+  content: attr(aria-month);
+  position: absolute;
+  right: calc(var(--item-width) + 15px);
+  top: 10px;
+  color: #B4B4B4;
+  font-size: 16px;
+  float: right;
+  font-family: jura;
+}
+
 .timeline-item::before {
   content: "";
   border-radius: 50%;
@@ -463,18 +480,12 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Upload Modal */
-#upload__container_modal
-  > span
-  > div.ant-upload-list.ant-upload-list-picture {
+#upload__container_modal > span > div.ant-upload-list.ant-upload-list-picture {
   overflow-y: auto;
   max-height: 200px;
 }
 
-#upload__container_modal
-  > span
-  > div
-  > span
-  > div {
+#upload__container_modal > span > div > span > div {
   display: flex;
   justify-content: center;
   align-items: center;
