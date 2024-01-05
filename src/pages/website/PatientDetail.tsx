@@ -170,9 +170,9 @@ export default function PatientDetail() {
                   {/* Body */}
                   <div
                     id="timeline-container"
-                    className="h-full overflow-y-auto"
+                    className="h-full overflow-y-auto pt-4"
                   >
-                    <div className="inner-container pt-4">
+                    <div className="inner-container">
                       <List
                         className="timeline pl-20"
                         dataSource={Object.keys(images)}

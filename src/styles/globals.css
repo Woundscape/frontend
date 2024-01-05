@@ -362,6 +362,7 @@ input::-webkit-inner-spin-button {
 .timeline-item {
   color: #dcd3d3;
   font-family: var(--font-family-2);
+  text-wrap:nowrap;
   text-align: center;
   padding: 0 1.5rem 1.5rem 1.5rem;
   border-left: 2px dashed #dcd3d3;
@@ -378,7 +379,7 @@ input::-webkit-inner-spin-button {
   right: calc(var(--item-width) + 20px);
   top: -20px;
   color: #555554;
-  font-size: 20px;
+  font-size: 18px;
   float: right;
   font-family: jura;
   /* white-space:nowrap */
@@ -395,7 +396,7 @@ input::-webkit-inner-spin-button {
   content: attr(aria-month);
   position: absolute;
   right: calc(var(--item-width) + 15px);
-  top: 10px;
+  top: 6px;
   color: #B4B4B4;
   font-size: 16px;
   float: right;

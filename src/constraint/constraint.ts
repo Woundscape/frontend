@@ -7,6 +7,12 @@ export interface IFormattedErrorResponse {
   statusText?: string;
 }
 
+export interface TissueType {
+  title: string;
+  value: number;
+  color: string;
+}
+
 export interface ICase {
   case_id: string;
   hn_id: string;
