@@ -1,38 +1,51 @@
-import { getInstance } from "@api/apiTest";
+import { getAllImageById } from "@api-caller/imageApi";
+import { IImage } from "@constraint/constraint";
 import { List, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-export interface IWound {
-  id: number;
-  title: string;
-  description: string;
-  images: string[];
-}
 export default function ImageMenu() {
-  const [data, setData] = useState<IWound[]>([]);
+  const { img_id } = useParams();
+  const router = useNavigate();
+  const [images, setImages] = useState<IImage[]>([]);
+
   useEffect(() => {
-    getInstance()
-      .get("/products")
-      .then((res: any) => {
-        setData(res.data.products);
-      });
+    if (img_id) {
+      getAllImage();
+    }
   }, []);
+  async function getAllImage() {
+    const response = await getAllImageById(img_id as string);
+    setImages(response);
+  }
+  
   return (
     <>
-      {data?.map((item, index) => {
+      {images?.map((image, index) => {
+        let imgPath = image.img_path.replace(/\\/g, "/");
+        let dateObject = new Date(image.created_at);
+        let formattedDate = new Intl.DateTimeFormat('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        }).format(dateObject);
         return (
           <List.Item
             key={index}
+            id={image.img_id}
             className="select-none text-center flex flex-col"
           >
             <div className="w-full h-40 rounded-lg">
               <img
-                src={`./src/assets/wound/img_${index + 1}.jpg`}
+              onClick={()=>router(`/wound/${image.img_id}`)}
+                src={`http://localhost:3000/${imgPath}`}
                 className="w-full h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
               />
             </div>
             <Typography className="jura text-[#9198AF]">
-              Feb 14, 2023 18:42
+              {formattedDate}
             </Typography>
           </List.Item>
         );

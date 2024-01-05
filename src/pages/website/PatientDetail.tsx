@@ -7,7 +7,7 @@ import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { IImage } from "@constraint/constraint";
 import { optionSegmented } from "@utils/option";
-import { deleteImage, getImageByCaseId } from "@api-caller/imageApi";
+import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import UserProfile from "@features/UserProfile";
 import DefaultInput from "@components/Patient/DefaultInput";
 import ViewResult from "@assets/view_result.svg";
@@ -23,21 +23,23 @@ export default function PatientDetail() {
   const [stageSegmented, setStageSegmented] = useState("Overview");
   const [checkedList, setCheckList] = useState<string[]>([]);
 
-  async function formatDate(images: IImage[]) {
+  async function formatDateImages(images: IImage[]) {
     const sortImage: Record<string, IImage[]> = {};
     images.forEach((image: IImage) => {
-      const updatedAtDate = moment(image.updated_at).format("DD MMM");
-      if (!sortImage[updatedAtDate]) {
-        sortImage[updatedAtDate] = [];
+      if (image.img_status) {
+        const createdAtDate = moment(image.created_at).format("DD MMM");
+        if (!sortImage[createdAtDate]) {
+          sortImage[createdAtDate] = [];
+        }
+        sortImage[createdAtDate].push({ ...image });
       }
-      sortImage[updatedAtDate].push({ ...image });
     });
     return sortImage;
   }
   async function getImage() {
     if (case_id) {
-      const images: IImage[] = await getImageByCaseId(case_id as string);
-      const format = await formatDate(images);
+      const images: IImage[] = await getAllImageByCaseId(case_id as string);
+      const format = await formatDateImages(images);
       setImages(format);
     }
   }
@@ -80,7 +82,7 @@ export default function PatientDetail() {
               <div className="w-full h-full flex flex-col justify-between">
                 <div className="flex flex-row justify-between text-white jura border-b">
                   <p>HN.9877065</p>
-                  <p>{new Date(image.updated_at).toLocaleTimeString()}</p>
+                  <p>{new Date(image.created_at).toLocaleTimeString()}</p>
                 </div>
                 <div className="flex flex-row justify-between h-8 border rounded-full">
                   <p className="jura text-white p-1 pl-3">Edit</p>
@@ -105,17 +107,17 @@ export default function PatientDetail() {
         setStageSegmented("Delete");
         break;
       case "Delete":
-        if (checkedList.length > 0){
+        if (checkedList.length > 0) {
           const deleteResponse = await deleteImage(checkedList);
           getImage();
         }
         setStageSegmented("Overview");
         break;
       case "Comparative Imaging":
-        router('/compare')
+        router("/compare");
         break;
       case "Wound Progression":
-        router('/progress')
+        router("/progress");
         break;
       default:
         console.log(checkedList);
@@ -147,6 +149,8 @@ export default function PatientDetail() {
                 onChange={(stage: any) => {
                   setStageSegmented(stage);
                   setCheckList([]);
+                  let test = document.getElementById("timeline-container");
+                  if (test) test.scrollTop = 0;
                 }}
               />
             </header>
@@ -157,12 +161,12 @@ export default function PatientDetail() {
                   <DefaultInput
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
+                    onRender={getImage}
                     images
                   />
-                  {
-                    stageSegmented == 'Overview' &&
-                  <AdditionalData case_id={case_id} />
-                  }
+                  {stageSegmented == "Overview" && (
+                    <AdditionalData case_id={case_id} />
+                  )}
                   {/* Body */}
                   <div
                     id="timeline-container"

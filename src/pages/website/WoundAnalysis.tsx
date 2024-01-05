@@ -33,6 +33,8 @@ import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import DefaultButton from "@components/DefaultButton";
+import { useLocation, useParams } from "react-router-dom";
+import { IImage } from "@constraint/constraint";
 interface TissueType {
   title: string;
   value: number;
@@ -40,6 +42,8 @@ interface TissueType {
 }
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
+  const { img_id } = useParams();
+  const { TabPane } = Tabs;
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
       title: "eschar",
@@ -89,8 +93,8 @@ export default function WoundAnalysis() {
   ]);
   const data: any = {
     labels: tissueData
-      .filter((tissue) => tissue.value > 0)
-      .map((tissue) => tissue.title),
+    .filter((tissue) => tissue.value > 0)
+    .map((tissue) => tissue.title),
     datasets: [
       {
         label: "Data is",
@@ -103,7 +107,7 @@ export default function WoundAnalysis() {
       },
     ],
   };
-  const { TabPane } = Tabs;
+  const [image, setImage] = useState<IImage>();
   const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
@@ -128,6 +132,16 @@ export default function WoundAnalysis() {
     //   setCanvasHeight(canvasDiv.current?.clientHeight || 0);
     // }
   }, []);
+  // useEffect(() => {
+  //   if (img_id) {
+  //     getImage();
+  //   }
+  // }, []);
+  // async function getImage() {
+  //   const response = await getImageById(img_id as string);
+  //   setImage(response);
+  //   console.log(response);
+  // }
   async function handleSave() {
     if (canvasRef.current) {
       const test = await canvasRef.current.exportPaths();

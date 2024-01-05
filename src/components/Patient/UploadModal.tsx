@@ -16,6 +16,7 @@ interface IModelProps {
   confirmLoading?: boolean;
   setModal: (value: boolean) => void;
   setLoading: (value: boolean) => void;
+  onRender: () => void;
   uploadMutate: UseMutationResult<string, IFormattedErrorResponse, FormData>;
 }
 
@@ -26,6 +27,7 @@ export default function UploadModal({
   confirmLoading,
   setModal,
   setLoading,
+  onRender,
   uploadMutate,
 }: IModelProps) {
   const { case_id } = useParams();
@@ -42,6 +44,7 @@ export default function UploadModal({
         formData.append("case_id", case_id as string);
         uploadMutate.mutate(formData, {
           onSuccess: () => {
+            onRender();
             setModal(false);
             setLoading(false);
             setFiles([]);

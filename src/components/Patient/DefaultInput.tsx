@@ -27,6 +27,7 @@ interface IDefaultInputProps {
   segmented?: boolean;
   images?: boolean;
   onFilter: (e: any) => void;
+  onRender: () => void;
   onChangeView?: (e: SegmentedValue) => void;
 }
 
@@ -35,6 +36,7 @@ export default function DefaultInput({
   segmented,
   images,
   onFilter,
+  onRender,
   onChangeView,
 }: IDefaultInputProps) {
   const uploadMutation: UseMutationResult<
@@ -118,6 +120,7 @@ export default function DefaultInput({
               setModal={setModal}
               setLoading={setLoading}
               uploadMutate={uploadMutation}
+              onRender={onRender}
             />
           </>
         )}
