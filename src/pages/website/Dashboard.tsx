@@ -44,7 +44,6 @@ export default function Dashboard() {
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex justify-between items-center">
                         <h1 className="jura text-xl">Dashboard</h1>
-
                         <div>
                           <input
                             type="text"

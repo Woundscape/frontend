@@ -58,6 +58,7 @@ export default function Patient() {
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
+                    onRender={() => {}}
                     segmented
                   />
                   {/* Body */}
