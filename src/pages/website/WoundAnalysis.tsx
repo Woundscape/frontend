@@ -4,20 +4,18 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined,
   LeftOutlined,
-  PlusOutlined,
 } from "@ant-design/icons";
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
 
-import LoadPath from "@libs/images_2.json";
-
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { IImage, TissueType } from "@constraint/constraint";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
+import AddNote from "@components/AddNote";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
@@ -119,7 +117,7 @@ export default function WoundAnalysis() {
           <div className="w-full bg-white grow px-10">
             <div className="flex flex-col items-center h-full py-12">
               <div className="w-full h-full flex flex-col justify-between space-y-4">
-                <div id="button" className="flex justify-between">
+                <div id="button-wrapper" className="flex justify-between">
                   <Button
                     type="text"
                     icon={<LeftOutlined style={{ color: "#61708C" }} />}
@@ -135,27 +133,7 @@ export default function WoundAnalysis() {
                   </Button>
                 </div>
                 <DrawSketchCanvas />
-                <Button
-                  id="add-note"
-                  className="py-8 flex items-center border-2 border-[#D9D9D9]"
-                  onClick={handleModal}
-                >
-                  <div className="flex space-x-4 jura">
-                    <PlusOutlined style={{ fontSize: 20, color: "#4C577C" }} />
-                    <p className="text-lg text-[#4C577C]">ADD NOTE</p>
-                  </div>
-                </Button>
-                <Modal
-                  open={openModal}
-                  onOk={handleModal}
-                  onCancel={handleModal}
-                  width={1000}
-                  style={{
-                    borderRadius: "1.25rem",
-                  }}
-                >
-                  <div className="w-full bg-red-200">ds</div>
-                </Modal>
+                <AddNote openModal={openModal} onModal={handleModal} />
               </div>
             </div>
           </div>
