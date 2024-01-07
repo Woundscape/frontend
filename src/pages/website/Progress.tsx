@@ -14,9 +14,13 @@ import { Button, Collapse, DatePicker, Modal, Tabs } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Export from "@assets/export.svg";
 import Eye from "@assets/eye_input.svg";
+import Patient from "@assets/patient_profile.svg";
+import Send from "@assets/send.svg";
+import WoundImg from "@assets/wound/img_6.jpg";
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import TabPane from "antd/es/tabs/TabPane";
+import TextArea from "antd/es/input/TextArea";
 
 const { RangePicker } = DatePicker;
 
@@ -120,7 +124,7 @@ export default function progress() {
               </div>
             </header>
             <Content className="flex justify-between jura">
-              <div className="p-6 w-2/3">
+              <div className="p-6 grow space-y-3">
                 <div className="border rounded">
                   <div className="bg-[#EEEEEE] p-4 flex justify-between jura">
                     <p className="text-[#626060] text-lg">Wound Progression</p>
@@ -130,7 +134,7 @@ export default function progress() {
                     </div>
                   </div>
                   <div className="p-3">
-      <Line data={data} options={options} />
+                    <Line data={data} options={options} />
                   </div>
                 </div>
                 <Button
@@ -159,8 +163,32 @@ export default function progress() {
                   items={[
                     {
                       key: "1",
-                      label: "This is default size panel header",
-                      children: <p>ddd</p>,
+                      label: (
+                        <div className="flex space-x-3">
+                          <img src={Patient} className="w-9" alt="" />
+                          <div className="jura flex-col">
+                            <p className="text-[#4C577C] text-base">
+                              HN. 6643793
+                            </p>
+                            <p className="text-[#B4B4B4]">patient</p>
+                          </div>
+                        </div>
+                      ),
+                      children: (
+                        <div className="relative space-y-3">
+                          <TextArea
+                            className="block w-full resize-none px-0 text-base text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                            placeholder="Type your message . . ."
+                            required
+                          ></TextArea>
+                          <div className="h-7">
+                            <Button className="absolute w-28 right-0 jura flex justify-center items-center space-x-2 border-[#9198AF] border-2 rounded text-[#4C577C]">
+                              <p>Send</p>
+                              <img src={Send} className="w-4" alt="" />
+                            </Button>
+                          </div>
+                        </div>
+                      ),
                     },
                   ]}
                 />
@@ -168,7 +196,7 @@ export default function progress() {
 
               <div className="border-l-2 border-[#E8EAF4]"></div>
 
-              <div className="w-1/3 tabs-container__navigation">
+              <div className="w-[23rem] tabs-container__navigation">
                 <Tabs type="card" className="h-full p-6">
                   {/* Summary Tissue Tab */}
                   <TabPane
@@ -206,15 +234,28 @@ export default function progress() {
                       })}
                     </div>
                   </TabPane>
-                  <TabPane
+                  <TabPane className=""
                     tab={
                       <div className="text-[#424241] text-center select-none jura">
-                        Equipment
+                        Image
                       </div>
                     }
                     key="2"
                   >
-                    <p>jjjjjjj</p>
+                    <div
+                      className="flex flex-col mt-3 space-y-2 justify-center items-center w-full h-40 rounded-lg"
+                      style={{
+                        backgroundSize: "cover",
+                        backgroundPosition: "center center",
+                      }}
+                    >
+                      <img
+                        src={WoundImg}
+                        className="w-60 h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
+                        alt=""
+                      />
+                      <p className="jura text-sm text-[#9198AF]">Feb 14, 2023 18:42</p>
+                    </div>
                   </TabPane>
                 </Tabs>
               </div>
