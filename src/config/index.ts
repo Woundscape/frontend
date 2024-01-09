@@ -1,5 +1,7 @@
 import { ThemeConfig } from "antd";
 
+export const httpAPI: string = "http://localhost:3000";
+
 export const themeConfig: ThemeConfig = {
   components: {
     Segmented: {
@@ -15,36 +17,44 @@ export const themeConfig: ThemeConfig = {
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
     },
-    Button:{
-      colorPrimaryHover: 'none'
+    Button: {
+      colorPrimaryHover: "none",
     },
-    Select:{
-      fontFamily: 'jura',
-      zIndexPopup:50,
+    Select: {
+      fontFamily: "jura",
     },
-    Modal:{
-      titleColor:'#4C577C',
-      fontFamily:'jura',
-      wireframe:true,
+    Modal: {
+      titleColor: "#4C577C",
+      fontFamily: "jura",
+      wireframe: true,
     },
-    Input:{
-      activeShadow:'transparent',
-      activeBorderColor:'',
-      hoverBorderColor:'#B4B4B4',
-      fontFamily:'jura',
+    Input: {
+      activeShadow: "transparent",
+      activeBorderColor: "",
+      hoverBorderColor: "#B4B4B4",
+      fontFamily: "jura",
+      colorBgContainerDisabled: "transparent",
+      colorTextDisabled: "black",
     },
-    DatePicker:{
-      activeShadow:'transparent',
-      activeBorderColor:'#B4B4B4',
-      hoverBorderColor:'#B4B4B4',
-      fontFamily:'jura',
-  
-      cellActiveWithRangeBg:'#E2EDFF',
-      colorText:'#555554',
+    DatePicker: {
+      activeShadow: "transparent",
+      activeBorderColor: "#B4B4B4",
+      hoverBorderColor: "#B4B4B4",
+      fontFamily: "jura",
+
+      cellActiveWithRangeBg: "#E2EDFF",
+      colorText: "#555554",
     },
-    Collapse:{
-      headerBg:'white'
-    }
+    Collapse: {
+      headerBg: "white",
+    },
+    Card: {
+      fontFamily: "jura",
+      headerFontSize: 14,
+      colorTextHeading: "#4C577C",
+      colorText: "#4C577C",
+      colorBorderSecondary: "#D9D9D9",
+    },
   },
 };
 
@@ -58,4 +68,3 @@ export const tagInputStyle: React.CSSProperties = {
 export const tagPlusStyle: React.CSSProperties = {
   borderStyle: "dashed",
 };
-

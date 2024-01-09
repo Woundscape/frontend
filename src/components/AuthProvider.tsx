@@ -2,8 +2,10 @@ import { getMe } from "@api-caller/authenApi";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
+import { IMe } from "@constraint/constraint";
 
 const AuthContext = createContext({
+  doctorId: "",
   isAuthenticated: false,
   login: async (accessToken: string) => {},
   logout: () => {},
@@ -13,6 +15,7 @@ export const AuthProvider = ({ children }: any) => {
   const router = useNavigate();
   const { changeLoading } = useLoading();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [doctorId, setDoctorId] = useState("");
   useEffect(() => {
     checkAccessToken();
   }, [children]);
@@ -22,10 +25,10 @@ export const AuthProvider = ({ children }: any) => {
       JSON.parse(sessionStorage.getItem("token") || "");
     try {
       if (token) {
-        const response = await getMe(token);
-        console.log("response", response);
+        const response: IMe = await getMe(token);
         changeLoading(false);
         setIsAuthenticated(true);
+        setDoctorId(response.doctor_id);
       } else {
         router("/signin");
       }
@@ -47,7 +50,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ doctorId, isAuthenticated, login, logout }}>
       {isAuthenticated && children}
     </AuthContext.Provider>
   );

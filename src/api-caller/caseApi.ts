@@ -11,7 +11,7 @@ export const getAllCase = async (): Promise<ICase[]> => {
   }
 };
 
-export const getCaseByCaseId = async (params:string): Promise<any> => {
+export const getCaseByCaseId = async (params: string): Promise<any> => {
   try {
     const { data } = await getInstanceLocal().get(
       `/case/getByCaseId/${params}`
@@ -37,16 +37,19 @@ export const getCaseByDoctorId = async ({
   }
 };
 
-export const updateCase = async ({
-  params,
-  body,
-}: {
-  params: string;
+export interface IUpdateCase {
+  case_id: string;
   body: any;
-}): Promise<boolean> => {
+}
+
+export const updateCase = async ({
+  case_id,
+  body,
+}: IUpdateCase): Promise<boolean> => {
   try {
-    const { data } = await getInstanceLocal().put(`/case/assignee/${params}`, {
-      doctor_id: body.doctor_id,
+    const { data } = await getInstanceLocal().put(`/case/`, {
+      case_id: case_id,
+      ...body,
     });
     return data === "Successfully";
   } catch (error) {

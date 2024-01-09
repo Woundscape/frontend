@@ -2,6 +2,26 @@ import { getInstanceLocal } from "@api/apiClient";
 import { IImage } from "@constraint/constraint";
 import { formattedError } from "@utils";
 
+export interface IUpdateImage {
+  img_id: string;
+  img_tissue: any;
+}
+
+export async function updateImage({
+  img_id,
+  img_tissue,
+}: IUpdateImage): Promise<boolean> {
+  try {
+    const { data } = await getInstanceLocal().put("/image/", {
+      img_id,
+      img_tissue
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
 export async function getImageById(img_id: string): Promise<IImage> {
   try {
     const { data } = await getInstanceLocal().get(`/image/${img_id}`);
@@ -24,7 +44,9 @@ export async function getAllImageByCaseId(case_id: string): Promise<IImage[]> {
 
 export async function getAllImageById(img_id: string): Promise<IImage[]> {
   try {
-    const { data } = await getInstanceLocal().get(`/image/getAllByImageId/${img_id}`);
+    const { data } = await getInstanceLocal().get(
+      `/image/getAllByImageId/${img_id}`
+    );
     return data;
   } catch (error) {
     throw formattedError(error);

@@ -1,3 +1,4 @@
+import { useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Button, Popover, Slider, Typography } from "antd";
@@ -11,10 +12,22 @@ import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
 import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
-import Wound from "@assets/wound/img_31.jpg";
-import { TissueType } from "@constraint/constraint";
+import {
+  IFormattedErrorResponse,
+  IImage,
+  TissueType,
+} from "@constraint/constraint";
+import { IUpdateImage, getImageById, updateImage } from "@api-caller/imageApi";
+import { UseMutationResult, useMutation } from "react-query";
+import { httpAPI } from "@config";
 
 export default function DrawSketchCanvas() {
+  const { img_id } = useParams();
+  const updateMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    IUpdateImage
+  > = useMutation(updateImage);
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
       title: "eschar",
@@ -62,6 +75,7 @@ export default function DrawSketchCanvas() {
       color: "#D4F3F3",
     },
   ]);
+  const [image, setImage] = useState<IImage>();
   const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
@@ -73,27 +87,24 @@ export default function DrawSketchCanvas() {
   // const [canvasHeight, setCanvasHeight] = useState(0);
   const [selectTools, setSelectTools] = useState("none");
   const [pointer, setPointer] = useState("none");
-  const [original, setOriginal] = useState<any>();
+  const [original, setOriginal] = useState<any>([]);
   // const { isLoading, changeLoading } = useLoading();
   useEffect(() => {
-    if (canvasRef.current) {
-      canvasRef.current.loadPaths(LoadPath.data);
-      setOriginal(LoadPath.data);
+    if (img_id) {
+      getImage();
+      // if (canvasDiv) {
+      //   setCanvasHeight(canvasDiv.current?.clientHeight || 0);
+      // }
     }
-    // if (canvasDiv) {
-    //   setCanvasHeight(canvasDiv.current?.clientHeight || 0);
-    // }
   }, []);
-  // useEffect(() => {
-  //   if (img_id) {
-  //     getImage();
-  //   }
-  // }, []);
-  // async function getImage() {
-  //   const response = await getImageById(img_id as string);
-  //   setImage(response);
-  //   console.log(response);
-  // }
+  async function getImage() {
+    const response = await getImageById(img_id as string);
+    if (canvasRef.current && response.img_tissue) {
+      canvasRef.current.loadPaths(response.img_tissue);
+      setOriginal(response.img_tissue);
+    }
+    setImage(response);
+  }
   const handleCanvasExportImage = async () => {
     const a = await canvasRef.current?.exportImage("png");
     console.log(a);
@@ -155,9 +166,22 @@ export default function DrawSketchCanvas() {
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
   };
-  const onChange = async () => {
-    const paths = await canvasRef.current?.exportPaths();
-    setOriginal(paths);
+  const onSubmit = async () => {
+    if (editable) {
+      const paths = await canvasRef.current?.exportPaths();
+      const body: IUpdateImage = {
+        img_id: image?.img_id || "",
+        img_tissue: paths,
+      };
+      console.log(body);
+      updateMutation.mutate(body, {
+        onSuccess: () => {
+          console.log("eiei");
+        },
+      });
+      console.log(paths);
+      setOriginal(paths);
+    }
     setEditable(!editable);
   };
   function renderSelectTissue() {
@@ -234,6 +258,7 @@ export default function DrawSketchCanvas() {
       </div>
     );
   }
+  
   return (
     <>
       <Content
@@ -287,7 +312,7 @@ export default function DrawSketchCanvas() {
             <DefaultButton
               title="Edit"
               sub_title="Save"
-              onChange={onChange}
+              onChange={onSubmit}
               editable={editable}
               backgroundColor="bg-[#D2D4EB]"
               bordered
@@ -359,25 +384,34 @@ export default function DrawSketchCanvas() {
           )}
           <div
             id="canvas_editor___container"
-            className="w-full grow flex-1 min-h-0 relative"
+            className="relative grow flex min-h-0 min-w-0"
           >
             <div
               id="canvas_editor___sketch"
-              className={`w-full h-full  ${
+              className={`relative overflow-auto grow ${
                 selectTools == "pen" ? "canvas__cursor___paint" : ""
               }`}
-              style={{
-                backgroundImage: `url(${Wound})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-              }}
+              // style={{
+              //   backgroundImage: `url("http://localhost:3000/${image?.img_path.replace(
+              //     /\\/g,
+              //     "/"
+              //   )}")`,
+              //   backgroundSize: "cover",
+              //   backgroundPosition: "center center",
+              // }}
             >
               <ReactSketchCanvas
                 ref={canvasRef}
                 allowOnlyPointerType={pointer}
                 exportWithBackgroundImage={true}
-                // backgroundImage={Wound}
-                backgroundImage="transparent"
+                backgroundImage={`${httpAPI}/${image?.img_path.replace(
+                  /\\/g,
+                  "/"
+                )}`}
+                // width={"1000px"}
+                // height={"1000px"}
+                // preserveBackgroundImageAspectRatio="xMaxYMid meet"
+                // backgroundImage="transparent"
                 style={{
                   // height: canvasHeight,
                   border: "0.0625rem solid #9c9c9c",

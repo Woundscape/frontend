@@ -1,5 +1,5 @@
 import { LeftOutlined } from "@ant-design/icons";
-import { getAllCase, updateCase } from "@api-caller/caseApi";
+import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
 import {
   ICase,
   IDoctor,
@@ -19,7 +19,7 @@ export default function Management() {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    { params: string; body: any }
+    IUpdateCase
   > = useMutation(updateCase);
   useEffect(() => {
     getAllCase().then((data) => {

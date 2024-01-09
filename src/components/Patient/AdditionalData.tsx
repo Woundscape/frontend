@@ -3,16 +3,38 @@ import ConfirmModal from "@components/ConfirmModal";
 import { useEffect, useRef, useState } from "react";
 import { tagInputStyle, tagPlusStyle } from "@config";
 import { PlusOutlined } from "@ant-design/icons";
-import { IPatient, selectStage } from "@constraint/constraint";
-import { getCaseByCaseId } from "@api-caller/caseApi";
+import {
+  IFormattedErrorResponse,
+  IPatient,
+  selectStage,
+  selectStatus,
+} from "@constraint/constraint";
+import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller/caseApi";
+import { UseMutationResult, useMutation } from "react-query";
 
 interface IAdditionalDataProps {
   case_id: string | undefined;
 }
 
-export default function AdditionalData({case_id}:IAdditionalDataProps) {
+interface IDataStageProps {
+  stage: string;
+  value: any;
+}
+
+export default function AdditionalData({ case_id }: IAdditionalDataProps) {
+  const [cases, setCases] = useState<IPatient>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tags, setTags] = useState(["Diabete", "Wound"]);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [data, setData] = useState<IDataStageProps>({
+    stage: "",
+    value: "",
+  });
+  const updateMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    IUpdateCase
+  > = useMutation(updateCase);
+  const [tags, setTags] = useState<string[]>([]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -24,29 +46,26 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
       inputRef.current?.focus();
     }
   }, [inputVisible]);
-  
+
   useEffect(() => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  useEffect(()=>{
-    if(case_id){
-      getCase()
-    }    
-  })
-  async function getCase(){
-    const _case:IPatient = await getCaseByCaseId(case_id as string);
-    console.log(_case);
-    
-
+  useEffect(() => {
+    if (case_id) {
+      getCase();
+    }
+  }, []);
+  async function getCase() {
+    const _case: IPatient = await getCaseByCaseId(case_id as string);
+    setCases(_case);
+    setTags(_case.disease);
   }
   const handleClose = (e: React.MouseEvent<HTMLElement>, value: string) => {
     e.preventDefault();
+    let disease = tags.filter((item) => item != value);
+    setData({ stage: "case_disease", value: disease });
     showModal();
-    console.log("Clicked! But prevent default.", value);
-  };
-  const showInput = () => {
-    setInputVisible(true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,15 +73,13 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
+    if (inputValue != "") {
+      let disease = [...tags, inputValue];
+      setData({ stage: "case_disease", value: disease });
+      showModal();
+    }else{
+      setInputVisible(false)
     }
-    setInputVisible(false);
-    setInputValue("");
-  };
-
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditInputValue(e.target.value);
   };
 
   const handleEditInputConfirm = () => {
@@ -75,10 +92,28 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleModal = () => {
+  const onCancel = () => {
     setIsModalOpen(!isModalOpen);
   };
-    // const handleClose = (removedTag: string) => {
+  const onSubmit = () => {
+    setSubmitLoading(true);
+    let body: IUpdateCase = {
+      case_id: case_id || "",
+      body: { [data.stage]: data.value },
+    };
+    updateMutation.mutate(body, {
+      onSuccess: () => {
+        if (data.stage == "case_disease") {
+          setInputVisible(false);
+          setInputValue("");
+        }
+        getCase();
+        setIsModalOpen(false);
+        setSubmitLoading(false);
+      },
+    });
+  };
+  // const handleClose = (removedTag: string) => {
 
   // const newTags = tags.filter((tag) => tag !== removedTag);
   // console.log(newTags);
@@ -87,23 +122,39 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
   return (
     <>
       <div className="flex space-x-2 items-center">
+        <Typography id="text__primary">Status :</Typography>
+        <Select
+          style={{ width: 150 }}
+          placeholder="Select"
+          value={cases?.status}
+          options={selectStatus}
+          onSelect={(_, option) => {
+            setData({ stage: "case_status", value: option.value });
+            showModal();
+          }}
+        />
         <Typography id="text__primary">Progression Stage :</Typography>
         <Select
           style={{ width: 200 }}
           placeholder="Select"
+          value={cases?.stage || null}
           options={selectStage}
+          onSelect={(_, option) => {
+            setData({ stage: "case_stage", value: option.value });
+            showModal();
+          }}
         />
         <Space size={[0, 8]} wrap>
           <ConfirmModal
             title="Are you sure ?"
             description="Are you sure that the hospital number you entered is 9877069?"
             isOpen={isModalOpen}
-            confirmLoading={false}
-            onSubmit={handleModal}
-            onCancel={handleModal}
+            confirmLoading={submitLoading}
+            onCancel={onCancel}
+            onSubmit={onSubmit}
           />
           <Typography id="text__primary">Disease :</Typography>
-          {tags.map((tag, index) => {
+          {tags?.map((tag, index) => {
             if (editInputIndex === index) {
               return (
                 <Input
@@ -112,7 +163,9 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
                   size="small"
                   style={tagInputStyle}
                   value={editInputValue}
-                  onChange={handleEditInputChange}
+                  onChange={(e) =>
+                    setData({ stage: "case_disease", value: e.target.value })
+                  }
                   onBlur={handleEditInputConfirm}
                   onPressEnter={handleEditInputConfirm}
                 />
@@ -167,7 +220,7 @@ export default function AdditionalData({case_id}:IAdditionalDataProps) {
             <Tag
               style={tagPlusStyle}
               icon={<PlusOutlined />}
-              onClick={showInput}
+              onClick={() => setInputVisible(true)}
               className="jura"
             >
               Add Tag

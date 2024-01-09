@@ -13,6 +13,7 @@ import {
   Select,
 } from "antd";
 import SearchIcon from "@assets/icon-search-upload.svg";
+import AddImageIcon from "@assets/icons/add_image_icon2.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { SegmentedValue } from "antd/es/segmented";
 import uploadImage from "@api-caller/imageApi";
@@ -106,7 +107,7 @@ export default function DefaultInput({
             <Button
               onClick={() => setIsModalOpen(true)}
               className="button_add"
-              icon={<UserAddOutlined />}
+              icon={<img src={AddImageIcon}/>}
             >
               Add Image
             </Button>

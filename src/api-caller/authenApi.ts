@@ -1,5 +1,6 @@
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
+import { IMe } from "@constraint/constraint";
 
 export interface IFormInputsLogin {
   user_email: string;
@@ -21,7 +22,7 @@ export async function login(request: IFormInputsLogin): Promise<LoginSuccessResp
   }
 }
 
-export async function getMe(token: string): Promise<any> {
+export async function getMe(token: string): Promise<IMe> {
   try {
     const { data } = await getInstanceLocal().get('/user/me', {
       headers: {

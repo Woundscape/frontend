@@ -10,16 +10,14 @@ import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
 
 import { useEffect, useRef, useState } from "react";
-import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
+import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
-import { useParams } from "react-router-dom";
 import { IImage, TissueType } from "@constraint/constraint";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
 import AddNote from "@components/AddNote";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
-  const { img_id } = useParams();
   const { TabPane } = Tabs;
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
@@ -84,7 +82,6 @@ export default function WoundAnalysis() {
       },
     ],
   };
-  const [image, setImage] = useState<IImage>();
   const [opacityVal, setOpacityVal] = useState(100);
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
   const [openModal, setOpenModal] = useState(false);
@@ -92,7 +89,6 @@ export default function WoundAnalysis() {
   function handleOpacity(value: string) {
     setOpacityVal(parseInt(value));
   }
-
   async function renderTissueData(strokeColor: string) {
     if (canvasRef.current) {
       const test = await canvasRef.current.exportPaths();
@@ -114,9 +110,9 @@ export default function WoundAnalysis() {
     <>
       <div className="w-full h-screen relative">
         <div className="h-full relative flex gap-3">
-          <div className="w-full bg-white grow px-10">
+          <div className="w-full bg-white grow overflow-y-auto px-10">
             <div className="flex flex-col items-center h-full py-12">
-              <div className="w-full h-full flex flex-col justify-between space-y-4">
+              <div className="w-full min-h-full overflow-y-auto flex flex-col justify-between space-y-4">
                 <div id="button-wrapper" className="flex justify-between">
                   <Button
                     type="text"
@@ -137,11 +133,11 @@ export default function WoundAnalysis() {
               </div>
             </div>
           </div>
-          <div className="w-[30rem] h-full bg-white relative py-4 px-4 overflow-y-auto">
+          <div className="w-[30rem] h-full bg-white relative py-4 px-4">
             <div className="h-full flex flex-col space-y-3">
               <UserProfile />
-              <div className="tabs-container__navigation h-full">
-                <Tabs type="card" className="h-full">
+              <div className="tabs-container__navigation h-full overflow-y-auto">
+                <Tabs type="card" id="tabs-container_antd" className="h-full">
                   {/* Summary Tissue Tab */}
                   <TabPane
                     tab={
@@ -151,83 +147,89 @@ export default function WoundAnalysis() {
                     }
                     key="1"
                   >
-                    <Content className="space-y-3 overflow-y-auto">
-                      {tissueData?.map((item, index) => (
-                        <div
-                          key={index}
-                          className={`w-full p-2.5 flex justify-center items-center space-x-3`}
-                          style={{
-                            borderRadius: "0.8125rem",
-                            backgroundColor: item.color + "",
-                          }}
-                        >
-                          <Typography className="text-xl text-[#535352] jura">
-                            {index + 1}
-                          </Typography>
-                          <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 jura bg-white">
-                            <p>{item.title}</p>
-                            <p>{item.value + ""}%</p>
-                          </div>
+                    <Content className="h-full overflow-y-auto">
+                      <div className="h-full space-y-3">
+                        {tissueData?.map((item, index) => (
                           <div
-                            id="tools_tissue"
-                            title="Hidden"
-                            onClick={() => {
-                              if (hideTissue.includes(item.color)) {
-                                let tissue = hideTissue.filter(
-                                  (e) => e !== item.color
-                                );
-                                setHideTissue(tissue);
-                              } else {
-                                setHideTissue([...hideTissue, item.color]);
-                              }
-                              renderTissueData(item.color);
+                            key={index}
+                            className={`w-full p-2.5 flex justify-center items-center space-x-3`}
+                            style={{
+                              borderRadius: "0.8125rem",
+                              backgroundColor: item.color + "",
                             }}
-                            className="space-x-2 flex justify-center items-center cursor-pointer"
                           >
-                            {hideTissue.includes(item.color) ? (
-                              <EyeInvisibleOutlined style={{ fontSize: 18 }} />
-                            ) : (
-                              <EyeOutlined style={{ fontSize: 18 }} />
-                            )}
-                            {/* <LockOutlined style={{ fontSize: 18 }} /> */}
+                            <Typography className="text-xl text-[#535352] jura">
+                              {index + 1}
+                            </Typography>
+                            <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 jura bg-white">
+                              <p>{item.title}</p>
+                              <p>{item.value + ""}%</p>
+                            </div>
+                            <div
+                              id="tools_tissue"
+                              title="Hidden"
+                              onClick={() => {
+                                if (hideTissue.includes(item.color)) {
+                                  let tissue = hideTissue.filter(
+                                    (e) => e !== item.color
+                                  );
+                                  setHideTissue(tissue);
+                                } else {
+                                  setHideTissue([...hideTissue, item.color]);
+                                }
+                                renderTissueData(item.color);
+                              }}
+                              className="space-x-2 flex justify-center items-center cursor-pointer"
+                            >
+                              {hideTissue.includes(item.color) ? (
+                                <EyeInvisibleOutlined
+                                  style={{ fontSize: 18 }}
+                                />
+                              ) : (
+                                <EyeOutlined style={{ fontSize: 18 }} />
+                              )}
+                              {/* <LockOutlined style={{ fontSize: 18 }} /> */}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                      <List>
-                        <div className="flex justify-between">
-                          <Typography className="jura">Opacity</Typography>
-                          <InputNumber
-                            min={0}
-                            max={100}
-                            value={opacityVal}
-                            onChange={() => {
-                              handleOpacity;
-                            }}
-                          />
-                        </div>
-
-                        <div className="canvas__slider___range">
-                          <input
-                            type="range"
-                            min={0}
-                            max={100}
-                            value={opacityVal}
-                            onChange={(e) => {
-                              handleOpacity(e.target.value);
-                            }}
-                          />
-                        </div>
-                      </List>
-                      <Pie
-                        data={data}
-                        options={{
-                          plugins: {
-                            legend: {
-                              display: false, // Set display to false to hide the labels
+                        ))}
+                        <List>
+                          <div className="flex justify-between">
+                            <Typography className="jura">Opacity</Typography>
+                            <InputNumber
+                              min={0}
+                              max={100}
+                              value={opacityVal}
+                              onChange={() => {
+                                handleOpacity;
+                              }}
+                            />
+                          </div>
+                          <div className="canvas__slider___range">
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={opacityVal}
+                              onChange={(e) => {
+                                handleOpacity(e.target.value);
+                              }}
+                            />
+                          </div>
+                          <div className="py-2.5 flex justify-center items-center rounded-lg jura text=[#424241] bg-[#EEE]">
+                            Result
+                          </div>
+                        </List>
+                        <Pie
+                          data={data}
+                          options={{
+                            plugins: {
+                              legend: {
+                                display: false, // Set display to false to hide the labels
+                              },
                             },
-                          },
-                        }}
-                      />
+                          }}
+                        />
+                      </div>
                     </Content>
                   </TabPane>
                   {/* Equipment Tab */}

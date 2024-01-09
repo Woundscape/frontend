@@ -14,14 +14,17 @@ import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
 import AdditionalData from "@components/Patient/AdditionalData";
+import DeleteModal from "@components/DeleteModal";
 
 export default function PatientDetail() {
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
-  const [casePatient, setCasePatient] = useState();
   const [stageSegmented, setStageSegmented] = useState("Overview");
   const [checkedList, setCheckList] = useState<string[]>([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   async function formatDateImages(images: IImage[]) {
     const sortImage: Record<string, IImage[]> = {};
@@ -102,28 +105,33 @@ export default function PatientDetail() {
     });
   }
   const onSubmit = async () => {
-    switch (stageSegmented) {
-      case "Overview":
-        setStageSegmented("Delete");
-        break;
-      case "Delete":
-        if (checkedList.length > 0) {
-          const deleteResponse = await deleteImage(checkedList);
-          getImage();
-        }
-        setStageSegmented("Overview");
-        break;
-      case "Comparative Imaging":
-        router("/compare");
-        break;
-      case "Wound Progression":
-        router("/progress");
-        break;
-      default:
-        console.log(checkedList);
-        break;
+    if (stageSegmented == 'Delete' && !isModalOpen && checkedList.length > 0){
+      setIsModalOpen(true)
+    }else{
+      switch (stageSegmented) {
+        case "Overview":
+          setStageSegmented("Delete");
+          break;
+        case "Delete":
+          if (checkedList.length > 0) {
+            const deleteResponse = await deleteImage(checkedList);
+            getImage();
+            setIsModalOpen(false)
+          }
+          setStageSegmented("Overview");
+          break;
+        case "Comparative Imaging":
+          router("/compare");
+          break;
+        case "Wound Progression":
+          router("/progress");
+          break;
+        default:
+          console.log(checkedList);
+          break;
+      }
+      setCheckList([]);
     }
-    setCheckList([]);
   };
   return (
     <>
@@ -178,7 +186,7 @@ export default function PatientDetail() {
                         dataSource={Object.keys(images)}
                         renderItem={(item, index) => {
                           return (
-                            <p className="test-item" aria-month={'2023'}>
+                            <div className="test-item" data-month={"2023"}>
                               <li
                                 key={index}
                                 className="timeline-item flex flex-wrap gap-3"
@@ -186,7 +194,7 @@ export default function PatientDetail() {
                               >
                                 {renderImage(item)}
                               </li>
-                            </p>
+                            </div>
                           );
                         }}
                       />
@@ -267,6 +275,14 @@ export default function PatientDetail() {
                     ? "Delete"
                     : "Confirm"}
                 </Button>
+                <DeleteModal
+                  title="Are you sure ?"
+                  description="Are you sure that you want to delete these images"
+                  isOpen={isModalOpen}
+                  confirmLoading={submitLoading}
+                  onCancel={()=> setIsModalOpen(false)}
+                  onSubmit={onSubmit}
+                />
               </div>
             </div>
           </div>

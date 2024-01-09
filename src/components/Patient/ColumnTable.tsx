@@ -2,7 +2,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Typography, Tag } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-
+import MoreIcon from "@assets/icons/more_icon.svg";
 
 export const getColumns = (): ColumnsType<any> => [
   {
@@ -27,7 +27,7 @@ export const getColumns = (): ColumnsType<any> => [
       return (
         <>
           <Typography key={index} className="jura truncate">
-            {value.toString().padStart(3,'0')}
+            {value.toString().padStart(3, "0")}
           </Typography>
         </>
       );
@@ -51,19 +51,21 @@ export const getColumns = (): ColumnsType<any> => [
     dataIndex: "disease",
     key: "disease",
     render: (_, { disease }) => (
-      <>
-        {"123"?.split("")?.map((value: string, index: number) => {
-          let color = value.length > 5 ? "geekblue" : "green";
-          if (value === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={`${value}-${index}`} className="jura">
-              {value}
+      <div className="flex items-center">
+        {disease && disease.length > 0 && (
+          <>
+            <Tag
+              color={disease[0].length > 5 ? "geekblue" : "green"}
+              className="jura"
+            >
+              {disease[0]}
             </Tag>
-          );
-        })}
-      </>
+            {disease.length > 1 && (
+              <Typography id="text__disease">+{disease.length - 1}</Typography>
+            )}
+          </>
+        )}
+      </div>
     ),
   },
   {
@@ -87,10 +89,14 @@ export const getColumns = (): ColumnsType<any> => [
     ),
   },
   {
-    title: 'Action',
-    key: 'operation',
-    fixed: 'right',
+    title: "Action",
+    key: "operation",
+    fixed: "right",
     width: 100,
-    render: () => <a>action</a>,
+    render: () => (
+      <div className="mr-6 first-letter:bg-red-200 flex justify-center">
+        <img src={MoreIcon} alt="" />
+      </div>
+    ),
   },
 ];
