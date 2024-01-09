@@ -6,7 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function ImageMenu() {
   const { img_id } = useParams();
-  const router = useNavigate();
   const [images, setImages] = useState<IImage[]>([]);
 
   useEffect(() => {
@@ -14,22 +13,30 @@ export default function ImageMenu() {
       getAllImage();
     }
   }, []);
+
+  useEffect(() => {
+    const imageElement = document.getElementById(`${img_id}`);
+    if (imageElement) {
+      imageElement.scrollIntoView();
+    }
+  }, [images]);
+
   async function getAllImage() {
     const response = await getAllImageById(img_id as string);
     setImages(response);
   }
-  
+
   return (
     <>
       {images?.map((image, index) => {
         let imgPath = image.img_path.replace(/\\/g, "/");
         let dateObject = new Date(image.created_at);
-        let formattedDate = new Intl.DateTimeFormat('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
+        let formattedDate = new Intl.DateTimeFormat("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
         }).format(dateObject);
         return (
           <List.Item
@@ -38,11 +45,12 @@ export default function ImageMenu() {
             className="select-none text-center flex flex-col"
           >
             <div className="w-full h-40 rounded-lg">
-              <img
-              onClick={()=>router(`/wound/${image.img_id}`)}
-                src={`http://localhost:3000/${imgPath}`}
-                className="w-full h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
-              />
+              <a href={`/wound/${image.img_id}`}>
+                <img
+                  src={`http://localhost:3000/${imgPath}`}
+                  className="w-full h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
+                />
+              </a>
             </div>
             <Typography className="jura text-[#9198AF]">
               {formattedDate}

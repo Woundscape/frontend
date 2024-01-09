@@ -10,7 +10,7 @@ export const optionSegmented: any = [
     label: (
       <div id="text__primary" className="flex space-x-2">
         <p>Comparative Imaging</p>
-        <Tooltip title="test">
+        <Tooltip placement="bottom" title="Comparing photos of wounds to observe differences in tissue.">
           <InfoCircleOutlined />
         </Tooltip>
       </div>
@@ -21,7 +21,7 @@ export const optionSegmented: any = [
     label: (
       <div id="text__primary" className="flex space-x-2">
         <p>Wound Progression</p>
-        <Tooltip title="test">
+        <Tooltip placement="bottom" title="Progress of the wound to observe recovery.">
           <InfoCircleOutlined />
         </Tooltip>
       </div>

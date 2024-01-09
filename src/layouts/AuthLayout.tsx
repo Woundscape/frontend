@@ -1,9 +1,7 @@
-import { useAuth } from "@components/AuthProvider";
 import Menu from "@components/Menu";
 import { Outlet, useLocation } from "react-router-dom";
 
 export default function AuthLayout() {
-  const { isAuthenticated } = useAuth();
   const location = useLocation();
   const checkParamsPatient = location.pathname.split("/patient/")[1];
   return (

@@ -29,6 +29,7 @@ export const getColumnEquipment = (): ColumnsType<IEquipment> => [
           <Typography key={index} className="jura truncate">
             {value}
           </Typography>
+          {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
       );
     },

@@ -7,6 +7,7 @@ import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
 import { useLoading } from "@components/Loading";
 import DashboardTable from "@features/PatientTable";
+import { useAuth } from "@components/AuthProvider";
 
 export interface CardPatient {
   title: string;
@@ -14,6 +15,8 @@ export interface CardPatient {
 }
 
 export default function Dashboard() {
+  const { doctorId } = useAuth();
+  console.log(doctorId);
   // const { changeLoading } = useLoading();
   // changeLoading(false)
   const card: CardPatient[] = [

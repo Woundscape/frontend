@@ -9,6 +9,7 @@ import { Select, notification } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
+import { IUpdateCase } from "@api-caller/caseApi";
 
 interface DropdownFieldProps {
   data: ICase;
@@ -16,7 +17,7 @@ interface DropdownFieldProps {
   updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    { params: string; body: any }
+    IUpdateCase
   >;
 }
 
@@ -50,7 +51,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
     setSubmitLoading(true);
     updateMutation.mutate(
       {
-        params: data.case_id,
+        case_id: data.case_id,
         body: { doctor_id: selectValue },
       },
       {

@@ -46,7 +46,7 @@ export default function Equipment() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <DefaultInput placeholder="Search by Equipment Name" onFilter={filterEquipmentId} />
+                  <DefaultInput placeholder="Search by Equipment Name" onFilter={filterEquipmentId} onRender={()=>{}} />
                   {/* Body */}
                   <Content id="content__patient" className="pt-7">
                     <Table

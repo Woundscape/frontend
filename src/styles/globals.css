@@ -52,12 +52,21 @@
   color: var(--black);
 }
 
+div{
+  user-select: none;
+}
+
 #text__primary {
   font-family: jura;
   color: #4c577c;
   padding-right: 5px;
 }
 
+#text__disease {
+  font-family: jura;
+  color: #949CB6;
+  padding-left: 3px;
+}
 #line__upload_container > .ant-upload-wrapper {
   width: 350px;
 }
@@ -87,6 +96,12 @@
     justify-content: center;
   }
 } */
+#tabs-container_antd > div.ant-tabs-content-holder,
+#tabs-container_antd > div.ant-tabs-content-holder > div,
+#tabs-container_antd > div.ant-tabs-content-holder > div > div {
+  height: 100%;
+}
+
 .tabs-container__navigation
   > .ant-tabs-card
   > .ant-tabs-nav
@@ -148,7 +163,6 @@
   border-radius: 8px !important;
 }
 
-
 /* #head__patient > div.ant-segmented.jura.mt-4.select-none.css-dev-only-do-not-override-p76nsb > div > label.ant-segmented-item:nth-child(1).ant-segmented-item-selected{
   background-color: #EEEEEE !important;
 }
@@ -160,7 +174,7 @@
 } */
 
 .react-sketch-canvas {
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 
@@ -322,6 +336,9 @@ input::-webkit-inner-spin-button {
   border-color: #8087a7;
   border-width: 2px;
   color: #4c577c;
+  font-family: jura;
+  display: flex;
+  align-items: center;
 }
 .patient_img {
   filter: saturate(50%);
@@ -363,6 +380,7 @@ input::-webkit-inner-spin-button {
 .timeline-item {
   color: #dcd3d3;
   font-family: var(--font-family-2);
+  text-wrap: nowrap;
   text-align: center;
   padding: 0 1.5rem 1.5rem 1.5rem;
   border-left: 2px dashed #dcd3d3;
@@ -376,23 +394,44 @@ input::-webkit-inner-spin-button {
 .timeline-item::after {
   content: attr(data-date);
   position: absolute;
-  right: calc(var(--item-width) + 20px);
+  right: calc(var(--item-width) + 15px);
   top: -20px;
   color: #555554;
-  font-size: 20px;
+  font-size: 18px;
   float: right;
   font-family: jura;
   /* white-space:nowrap */
 }
 
-.timeline-item::before {
+.test-item {
+  color: #dcd3d3;
+  font-family: var(--font-family-2);
+  text-wrap: nowrap;
+  text-align: center;
+  border-bottom: 2px dashed #e9ebf5;
+  position: relative;
+  list-style-type: none;
+  --item-width: calc(100%);
+}
+.test-item::after {
+  content: attr(data-month);
+  position: absolute;
+  right: calc(var(--item-width) + 15px);
+  top: 6px;
+  color: #b4b4b4;
+  font-size: 16px;
+  float: right;
+  font-family: jura;
+}
+
+.test-item::before {
   content: "";
   border-radius: 50%;
   width: 12px;
   height: 12px;
   background-color: #dcd3d3;
   position: absolute;
-  left: -8px;
+  left: -5px;
   top: -8px;
 }
 
@@ -463,18 +502,12 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Upload Modal */
-#upload__container_modal
-  > span
-  > div.ant-upload-list.ant-upload-list-picture {
+#upload__container_modal > span > div.ant-upload-list.ant-upload-list-picture {
   overflow-y: auto;
   max-height: 200px;
 }
 
-#upload__container_modal
-  > span
-  > div
-  > span
-  > div {
+#upload__container_modal > span > div > span > div {
   display: flex;
   justify-content: center;
   align-items: center;

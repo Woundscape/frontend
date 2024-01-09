@@ -92,6 +92,7 @@ export default function UploadModal({
           </Button>
         </div>,
       ]}
+      destroyOnClose
     >
       <Content
         id="upload__container_modal"

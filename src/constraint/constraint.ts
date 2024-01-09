@@ -7,6 +7,12 @@ export interface IFormattedErrorResponse {
   statusText?: string;
 }
 
+export interface TissueType {
+  title: string;
+  value: number;
+  color: string;
+}
+
 export interface ICase {
   case_id: string;
   hn_id: string;
@@ -30,13 +36,15 @@ export interface IDoctor {
 
 export interface IPatient {
   case_id: string;
+  admit_no: any;
   hn_id: string;
+  doctor_id: string;
   status: string;
   stage: string;
-  disease: any;
+  disease: string[];
   created_at: Date;
   updated_at: Date;
-  imagePreview: any;
+  imagePreview?: any;
 }
 
 export interface IMe {
@@ -51,7 +59,7 @@ export interface IMe {
 
 export interface IImage {
   img_id: string;
-  img_tissue?: any;
+  img_tissue?: any | [];
   img_equip?: any;
   img_path: string;
   img_status: boolean;
@@ -94,5 +102,16 @@ export const selectStage: DefaultOptionType[] = [
   {
     value: IStage.IMPROVE,
     label: IStage.IMPROVE,
+  },
+];
+
+export const selectStatus: DefaultOptionType[] = [
+  {
+    value: "In Progress",
+    label: "In Progress",
+  },
+  {
+    value: "Done",
+    label: "Done",
   },
 ];

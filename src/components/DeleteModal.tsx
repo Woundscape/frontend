@@ -10,7 +10,7 @@ interface IModelProps {
   onCancel: () => void;
 }
 
-export default function ConfirmModal({
+export default function DeleteModal({
   isOpen,
   title,
   description,
@@ -45,7 +45,7 @@ export default function ConfirmModal({
             onClick={onSubmit}
             loading={confirmLoading}
             type="default"
-            className="w-1/2 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
+            className="w-1/2 jura text-[#4C577C] bg-[#F7AD9E] border-[#8088A7]"
             style={{ borderWidth: "1.5px" }}
           >
             Confirm

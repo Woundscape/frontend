@@ -5,9 +5,10 @@ import { DropdownField } from "@components/Management/DropdownField";
 import { UseMutationResult } from "react-query";
 import { Typography, Tag } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
+import { IUpdateCase } from "@api-caller/caseApi";
 
 interface ColumnsConfigProps {
-  updateMutation: UseMutationResult<boolean, IFormattedErrorResponse, { params: string; body: any }>;
+  updateMutation: UseMutationResult<boolean, IFormattedErrorResponse, IUpdateCase>;
   doctors: IDoctor[];
 }
 
