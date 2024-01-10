@@ -79,6 +79,14 @@ export interface IEquipment {
   updated_at: Date;
 }
 
+export interface INote {
+  note_title: string;
+  note_equip: any;
+  note_desc: string;
+  note_img: any;
+  img_id: string;
+}
+
 export enum IStage {
   SPECIAL = "Special",
   UNSTABLE = "Unstable",

@@ -10,6 +10,7 @@ import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
 import { IUpdateCase } from "@api-caller/caseApi";
+import { filterOptions, filterSort } from "@config";
 
 interface DropdownFieldProps {
   data: ICase;
@@ -89,16 +90,8 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           onDropdownVisibleChange={(open) => {}}
           onClick={() => setOpen(true)}
           onBlur={() => !isModalOpen && setOpen(false)}
-          filterOption={(input, option) =>
-            (option?.label as string)
-              .toLowerCase()
-              .indexOf(input.toLowerCase()) >= 0
-          }
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? "")
-              .toLowerCase()
-              .localeCompare((optionB?.label ?? "").toLowerCase())
-          }
+          filterOption={filterOptions}
+          filterSort={filterSort}
           options={doctor.map((doctor) => {
             const label = `${doctor.doctor_firstname}  ${doctor.doctor_lastname}`;
             const value = doctor.doctor_id;

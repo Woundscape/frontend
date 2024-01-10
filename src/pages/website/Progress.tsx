@@ -124,7 +124,7 @@ export default function progress() {
               </div>
             </header>
             <Content className="flex justify-between jura">
-              <div className="p-6 grow space-y-3">
+              <div className="m-6 grow space-y-3">
                 <div className="border rounded">
                   <div className="bg-[#EEEEEE] p-4 flex justify-between jura">
                     <p className="text-[#626060] text-lg">Wound Progression</p>
@@ -234,7 +234,8 @@ export default function progress() {
                       })}
                     </div>
                   </TabPane>
-                  <TabPane className=""
+                  <TabPane
+                    className=""
                     tab={
                       <div className="text-[#424241] text-center select-none jura">
                         Image
@@ -254,7 +255,9 @@ export default function progress() {
                         className="w-60 h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
                         alt=""
                       />
-                      <p className="jura text-sm text-[#9198AF]">Feb 14, 2023 18:42</p>
+                      <p className="jura text-sm text-[#9198AF]">
+                        Feb 14, 2023 18:42
+                      </p>
                     </div>
                   </TabPane>
                 </Tabs>

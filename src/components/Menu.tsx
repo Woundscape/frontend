@@ -33,14 +33,9 @@ const defaultMenuRoutes: IMenu[] = [
     icon: Equipment_LOGO,
   },
   {
-    title: "Account",
+    title: "Allocation",
     pathname: "/management",
     icon: Account_LOGO,
-  },
-  {
-    title: "Contact Us",
-    pathname: "/contactus",
-    icon: Contact_LOGO,
   },
 ];
 

@@ -52,7 +52,7 @@
   color: var(--black);
 }
 
-div{
+div {
   user-select: none;
 }
 
@@ -64,7 +64,7 @@ div{
 
 #text__disease {
   font-family: jura;
-  color: #949CB6;
+  color: #949cb6;
   padding-left: 3px;
 }
 #line__upload_container > .ant-upload-wrapper {
@@ -414,7 +414,7 @@ input::-webkit-inner-spin-button {
   --item-width: calc(100%);
 }
 .test-item::after {
-  content: attr(data-month);
+  content: attr(data-year);
   position: absolute;
   right: calc(var(--item-width) + 15px);
   top: 6px;
@@ -444,6 +444,28 @@ input::-webkit-inner-spin-button {
   background-size: contain !important;
 }
 
+#addNote__upload__wrapper > span > div.ant-upload-list.ant-upload-list-picture {
+  display: flex;
+  flex-flow: wrap;
+  overflow-y: auto;
+  max-height: 100px;
+}
+
+#addNote__upload__wrapper
+  > span
+  > div.ant-upload-list.ant-upload-list-picture
+  > div {
+  margin-right: 1rem;
+}
+
+#addNote__upload__wrapper
+  > span
+  > div.ant-upload-list.ant-upload-list-picture
+  > div
+  > div
+  > span.ant-upload-list-item-name {
+  width: 80px;
+}
 /* .ant-popover-inner{
   border: 1.5px solid #D9D9D9 ;
 } */

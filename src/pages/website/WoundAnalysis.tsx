@@ -12,12 +12,20 @@ import { Content } from "antd/es/layout/layout";
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
-import { IImage, TissueType } from "@constraint/constraint";
+import {
+  IFormattedErrorResponse,
+  INote,
+  TissueType,
+} from "@constraint/constraint";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
 import AddNote from "@components/AddNote";
+import { UseMutationResult, useMutation } from "react-query";
+import addNoteImage from "@api-caller/noteApi";
+import { useParams } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
+  const { img_id } = useParams();
   const { TabPane } = Tabs;
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
@@ -84,7 +92,6 @@ export default function WoundAnalysis() {
   };
   const [opacityVal, setOpacityVal] = useState(100);
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
-  const [openModal, setOpenModal] = useState(false);
   const [hideTissue, setHideTissue] = useState<string[]>([]);
   function handleOpacity(value: string) {
     setOpacityVal(parseInt(value));
@@ -103,9 +110,12 @@ export default function WoundAnalysis() {
       canvasRef.current.loadPaths(newData);
     }
   }
-  const handleModal = () => {
-    setOpenModal(!openModal);
-  };
+
+  const addNoteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    INote
+  > = useMutation(addNoteImage);
   return (
     <>
       <div className="w-full h-screen relative">
@@ -128,8 +138,8 @@ export default function WoundAnalysis() {
                     HN. 6643793
                   </Button>
                 </div>
-                <DrawSketchCanvas />
-                <AddNote openModal={openModal} onModal={handleModal} />
+                <DrawSketchCanvas img_id={img_id as string} />
+                <AddNote id={img_id as string} mutation={addNoteMutation} />
               </div>
             </div>
           </div>

@@ -21,8 +21,7 @@ import { IUpdateImage, getImageById, updateImage } from "@api-caller/imageApi";
 import { UseMutationResult, useMutation } from "react-query";
 import { httpAPI } from "@config";
 
-export default function DrawSketchCanvas() {
-  const { img_id } = useParams();
+export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -97,6 +96,12 @@ export default function DrawSketchCanvas() {
       // }
     }
   }, []);
+
+  // useEffect(() => {
+  //   window.addEventListener("resize", () => {
+  //     window.location.reload();
+  //   });
+  // }, []);
   async function getImage() {
     const response = await getImageById(img_id as string);
     if (canvasRef.current && response.img_tissue) {
@@ -258,7 +263,7 @@ export default function DrawSketchCanvas() {
       </div>
     );
   }
-  
+
   return (
     <>
       <Content
@@ -319,69 +324,7 @@ export default function DrawSketchCanvas() {
             />
           </div>
         </div>
-        <Content className="w-full h-full flex p-3 space-x-3">
-          {editable && (
-            <div
-              id="canvas_editor___tools"
-              className="w-12 h-full flex flex-col justify-center items-center space-y-4 relative"
-            >
-              <div className="w-10 border border-[#D9D9D9] bg-[#FDFCFC] space-y-2 p-0.5 rounded-md">
-                <Button
-                  type="text"
-                  className={`flex justify-center p-1 h-auto rounded-md ${
-                    selectTools == "none" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                  title="Cursor"
-                  onClick={() => handleCanvasEditor("none")}
-                >
-                  <img src={CanvasSelectIcon} />
-                </Button>
-                <Button
-                  type="text"
-                  title="Pen"
-                  className={`flex justify-center p-1 h-auto rounded-md ${
-                    selectTools == "pen" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                >
-                  <Popover
-                    content={renderSelectTissue}
-                    placement="rightTop"
-                    trigger={"click"}
-                    open={openSelectPaint}
-                    onOpenChange={handleOpenSelectPaint}
-                  >
-                    <img src={CanvasPenIcon} alt="" />
-                  </Popover>
-                </Button>
-                <Button
-                  type="text"
-                  title="Eraser"
-                  className={`flex justify-center p-1 h-auto rounded-md ${
-                    selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                  onClick={() => handleCanvasEditor("eraser")}
-                >
-                  <img src={CanvasEraserIcon} alt="" />
-                </Button>
-                <Button
-                  type="text"
-                  className={`flex justify-center p-0.5 h-auto rounded-md ${
-                    selectTools == "size" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                >
-                  <Popover
-                    content={renderSelectSize}
-                    placement="rightTop"
-                    trigger={"click"}
-                    open={openSelectSize}
-                    onOpenChange={handleOpenSelectSize}
-                  >
-                    <img src={CanvasSizeIcon} alt="" />
-                  </Popover>
-                </Button>
-              </div>
-            </div>
-          )}
+        <Content className="w-full h-full flex flex-col p-3 space-x-3">
           <div
             id="canvas_editor___container"
             className="relative grow flex min-h-0 min-w-0"
@@ -422,6 +365,68 @@ export default function DrawSketchCanvas() {
               />
             </div>
           </div>
+          {editable && (
+            <div
+              id="canvas_editor___tools"
+              className="flex justify-center items-center relative"
+            >
+              <div className="border border-[#D9D9D9] bg-[#FDFCFC] p-0.5 flex rounded-md">
+                <Button
+                  type="text"
+                  className={`px-2 flex justify-center rounded-md ${
+                    selectTools == "none" ? "bg-[#F0ECEC]" : ""
+                  }`}
+                  title="Cursor"
+                  onClick={() => handleCanvasEditor("none")}
+                >
+                  <img src={CanvasSelectIcon} />
+                </Button>
+                <Button
+                  type="text"
+                  title="Pen"
+                  className={`flex justify-center rounded-md ${
+                    selectTools == "pen" ? "bg-[#F0ECEC]" : ""
+                  }`}
+                >
+                  <Popover
+                    content={renderSelectTissue}
+                    placement="rightTop"
+                    trigger={"click"}
+                    open={openSelectPaint}
+                    onOpenChange={handleOpenSelectPaint}
+                  >
+                    <img src={CanvasPenIcon} alt="" />
+                  </Popover>
+                </Button>
+                <Button
+                  type="text"
+                  title="Eraser"
+                  className={`flex justify-center rounded-md ${
+                    selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
+                  }`}
+                  onClick={() => handleCanvasEditor("eraser")}
+                >
+                  <img src={CanvasEraserIcon} alt="" />
+                </Button>
+                <Button
+                  type="text"
+                  className={`flex justify-center rounded-md ${
+                    selectTools == "size" ? "bg-[#F0ECEC]" : ""
+                  }`}
+                >
+                  <Popover
+                    content={renderSelectSize}
+                    placement="rightTop"
+                    trigger={"click"}
+                    open={openSelectSize}
+                    onOpenChange={handleOpenSelectSize}
+                  >
+                    <img src={CanvasSizeIcon} alt="" />
+                  </Popover>
+                </Button>
+              </div>
+            </div>
+          )}
         </Content>
       </Content>
     </>

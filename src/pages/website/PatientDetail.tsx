@@ -30,7 +30,7 @@ export default function PatientDetail() {
     const sortImage: Record<string, IImage[]> = {};
     images.forEach((image: IImage) => {
       if (image.img_status) {
-        const createdAtDate = moment(image.created_at).format("DD MMM");
+        const createdAtDate = moment(image.created_at).format("DD MMM YYYY");
         if (!sortImage[createdAtDate]) {
           sortImage[createdAtDate] = [];
         }
@@ -182,15 +182,18 @@ export default function PatientDetail() {
                   >
                     <div className="inner-container">
                       <List
-                        className="timeline pl-20"
+                        className="timeline pl-20 pt-2"
                         dataSource={Object.keys(images)}
                         renderItem={(item, index) => {
+                          const splitIt = item.split(' ')
+                          const date = splitIt[0]+' '+ splitIt[1]
+                          const year = splitIt[2]
                           return (
-                            <div className="test-item" data-month={"2023"}>
+                            <div className="test-item" data-year={year}>
                               <li
                                 key={index}
                                 className="timeline-item flex flex-wrap gap-3"
-                                data-date={item}
+                                data-date={date}
                               >
                                 {renderImage(item)}
                               </li>

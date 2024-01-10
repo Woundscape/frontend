@@ -1,4 +1,5 @@
 import { ThemeConfig } from "antd";
+import { BaseOptionType } from "antd/es/select";
 
 export const httpAPI: string = "http://localhost:3000";
 
@@ -68,3 +69,13 @@ export const tagInputStyle: React.CSSProperties = {
 export const tagPlusStyle: React.CSSProperties = {
   borderStyle: "dashed",
 };
+
+export const filterOptions = (
+  value: string,
+  option: BaseOptionType | undefined
+) => (option?.label as string).toLowerCase().includes(value.toLowerCase());
+
+export const filterSort = (optionA: BaseOptionType, optionB: BaseOptionType) =>
+  (optionA?.label ?? "")
+    .toLowerCase()
+    .localeCompare((optionB?.label ?? "").toLowerCase());
