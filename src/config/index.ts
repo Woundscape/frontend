@@ -42,7 +42,6 @@ export const themeConfig: ThemeConfig = {
       activeBorderColor: "#B4B4B4",
       hoverBorderColor: "#B4B4B4",
       fontFamily: "jura",
-
       cellActiveWithRangeBg: "#E2EDFF",
       colorText: "#555554",
     },

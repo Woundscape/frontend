@@ -37,6 +37,21 @@ export default function EquipmentTab() {
             </div>
           </div>
         ))}
+        <div
+            className="w-full px-4 py-1.5 flex items-center rounded-xl space-x-2"
+            style={{
+              borderRadius: "0.8125rem",
+              border: "1.5px solid #E3E1E1",
+            }}
+          >
+            <Typography className="text-3xl text-[#E7E5E5] jura">
+              {" "}
+              {1 + 1}
+            </Typography>
+            <div className="w-9/12 flex justify-between rounded-md py-1.5 px-3 ">
+              <p className="jura text-md text-[#61708C]">item.equip_name</p>
+            </div>
+          </div>
         {!btnEquip ? (
           <div className="flex justify-end">
             <button

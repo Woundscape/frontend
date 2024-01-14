@@ -102,6 +102,16 @@ div {
   height: 100%;
 }
 
+#tabs-container_antd > div.ant-tabs-content-holder,
+#tabs-container_antd > div.ant-tabs-content-holder > div,
+#tabs-container_antd > div.ant-tabs-content-holder > div > div {
+  height: 100%;
+}
+
+.ant-collapse-expand-icon {
+  height: 40px !important;
+}
+
 .tabs-container__navigation
   > .ant-tabs-card
   > .ant-tabs-nav

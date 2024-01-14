@@ -27,7 +27,6 @@ export default function ConfirmModal({
       onCancel={onCancel}
       footer={null}
       centered
-      zIndex={100}
       destroyOnClose
     >
       <Content className="flex flex-col text-center px-6 justify-center space-y-6">

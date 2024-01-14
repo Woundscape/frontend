@@ -2,6 +2,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
+  Collapse,
+  Form,
   Input,
   Modal,
   Select,
@@ -10,7 +12,6 @@ import {
   Typography,
   Upload,
 } from "antd";
-import { Content } from "antd/es/layout/layout";
 import TextArea from "antd/es/input/TextArea";
 import AddImageIcon from "@assets/icons/add_image_icon.svg";
 import { useEffect, useState } from "react";
@@ -24,6 +25,10 @@ import {
 } from "@constraint/constraint";
 import { UseMutationResult } from "react-query";
 import { filterOptions, filterSort } from "@config";
+import { DefaultNoteForm } from "@constraint/defaultForm";
+import { getNoteImageById } from "@api-caller/noteApi";
+import { formatTimeDifference } from "@features/FormatDate";
+import { Content } from "antd/es/layout/layout";
 
 interface INoteProps {
   id: string;
@@ -31,80 +36,47 @@ interface INoteProps {
 }
 
 export default function AddNote({ id, mutation }: INoteProps) {
+  const [notes, setNotes] = useState<INote[]>([]);
   const [equip, setEquip] = useState<IEquipment[]>([]);
-  // const [files, setFiles] = useState<UploadFile<any>[]>([]);
-  const [form, setForm] = useState<INote>({
-    note_title: "",
-    note_equip: [],
-    note_desc: "",
-    note_img: [],
-    img_id: id,
-  });
+  const [form, setForm] = useState<INote>({ ...DefaultNoteForm, img_id: id });
+  const [forms] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   useEffect(() => {
     async function getEquipment() {
-      const equipments = await getAllEquipment();
-      setEquip(equipments);
+      const data = await getAllEquipment();
+      setEquip(data);
     }
+    async function getNote() {
+      const data = await getNoteImageById(id);
+      setNotes(data);
+    }
+    getNote();
     getEquipment();
   }, []);
   const handleModal = () => {
     setOpenModal(!openModal);
   };
-  const onSubmit = () => {
+  const onSubmit = async () => {
     setConfirmLoading(true);
-    console.log(form);
-
-    // mutation.mutate(
-    //   {
-    //     note_title: "",
-    //     note_equip: [],
-    //     note_desc: "",
-    //     note_img: [],
-    //     img_id: "",
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       setIsModalOpen(false);
-    //       setOpen(false);
-    //       setSubmitLoading(false);
-    //       openNotificationWithIcon();
-    //     },
-    //   }
-    // );
+    const values = await forms.validateFields();
+    if (values) {
+      setForm({ ...DefaultNoteForm, img_id: id });
+      mutation.mutate(form, {
+        onSuccess: (response) => {
+          setOpenModal(false);
+          setConfirmLoading(false);
+          console.log(response);
+        },
+      });
+    }
   };
-  // async function handleUpload() {
-  //   try {
-  //     setSubmitLoading(true);
-  //     if (files.length > 0) {
-  //       const formData = new FormData();
-  //       files.forEach((file, _) => {
-  //         let fileBlob = file.originFileObj ?? new Blob();
-  //         formData.append("file", fileBlob);
-  //       });
-  //       formData.append("case_id", case_id as string);
-  //       uploadMutate.mutate(formData, {
-  //         onSuccess: () => {
-  //           onRender();
-  //           setModal(false);
-  //           setLoading(false);
-  //           setFiles([]);
-  //         },
-  //       });
-  //     } else {
-  //       setModal(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during file upload:", error);
-  //   }
-  // }
 
   return (
     <>
       <Button
         id="add-note"
-        className="py-8 flex items-center border-2 border-[#D9D9D9]"
+        className="w-full py-8 flex items-center border border-[#D9D9D9]"
         onClick={handleModal}
       >
         <div className="flex space-x-4 jura">
@@ -112,7 +84,33 @@ export default function AddNote({ id, mutation }: INoteProps) {
           <p className="text-lg text-[#4C577C]">ADD NOTE</p>
         </div>
       </Button>
+      <Space direction="vertical" className="pt-3" style={{ width: "100%" }}>
+        {notes?.map((item, index) => (
+          <Collapse key={index}>
+            <Collapse.Panel
+              key={index}
+              showArrow={false}
+              header={
+                <Content className="py-1 flex space-x-3">
+                  <div className="w-full jura flex justify-between">
+                    <p className="text-[#4C577C] text-base uppercase">
+                      {item.note_title}
+                    </p>
+                    <p className="text-[#4C577C] text-md">
+                      {formatTimeDifference(item.created_at)}
+                    </p>
+                  </div>
+                </Content>
+              }
+            >
+              <p className="text-[#4C577C] text-md jura">{item.note_desc}</p>
+            </Collapse.Panel>
+          </Collapse>
+        ))}
+      </Space>
       <Modal
+        centered
+        destroyOnClose
         open={openModal}
         onOk={handleModal}
         onCancel={handleModal}
@@ -136,9 +134,10 @@ export default function AddNote({ id, mutation }: INoteProps) {
               Cancel
             </Button>
             <Button
+              type="default"
+              htmlType="submit"
               onClick={onSubmit}
               loading={confirmLoading}
-              type="default"
               className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
               style={{ borderWidth: "1.5px" }}
             >
@@ -146,24 +145,35 @@ export default function AddNote({ id, mutation }: INoteProps) {
             </Button>
           </div>,
         ]}
-        destroyOnClose
       >
-        <Content className="w-full space-y-4">
+        <Form
+          form={forms}
+          onFinish={onSubmit}
+          scrollToFirstError
+          className="w-full space-y-4"
+        >
           <Space.Compact className="space-y-2" direction="vertical" block>
             <Typography id="text__primary" className="text-md">
               Title :
             </Typography>
-            <Input
-              name="note_title"
-              placeholder="Input note title"
-              className="w-1/2"
-              onChange={(e) => {
-                setForm((previous) => ({
-                  ...previous,
-                  note_title: e.target.value,
-                }));
-              }}
-            />
+            <Form.Item
+              name="title"
+              rules={[
+                { required: true, message: "Please confirm your title!" },
+              ]}
+            >
+              <Input
+                name="note_title"
+                placeholder="Input note title"
+                className="w-1/2"
+                onChange={(e) => {
+                  setForm((previous) => ({
+                    ...previous,
+                    note_title: e.target.value,
+                  }));
+                }}
+              />
+            </Form.Item>
           </Space.Compact>
           <Space.Compact className="space-y-2" direction="vertical" block>
             <Typography id="text__primary" className="text-md">
@@ -180,11 +190,11 @@ export default function AddNote({ id, mutation }: INoteProps) {
               maxTagCount="responsive"
               filterOption={filterOptions}
               filterSort={filterSort}
-              onSelect={(_, option) => {
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  note_equip: [...prevForm.note_equip, option.value],
-                }));
+              // onSelect={(_, { value }) => {}}
+              onChange={(value) => {
+                setForm((prevForm) => {
+                  return { ...prevForm, note_equip: value };
+                });
               }}
             />
           </Space.Compact>
@@ -240,7 +250,7 @@ export default function AddNote({ id, mutation }: INoteProps) {
               </Upload>
             </div>
           </Card>
-        </Content>
+        </Form>
       </Modal>
     </>
   );

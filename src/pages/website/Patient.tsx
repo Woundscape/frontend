@@ -68,10 +68,10 @@ export default function Patient() {
                   >
                     {view == "Image" ? (
                       patients.map((patient: IPatient, index: number) => {
-                        let image = patient.imagePreview[0].img_path.replace(
-                          /\\/g,
-                          "/"
-                        );
+                        let image = patient.imagePreview[0]?.img_path
+                          ? patient.imagePreview[0].img_path.replace(/\\/g, "/")
+                          : null;
+
                         return (
                           <div
                             key={index}
@@ -120,7 +120,7 @@ export default function Patient() {
                           onClick: (_) => router(`/patient/${record.case_id}`),
                         })}
                         pagination={{
-                          defaultPageSize: 2,
+                          defaultPageSize: 10,
                           showSizeChanger: false,
                         }}
                       />

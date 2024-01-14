@@ -1,3 +1,4 @@
+import { UploadFile } from "antd";
 import { DefaultOptionType } from "antd/es/select";
 
 export interface IFormattedErrorResponse {
@@ -83,8 +84,9 @@ export interface INote {
   note_title: string;
   note_equip: any;
   note_desc: string;
-  note_img: any;
+  note_img: UploadFile<any>[];
   img_id: string;
+  created_at?: Date;
 }
 
 export enum IStage {

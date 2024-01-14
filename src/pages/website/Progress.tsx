@@ -1,4 +1,3 @@
-import { LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,6 +20,11 @@ import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
+import { UseMutationResult, useMutation } from "react-query";
+import { IFormattedErrorResponse, INote } from "@constraint/constraint";
+import addNoteImage from "@api-caller/noteApi";
+import AddNote from "@components/AddNote";
+import { useLocation, useParams } from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 
@@ -104,28 +108,35 @@ export default function progress() {
       color: "#D4F3F3",
     },
   ];
-
+  const { img_id } = useParams();
   const [openModal, setOpenModal] = useState(false);
+  const location = useLocation();
+  const { imageList } = location.state || {};
+  console.log(imageList);
   const handleModal = () => {
     setOpenModal(!openModal);
   };
+  const addNoteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    INote
+  > = useMutation(addNoteImage);
   return (
     <>
       <div className="w-full h-screen relative">
-        <div className="w-full h-full py-8 bg-white">
-          <div className="w-full h-full">
-            <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
-              <div className="flex items-center space-x-4">
-                <LeftOutlined />
-                <p className="jura text-xl">HN. 6643793</p>
-              </div>
-              <div className="w-[30rem]">
-                <UserProfile />
-              </div>
-            </header>
-            <Content className="flex justify-between jura">
-              <div className="m-6 grow space-y-3">
-                <div className="border rounded">
+        <div className="w-full h-full flex flex-col pt-8 bg-white">
+          <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
+            <div className="flex items-center space-x-4">
+              <p className="jura text-xl text-[#424241]">Equipment</p>
+            </div>
+            <div className="w-[30rem]">
+              <UserProfile />
+            </div>
+          </header>
+          <Content className="w-full flex justify-between pb-6">
+            <div className="grow flex overflow-y-auto">
+              <div className="w-full space-y-3 p-6">
+                <div className="w-full h-full border rounded">
                   <div className="bg-[#EEEEEE] p-4 flex justify-between jura">
                     <p className="text-[#626060] text-lg">Wound Progression</p>
                     <div className="flex items-center px-4 space-x-2 bg-[#D8C290] border-[#424241] border rounded text-[#424241]">
@@ -133,31 +144,9 @@ export default function progress() {
                       <p className="jura">Export</p>
                     </div>
                   </div>
-                  <div className="p-3">
-                    <Line data={data} options={options} />
-                  </div>
+                  <Line data={data} options={options} className="p-6"/>
                 </div>
-                <Button
-                  id="add-note"
-                  className="py-8 w-full flex items-center border-2 border-[#D9D9D9]"
-                  onClick={handleModal}
-                >
-                  <div className="flex space-x-4 jura">
-                    <PlusOutlined style={{ fontSize: 20, color: "#4C577C" }} />
-                    <p className="text-lg text-[#4C577C]">ADD NOTE</p>
-                  </div>
-                </Button>
-                <Modal
-                  open={openModal}
-                  onOk={handleModal}
-                  onCancel={handleModal}
-                  width={1000}
-                  style={{
-                    borderRadius: "1.25rem",
-                  }}
-                >
-                  <div className="w-full bg-red-200">ds</div>
-                </Modal>
+                <AddNote id={img_id as string} mutation={addNoteMutation} />
                 <Collapse
                   expandIconPosition={"right"}
                   items={[
@@ -177,7 +166,8 @@ export default function progress() {
                       children: (
                         <div className="relative space-y-3">
                           <TextArea
-                            className="block w-full resize-none px-0 text-base text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                            autoSize={{ minRows: 3, maxRows: 3 }}
+                            className="block w-full resize-none px-0 text-base text-gray-800 bg-white border-0"
                             placeholder="Type your message . . ."
                             required
                           ></TextArea>
@@ -193,20 +183,19 @@ export default function progress() {
                   ]}
                 />
               </div>
-
-              <div className="border-l-2 border-[#E8EAF4]"></div>
-
-              <div className="w-[23rem] tabs-container__navigation">
-                <Tabs type="card" className="h-full p-6">
-                  {/* Summary Tissue Tab */}
-                  <TabPane
-                    tab={
-                      <div className="text-[#424241] text-center select-none jura">
-                        Tissue
-                      </div>
-                    }
-                    key="1"
-                  >
+            </div>
+            <div className="w-[23rem] tabs-container__navigation border-l-2 border-[#E8EAF4]">
+              <Tabs type="card" id="tabs-container_antd" className="h-full p-6">
+                {/* Summary Tissue Tab */}
+                <TabPane
+                  tab={
+                    <div className="text-[#424241] text-center select-none jura">
+                      Tissue
+                    </div>
+                  }
+                  key="1"
+                >
+                  <Content className="h-full overflow-y-auto">
                     <div className="space-y-3">
                       {listTissue.map((item, index) => {
                         return (
@@ -233,16 +222,18 @@ export default function progress() {
                         );
                       })}
                     </div>
-                  </TabPane>
-                  <TabPane
-                    className=""
-                    tab={
-                      <div className="text-[#424241] text-center select-none jura">
-                        Image
-                      </div>
-                    }
-                    key="2"
-                  >
+                  </Content>
+                </TabPane>
+                <TabPane
+                  className=""
+                  tab={
+                    <div className="text-[#424241] text-center select-none jura">
+                      Image
+                    </div>
+                  }
+                  key="2"
+                >
+                  <Content className="h-full overflow-y-auto">
                     <div
                       className="flex flex-col mt-3 space-y-2 justify-center items-center w-full h-40 rounded-lg"
                       style={{
@@ -259,11 +250,11 @@ export default function progress() {
                         Feb 14, 2023 18:42
                       </p>
                     </div>
-                  </TabPane>
-                </Tabs>
-              </div>
-            </Content>
-          </div>
+                  </Content>
+                </TabPane>
+              </Tabs>
+            </div>
+          </Content>
         </div>
       </div>
     </>

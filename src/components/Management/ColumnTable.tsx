@@ -1,6 +1,10 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constraint/constraint";
+import {
+  ICase,
+  IDoctor,
+  IFormattedErrorResponse,
+} from "@constraint/constraint";
 import { DropdownField } from "@components/Management/DropdownField";
 import { UseMutationResult } from "react-query";
 import { Typography, Tag } from "antd";
@@ -8,11 +12,18 @@ import { formatTimeDifference } from "@features/FormatDate";
 import { IUpdateCase } from "@api-caller/caseApi";
 
 interface ColumnsConfigProps {
-  updateMutation: UseMutationResult<boolean, IFormattedErrorResponse, IUpdateCase>;
+  updateMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    IUpdateCase
+  >;
   doctors: IDoctor[];
 }
 
-export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): ColumnsType<ICase> => [
+export const getColumns = ({
+  updateMutation,
+  doctors,
+}: ColumnsConfigProps): ColumnsType<ICase> => [
   {
     title: "Hospital No.",
     dataIndex: "hn_id",
@@ -46,7 +57,12 @@ export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): Col
     dataIndex: "doctor_assign",
     key: "doctor_assign",
     render: (_, data, index) => (
-      <DropdownField key={index} data={data} doctor={doctors} updateMutation={updateMutation} />
+      <DropdownField
+        key={index}
+        data={data}
+        doctor={doctors}
+        updateMutation={updateMutation}
+      />
     ),
   },
   {
@@ -84,19 +100,21 @@ export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): Col
     dataIndex: "disease",
     key: "disease",
     render: (_, { disease }) => (
-      <>
-        {"123"?.split("")?.map((value: string, index: number) => {
-          let color = value.length > 5 ? "geekblue" : "green";
-          if (value === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={`${value}-${index}`} className="jura">
-              {value}
+      <div className="flex items-center">
+        {disease && disease.length > 0 && (
+          <>
+            <Tag
+              color={disease[0].length > 5 ? "geekblue" : "green"}
+              className="jura"
+            >
+              {disease[0]}
             </Tag>
-          );
-        })}
-      </>
+            {disease.length > 1 && (
+              <Typography id="text__disease">+{disease.length - 1}</Typography>
+            )}
+          </>
+        )}
+      </div>
     ),
   },
 ];

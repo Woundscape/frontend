@@ -9,7 +9,7 @@ import EditImage from "@pages/website/Test";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
 import Equipment from "@pages/website/Equipment";
 import Compare from "@pages/website/Compare";
-import Management from "@pages/website/Management";
+import Allocation from "@pages/website/Allocation";
 import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset";
@@ -75,7 +75,7 @@ function AuthRoutes() {
         <Route path="pred" element={<TestPred />} />
         <Route path="compare" element={<Compare />} />
         <Route path="progress" element={<Progress />} />
-        <Route path="management" element={<Management />} />
+        <Route path="allocation" element={<Allocation />} />
       </Route>
     </Routes>
   );
