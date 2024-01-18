@@ -82,7 +82,7 @@ export interface IEquipment {
 
 export interface INote {
   note_title: string;
-  note_equip: any;
+  note_equip: string[];
   note_desc: string;
   note_img: UploadFile<any>[];
   img_id: string;

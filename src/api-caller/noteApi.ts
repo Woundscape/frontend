@@ -23,7 +23,7 @@ export default async function addNoteImage({
 
     formData.append("note_title", note_title);
     formData.append("note_desc", note_desc);
-    formData.append("note_equip", note_equip);
+    formData.append("note_equip", JSON.stringify(note_equip));
     formData.append("img_id", img_id);
 
     note_img.forEach((file, _) => {

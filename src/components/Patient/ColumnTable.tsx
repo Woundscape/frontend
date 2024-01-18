@@ -1,8 +1,47 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { Typography, Tag } from "antd";
+import { Typography, Tag, Dropdown, MenuProps } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
 import MoreIcon from "@assets/icons/more_icon.svg";
+
+const items: MenuProps["items"] = [
+  {
+    key: "1",
+    label: (
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.antgroup.com"
+      >
+        Edit
+      </a>
+    ),
+  },
+  {
+    key: "2",
+    label: (
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.aliyun.com"
+      >
+        Consult
+      </a>
+    ),
+  },
+  {
+    key: "3",
+    label: (
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.aliyun.com"
+      >
+        Delete
+      </a>
+    ),
+  },
+];
 
 export const getColumns = (): ColumnsType<any> => [
   {
@@ -94,8 +133,12 @@ export const getColumns = (): ColumnsType<any> => [
     fixed: "right",
     width: 100,
     render: () => (
-      <div className="mr-6 first-letter:bg-red-200 flex justify-center">
-        <img src={MoreIcon} alt="" />
+      <div onClick={(e)=>e.stopPropagation()}>
+      <Dropdown menu={{ items }} trigger={["click"]}  className="bg-red-200">
+        <div className="mr-6 first-letter:bg-red-200 flex justify-center">
+          <img src={MoreIcon} alt="" />
+        </div>
+      </Dropdown>
       </div>
     ),
   },

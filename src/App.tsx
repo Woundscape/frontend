@@ -25,6 +25,7 @@ import HistoryLine from "@pages/line/History";
 import TestPred from "@pages/website/testPred";
 import { LoadingProvider } from "@components/Loading";
 import { AuthProvider } from "@components/AuthProvider";
+import Account from "@pages/website/Account";
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function AuthRoutes() {
         <Route path="compare" element={<Compare />} />
         <Route path="progress" element={<Progress />} />
         <Route path="allocation" element={<Allocation />} />
+        <Route path="account" element={<Account />} />
       </Route>
     </Routes>
   );

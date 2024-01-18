@@ -4,11 +4,13 @@ import {
   Card,
   Collapse,
   Form,
+  Image,
   Input,
   Modal,
   Select,
   Space,
   Spin,
+  Tag,
   Typography,
   Upload,
 } from "antd";
@@ -24,7 +26,7 @@ import {
   INote,
 } from "@constraint/constraint";
 import { UseMutationResult } from "react-query";
-import { filterOptions, filterSort } from "@config";
+import { filterOptions, filterSort, httpAPI } from "@config";
 import { DefaultNoteForm } from "@constraint/defaultForm";
 import { getNoteImageById } from "@api-caller/noteApi";
 import { formatTimeDifference } from "@features/FormatDate";
@@ -103,7 +105,24 @@ export default function AddNote({ id, mutation }: INoteProps) {
                 </Content>
               }
             >
-              <p className="text-[#4C577C] text-md jura">{item.note_desc}</p>
+              <Content className="space-y-3">
+                <Typography id="text__primary">{item.note_desc}</Typography>
+                {item.note_equip.map((equip: string, index: number) => (
+                  <Tag key={index} color={"geekblue"} className="jura">
+                    {equip}
+                  </Tag>
+                ))}
+                <div className="flex gap-3">
+                  {item.note_img.map((image, index) => (
+                    <Image
+                      key={index}
+                      width={90}
+                      src={`${httpAPI}/${image}`}
+                      className="rounded-md"
+                    />
+                  ))}
+                </div>
+              </Content>
             </Collapse.Panel>
           </Collapse>
         ))}
