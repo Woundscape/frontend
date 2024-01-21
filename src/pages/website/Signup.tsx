@@ -1,7 +1,18 @@
 import logo_wound from "@assets/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
+import logo_it from "@assets/it-logo.svg";
+import { Input } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function Signup() {
+ 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormInputs((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
   return (
     <div className="wound-background w-full bg-white h-screen">
       <div className="w-full h-full flex flex-col justify-between p-4">
@@ -28,20 +39,29 @@ function Signup() {
             placeholder="Email"
             type="text"
           />
-          <input
-            className="w-1/2 py-2 pl-4 border border-[#B4B4B4] border-1 rounded-[50px] outline-none"
-            placeholder="Password"
-            type="password"
-          />
-          <input
-            className="w-1/2 py-2 pl-4 border border-[#B4B4B4] border-1 rounded-[50px] outline-none"
-            placeholder="Confirm Password"
-            type="password"
-          />
+
           <input
             className="w-1/2 py-2 pl-4 border border-[#B4B4B4] border-1 rounded-[50px] outline-none"
             placeholder="Tel"
             type="text"
+          />
+          <Input.Password
+            name="user_password"
+            placeholder="Password"
+            className="w-1/2 py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+            onChange={handleInputChange}
+          />
+          <Input.Password
+            name="user_password"
+            placeholder="Confirm Password"
+            className="w-1/2 py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+            onChange={handleInputChange}
           />
           <div className="w-1/2 flex px-4 py-1.5 justify-between btn-homepage cursor-pointer">
             <button type="submit" className="text-xl jura font-bold">
@@ -56,6 +76,9 @@ function Signup() {
             <span className="text-[#A3802D] underline">SIGN IN</span>
           </div>
         </form>
+        <div className="w-1/2 p-4">
+          <img className="absolute right-14 w-80" src={logo_it} alt="" />
+        </div>
       </div>
     </div>
   );
