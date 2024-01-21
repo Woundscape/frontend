@@ -26,6 +26,30 @@ export interface ICase {
   disease?: any | null;
 }
 
+export interface IManageUser {
+  user_id: string;
+  user_firstname: string | null;
+  user_lastname: string | null;
+  user_type: string;
+  line_uid: string;
+  created_at: Date;
+}
+
+export enum UserType {
+  Patient = "Patient",
+  Doctor = "Doctor",
+}
+
+export interface IUser {
+  user_firstname: string;
+  user_lastname: string;
+  user_email: string;
+  user_password: string;
+  user_tel: string;
+  user_type: UserType;
+  line_uid?: string | null;
+}
+
 export interface IDoctor {
   user_id: string;
   doctor_id: string;

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import Dashboard_LOGO from "@assets/navIcon/dashboard-logo.svg"
-import Patient_LOGO from "@assets/navIcon/patient_logo.svg";
-import Equipment_LOGO from "@assets/navIcon/equipment_logo.svg";
-import Allocation_LOGO from "@assets/navIcon/allocation_logo.svg"
-import Archive_LOGO from "@assets/navIcon/archive_logo.svg"
-import UserManage_LOGO from "@assets/navIcon/user_manage_logo.svg"
-import Account_LOGO from "@assets/navIcon/account_logo.svg";
-import Logo_Wound from "@assets/navIcon/logo-wound.svg";
+import Dashboard_LOGO from "@assets/logo/dashboard-logo.svg"
+import Patient_LOGO from "@assets/logo/patient_logo.svg";
+import Equipment_LOGO from "@assets/logo/equipment_logo.svg";
+import Allocation_LOGO from "@assets/logo/allocation_logo.svg"
+import Archive_LOGO from "@assets/logo/archive_logo.svg"
+import UserManage_LOGO from "@assets/logo/user_manage_logo.svg"
+import Account_LOGO from "@assets/logo/account_logo.svg";
+import Logo_Wound from "@assets/logo/logo-wound.svg";
 
 import ImageMenu from "./ImageMenu";
 import { List } from "antd";

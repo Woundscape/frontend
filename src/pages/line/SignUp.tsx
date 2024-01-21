@@ -1,4 +1,4 @@
-import logo_wound from "@assets/logo-wound.svg";
+import logo_wound from "@assets/logo/logo-wound.svg";
 import footer_watermark from "@assets/footer_watermark.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";

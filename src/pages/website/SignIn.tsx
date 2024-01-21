@@ -1,4 +1,4 @@
-import logo_wound from "@assets/logo-wound.svg";
+import logo_wound from "@assets/logo/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
 import logo_google from "@assets/google_logo.svg";
@@ -8,18 +8,14 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { useState } from "react";
-import {
-  IFormInputsLogin,
-  LoginSuccessResponse,
-  login,
-} from "@api-caller/authenApi";
+import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
 import { useNavigate } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { IFormattedErrorResponse } from "@constraint/constraint";
 function Signin() {
   const router = useNavigate();
   const loginMutation: UseMutationResult<
-    LoginSuccessResponse,
+    Credentials,
     IFormattedErrorResponse,
     IFormInputsLogin
   > = useMutation(login);
@@ -38,8 +34,8 @@ function Signin() {
     e.preventDefault();
     loginMutation.mutate(formInputs, {
       onSuccess: (data) => {
-        sessionStorage.setItem('token', JSON.stringify(data.accessToken))
-        router('/dashboard')
+        sessionStorage.setItem("token", JSON.stringify(data.accessToken));
+        router("/dashboard");
       },
     });
   };
@@ -67,7 +63,10 @@ function Signin() {
             <img className="w-20" src={logo_wound} alt="" />
             <h1 className="michroma text-4xl text-[#424241]">Woundscape</h1>
           </div>
-          <button type='button' className="relative w-1/2 p-2.5 border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer">
+          <button
+            type="button"
+            className="relative w-1/2 p-2.5 border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer"
+          >
             <img
               className="w-6 absolute left-3 bottom-2"
               src={logo_google}

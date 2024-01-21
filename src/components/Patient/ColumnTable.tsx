@@ -25,18 +25,6 @@ const items: MenuProps["items"] = [
         rel="noopener noreferrer"
         href="https://www.aliyun.com"
       >
-        Consult
-      </a>
-    ),
-  },
-  {
-    key: "3",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-      >
         Delete
       </a>
     ),
@@ -133,12 +121,12 @@ export const getColumns = (): ColumnsType<any> => [
     fixed: "right",
     width: 100,
     render: () => (
-      <div onClick={(e)=>e.stopPropagation()}>
-      <Dropdown menu={{ items }} trigger={["click"]}  className="bg-red-200">
-        <div className="mr-6 first-letter:bg-red-200 flex justify-center">
-          <img src={MoreIcon} alt="" />
-        </div>
-      </Dropdown>
+      <div id="action_table" onClick={(e) => e.stopPropagation()}>
+        <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
+          <div className="mr-6 flex justify-center">
+            <img src={MoreIcon} alt="" />
+          </div>
+        </Dropdown>
       </div>
     ),
   },

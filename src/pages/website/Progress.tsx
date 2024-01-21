@@ -16,7 +16,7 @@ import Eye from "@assets/eye_input.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import WoundImg from "@assets/wound/img_6.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
@@ -24,7 +24,7 @@ import { UseMutationResult, useMutation } from "react-query";
 import { IFormattedErrorResponse, INote } from "@constraint/constraint";
 import addNoteImage from "@api-caller/noteApi";
 import AddNote from "@components/AddNote";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 
@@ -48,6 +48,11 @@ const options = {
   },
 };
 export default function progress() {
+  const addNoteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    INote
+  > = useMutation(addNoteImage);
   const [openEye, setOpenEye] = useState([
     {
       label: "Wound",
@@ -109,25 +114,26 @@ export default function progress() {
     },
   ];
   const { img_id } = useParams();
-  const [openModal, setOpenModal] = useState(false);
   const location = useLocation();
-  const { imageList } = location.state || {};
+  const [openModal, setOpenModal] = useState(false);
+  const router = useNavigate();
+  const { imageList } = location.state || [];
   console.log(imageList);
+  useEffect(() => {
+    if (imageList == undefined) {
+      router("/patient");
+    }
+  }, []);
   const handleModal = () => {
     setOpenModal(!openModal);
   };
-  const addNoteMutation: UseMutationResult<
-    boolean,
-    IFormattedErrorResponse,
-    INote
-  > = useMutation(addNoteImage);
   return (
     <>
       <div className="w-full h-screen relative">
         <div className="w-full h-full flex flex-col pt-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
             <div className="flex items-center space-x-4">
-              <p className="jura text-xl text-[#424241]">Equipment</p>
+              <p className="jura text-xl text-[#424241]">Progress</p>
             </div>
             <div className="w-[30rem]">
               <UserProfile />
@@ -144,7 +150,7 @@ export default function progress() {
                       <p className="jura">Export</p>
                     </div>
                   </div>
-                  <Line data={data} options={options} className="p-6"/>
+                  <Line data={data} options={options} className="p-6" />
                 </div>
                 <AddNote id={img_id as string} mutation={addNoteMutation} />
                 <Collapse

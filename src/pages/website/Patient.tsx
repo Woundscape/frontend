@@ -116,8 +116,13 @@ export default function Patient() {
                         loading={loading}
                         tableLayout="fixed"
                         rowKey={(record) => `row__patient__${record.case_id}`}
-                        onRow={(record: IPatient) => ({
-                          onClick: (_) => router(`/patient/${record.case_id}`),
+                        onRow={(record: IPatient, _) => ({
+                          onClick: (event: any) => {
+                            const index = event.target.cellIndex
+                            if (index != 7){
+                              router(`/patient/${record.case_id}`);
+                            }
+                          },
                         })}
                         pagination={{
                           defaultPageSize: 10,

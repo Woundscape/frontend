@@ -9,7 +9,7 @@ import { useLoading } from "@components/Loading";
 import DashboardTable from "@features/PatientTable";
 import { useAuth } from "@components/AuthProvider";
 import { useEffect, useState } from "react";
-import Logo_Wound from "@assets/navIcon/logo-wound.svg";
+import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
 
 export interface CardPatient {

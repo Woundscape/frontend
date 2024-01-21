@@ -26,6 +26,7 @@ import TestPred from "@pages/website/testPred";
 import { LoadingProvider } from "@components/Loading";
 import { AuthProvider } from "@components/AuthProvider";
 import Account from "@pages/website/Account";
+import Management from "@pages/website/Management";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function AuthRoutes() {
         <Route path="progress" element={<Progress />} />
         <Route path="allocation" element={<Allocation />} />
         <Route path="account" element={<Account />} />
+        <Route path="management" element={<Management />} />
       </Route>
     </Routes>
   );

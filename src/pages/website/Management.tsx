@@ -1,43 +1,32 @@
-import { LeftOutlined } from "@ant-design/icons";
-import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
-import {
-  ICase,
-  IDoctor,
-  IFormattedErrorResponse,
-} from "@constraint/constraint";
-import UserProfile from "@features/UserProfile";
 import { UseMutationResult, useMutation } from "react-query";
+import { LeftOutlined } from "@ant-design/icons";
+import { IUpdateCase, updateCase } from "@api-caller/caseApi";
+import { IFormattedErrorResponse, IManageUser } from "@constraint/constraint";
+import UserProfile from "@features/UserProfile";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
+import { useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { useState, useEffect } from "react";
-import { getColumns } from "@components/Allocation/ColumnTable";
-import getAllDoctor from "@api-caller/doctorApi";
+import { getColumnManageUser } from "@components/Management/ColumnTable";
 
-// const { RangePicker } = DatePicker;
-export default function Allocation() {
+export default function Management() {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     IUpdateCase
   > = useMutation(updateCase);
-  useEffect(() => {
-    getAllCase().then((data) => {
-      const sortedData = data.sort(
-        (a: any, b: any) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      );
-      setData(sortedData);
-      getAllDoctor().then((doctors) => {
-        setDoctors(doctors);
-        setLoading(false);
-      });
-    });
-  }, [updateMutation.data]);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ICase[]>([]);
-  const [doctors, setDoctors] = useState<IDoctor[]>([]);
-  const columns: ColumnsType<ICase> = getColumns({ updateMutation, doctors });
+  const [data, setData] = useState<IManageUser[]>([
+    {
+      user_id: "1",
+      user_firstname: "test",
+      user_lastname: "test2",
+      user_type: "Doctor",
+      line_uid: "sd",
+      created_at: new Date('2002-05-24'),
+    },
+  ]);
+  const [loading, setLoading] = useState(false);
+  const columns: ColumnsType<IManageUser> = getColumnManageUser();
   return (
     <>
       <div className="w-full h-screen relative">
@@ -46,7 +35,7 @@ export default function Allocation() {
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
                 <LeftOutlined />
-                <p className="jura text-xl">Allocation</p>
+                <p className="jura text-xl">User Management</p>
               </div>
               <div className="w-[30rem]">
                 <UserProfile />

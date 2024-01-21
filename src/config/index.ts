@@ -2,6 +2,10 @@ import { ThemeConfig } from "antd";
 import { BaseOptionType } from "antd/es/select";
 
 export const httpAPI: string = "http://localhost:3000";
+export enum lineLiffID {
+  UPLOAD_IMAGE = "2001180435-mZ7YAEj4",
+  SIGNIN = "2001180435-eBkJB6ZQ"
+};
 
 export const themeConfig: ThemeConfig = {
   components: {
