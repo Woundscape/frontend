@@ -1,50 +1,56 @@
+import liff from "@line/liff";
 import { Spin, Upload } from "antd";
-import Logo_Wound from "@assets/logo-wound.svg";
+import { useEffect, useState } from "react";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
+import { LineCredential, getLineMe } from "@api-caller/lineApi";
+import { lineLiffID } from "@config";
+import { IUser } from "@constraint/constraint";
+
+import Logo_Wound from "@assets/logo/logo-wound.svg";
 import Arrow_Start from "@assets/arrow-start.svg";
 import SearchUploadIcon from "@assets/icon-search-upload.svg";
 import AddUploadIcon from "@assets/icon-add-upload-file.svg";
-
-import liff from "@line/liff";
-import { useEffect } from "react";
-import { getInstance } from "@api/apiClient";
-// import CancelUploadIcon from "../customize/CanceledUploadIcon";
+import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 
 export default function UploadImage() {
+  const [user, setUser] = useState<IUser>();
+  const [wound, setWound] = useState<UploadFile<any>[]>([]);
+  const [equip, setEquip] = useState<UploadFile<any>[]>([]);
   useEffect(() => {
     liff
       .init({
-        liffId: "2001180435-mZ7YAEj4",
+        liffId: lineLiffID.UPLOAD_IMAGE,
       })
       .then(() => {
-        liff.getProfile().then((profile) => {
-          console.log(profile);
-        });
+        if (liff.isLoggedIn()) {
+          liff.getProfile().then((profile: LineCredential) => {
+            getLineMe(profile).then((data: IUser) => {
+              setUser(data);
+            });
+          });
+        } else {
+          liff.login();
+        }
       })
       .catch((err) => {
         alert(`error ${err}`);
       });
-  });
+  }, []);
 
-  function handleSubmit() {
-    liff.getProfile().then((profile) => {
-      console.log(profile);
-      getInstance()
-        .post(`/upload`, {
-          user: profile,
-        })
-        .then((res) => {
-          console.log(res.data);
-          liff.closeWindow();
-        })
-        .catch((error) => {
-          liff.closeWindow();
-          console.error("Error in API call:", error);
-        });
-    });
+  function onSubmit() {
+    try {
+      console.log("Wound", wound);
+      console.log("Equip", equip);
+    } catch (error) {
+      console.error("Error during file upload:", error);
+    }
   }
   return (
-    <div className="w-full h-screen bg-white p-10">
-      <div id="line__upload_container" className="w-full flex flex-col justify-center items-center space-y-4">
+    <div className="w-full h-screen bg-white">
+      <div
+        id="line__upload_container"
+        className="w-full flex flex-col justify-center items-center space-y-4 p-10"
+      >
         <div className="logo-box flex flex-col items-center space-y-2 py-4">
           <img className="w-20" src={Logo_Wound} alt="" />
           <h1 className="text-lg michroma">Woundscape</h1>
@@ -52,21 +58,12 @@ export default function UploadImage() {
         <Upload.Dragger
           multiple
           listType="picture"
-          action={"http://localhost:5173/"}
-          accept=".png,.jpeg"
-          beforeUpload={(file) => {
-            console.log(file);
+          accept="image/png, image/jpeg"
+          fileList={wound}
+          maxCount={7}
+          beforeUpload={(_) => {
             return false;
           }}
-          //   defaultFileList={[
-          //     {
-          //         uid:"abc",
-          //         name:"existing_file.png",
-          //         status:"uploading",
-          //         percent:50,
-          //         url:"http://www.google.com"
-          //     }
-          //   ]}
           iconRender={() => {
             return <Spin></Spin>;
           }}
@@ -78,8 +75,10 @@ export default function UploadImage() {
             },
             style: { top: 5 },
           }}
-          // showUploadList={{ removeIcon: <CancelUploadIcon /> }}
-          //   showUploadList={{showRemoveIcon:false}}
+          onChange={(info: UploadChangeParam) => {
+            setWound(info.fileList);
+          }}
+          showUploadList={{ removeIcon: <img src={CancelUploadIcon} /> }}
         >
           <div className="flex flex-col items-center justify-center select-none cursor-pointer">
             <img className="w-16" src={AddUploadIcon} alt="" />
@@ -94,23 +93,13 @@ export default function UploadImage() {
           กรุณาอัปโหลดรูปเพื่อวินิจฉัยชั้นแผล
         </h1>
         <Upload.Dragger
-          multiple
           listType="picture"
-          action={"http://localhost:5173/"}
-          accept=".png,.jpeg"
-          beforeUpload={(file) => {
-            console.log(file);
+          accept="image/png, image/jpeg"
+          fileList={equip}
+          maxCount={1}
+          beforeUpload={(_) => {
             return false;
           }}
-          //   defaultFileList={[
-          //     {
-          //         uid:"abc",
-          //         name:"existing_file.png",
-          //         status:"uploading",
-          //         percent:50,
-          //         url:"http://www.google.com"
-          //     }
-          //   ]}
           iconRender={() => {
             return <Spin></Spin>;
           }}
@@ -122,8 +111,10 @@ export default function UploadImage() {
             },
             style: { top: 5 },
           }}
-          // showUploadList={{ removeIcon: <CancelUploadIcon /> }}
-          //   showUploadList={{showRemoveIcon:false}}
+          onChange={(info: UploadChangeParam) => {
+            setEquip(info.fileList);
+          }}
+          showUploadList={{ removeIcon: <img src={CancelUploadIcon} /> }}
         >
           <div className="flex flex-col items-center justify-center select-none cursor-pointer">
             <img className="w-16" src={AddUploadIcon} alt="" />
@@ -139,7 +130,7 @@ export default function UploadImage() {
         </h1>
         <button
           className="w-80 flex px-4 py-1.5 justify-between items-center btn-homepage cursor-pointer text-center"
-          onClick={handleSubmit}
+          onClick={onSubmit}
         >
           <div className="text-lg jura font-bold">Upload</div>
           <img className="w-14" src={Arrow_Start} alt="" />

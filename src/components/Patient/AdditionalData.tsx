@@ -77,8 +77,8 @@ export default function AdditionalData({ case_id }: IAdditionalDataProps) {
       let disease = [...tags, inputValue];
       setData({ stage: "case_disease", value: disease });
       showModal();
-    }else{
-      setInputVisible(false)
+    } else {
+      setInputVisible(false);
     }
   };
 
@@ -128,8 +128,8 @@ export default function AdditionalData({ case_id }: IAdditionalDataProps) {
           placeholder="Select"
           value={cases?.status}
           options={selectStatus}
-          onSelect={(_, option) => {
-            setData({ stage: "case_status", value: option.value });
+          onChange={(value) => {
+            setData({ stage: "case_status", value: value });
             showModal();
           }}
         />
@@ -139,8 +139,8 @@ export default function AdditionalData({ case_id }: IAdditionalDataProps) {
           placeholder="Select"
           value={cases?.stage || null}
           options={selectStage}
-          onSelect={(_, option) => {
-            setData({ stage: "case_stage", value: option.value });
+          onChange={(value) => {
+            setData({ stage: "case_stage", value: value });
             showModal();
           }}
         />

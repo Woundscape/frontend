@@ -17,6 +17,12 @@
   box-sizing: border-box;
 }
 
+@layer components {
+  .input__authentication {
+    @apply py-2 pl-4 border border-[#B4B4B4] rounded-[50px] outline-none;
+  }
+}
+
 @font-face {
   font-family: jura;
   src: url("../font/Jura-Bold.ttf");
@@ -100,6 +106,16 @@ div {
 #tabs-container_antd > div.ant-tabs-content-holder > div,
 #tabs-container_antd > div.ant-tabs-content-holder > div > div {
   height: 100%;
+}
+
+#tabs-container_antd > div.ant-tabs-content-holder,
+#tabs-container_antd > div.ant-tabs-content-holder > div,
+#tabs-container_antd > div.ant-tabs-content-holder > div > div {
+  height: 100%;
+}
+
+.ant-collapse-expand-icon {
+  height: 40px !important;
 }
 
 .tabs-container__navigation
@@ -544,6 +560,42 @@ input[type="range"]::-moz-range-thumb {
   border-spacing: 0 8px;
   font-family: jura;
 }
+/* .ant-table-wrapper {
+  height: 100%;
+  .ant-spin-nested-loading {
+    height: 100%;
+
+    .ant-spin-container {
+      height: 100%;
+      display: flex;
+      flex-flow: column nowrap;
+
+      .ant-table {
+        flex: auto;
+        overflow: hidden;
+
+        .ant-table-container {
+          height: 100%;
+          display: flex;
+          flex-flow: column nowrap;
+
+          .ant-table-header {
+            flex: none;
+          }
+
+          .ant-table-body {
+            flex: auto;
+            overflow: scroll;
+          }
+        }
+      }
+
+      .ant-table-pagination {
+        flex: none;
+      }
+    }
+  }
+} */
 
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
@@ -620,3 +672,4 @@ input[type="range"]::-moz-range-thumb {
 select {
   cursor: pointer;
 }
+

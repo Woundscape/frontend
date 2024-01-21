@@ -6,14 +6,15 @@ export interface IFormInputsLogin {
   user_email: string;
   user_password: string;
 }
-export interface LoginSuccessResponse {
+
+export interface Credentials {
   accessToken: string;
   expiresIn: number;
   refreshToken: string;
   tokenType: string;
 }
 
-export async function login(request: IFormInputsLogin): Promise<LoginSuccessResponse> {
+export async function login(request: IFormInputsLogin): Promise<Credentials> {
   try {
     const { data } = await getInstanceLocal().post("/user/login", request);
     return data;

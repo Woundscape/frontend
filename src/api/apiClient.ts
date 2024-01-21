@@ -21,7 +21,7 @@ export function getInstanceLocal(config?: CreateAxiosDefaults) {
 
 export function createInstanceLocal(config?: CreateAxiosDefaults) {
   instance = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: "https://f7m1cgrd-3000.asse.devtunnels.ms/api",
     ...config,
   });
 }
