@@ -5,7 +5,7 @@ import {
   IDoctor,
   IFormattedErrorResponse,
 } from "@constraint/constraint";
-import { Select, notification } from "antd";
+import { ConfigProvider, Select, notification } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
@@ -78,31 +78,40 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
         {data?.doctor_assign && (
           <CheckCircleOutlined style={{ color: "#A0A7DB" }} />
         )}
-        <Select
-          showSearch
-          open={open}
-          defaultActiveFirstOption
-          className="w-full"
-          placeholder="Select"
-          value={data.doctor_assign || null}
-          loading={selectLoading}
-          optionFilterProp="children"
-          onDropdownVisibleChange={(open) => {}}
-          onClick={() => setOpen(true)}
-          onBlur={() => !isModalOpen && setOpen(false)}
-          filterOption={filterOptions}
-          filterSort={filterSort}
-          options={doctor.map((doctor) => {
-            const label = `${doctor.doctor_firstname}  ${doctor.doctor_lastname}`;
-            const value = doctor.doctor_id;
-            return { label, value };
-          })}
-          onSelect={(_, option) => {
-            setSelectValue(option.value);
-            setOpen(true);
-            showModal();
+        <ConfigProvider
+          theme={{
+            components: {
+              Select: { zIndexPopup:10},
+            },
           }}
-        />
+        >
+          <Select
+            showSearch
+            open={open}
+            defaultActiveFirstOption
+            className="w-full"
+            placeholder="Select"
+            value={data.doctor_assign || null}
+            loading={selectLoading}
+            optionFilterProp="children"
+            onDropdownVisibleChange={(open) => {}}
+            onClick={() => setOpen(true)}
+            onBlur={() => !isModalOpen && setOpen(false)}
+            filterOption={filterOptions}
+            filterSort={filterSort}
+            options={doctor.map((doctor) => {
+              const label = `${doctor.doctor_firstname}  ${doctor.doctor_lastname}`;
+              const value = doctor.doctor_id;
+              return { label, value };
+            })}
+            onChange={(value) => {
+              setSelectValue(value);
+              setOpen(true);
+              showModal();
+            }}
+          />
+        </ConfigProvider>
+
         <ConfirmModal
           title="Change new doctor"
           description={

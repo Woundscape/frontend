@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import Dashboard_LOGO from "@assets/dashboard-logo.svg";
-import Patient_LOGO from "@assets/patient_logo.svg";
-import Equipment_LOGO from "@assets/equipment_logo.svg";
-import Account_LOGO from "@assets/account_logo.svg";
-import Contact_LOGO from "@assets/contact_logo.svg";
-import Logo_Wound from "@assets/logo-wound.svg";
+import Dashboard_LOGO from "@assets/logo/dashboard-logo.svg"
+import Patient_LOGO from "@assets/logo/patient_logo.svg";
+import Equipment_LOGO from "@assets/logo/equipment_logo.svg";
+import Allocation_LOGO from "@assets/logo/allocation_logo.svg"
+import Archive_LOGO from "@assets/logo/archive_logo.svg"
+import UserManage_LOGO from "@assets/logo/user_manage_logo.svg"
+import Account_LOGO from "@assets/logo/account_logo.svg";
+import Logo_Wound from "@assets/logo/logo-wound.svg";
 
 import ImageMenu from "./ImageMenu";
 import { List } from "antd";
@@ -33,8 +35,23 @@ const defaultMenuRoutes: IMenu[] = [
     icon: Equipment_LOGO,
   },
   {
+    title: "Archive",
+    pathname: "/archive",
+    icon: Archive_LOGO,
+  },
+  {
     title: "Allocation",
+    pathname: "/allocation",
+    icon: Allocation_LOGO,
+  },
+  {
+    title: "Users Management",
     pathname: "/management",
+    icon: UserManage_LOGO,
+  },
+  {
+    title: "Account",
+    pathname: "/account",
     icon: Account_LOGO,
   },
 ];

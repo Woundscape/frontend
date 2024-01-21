@@ -121,10 +121,10 @@ export default function PatientDetail() {
           setStageSegmented("Overview");
           break;
         case "Comparative Imaging":
-          router("/compare");
+          router('/compare', { state: { myData: 'Hello from source page' } });
           break;
         case "Wound Progression":
-          router("/progress");
+          router('/progress', { state: { imageList: checkedList } });
           break;
         default:
           console.log(checkedList);

@@ -4,7 +4,7 @@ import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Button, Popover, Slider, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import LoadPath from "@libs/images_2.json";
-import DefaultButton from "@components/DefaultButton";
+import DefaultButton from "@components/WoundAnalysis/DefaultButton";
 import CanvasSelectIcon from "@assets/icons/canvas_icon_select.svg";
 import CanvasPenIcon from "@assets/icons/canvas_icon_pen.svg";
 import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";

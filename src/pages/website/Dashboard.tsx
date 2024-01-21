@@ -1,4 +1,4 @@
-import { Layout, List } from "antd";
+import { Checkbox, Divider, Layout, List, Modal, Typography } from "antd";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
 import ListNotification from "@features/ListNotification";
@@ -8,6 +8,9 @@ import { Content } from "antd/es/layout/layout";
 import { useLoading } from "@components/Loading";
 import DashboardTable from "@features/PatientTable";
 import { useAuth } from "@components/AuthProvider";
+import { useEffect, useState } from "react";
+import Logo_Wound from "@assets/logo/logo-wound.svg";
+import AddFriend from "@assets/AddFriendQRCODE.png";
 
 export interface CardPatient {
   title: string;
@@ -33,12 +36,51 @@ export default function Dashboard() {
       value: "3",
     },
   ];
-
+  const [isConnect, setIsConnect] = useState(false);
+  useEffect(()=>{
+    const connectedLine = localStorage.getItem('line_LIFF_SCAN_QRCODE')
+    if(!connectedLine){
+      setIsConnect(true)
+    }
+  },[])
   return (
     <>
       <Layout className="w-full h-screen relative">
         <div className="flex gap-3 h-full relative">
           {/* Body */}
+          <Modal
+            title={"Connect with line"}
+            open={isConnect}
+            onCancel={() => setIsConnect(false)}
+            footer={null}
+            centered
+            destroyOnClose
+          >
+            <Content className="flex flex-col justify-center items-center p-2">
+              <div className="flex flex-col items-center space-y-3">
+                <img width={80} src={Logo_Wound} />
+                <Divider>
+                  <Typography className="prompt text-[#868686] text-xs">
+                    SCAN CODE HERE
+                  </Typography>
+                </Divider>
+                <div className="bg-[#D2D4EB] w-48 h-48 p-2.5 rounded-md">
+                  <img src={AddFriend} alt="" className="rounded-md" />
+                </div>
+                <Typography className="jura text-[#868686] text-xs">
+                  Please scan to connect your account with line
+                </Typography>
+                <Checkbox
+                  onChange={() => {
+                    localStorage.setItem("line_LIFF_SCAN_QRCODE", "Connected");
+                  }}
+                  className="jura text-xs flex items-center text-[#868686]"
+                >
+                  Don't show me again
+                </Checkbox>
+              </div>
+            </Content>
+          </Modal>
           <Content className="grow w-full bg-white px-6">
             <div className="flex flex-col items-center h-full py-10">
               <div id="content" className="w-full h-full">

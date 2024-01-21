@@ -1,32 +1,43 @@
-import { UseMutationResult, useMutation } from "react-query";
 import { LeftOutlined } from "@ant-design/icons";
-import { IUpdateCase, updateCase } from "@api-caller/caseApi";
-import { IFormattedErrorResponse, IManageUser } from "@constraint/constraint";
+import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
+import {
+  ICase,
+  IDoctor,
+  IFormattedErrorResponse,
+} from "@constraint/constraint";
 import UserProfile from "@features/UserProfile";
+import { UseMutationResult, useMutation } from "react-query";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { getColumnManageUser } from "@components/Management/ColumnTable";
+import { useState, useEffect } from "react";
+import { getColumns } from "@components/Allocation/ColumnTable";
+import getAllDoctor from "@api-caller/doctorApi";
 
-export default function Management() {
+// const { RangePicker } = DatePicker;
+export default function Allocation() {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     IUpdateCase
   > = useMutation(updateCase);
-  const [data, setData] = useState<IManageUser[]>([
-    {
-      user_id: "1",
-      user_firstname: "test",
-      user_lastname: "test2",
-      user_type: "Doctor",
-      line_uid: "sd",
-      created_at: new Date('2002-05-24'),
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const columns: ColumnsType<IManageUser> = getColumnManageUser();
+  useEffect(() => {
+    getAllCase().then((data) => {
+      const sortedData = data.sort(
+        (a: any, b: any) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+      setData(sortedData);
+      getAllDoctor().then((doctors) => {
+        setDoctors(doctors);
+        setLoading(false);
+      });
+    });
+  }, [updateMutation.data]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ICase[]>([]);
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  const columns: ColumnsType<ICase> = getColumns({ updateMutation, doctors });
   return (
     <>
       <div className="w-full h-screen relative">
@@ -35,7 +46,7 @@ export default function Management() {
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
                 <LeftOutlined />
-                <p className="jura text-xl">User Management</p>
+                <p className="jura text-xl">Allocation</p>
               </div>
               <div className="w-[30rem]">
                 <UserProfile />

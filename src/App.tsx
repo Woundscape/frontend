@@ -9,7 +9,7 @@ import EditImage from "@pages/website/Test";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
 import Equipment from "@pages/website/Equipment";
 import Compare from "@pages/website/Compare";
-import Management from "@pages/website/Management";
+import Allocation from "@pages/website/Allocation";
 import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset";
@@ -25,6 +25,8 @@ import HistoryLine from "@pages/line/History";
 import TestPred from "@pages/website/testPred";
 import { LoadingProvider } from "@components/Loading";
 import { AuthProvider } from "@components/AuthProvider";
+import Account from "@pages/website/Account";
+import Management from "@pages/website/Management";
 
 function App() {
   return (
@@ -75,6 +77,8 @@ function AuthRoutes() {
         <Route path="pred" element={<TestPred />} />
         <Route path="compare" element={<Compare />} />
         <Route path="progress" element={<Progress />} />
+        <Route path="allocation" element={<Allocation />} />
+        <Route path="account" element={<Account />} />
         <Route path="management" element={<Management />} />
       </Route>
     </Routes>

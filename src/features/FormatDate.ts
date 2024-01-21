@@ -1,7 +1,10 @@
 import moment from "moment";
 
-export function formatTimeDifference(inputDate: Date) {
+export function formatTimeDifference(inputDate: Date | undefined) {
   const currentDate: any = new Date();
+  if (!inputDate){
+    return 'Unknown'
+  }
   const targetDate: any = new Date(inputDate);
 
   // Calculate the time difference in milliseconds

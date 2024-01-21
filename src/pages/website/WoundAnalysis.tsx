@@ -1,4 +1,4 @@
-import { List, Tabs, Button, Typography, InputNumber, Modal } from "antd";
+import { List, Tabs, Button, Typography, InputNumber, Modal, Form } from "antd";
 import UserProfile from "@features/UserProfile";
 import {
   EyeInvisibleOutlined,
@@ -121,7 +121,7 @@ export default function WoundAnalysis() {
       <div className="w-full h-screen relative">
         <div className="h-full relative flex gap-3">
           <div className="w-full bg-white grow overflow-y-auto px-10">
-            <div className="flex flex-col items-center h-full py-12">
+            <div className="flex flex-col items-center h-full py-12 space-y-4">
               <div className="w-full min-h-full overflow-y-auto flex flex-col justify-between space-y-4">
                 <div id="button-wrapper" className="flex justify-between">
                   <Button
@@ -139,6 +139,8 @@ export default function WoundAnalysis() {
                   </Button>
                 </div>
                 <DrawSketchCanvas img_id={img_id as string} />
+              </div>
+              <div className="w-full pb-10">
                 <AddNote id={img_id as string} mutation={addNoteMutation} />
               </div>
             </div>

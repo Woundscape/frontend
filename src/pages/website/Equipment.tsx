@@ -3,14 +3,12 @@ import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { useNavigate } from "react-router-dom";
 import { IEquipment } from "@constraint/constraint";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
 import getAllEquipment from "@api-caller/equipApi";
 
 export default function Equipment() {
-  const router = useNavigate();
   const [data, setData] = useState<IEquipment[]>([]);
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import Logo_Wound from "@assets/logo-wound.svg";
+import Logo_Wound from "@assets/logo/logo-wound.svg";
 import MockWound from "@assets/mockup_wound_history.svg";
 import MockEquip from "@assets/mockup_equip_history.svg";
 import footer_watermark from "@assets/footer_watermark.svg";

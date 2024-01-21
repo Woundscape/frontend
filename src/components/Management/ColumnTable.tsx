@@ -1,22 +1,14 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constraint/constraint";
-import { DropdownField } from "@components/Management/DropdownField";
-import { UseMutationResult } from "react-query";
-import { Typography, Tag } from "antd";
+import { Checkbox, Space, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-import { IUpdateCase } from "@api-caller/caseApi";
+import { IManageUser } from "@constraint/constraint";
 
-interface ColumnsConfigProps {
-  updateMutation: UseMutationResult<boolean, IFormattedErrorResponse, IUpdateCase>;
-  doctors: IDoctor[];
-}
-
-export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): ColumnsType<ICase> => [
+export const getColumnManageUser = (): ColumnsType<IManageUser> => [
   {
-    title: "Hospital No.",
-    dataIndex: "hn_id",
-    key: "hn_id",
+    title: "User id.",
+    dataIndex: "user_id",
+    key: "user_id",
     render(value: string, _, index) {
       return (
         <>
@@ -28,46 +20,47 @@ export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): Col
     },
   },
   {
-    title: "User id.",
-    dataIndex: "line_uid",
-    key: "line_uid",
+    title: "Name",
+    dataIndex: "user_fullname",
+    key: "user_fullname",
     render(value, _, index) {
       return (
         <>
           <Typography key={index} className="jura truncate">
             {value}
           </Typography>
+          {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
       );
     },
   },
   {
     title: "Doctor",
-    dataIndex: "doctor_assign",
-    key: "doctor_assign",
-    render: (_, data, index) => (
-      <DropdownField key={index} data={data} doctor={doctors} updateMutation={updateMutation} />
-    ),
+    dataIndex: "equip_type",
+    key: "equip_type",
+    render(value, record, index) {
+      return (
+        <>
+          <Space direction="horizontal">
+            <Checkbox />
+          </Space>
+        </>
+      );
+    },
   },
   {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-  },
-  {
-    title: "Progression Stage",
-    dataIndex: "stage",
-    key: "stage",
-  },
-  {
-    title: "Last Updated",
-    dataIndex: "updated_at",
-    key: "updated_at",
-    render: (_, { updated_at }, index) => (
-      <Typography key={index} id="text__primary">
-        {formatTimeDifference(updated_at)}
-      </Typography>
-    ),
+    title: "Admin",
+    dataIndex: "equip_type",
+    key: "equip_type",
+    render(value, record, index) {
+      return (
+        <>
+          <Space direction="horizontal">
+            <Checkbox />
+          </Space>
+        </>
+      );
+    },
   },
   {
     title: "Start date & time",
@@ -80,23 +73,8 @@ export const getColumns = ({ updateMutation, doctors }: ColumnsConfigProps): Col
     ),
   },
   {
-    title: "Disease",
-    dataIndex: "disease",
-    key: "disease",
-    render: (_, { disease }) => (
-      <>
-        {"123"?.split("")?.map((value: string, index: number) => {
-          let color = value.length > 5 ? "geekblue" : "green";
-          if (value === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={`${value}-${index}`} className="jura">
-              {value}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: "Action",
+    dataIndex: "equip_type",
+    key: "equip_type",
   },
 ];

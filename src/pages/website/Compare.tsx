@@ -5,7 +5,6 @@ import UserProfile from "@features/UserProfile";
 import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import { Content } from "antd/es/layout/layout";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";
-import AddNote from "@assets/icons/addNote.svg";
 import WoundCom from "@assets/wound/img_10.jpg";
 
 export default function Patient() {

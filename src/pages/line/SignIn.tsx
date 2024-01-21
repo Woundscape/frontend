@@ -2,50 +2,53 @@ import { useEffect, useState } from "react";
 import { Input, Divider } from "antd";
 import { useGoogleLogin } from "@react-oauth/google";
 import liff from "@line/liff";
-import { getInstance } from "@api/apiClient";
 import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
-import logo_wound from "@assets/logo-wound.svg";
+import logo_wound from "@assets/logo/logo-wound.svg";
 import footer_watermark from "@assets/footer_watermark.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import google_icon from "@assets/icons/google_icon.svg";
 import line_icon from "@assets/icons/line_icon.svg";
+import { LineCredential, lineLogin } from "@api-caller/lineApi";
+import { UserType } from "@constraint/constraint";
+import { lineLiffID } from "@config";
 
 export default function SignIn() {
-  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState<LineCredential>();
   useEffect(() => {
     liff
       .init({
-        liffId: "2001180435-eBkJB6ZQ",
+        liffId: lineLiffID.SIGNIN,
       })
       .then(() => {
         if (liff.isLoggedIn()) {
           liff.getProfile().then((profile) => {
-            setUserId(profile.userId);
+            setUser(profile);
           });
         }
       })
       .catch((err) => {
         console.log(`error ${err}`);
       });
-  });
+  }, []);
   function handleSubmit() {
-    liff.getProfile().then((profile) => {
-      console.log(profile);
-      getInstance()
-        .post(`/signin`, {
-          user: profile,
-        })
-        .then((res) => {
-          console.log(res.data);
+    if (user) {
+      lineLogin({
+        userId: user.userId,
+        displayName: user.displayName,
+        type: UserType.Patient,
+      })
+        .then(() => {
           liff.closeWindow();
         })
         .catch((error) => {
           liff.closeWindow();
           console.error("Error in API call:", error);
         });
-    });
+    } else {
+      liff.login();
+    }
   }
   function loginLiff() {
     if (liff.isLoggedIn()) {
@@ -53,18 +56,18 @@ export default function SignIn() {
     } else {
       liff.login();
     }
-    // window.location.replace('https://liff.line.me/2001180435-eBkJB6ZQ')
   }
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      getOAuthInstance().get(`/oauth2/v1/userinfo`, {
-        params:{
-          access_token: tokenResponse.access_token
-        }
-      }).then((res)=> {
-        console.log(res.data);
-        
-      })
+      getOAuthInstance()
+        .get(`/oauth2/v1/userinfo`, {
+          params: {
+            access_token: tokenResponse.access_token,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
     },
   });
   return (

@@ -1,4 +1,4 @@
-import logo_wound from "@assets/logo-wound.svg";
+import logo_wound from "@assets/logo/logo-wound.svg";
 import logo_it from "@assets/it-logo.svg";
 function ResetPassword() {
   return (
