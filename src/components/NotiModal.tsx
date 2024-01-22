@@ -1,9 +1,6 @@
-import { Avatar, Divider, List, Modal } from "antd";
-import React, { useState } from "react";
-import NotiAll from "@assets/icons/all_noti.svg";
-import PatientNoteIcon from "@assets/icons/patient_note_noti.svg";
-import SuggestNotiIcon from "@assets/icons/sugggest_noti.svg";
+import { Avatar, ConfigProvider, Divider, List, Modal, Segmented } from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
+import { optionNotification } from "@utils/option";
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -62,18 +59,27 @@ export default function NotiModal({
           <div className="w-full text-[#4C577C] text-lg">Notification</div>
           <Divider className="m-0" />
           <div className="flex text-[#4C577C] space-x-7">
-            <div className="flex justify-center items-center cursor-pointer rounded-full space-x-2 bg-[#EEEEEE] w-[4.5rem] ">
-              <img src={NotiAll} className="w-5.5" alt="" />
-              <p>All</p>
-            </div>
-            <div className="flex space-x-1.5 cursor-pointer">
-              <img className="w-5" src={PatientNoteIcon} alt="" />
-              <p className="w-24">Patient note</p>
-            </div>
-            <div className="flex space-x-1.5 cursor-pointer">
-              <img className="w-5" src={SuggestNotiIcon} alt="" />
-              <p className="w-24">Suggestion</p>
-            </div>
+            <ConfigProvider
+              theme={{
+                components: {
+                  Segmented: {
+                    itemSelectedBg: "#EEEEEE",
+                    itemSelectedColor: "#424241",
+                    itemHoverBg: "transparent",
+                    itemColor: "#4C577C",
+                    colorBgContainer: "red",
+                  },
+                },
+              }}
+            >
+              <div id="head__notification">
+                <Segmented
+                  className="jura select-none"
+                  options={optionNotification}
+                  onChange={(stage: any) => {}}
+                />
+              </div>
+            </ConfigProvider>
           </div>
           <div className="flex flex-col h-24 overflow-y-auto grow">
             <List
