@@ -1,10 +1,6 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import {
-  ICase,
-  IDoctor,
-  IFormattedErrorResponse,
-} from "@constraint/constraint";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import { DropdownField } from "@components/Allocation/DropdownField";
 import { UseMutationResult } from "react-query";
 import { Typography, Tag } from "antd";

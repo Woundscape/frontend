@@ -24,10 +24,10 @@ import {
   IEquipment,
   IFormattedErrorResponse,
   INote,
-} from "@constraint/constraint";
+} from "@constants/interface";
 import { UseMutationResult } from "react-query";
 import { filterOptions, filterSort, httpAPI } from "@config";
-import { DefaultNoteForm } from "@constraint/defaultForm";
+import { DefaultNoteForm } from "@constants/defaultForm";
 import { getNoteImageById } from "@api-caller/noteApi";
 import { formatTimeDifference } from "@features/FormatDate";
 import { Content } from "antd/es/layout/layout";

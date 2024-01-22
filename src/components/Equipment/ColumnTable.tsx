@@ -1,8 +1,20 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { Typography } from "antd";
+import { Dropdown, MenuProps, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-import { IEquipment } from "@constraint/constraint";
+import { IEquipment } from "@constants/interface";
+import MoreIcon from "@assets/icons/more_icon.svg";
+
+const items: MenuProps["items"] = [
+  {
+    key: "1",
+    label: <div>Edit</div>,
+  },
+  {
+    key: "2",
+    label: <div>Delete</div>,
+  },
+];
 
 export const getColumnEquipment = (): ColumnsType<IEquipment> => [
   {
@@ -57,6 +69,21 @@ export const getColumnEquipment = (): ColumnsType<IEquipment> => [
       <Typography key={index} id="text__primary">
         {formatTimeDifference(created_at)}
       </Typography>
+    ),
+  },
+  {
+    title: "Action",
+    key: "operation",
+    fixed: "right",
+    width: 100,
+    render: () => (
+      <div id="action_table" onClick={(e) => e.stopPropagation()}>
+        <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
+          <div className="mr-6 flex justify-center">
+            <img src={MoreIcon} alt="" />
+          </div>
+        </Dropdown>
+      </div>
     ),
   },
 ];

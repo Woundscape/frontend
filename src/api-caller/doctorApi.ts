@@ -1,6 +1,6 @@
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
-import { IDoctor } from "@constraint/constraint";
+import { IDoctor } from "@constants/interface";
 
 export default async function getAllDoctor(): Promise<IDoctor[]> {
   try {

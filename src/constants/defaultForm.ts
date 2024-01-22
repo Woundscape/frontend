@@ -5,3 +5,9 @@ export const DefaultNoteForm = {
   note_img: [],
   img_id: "",
 };
+
+export const DefaultEquipForm = {
+  equip_name: "",
+  equip_type: "",
+  equip_subtype: "",
+};

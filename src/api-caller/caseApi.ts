@@ -1,4 +1,4 @@
-import { ICase } from "@constraint/constraint";
+import { ICase } from "@constants/interface";
 import { getInstanceLocal } from "../api/apiClient";
 import { formattedError } from "@utils";
 

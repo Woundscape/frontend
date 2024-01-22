@@ -1,5 +1,5 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { INote } from "@constraint/constraint";
+import { INote } from "@constants/interface";
 import { formattedError } from "@utils";
 
 export async function getNoteImageById(note_id: string): Promise<any> {

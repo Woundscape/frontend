@@ -1,5 +1,5 @@
 import { getAllImageById } from "@api-caller/imageApi";
-import { IImage } from "@constraint/constraint";
+import { IImage } from "@constants/interface";
 import { List, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";

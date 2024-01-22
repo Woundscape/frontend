@@ -1,6 +1,6 @@
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
-import { IMe } from "@constraint/constraint";
+import { IMe } from "@constants/interface";
 
 export interface IFormInputsLogin {
   user_email: string;

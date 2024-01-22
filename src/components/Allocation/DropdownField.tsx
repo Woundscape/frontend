@@ -1,10 +1,6 @@
 // Used In: { Management }
 import { useEffect, useState } from "react";
-import {
-  ICase,
-  IDoctor,
-  IFormattedErrorResponse,
-} from "@constraint/constraint";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import { ConfigProvider, Select, notification } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
@@ -81,7 +77,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
         <ConfigProvider
           theme={{
             components: {
-              Select: { zIndexPopup:10},
+              Select: { zIndexPopup: 10 },
             },
           }}
         >

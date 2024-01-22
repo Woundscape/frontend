@@ -1,10 +1,6 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
-import {
-  ICase,
-  IDoctor,
-  IFormattedErrorResponse,
-} from "@constraint/constraint";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
 import { UseMutationResult, useMutation } from "react-query";
 import { Table } from "antd";

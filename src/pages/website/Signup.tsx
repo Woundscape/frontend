@@ -2,7 +2,7 @@ import logo_wound from "@assets/logo/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import { Button, Form, Input } from "antd";
 import { useState } from "react";
-import { IUser, UserType } from "@constraint/constraint";
+import { IUser, UserType } from "@constants/interface";
 
 function Signup() {
   const [form, setForm] = useState<IUser>({

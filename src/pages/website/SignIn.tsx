@@ -11,7 +11,7 @@ import { useState } from "react";
 import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
 import { useNavigate } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse } from "@constraint/constraint";
+import { IFormattedErrorResponse } from "@constants/interface";
 function Signin() {
   const router = useNavigate();
   const loginMutation: UseMutationResult<
@@ -34,7 +34,7 @@ function Signin() {
     e.preventDefault();
     loginMutation.mutate(formInputs, {
       onSuccess: (data) => {
-        sessionStorage.setItem("token", JSON.stringify(data.accessToken));
+        sessionStorage.setItem("token", JSON.stringify(data));
         router("/dashboard");
       },
     });

@@ -5,7 +5,6 @@ import ListNotification from "@features/ListNotification";
 import UserProfile from "@features/UserProfile";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
-import { useLoading } from "@components/Loading";
 import DashboardTable from "@features/PatientTable";
 import { useAuth } from "@components/AuthProvider";
 import { useEffect, useState } from "react";

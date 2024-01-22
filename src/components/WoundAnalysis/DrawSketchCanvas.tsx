@@ -16,7 +16,7 @@ import {
   IFormattedErrorResponse,
   IImage,
   TissueType,
-} from "@constraint/constraint";
+} from "@constants/interface";
 import { IUpdateImage, getImageById, updateImage } from "@api-caller/imageApi";
 import { UseMutationResult, useMutation } from "react-query";
 import { httpAPI } from "@config";

@@ -2,10 +2,8 @@ import liff from "@line/liff";
 import { Spin, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { LineCredential, getLineMe } from "@api-caller/lineApi";
+import { LineCredential, getLineMe, lineUpload } from "@api-caller/lineApi";
 import { lineLiffID } from "@config";
-import { IUser } from "@constraint/constraint";
-
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import Arrow_Start from "@assets/arrow-start.svg";
 import SearchUploadIcon from "@assets/icon-search-upload.svg";
@@ -13,7 +11,7 @@ import AddUploadIcon from "@assets/icon-add-upload-file.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 
 export default function UploadImage() {
-  const [user, setUser] = useState<IUser>();
+  const [user, setUser] = useState<LineCredential>();
   const [wound, setWound] = useState<UploadFile<any>[]>([]);
   const [equip, setEquip] = useState<UploadFile<any>[]>([]);
   useEffect(() => {
@@ -23,8 +21,8 @@ export default function UploadImage() {
       })
       .then(() => {
         if (liff.isLoggedIn()) {
-          liff.getProfile().then((profile: LineCredential) => {
-            getLineMe(profile).then((data: IUser) => {
+          liff.getProfile().then((profile) => {
+            getLineMe(profile).then((data: LineCredential) => {
               setUser(data);
             });
           });
@@ -37,12 +35,24 @@ export default function UploadImage() {
       });
   }, []);
 
-  function onSubmit() {
-    try {
-      console.log("Wound", wound);
-      console.log("Equip", equip);
-    } catch (error) {
-      console.error("Error during file upload:", error);
+  async function onSubmit() {
+    if (wound.length > 0) {
+      try {
+        const form = new FormData();
+        wound.forEach((file, _) => {
+          let fileBlob = file.originFileObj ?? new Blob();
+          form.append("wound", fileBlob);
+        });
+        equip.forEach((file, _) => {
+          let fileBlob = file.originFileObj ?? new Blob();
+          form.append("equip", fileBlob);
+        });
+        form.append("hn_id", user?.hn_id ?? "");
+        const data = await lineUpload(form);
+        console.log(data);
+      } catch (error) {
+        console.error("Error during file upload:", error);
+      }
     }
   }
   return (

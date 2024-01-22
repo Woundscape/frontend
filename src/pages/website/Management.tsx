@@ -1,7 +1,7 @@
 import { UseMutationResult, useMutation } from "react-query";
 import { LeftOutlined } from "@ant-design/icons";
 import { IUpdateCase, updateCase } from "@api-caller/caseApi";
-import { IFormattedErrorResponse, IManageUser } from "@constraint/constraint";
+import { IFormattedErrorResponse, IManageUser } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -22,7 +22,7 @@ export default function Management() {
       user_lastname: "test2",
       user_type: "Doctor",
       line_uid: "sd",
-      created_at: new Date('2002-05-24'),
+      created_at: new Date("2002-05-24"),
     },
   ]);
   const [loading, setLoading] = useState(false);

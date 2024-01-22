@@ -18,7 +18,7 @@ import SortBy from "@assets/icons/sortBy.svg";
 import { SegmentedValue } from "antd/es/segmented";
 import uploadImage from "@api-caller/imageApi";
 import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse } from "@constraint/constraint";
+import { IFormattedErrorResponse } from "@constants/interface";
 import UploadModal from "./UploadModal";
 
 const { RangePicker } = DatePicker;
@@ -107,7 +107,7 @@ export default function DefaultInput({
             <Button
               onClick={() => setIsModalOpen(true)}
               className="button_add"
-              icon={<img src={AddImageIcon}/>}
+              icon={<img src={AddImageIcon} />}
             >
               Add Image
             </Button>
