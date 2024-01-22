@@ -2,7 +2,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Checkbox, Space, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-import { IManageUser } from "@constraint/constraint";
+import { IManageUser } from "@constants/interface";
 
 export const getColumnManageUser = (): ColumnsType<IManageUser> => [
   {

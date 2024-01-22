@@ -15,9 +15,9 @@ export default defineConfig({
       "@features": "/src/features",
       "@libs": "/src/libs",
       "@config": "/src/config",
-      "@constraint": "/src/constraint",
+      "@constants": "/src/constants",
       "@utils": "/src/utils",
-      "@api-caller": "/src/api-caller"
+      "@api-caller": "/src/api-caller",
     },
   },
 });

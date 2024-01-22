@@ -1,4 +1,4 @@
-import { IFormattedErrorResponse } from "@constraint/constraint";
+import { IFormattedErrorResponse } from "@constants/interface";
 import { AxiosError, isAxiosError } from "axios";
 
 export function formattedError(
@@ -8,7 +8,7 @@ export function formattedError(
     const response = error.response;
     if (response) {
       const { message, info, errors } = response.data;
-      const infoMessage = errors ?? '';
+      const infoMessage = errors ?? "";
       return {
         message,
         infoMessage,
@@ -23,6 +23,6 @@ export function formattedError(
     };
   }
   return {
-    message: 'error',
+    message: "error",
   };
 }

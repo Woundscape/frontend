@@ -1,8 +1,8 @@
-import { getMe } from "@api-caller/authenApi";
+import { Credentials, getMe } from "@api-caller/authenApi";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
-import { IMe } from "@constraint/constraint";
+import { IMe } from "@constants/interface";
 
 const AuthContext = createContext({
   doctorId: "",
@@ -20,12 +20,13 @@ export const AuthProvider = ({ children }: any) => {
     checkAccessToken();
   }, [children]);
   const checkAccessToken = async () => {
-    const token =
+    const token:Credentials =
       sessionStorage.getItem("token") &&
       JSON.parse(sessionStorage.getItem("token") || "");
+      console.log(token);
     try {
       if (token) {
-        const response: IMe = await getMe(token);
+        const response: IMe = await getMe(token.accessToken);
         changeLoading(false);
         setIsAuthenticated(true);
         setDoctorId(response.doctor_id);
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: any) => {
       }
     } catch (error) {
       setIsAuthenticated(false);
-      sessionStorage.removeItem("token");
+      // sessionStorage.removeItem("token");
       router("/signin");
     }
   };

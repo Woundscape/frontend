@@ -3,8 +3,8 @@ import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { IEquipment } from "@constraint/constraint";
-import DefaultInput from "@components/Patient/DefaultInput";
+import { IEquipment } from "@constants/interface";
+import DefaultInput from "@components/Equipment/DefaultInput";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
 import getAllEquipment from "@api-caller/equipApi";
 
@@ -13,12 +13,15 @@ export default function Equipment() {
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
+    getEquipment()
+  }, []);
+  async function getEquipment() {
     getAllEquipment().then((response) => {
       setData(response);
       setEquipment(response);
       setLoading(false);
     });
-  }, []);
+  }
   const columns: ColumnsType<any> = getColumnEquipment();
   const filterEquipmentId = (e: any) => {
     const searchTerm = e.target.value.toLowerCase();
@@ -44,7 +47,11 @@ export default function Equipment() {
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
-                  <DefaultInput placeholder="Search by Equipment Name" onFilter={filterEquipmentId} onRender={()=>{}} />
+                  <DefaultInput
+                    placeholder="Search by Equipment Name"
+                    onFilter={filterEquipmentId}
+                    onRender={getEquipment}
+                  />
                   {/* Body */}
                   <Content id="content__patient" className="pt-7">
                     <Table
@@ -54,8 +61,12 @@ export default function Equipment() {
                       loading={loading}
                       tableLayout="fixed"
                       rowKey={(record) => `row__patient__${record.equip_id}`}
+                      onRow={(record: IEquipment, _) => ({
+                        onClick: (event: any) => {
+                          console.log(event);
+                        },
+                      })}
                       pagination={{
-                        defaultPageSize: 2,
                         showSizeChanger: false,
                       }}
                     />

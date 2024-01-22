@@ -16,7 +16,7 @@ import {
   IFormattedErrorResponse,
   INote,
   TissueType,
-} from "@constraint/constraint";
+} from "@constants/interface";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
 import AddNote from "@components/AddNote";
 import { UseMutationResult, useMutation } from "react-query";

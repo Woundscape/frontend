@@ -1,5 +1,5 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { IImage } from "@constraint/constraint";
+import { IImage } from "@constants/interface";
 import { formattedError } from "@utils";
 
 export interface IUpdateImage {
@@ -14,7 +14,7 @@ export async function updateImage({
   try {
     const { data } = await getInstanceLocal().put("/image/", {
       img_id,
-      img_tissue
+      img_tissue,
     });
     return data;
   } catch (error) {

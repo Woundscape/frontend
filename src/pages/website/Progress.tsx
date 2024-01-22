@@ -21,7 +21,7 @@ import { Line } from "react-chartjs-2";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
 import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse, INote } from "@constraint/constraint";
+import { IFormattedErrorResponse, INote } from "@constants/interface";
 import addNoteImage from "@api-caller/noteApi";
 import AddNote from "@components/AddNote";
 import { useLocation, useNavigate, useParams } from "react-router-dom";

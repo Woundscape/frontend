@@ -1,17 +1,13 @@
+import { useState } from "react";
 import logo_wound from "@assets/logo/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
 import { Button, Form, Input, notification } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import {
-  IFormattedErrorResponse,
-  IUser,
-  UserType,
-} from "@constraint/constraint";
-import { useState } from "react";
+import { IUser, IFormattedErrorResponse } from "@constants/interface";
 import { UseMutationResult, useMutation } from "react-query";
 import { webRegister } from "@api-caller/authenApi";
-import { DefaultUserForm } from "@constraint/defaultForm";
+import { DefaultUserForm } from "@constants/defaultForm";
 
 function Signup() {
   const registerMutation: UseMutationResult<

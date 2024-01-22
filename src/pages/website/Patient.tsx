@@ -8,17 +8,19 @@ import { ColumnsType } from "antd/es/table";
 import { getColumns } from "@components/Patient/ColumnTable";
 import { SegmentedValue } from "antd/es/segmented";
 import { useNavigate } from "react-router-dom";
-import { IPatient } from "@constraint/constraint";
+import { IPatient } from "@constants/interface";
 import DefaultInput from "@components/Patient/DefaultInput";
+import { useAuth } from "@components/AuthProvider";
 
 export default function Patient() {
   const router = useNavigate();
+  const { doctorId } = useAuth();
   const [data, setData] = useState<IPatient[]>([]);
   const [patients, setPatients] = useState<IPatient[]>([]);
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: "6dd9462c-0003-4ca6-b41d-ce16a8980feb" }).then(
+    getCaseByDoctorId({ params: doctorId }).then(
       (response) => {
         setData(response);
         setPatients(response);
@@ -118,8 +120,8 @@ export default function Patient() {
                         rowKey={(record) => `row__patient__${record.case_id}`}
                         onRow={(record: IPatient, _) => ({
                           onClick: (event: any) => {
-                            const index = event.target.cellIndex
-                            if (index != 7){
+                            const index = event.target.cellIndex;
+                            if (index != 7) {
                               router(`/patient/${record.case_id}`);
                             }
                           },

@@ -8,7 +8,7 @@ import {
   IPatient,
   selectStage,
   selectStatus,
-} from "@constraint/constraint";
+} from "@constants/interface";
 import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller/caseApi";
 import { UseMutationResult, useMutation } from "react-query";
 

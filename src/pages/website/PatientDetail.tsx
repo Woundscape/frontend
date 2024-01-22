@@ -5,7 +5,7 @@ import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { IImage } from "@constraint/constraint";
+import { IImage } from "@constants/interface";
 import { optionSegmented } from "@utils/option";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import UserProfile from "@features/UserProfile";
@@ -73,14 +73,15 @@ export default function PatientDetail() {
         <div
           key={index}
           onClick={() => handleImage(image.img_id)}
-          className="flex mt-4 cursor-pointer"
+          className="flex mt-4 cursor-pointer "
         >
           <div
-            className="w-64 h-44 patient_img p-3 flex justify-end items-start"
+            className="w-64 h-44 patient_img p-3 flex justify-end items-start "
             style={{
               backgroundImage: `url("http://localhost:3000/${imgPath}")`,
             }}
           >
+            {/* <div className="absolute w-full h-full bg-green-500">dsa</div> */}
             {stageSegmented == "Overview" ? (
               <div className="w-full h-full flex flex-col justify-between">
                 <div className="flex flex-row justify-between text-white jura border-b">
@@ -105,9 +106,9 @@ export default function PatientDetail() {
     });
   }
   const onSubmit = async () => {
-    if (stageSegmented == 'Delete' && !isModalOpen && checkedList.length > 0){
-      setIsModalOpen(true)
-    }else{
+    if (stageSegmented == "Delete" && !isModalOpen && checkedList.length > 0) {
+      setIsModalOpen(true);
+    } else {
       switch (stageSegmented) {
         case "Overview":
           setStageSegmented("Delete");
@@ -116,15 +117,15 @@ export default function PatientDetail() {
           if (checkedList.length > 0) {
             const deleteResponse = await deleteImage(checkedList);
             getImage();
-            setIsModalOpen(false)
+            setIsModalOpen(false);
           }
           setStageSegmented("Overview");
           break;
         case "Comparative Imaging":
-          router('/compare', { state: { myData: 'Hello from source page' } });
+          router("/compare", { state: { myData: "Hello from source page" } });
           break;
         case "Wound Progression":
-          router('/progress', { state: { imageList: checkedList } });
+          router("/progress", { state: { imageList: checkedList } });
           break;
         default:
           console.log(checkedList);
@@ -185,9 +186,9 @@ export default function PatientDetail() {
                         className="timeline pl-20 pt-2"
                         dataSource={Object.keys(images)}
                         renderItem={(item, index) => {
-                          const splitIt = item.split(' ')
-                          const date = splitIt[0]+' '+ splitIt[1]
-                          const year = splitIt[2]
+                          const splitIt = item.split(" ");
+                          const date = splitIt[0] + " " + splitIt[1];
+                          const year = splitIt[2];
                           return (
                             <div className="test-item" data-year={year}>
                               <li
@@ -283,7 +284,7 @@ export default function PatientDetail() {
                   description="Are you sure that you want to delete these images"
                   isOpen={isModalOpen}
                   confirmLoading={submitLoading}
-                  onCancel={()=> setIsModalOpen(false)}
+                  onCancel={() => setIsModalOpen(false)}
                   onSubmit={onSubmit}
                 />
               </div>
