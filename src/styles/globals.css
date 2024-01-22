@@ -674,3 +674,11 @@ select {
   cursor: pointer;
 }
 
+/* Notification */
+#head__notification > div.ant-segmented {
+  background-color: transparent;
+}
+#head__notification > div > div > label.ant-segmented-item> div{
+  background-color: transparent !important;
+  border-radius: 50rem !important;
+}
