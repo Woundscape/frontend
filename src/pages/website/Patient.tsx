@@ -14,13 +14,13 @@ import { useAuth } from "@components/AuthProvider";
 
 export default function Patient() {
   const router = useNavigate();
-  const { doctorId } = useAuth();
+  const { me } = useAuth();
   const [data, setData] = useState<IPatient[]>([]);
   const [patients, setPatients] = useState<IPatient[]>([]);
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: doctorId }).then(
+    getCaseByDoctorId({ params: me?.doctor_id as string }).then(
       (response) => {
         setData(response);
         setPatients(response);

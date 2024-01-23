@@ -5,7 +5,7 @@ import { useLoading } from "./Loading";
 import { IMe } from "@constants/interface";
 
 const AuthContext = createContext({
-  doctorId: "",
+  me: undefined as IMe | undefined,
   isAuthenticated: false,
   login: async (accessToken: string) => {},
   logout: () => {},
@@ -15,28 +15,25 @@ export const AuthProvider = ({ children }: any) => {
   const router = useNavigate();
   const { changeLoading } = useLoading();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [doctorId, setDoctorId] = useState("");
+  const [me, setMe] = useState<IMe>();
   useEffect(() => {
     checkAccessToken();
   }, [children]);
   const checkAccessToken = async () => {
-    const token:Credentials =
+    const token: Credentials =
       sessionStorage.getItem("token") &&
       JSON.parse(sessionStorage.getItem("token") || "");
-      console.log(token);
     try {
       if (token) {
         const response: IMe = await getMe(token.accessToken);
         changeLoading(false);
         setIsAuthenticated(true);
-        setDoctorId(response.doctor_id);
+        setMe(response);
       } else {
         router("/signin");
       }
     } catch (error) {
-      setIsAuthenticated(false);
-      // sessionStorage.removeItem("token");
-      router("/signin");
+      logout();
     }
   };
 
@@ -48,10 +45,11 @@ export const AuthProvider = ({ children }: any) => {
   const logout = () => {
     sessionStorage.removeItem("token");
     setIsAuthenticated(false);
+    router("/signin");
   };
 
   return (
-    <AuthContext.Provider value={{ doctorId, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ me, isAuthenticated, login, logout }}>
       {isAuthenticated && children}
     </AuthContext.Provider>
   );
