@@ -34,11 +34,11 @@ const defaultMenuRoutes: IMenu[] = [
     pathname: "/equipment",
     icon: Equipment_LOGO,
   },
-  {
-    title: "Archive",
-    pathname: "/archive",
-    icon: Archive_LOGO,
-  },
+  // {
+  //   title: "Archive",
+  //   pathname: "/archive",
+  //   icon: Archive_LOGO,
+  // },
   {
     title: "Allocation",
     pathname: "/allocation",

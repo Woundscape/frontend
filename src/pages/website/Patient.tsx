@@ -14,19 +14,17 @@ import { useAuth } from "@components/AuthProvider";
 
 export default function Patient() {
   const router = useNavigate();
-  const { doctorId } = useAuth();
+  const { me } = useAuth();
   const [data, setData] = useState<IPatient[]>([]);
   const [patients, setPatients] = useState<IPatient[]>([]);
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: doctorId }).then(
-      (response) => {
-        setData(response);
-        setPatients(response);
-        setLoading(false);
-      }
-    );
+    getCaseByDoctorId({ params: me?.doctor_id + "" }).then((response) => {
+      setData(response);
+      setPatients(response);
+      setLoading(false);
+    });
   }, []);
   const columns: ColumnsType<any> = getColumns();
   const filterPatient = (e: any) => {

@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import { getColumns } from "@components/Allocation/ColumnTable";
 import getAllDoctor from "@api-caller/doctorApi";
 
-// const { RangePicker } = DatePicker;
 export default function Allocation() {
   const updateMutation: UseMutationResult<
     boolean,
@@ -24,7 +23,7 @@ export default function Allocation() {
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
       setData(sortedData);
-      getAllDoctor().then((doctors) => {
+      getAllDoctor(true).then((doctors) => {
         setDoctors(doctors);
         setLoading(false);
       });

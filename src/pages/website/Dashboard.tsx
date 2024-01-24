@@ -17,8 +17,8 @@ export interface CardPatient {
 }
 
 export default function Dashboard() {
-  const { doctorId } = useAuth();
-  console.log(doctorId);
+  const { me } = useAuth();
+  console.log(me);
   // const { changeLoading } = useLoading();
   // changeLoading(false)
   const card: CardPatient[] = [
@@ -35,13 +35,13 @@ export default function Dashboard() {
       value: "3",
     },
   ];
-  const [isConnect, setIsConnect] = useState(false);
-  useEffect(()=>{
-    const connectedLine = localStorage.getItem('line_LIFF_SCAN_QRCODE')
-    if(!connectedLine){
-      setIsConnect(true)
+  const [isConnect, setIsConnect] = useState(true);
+  useEffect(() => {
+    const connectedLine = localStorage.getItem("line_LIFF_SCAN_QRCODE");
+    if (!connectedLine) {
+      setIsConnect(true);
     }
-  },[])
+  }, []);
   return (
     <>
       <Layout className="w-full h-screen relative">

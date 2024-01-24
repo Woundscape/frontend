@@ -1,13 +1,15 @@
 import { UseMutationResult, useMutation } from "react-query";
 import { LeftOutlined } from "@ant-design/icons";
 import { IUpdateCase, updateCase } from "@api-caller/caseApi";
-import { IFormattedErrorResponse, IManageUser } from "@constants/interface";
+import { IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
+import getAllDoctor from "@api-caller/doctorApi";
+import ConfirmModal from "@components/ConfirmModal";
 
 export default function Management() {
   const updateMutation: UseMutationResult<
@@ -15,18 +17,29 @@ export default function Management() {
     IFormattedErrorResponse,
     IUpdateCase
   > = useMutation(updateCase);
-  const [data, setData] = useState<IManageUser[]>([
-    {
-      user_id: "1",
-      user_firstname: "test",
-      user_lastname: "test2",
-      user_type: "Doctor",
-      line_uid: "sd",
-      created_at: new Date("2002-05-24"),
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const columns: ColumnsType<IManageUser> = getColumnManageUser();
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  useEffect(() => {
+    getAllDoctor(false).then((doctors) => {
+      setDoctors(doctors);
+      setLoading(false);
+    });
+  }, []);
+  const [loading, setLoading] = useState(true);
+  const [isEditable, setIsEditable] = useState(false);
+  const [isConfirmmOpen, setIsConfirmOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const onCancel = () => {
+    setIsConfirmOpen(!isConfirmmOpen);
+  };
+  const onSubmit = () => {
+    setConfirmLoading(true);
+    // setIsConfirmOpen(!isConfirmmOpen);
+  };
+  const onChangeDoctor = () => {};
+  const columns: ColumnsType<IDoctor> = getColumnManageUser({
+    isEditable,
+    onChangeDoctor,
+  });
   return (
     <>
       <div className="w-full h-screen relative">
@@ -49,11 +62,21 @@ export default function Management() {
                   <Content className="w-full h-full grow">
                     <Table
                       id="management__table__patient"
-                      dataSource={data}
+                      dataSource={doctors}
                       columns={columns}
                       loading={loading}
                       tableLayout="fixed"
                       rowKey={(_, index) => `table__row__${index}`}
+                    />
+                    <ConfirmModal
+                      title="Change new doctor"
+                      description={
+                        "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
+                      }
+                      isOpen={isConfirmmOpen}
+                      confirmLoading={confirmLoading}
+                      onSubmit={onSubmit}
+                      onCancel={onCancel}
                     />
                   </Content>
                 </div>
