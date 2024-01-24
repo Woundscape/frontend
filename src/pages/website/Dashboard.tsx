@@ -9,6 +9,7 @@ import DashboardTable from "@features/PatientTable";
 import { useEffect, useState } from "react";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
+import { useAuth } from "@components/AuthProvider";
 
 export interface CardPatient {
   title: string;
@@ -16,6 +17,8 @@ export interface CardPatient {
 }
 
 export default function Dashboard() {
+  const { me } = useAuth();
+  console.log(me);
   // const { changeLoading } = useLoading();
   // changeLoading(false)
   const card: CardPatient[] = [
@@ -32,13 +35,13 @@ export default function Dashboard() {
       value: "3",
     },
   ];
-  const [isConnect, setIsConnect] = useState(false);
-  useEffect(()=>{
-    const connectedLine = localStorage.getItem('line_LIFF_SCAN_QRCODE')
-    if(!connectedLine){
-      setIsConnect(true)
+  const [isConnect, setIsConnect] = useState(true);
+  useEffect(() => {
+    const connectedLine = localStorage.getItem("line_LIFF_SCAN_QRCODE");
+    if (!connectedLine) {
+      setIsConnect(true);
     }
-  },[])
+  }, []);
   return (
     <>
       <Layout className="w-full h-screen relative">

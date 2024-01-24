@@ -1,4 +1,5 @@
-import { UserType } from "./interface";
+import { ICreateEquip } from "@api-caller/equipApi";
+import { IEquipment, UserType } from "./interface";
 
 export const DefaultNoteForm = {
   note_title: "",
@@ -8,7 +9,14 @@ export const DefaultNoteForm = {
   img_id: "",
 };
 
-export const DefaultEquipForm = {
+export const DefaultEquipForm: ICreateEquip = {
+  equip_name: "",
+  equip_type: "",
+  equip_subtype: "",
+};
+
+export const DefaultEquipment: IEquipment = {
+  equip_id: "",
   equip_name: "",
   equip_type: "",
   equip_subtype: "",

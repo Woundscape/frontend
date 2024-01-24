@@ -19,13 +19,11 @@ function Signup() {
   const [forms] = Form.useForm();
   const [registrationFailed, setRegistrationFailed] = useState<string>("");
   const onSubmit = async () => {
-    console.log(form);
     try {
       const values = await forms.validateFields();
       if (values) {
         registerMutation.mutate(form, {
           onSuccess: (e) => {
-            console.log("pass", e);
             notification.success({
               message: "Success",
               description: "Registration successful!",
@@ -101,7 +99,7 @@ function Signup() {
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your last name" },
-              { max: 10, message: "Last name cannot exceed 10 characters" },
+              { max: 20, message: "Last name cannot exceed 10 characters" },
             ]}
           >
             <Input

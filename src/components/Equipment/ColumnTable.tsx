@@ -1,22 +1,25 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { Dropdown, MenuProps, Typography } from "antd";
+import { Dropdown, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
 import { IEquipment } from "@constants/interface";
 import MoreIcon from "@assets/icons/more_icon.svg";
 
-const items: MenuProps["items"] = [
+const items = [
   {
-    key: "1",
-    label: <div>Edit</div>,
+    key: "Edit",
+    label: <div id="text__primary">Edit</div>,
   },
   {
-    key: "2",
-    label: <div>Delete</div>,
+    key: "Delete",
+    label: <div id="text__primary">Delete</div>,
   },
 ];
 
-export const getColumnEquipment = (): ColumnsType<IEquipment> => [
+export const getColumnEquipment = (
+  handleActionClick: (key: string, record: IEquipment) => void
+): ColumnsType<IEquipment> => [
+  // ... other columns
   {
     title: "Equipment id.",
     dataIndex: "equip_id",
@@ -41,7 +44,6 @@ export const getColumnEquipment = (): ColumnsType<IEquipment> => [
           <Typography key={index} className="jura truncate">
             {value}
           </Typography>
-          {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
       );
     },
@@ -73,12 +75,22 @@ export const getColumnEquipment = (): ColumnsType<IEquipment> => [
   },
   {
     title: "Action",
-    key: "operation",
+    key: "action",
     fixed: "right",
     width: 100,
-    render: () => (
+    render: (_, record, index) => (
       <div id="action_table" onClick={(e) => e.stopPropagation()}>
-        <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
+        <Dropdown
+          placement="bottomRight"
+          menu={{
+            onClick: ({ key }) => {
+              handleActionClick(key, record);
+            },
+            items,
+          }}
+          trigger={["click"]}
+          className="h-full"
+        >
           <div className="mr-6 flex justify-center">
             <img src={MoreIcon} alt="" />
           </div>

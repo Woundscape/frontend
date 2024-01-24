@@ -26,15 +26,6 @@ export interface ICase {
   disease?: any | null;
 }
 
-export interface IManageUser {
-  user_id: string;
-  user_firstname: string | null;
-  user_lastname: string | null;
-  user_type: string;
-  line_uid: string;
-  created_at: Date;
-}
-
 export enum UserType {
   Patient = "Patient",
   Doctor = "Doctor",
@@ -56,7 +47,9 @@ export interface IDoctor {
   doctor_firstname: string | null;
   doctor_lastname: string | null;
   doctor_type: string;
+  doctor_verified: boolean;
   line_uid: string | null;
+  created_at: Date;
 }
 
 export interface IPatient {
@@ -100,8 +93,8 @@ export interface IEquipment {
   equip_name: string;
   equip_type: string;
   equip_subtype?: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface INote {
