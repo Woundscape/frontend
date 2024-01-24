@@ -20,11 +20,13 @@ export default function Patient() {
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: me?.doctor_id + "" }).then((response) => {
-      setData(response);
-      setPatients(response);
-      setLoading(false);
-    });
+    getCaseByDoctorId({ params: me?.doctor_id as string }).then(
+      (response) => {
+        setData(response);
+        setPatients(response);
+        setLoading(false);
+      }
+    );
   }, []);
   const columns: ColumnsType<any> = getColumns();
   const filterPatient = (e: any) => {

@@ -1,6 +1,7 @@
 import BgProfile from "@assets/profile_bg.svg";
 import ImgProfile from "@assets/profile_img.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
+import logo_line from "@assets/line_logo.svg";
 import { Divider, Input, Typography } from "antd";
 import { useAuth } from "@components/AuthProvider";
 export default function Account() {
@@ -59,7 +60,7 @@ export default function Account() {
                     Please scan to connect your account with line
                   </Typography>
                 </div>
-                
+
                 {/* <Divider>
                   <Typography className="prompt text-[#868686] text-xs">
                   PROFILE CONNECTED

@@ -6,10 +6,10 @@ import UserProfile from "@features/UserProfile";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
 import DashboardTable from "@features/PatientTable";
-import { useAuth } from "@components/AuthProvider";
 import { useEffect, useState } from "react";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
+import { useAuth } from "@components/AuthProvider";
 
 export interface CardPatient {
   title: string;
