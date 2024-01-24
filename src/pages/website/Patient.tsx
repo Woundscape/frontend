@@ -1,5 +1,15 @@
 import UserProfile from "@features/UserProfile";
-import { Table } from "antd";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Table,
+  Typography,
+} from "antd";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import { useEffect, useState } from "react";
@@ -11,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { IPatient } from "@constants/interface";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { useAuth } from "@components/AuthProvider";
+import Paragraph from "antd/es/skeleton/Paragraph";
 
 export default function Patient() {
   const router = useNavigate();
@@ -20,13 +31,11 @@ export default function Patient() {
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: me?.doctor_id as string }).then(
-      (response) => {
-        setData(response);
-        setPatients(response);
-        setLoading(false);
-      }
-    );
+    getCaseByDoctorId({ params: me?.doctor_id as string }).then((response) => {
+      setData(response);
+      setPatients(response);
+      setLoading(false);
+    });
   }, []);
   const columns: ColumnsType<any> = getColumns();
   const filterPatient = (e: any) => {
@@ -39,9 +48,173 @@ export default function Patient() {
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
   };
+  const [stateModal, setStateModal] = useState("STATE_1");
+  const onCancel = () => {
+    setStateModal("");
+  };
+  const onChangeState = (state: string) => {
+    if (state == "STATE_1") {
+      setStateModal("STATE_2");
+    } else if (state == "STATE_2") {
+      setStateModal("STATE_3");
+    }
+  };
+  const { Paragraph, Text } = Typography;
+
+  const [hnNumber, setHnNumber] = useState("");
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setHnNumber(e.target.value);
+    if (inputValue.length === 2 && hnNumber.length > inputValue.length) {
+      // If the user is deleting, remove the hyphen
+      setHnNumber(inputValue);
+    } else if (inputValue.length === 2) {
+      // Format the input value by adding a hyphen at position 2
+      setHnNumber(inputValue.slice(0, 2) + "-");
+    } else {
+      // For other cases, update the state normally
+      setHnNumber(inputValue);
+    }
+  };
   return (
     <>
       <div className="w-full h-screen relative">
+        <Modal
+          title={"Add patient"}
+          open={stateModal == "STATE_1"}
+          footer={[
+            <div
+              key={"footer"}
+              className="px-4 py-2 flex justify-between gap-4 text-center"
+            >
+              <Button
+                htmlType="reset"
+                className="w-36 jura text-[#4C577C] border-[#D2D4EB]"
+                style={{ borderWidth: "1.5px" }}
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
+                style={{ borderWidth: "1.5px" }}
+                onClick={() => {
+                  onChangeState("STATE_1");
+                }}
+              >
+                Save
+              </Button>
+            </div>,
+          ]}
+          centered
+          destroyOnClose
+        >
+          <Content className="px-2 h-[4.3rem]">
+            <div className="w-full">
+              <Form scrollToFirstError className="">
+                <Form.Item
+                  name="hospital_number"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Enter Hospital number please.",
+                    },
+                  ]}
+                >
+                  <Space.Compact className="gap-2" direction="vertical" block>
+                    <Typography id="text__primary" className="text-md">
+                      Hospital number :
+                    </Typography>
+                    <Input
+                      maxLength={9}
+                      value={hnNumber}
+                      name="hospital_number"
+                      placeholder="Enter hospital number"
+                      onChange={onInputChange}
+                    />
+                  </Space.Compact>
+                </Form.Item>
+              </Form>
+            </div>
+          </Content>
+        </Modal>
+        <Modal
+          title={"Add patient"}
+          open={stateModal == "STATE_2"}
+          onCancel={() => setStateModal("")}
+          footer={[
+            <div
+              key={"footer"}
+              className="px-4 py-2 flex justify-between gap-4 text-center"
+            >
+              <Button
+                htmlType="reset"
+                className="w-36 jura text-[#4C577C] border-[#D2D4EB]"
+                style={{ borderWidth: "1.5px" }}
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
+                style={{ borderWidth: "1.5px" }}
+                onClick={() => {
+                  onChangeState("STATE_2");
+                }}
+              >
+                Save
+              </Button>
+            </div>,
+          ]}
+          centered
+          destroyOnClose
+        >
+          <Content className="px-2 h-[3rem]">
+            <div className="w-full flex flex-col items-center text-center text-base jura">
+              <p className="text-[#61708C]">
+                Are you sure that the hospital number
+              </p>
+              <div className="flex gap-1">
+                <p className="text-[#61708C]">you entered is</p>
+                <p className="text-[#4D934B]">9877069</p>
+                <p className="text-[#61708C]">?</p>
+              </div>
+            </div>
+          </Content>
+        </Modal>
+        <Modal
+          title={"Referral code"}
+          open={stateModal == "STATE_3"}
+          onCancel={() => setStateModal("")}
+          footer={[
+            <div
+              key={"footer"}
+              className="px-4 py-2 flex justify-center gap-4 text-center"
+            >
+              <Button
+                htmlType="submit"
+                className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
+                style={{ borderWidth: "1.5px" }}
+                onClick={onCancel}
+              >
+                Done
+              </Button>
+            </div>,
+          ]}
+          centered
+          destroyOnClose
+        >
+          <Content className="px-2 h-[2rem]">
+            <div className="w-full flex flex-col items-center text-base jura">
+              <p className="text-[#61708C]">
+                Your code for connect with line is
+              </p>
+              <Paragraph copyable className="text-[#1677ff] text-base">KI3456</Paragraph>
+            </div>
+          </Content>
+        </Modal>
         <div className="w-full h-full py-8 bg-white">
           <div className="w-full h-full">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
