@@ -97,7 +97,7 @@ function Signup() {
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your last name" },
-              { max: 10, message: "Last name cannot exceed 10 characters" },
+              { max: 20, message: "Last name cannot exceed 10 characters" },
             ]}
           >
             <Input

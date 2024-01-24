@@ -1,19 +1,47 @@
+import { Form, Table, notification } from "antd";
 import UserProfile from "@features/UserProfile";
-import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { IEquipment } from "@constants/interface";
+import { IEquipment, IFormattedErrorResponse } from "@constants/interface";
 import DefaultInput from "@components/Equipment/DefaultInput";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
-import getAllEquipment from "@api-caller/equipApi";
+import getAllEquipment, {
+  deleteEquipment,
+  updateEquipment,
+} from "@api-caller/equipApi";
+import DeleteModal from "@components/DeleteModal";
+import { UseMutationResult, useMutation } from "react-query";
+import EquipmentModal from "@components/Equipment/EquipmentModal";
+import { DefaultEquipment } from "@constants/defaultForm";
 
 export default function Equipment() {
+  const updateMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    IEquipment
+  > = useMutation(updateEquipment);
+  const deleteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    string
+  > = useMutation(deleteEquipment);
+  const [form, setForm] = useState<IEquipment>(DefaultEquipment);
+  const [forms] = Form.useForm<IEquipment>();
   const [data, setData] = useState<IEquipment[]>([]);
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [submitDelete, setSubmitDelete] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const handleModal = () => {
+    setIsUpdateOpen(!isUpdateOpen);
+    setForm(DefaultEquipment);
+    forms.resetFields();
+  };
   useEffect(() => {
-    getEquipment()
+    getEquipment();
   }, []);
   async function getEquipment() {
     getAllEquipment().then((response) => {
@@ -22,13 +50,69 @@ export default function Equipment() {
       setLoading(false);
     });
   }
-  const columns: ColumnsType<any> = getColumnEquipment();
+  const handleActionClick = (key: string, record: IEquipment) => {
+    setForm(record);
+    if (key == "Edit") {
+      setIsUpdateOpen(true);
+    } else if (key == "Delete") {
+      setIsDeleteOpen(true);
+    }
+  };
+  const columns: ColumnsType<IEquipment> =
+    getColumnEquipment(handleActionClick);
   const filterEquipmentId = (e: any) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredpatient = data.filter((item) =>
       item.equip_name.toLowerCase().includes(searchTerm)
     );
     setEquipment(filteredpatient);
+  };
+  const onUpdate = async () => {
+    try {
+      const values = await forms.validateFields();
+      if (values) {
+        setConfirmLoading(true);
+        updateMutation.mutate(form, {
+          onSuccess: () => {
+            getEquipment();
+            setIsUpdateOpen(false);
+            setConfirmLoading(false);
+            forms.resetFields();
+          },
+          onError: () => {
+            setConfirmLoading(false);
+          },
+        });
+      }
+    } catch (error) {}
+  };
+  const onDelete = async () => {
+    setSubmitDelete(true);
+    if (form) {
+      deleteMutation.mutate(form.equip_id, {
+        onSuccess: () => {
+          notification.success({
+            message: "Success",
+            description: "Delete successful!",
+          });
+          getEquipment();
+          setIsDeleteOpen(false);
+          setSubmitDelete(false);
+        },
+      });
+    }
+  };
+  const onChange = async (e: any) => {
+    setForm((previous) => ({
+      ...previous,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const onSelect = async (value: string, name: string) => {
+    forms.setFieldsValue({ [name]: value });
+    setForm((prevForm) => {
+      return { ...prevForm, [name]: value };
+    });
   };
   return (
     <>
@@ -69,6 +153,26 @@ export default function Equipment() {
                       pagination={{
                         showSizeChanger: false,
                       }}
+                    />
+                    <EquipmentModal
+                      data={form}
+                      forms={forms}
+                      isOpen={isUpdateOpen}
+                      confirmLoading={confirmLoading}
+                      setLoading={setConfirmLoading}
+                      setModal={handleModal}
+                      onSubmit={onUpdate}
+                      onChange={onChange}
+                      onSelect={onSelect}
+                      onRender={getEquipment}
+                    />
+                    <DeleteModal
+                      title="Are you sure ?"
+                      description="Are you sure that you want to delete these images"
+                      isOpen={isDeleteOpen}
+                      confirmLoading={submitDelete}
+                      onCancel={() => setIsDeleteOpen(false)}
+                      onSubmit={onDelete}
                     />
                   </Content>
                 </div>

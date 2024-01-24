@@ -1,10 +1,18 @@
 // columnsConfig.ts
 import { ColumnsType } from "antd/es/table";
-import { Checkbox, Space, Typography } from "antd";
+import { Button, Checkbox, Space, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-import { IManageUser } from "@constants/interface";
+import { IDoctor } from "@constants/interface";
 
-export const getColumnManageUser = (): ColumnsType<IManageUser> => [
+interface ColumnsManageUserProps {
+  isEditable: boolean;
+  onChangeDoctor: () => void;
+}
+
+export const getColumnManageUser = ({
+  isEditable,
+  onChangeDoctor,
+}: ColumnsManageUserProps): ColumnsType<IDoctor> => [
   {
     title: "User id.",
     dataIndex: "user_id",
@@ -23,11 +31,11 @@ export const getColumnManageUser = (): ColumnsType<IManageUser> => [
     title: "Name",
     dataIndex: "user_fullname",
     key: "user_fullname",
-    render(value, _, index) {
+    render(value, record, index) {
       return (
         <>
           <Typography key={index} className="jura truncate">
-            {value}
+            {record.doctor_firstname + " " + record.doctor_lastname}
           </Typography>
           {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
@@ -36,15 +44,15 @@ export const getColumnManageUser = (): ColumnsType<IManageUser> => [
   },
   {
     title: "Doctor",
-    dataIndex: "equip_type",
-    key: "equip_type",
+    dataIndex: "doctor",
+    key: "doctor",
     render(value, record, index) {
       return (
-        <>
-          <Space direction="horizontal">
-            <Checkbox />
-          </Space>
-        </>
+        <Checkbox
+          key={`checkbox__doctor__${index}`}
+          checked={record.doctor_verified}
+          onChange={onChangeDoctor}
+        />
       );
     },
   },
@@ -74,7 +82,15 @@ export const getColumnManageUser = (): ColumnsType<IManageUser> => [
   },
   {
     title: "Action",
-    dataIndex: "equip_type",
-    key: "equip_type",
+    dataIndex: "action",
+    key: "action",
+    render: (_, record, index) => (
+      <Space id="action_management__table">
+        <Button type="text" className="button_add">
+          Approve
+        </Button>
+        <Button>Reject</Button>
+      </Space>
+    ),
   },
 ];
