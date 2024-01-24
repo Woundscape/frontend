@@ -19,13 +19,11 @@ function Signup() {
   const [forms] = Form.useForm();
   const [registrationFailed, setRegistrationFailed] = useState<string>("");
   const onSubmit = async () => {
-    console.log(form);
     try {
       const values = await forms.validateFields();
       if (values) {
         registerMutation.mutate(form, {
           onSuccess: (e) => {
-            console.log("pass", e);
             notification.success({
               message: "Success",
               description: "Registration successful!",
@@ -41,8 +39,6 @@ function Signup() {
                 message: "Error",
                 description: e.message,
               });
-            } else {
-              console.log("fail", e);
             }
           },
         });
