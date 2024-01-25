@@ -14,6 +14,7 @@ import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import {
   IFormattedErrorResponse,
+  IImage,
   INote,
   TissueType,
 } from "@constants/interface";
@@ -22,11 +23,16 @@ import AddNote from "@components/AddNote";
 import { UseMutationResult, useMutation } from "react-query";
 import addNoteImage from "@api-caller/noteApi";
 import { useParams } from "react-router-dom";
+import { getImageById } from "@api-caller/imageApi";
+import { useAuth } from "@components/AuthProvider";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
+  const {me} = useAuth()
+  console.log(me);
   const { img_id } = useParams();
   const { TabPane } = Tabs;
+  const [image, setImage] = useState<IImage>();
   const [tissueData, setTissueData] = useState<TissueType[]>([
     {
       title: "eschar",
@@ -74,6 +80,15 @@ export default function WoundAnalysis() {
       color: "#D4F3F3",
     },
   ]);
+  useEffect(() => {
+    if (img_id) {
+      getImage();
+    }
+  }, []);
+  async function getImage() {
+    const response = await getImageById(img_id as string);
+    setImage(response);
+  }
   const data: any = {
     labels: tissueData
       .filter((tissue) => tissue.value > 0)
@@ -236,7 +251,7 @@ export default function WoundAnalysis() {
                           options={{
                             plugins: {
                               legend: {
-                                display: false, // Set display to false to hide the labels
+                                display: false,
                               },
                             },
                           }}

@@ -62,7 +62,7 @@ export default async function uploadImage(formData: FormData): Promise<any> {
   }
 }
 
-export async function deleteImage(img_id: any): Promise<string> {
+export async function deleteImage(img_id: any): Promise<boolean> {
   try {
     const { data } = await getInstanceLocal().delete(`/image/`, {
       data: {

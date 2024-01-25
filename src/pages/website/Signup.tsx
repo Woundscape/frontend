@@ -39,8 +39,6 @@ function Signup() {
                 message: "Error",
                 description: e.message,
               });
-            } else {
-              console.log("fail", e);
             }
           },
         });

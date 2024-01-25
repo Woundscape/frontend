@@ -1,11 +1,12 @@
 import moment from "moment";
+import { UseMutationResult, useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { IImage } from "@constants/interface";
+import { IFormattedErrorResponse, IImage } from "@constants/interface";
 import { optionSegmented } from "@utils/option";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import UserProfile from "@features/UserProfile";
@@ -17,6 +18,11 @@ import AdditionalData from "@components/Patient/AdditionalData";
 import DeleteModal from "@components/DeleteModal";
 
 export default function PatientDetail() {
+  const deleteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    string[]
+  > = useMutation(deleteImage);
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
@@ -25,7 +31,6 @@ export default function PatientDetail() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-
   async function formatDateImages(images: IImage[]) {
     const sortImage: Record<string, IImage[]> = {};
     images.forEach((image: IImage) => {
@@ -115,9 +120,14 @@ export default function PatientDetail() {
           break;
         case "Delete":
           if (checkedList.length > 0) {
-            const deleteResponse = await deleteImage(checkedList);
-            getImage();
-            setIsModalOpen(false);
+            setSubmitLoading(true);
+            deleteMutation.mutate(checkedList, {
+              onSuccess: () => {
+                getImage();
+                setSubmitLoading(false);
+                setIsModalOpen(false);
+              },
+            });
           }
           setStageSegmented("Overview");
           break;

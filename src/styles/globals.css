@@ -9,6 +9,7 @@
   --black: #424241;
   --brown: #a3802d;
   --gray: #e8eaf4;
+  --text-primary: #4c577c;
 }
 
 * {
@@ -64,7 +65,7 @@ div {
 
 #text__primary {
   font-family: jura;
-  color: #4c577c;
+  color: var(--text-primary);
   padding-right: 5px;
 }
 
@@ -340,14 +341,24 @@ input::-webkit-inner-spin-button {
 
 /* page patient */
 .button_add {
+  font-family: jura;
   background-color: #d2d4eb;
   border-color: #8087a7;
   border-width: 2px;
-  color: #4c577c;
-  font-family: jura;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
 }
+
+.button_reject {
+  font-family: jura;
+  border-color: #d2d4eb;
+  border-width: 2px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
 .patient_img {
   filter: saturate(50%);
   border-radius: 15px;
@@ -552,42 +563,35 @@ input[type="range"]::-moz-range-thumb {
   border-spacing: 0 8px;
   font-family: jura;
 }
-/* .ant-table-wrapper {
+
+.ant-table-wrapper,
+.ant-spin-nested-loading,
+.ant-spin-container,
+.ant-table,
+.ant-table-container,
+.ant-table-body {
   height: 100%;
-  .ant-spin-nested-loading {
-    height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
 
-    .ant-spin-container {
-      height: 100%;
-      display: flex;
-      flex-flow: column nowrap;
+.ant-table {
+  flex: auto;
+  overflow: scroll;
+}
 
-      .ant-table {
-        flex: auto;
-        overflow: hidden;
+.ant-table-header {
+  flex: none;
+}
 
-        .ant-table-container {
-          height: 100%;
-          display: flex;
-          flex-flow: column nowrap;
+.ant-table-pagination {
+  flex: none;
+}
 
-          .ant-table-header {
-            flex: none;
-          }
-
-          .ant-table-body {
-            flex: auto;
-            overflow: scroll;
-          }
-        }
-      }
-
-      .ant-table-pagination {
-        flex: none;
-      }
-    }
-  }
-} */
+.ant-table-body {
+  flex: auto;
+  overflow: scroll;
+}
 
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
@@ -669,7 +673,7 @@ select {
 #head__notification > div.ant-segmented {
   background-color: transparent;
 }
-#head__notification > div > div > label.ant-segmented-item> div{
+#head__notification > div > div > label.ant-segmented-item > div {
   background-color: transparent !important;
   border-radius: 50rem !important;
 }

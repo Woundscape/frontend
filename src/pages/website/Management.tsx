@@ -8,6 +8,7 @@ import { ColumnsType } from "antd/es/table";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
 import getAllDoctor, { verifiedDoctor } from "@api-caller/doctorApi";
 import ConfirmModal from "@components/ConfirmModal";
+import { ACTION_MANAGE } from "@constants/defaultState";
 
 export default function Management() {
   const verifyMutation: UseMutationResult<
@@ -17,6 +18,9 @@ export default function Management() {
   > = useMutation(verifiedDoctor);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   useEffect(() => {
+    getDoctor();
+  }, []);
+  async function getDoctor() {
     getAllDoctor(false).then((doctors) => {
       const doctorWithRowEditable = doctors.map((doctor) => ({
         ...doctor,
@@ -25,18 +29,26 @@ export default function Management() {
       setDoctors(doctorWithRowEditable);
       setLoading(false);
     });
-  }, []);
+  }
   const [loading, setLoading] = useState(true);
-  const [isConfirmmOpen, setIsConfirmOpen] = useState(false);
+  const [titleModal, setTitleModal] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const onCancel = () => {
-    setIsConfirmOpen(!isConfirmmOpen);
-  };
-  const onSubmit = () => {
-    setConfirmLoading(true);
-    // setIsConfirmOpen(!isConfirmmOpen);
-  };
+
+  const [formState, setFormState] = useState({
+    action: "",
+    doctor_id: "",
+  });
   const columns: ColumnsType<IDoctor> = getColumnManageUser({
+    onAprrove: (action: string, doctor_id: string) => {
+      setFormState({ action, doctor_id });
+      if (action == ACTION_MANAGE.APPROVE) {
+        setIsModalOpen(true);
+        setTitleModal("Approve User");
+        setDescription("Approve: Kid kom hai noew");
+      }
+    },
     onToggleRowEdit: (rowIndex: number) => {
       setDoctors((prevData) => {
         const updatedData = [...prevData];
@@ -45,8 +57,24 @@ export default function Management() {
         return updatedData;
       });
     },
-    onChangeDoctor: () => {},
   });
+  const onSubmit = () => {
+    try {
+      setConfirmLoading(true);
+      if (formState.action == ACTION_MANAGE.APPROVE) {
+        verifyMutation.mutate(formState.doctor_id, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setConfirmLoading(false);
+            getDoctor();
+          },
+        });
+      }
+    } catch (error) {}
+  };
+  const onCancel = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <>
       <div className="w-full h-screen relative">
@@ -72,14 +100,16 @@ export default function Management() {
                       columns={columns}
                       loading={loading}
                       tableLayout="fixed"
-                      rowKey={(_, index) => `table__row__${index}`}
+                      rowKey={(record) => `table__row__${record.doctor_id}`}
+                      pagination={{
+                        defaultPageSize: 10,
+                        showSizeChanger: false,
+                      }}
                     />
                     <ConfirmModal
-                      title="Change new doctor"
-                      description={
-                        "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
-                      }
-                      isOpen={isConfirmmOpen}
+                      title={titleModal}
+                      description={description}
+                      isOpen={isModalOpen}
                       confirmLoading={confirmLoading}
                       onSubmit={onSubmit}
                       onCancel={onCancel}

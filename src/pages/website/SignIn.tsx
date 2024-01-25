@@ -3,7 +3,7 @@ import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
 import logo_google from "@assets/google_logo.svg";
 import logo_line from "@assets/line_logo.svg";
-import { Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getOAuthInstance } from "@api/apiOAuthGoogle";
@@ -14,6 +14,8 @@ import { UseMutationResult, useMutation } from "react-query";
 import { IFormattedErrorResponse } from "@constants/interface";
 function Signin() {
   const router = useNavigate();
+  const [loginFailed, setLoginFailed] = useState<string>();
+  const [forms] = Form.useForm();
   const loginMutation: UseMutationResult<
     Credentials,
     IFormattedErrorResponse,
@@ -30,12 +32,23 @@ function Signin() {
       [name]: value,
     }));
   };
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async () => {
+    const values = await forms.validateFields();
     loginMutation.mutate(formInputs, {
       onSuccess: (data) => {
+        console.log(data);
         sessionStorage.setItem("token", JSON.stringify(data));
         router("/dashboard");
+      },
+      onError: (e) => {
+        console.log(e);
+        if (e.message) {
+          setLoginFailed(e.message);
+          notification.error({
+            message: "Error",
+            description: "Email or password is Incorrect",
+          });
+        }
       },
     });
   };
@@ -55,8 +68,8 @@ function Signin() {
   return (
     <div className="wound-background w-full bg-white h-screen">
       <div className="w-full h-full flex flex-row justify-between p-4">
-        <form
-          onSubmit={onSubmit}
+        <Form
+          form={forms}
           className="w-1/2 h-full flex flex-col justify-center items-center space-y-8"
         >
           <div className="w-1/2 flex flex-col items-center space-y-4">
@@ -94,43 +107,69 @@ function Signin() {
             </div>
             <div className="border-b-2 h-3 w-1/3 border-[#B4B4B4] "></div>
           </div>
-          <Input
-            className="w-1/2 py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
-            type="email"
-            name="user_email"
-            placeholder="Email"
-            onChange={handleInputChange}
-          />
-          <div className="w-1/2 relative ">
-            <Input.Password
-              name="user_password"
-              placeholder="Password"
-              className="w-full py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
+          <Form.Item
+            hasFeedback
+            validateStatus={loginFailed ? "error" : undefined}
+            name={"user_email"}
+            className="w-1/2"
+            rules={[
+              { required: true, message: "Enter your email address" },
+              { type: "email", message: "Please enter a valid email address" },
+            ]}
+          >
+            <Input
+              name="user_email"
+              className="input__authentication"
+              placeholder="Email"
+              type="text"
               onChange={handleInputChange}
             />
+          </Form.Item>
+          <div className="w-1/2 relative ">
+            <Form.Item
+              validateStatus={loginFailed ? "error" : undefined}
+              name={"user_password"}
+              className=""
+              rules={[
+                { required: true, message: "Enter your password" },
+                { min: 6, message: "Password must be at least 6 characters!" },
+              ]}
+            >
+              <Input.Password
+                name="user_password"
+                placeholder="Password"
+                className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                onChange={handleInputChange}
+              />
+            </Form.Item>
             <div className="mt-2 mb-4">
-              <div className="absolute right-3 forgot_pass text-[#626060] cursor-pointer">
+              <a
+                href="/reset"
+                className="absolute right-3 forgot_pass text-[#626060] cursor-pointer hover:text-[#626060] "
+              >
                 <span>Forgot password</span>
-              </div>
+              </a>
             </div>
           </div>
-          <button
-            type="submit"
-            className="w-1/2 flex px-4 py-1.5 justify-between items-center btn-homepage cursor-pointer"
+          <Button
+            type="text"
+            htmlType="submit"
+            onClick={onSubmit}
+            className="w-1/2 py-5 justify-between text-lg text-[#424241] jura font-bold flex items-center btn-homepage cursor-pointer"
           >
-            <div className="text-xl jura font-bold">SIGN IN</div>
+            <p>SIGN IN</p>
             <img className="w-14" src={arrow_start} alt="" />
-          </button>
+          </Button>
           <div className="flex space-x-2">
             <span className="text-[#A7A6A5]">Don’t have an account yet?</span>
-            <span className="text-[#A3802D] underline cursor-pointer">
+            <a href="/signup" className="text-[#A3802D] underline cursor-pointer hover:text-[#A3802D] ">
               SIGN UP
-            </span>
+            </a>
           </div>
-        </form>
+        </Form>
         <div className="w-1/2 p-4">
           <img className="absolute right-14 w-80" src={logo_it} alt="" />
         </div>

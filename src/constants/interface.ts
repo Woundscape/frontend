@@ -78,8 +78,9 @@ export interface IMe {
 
 export interface IImage {
   img_id: string;
-  img_tissue?: any | [];
+  img_tissue?: any;
   img_equip?: any;
+  img_equipPath?: string | null;
   img_path: string;
   img_status: boolean;
   created_at: Date;
@@ -96,6 +97,12 @@ export interface IEquipment {
   equip_subtype?: string;
   created_at?: Date;
   updated_at?: Date;
+}
+
+export interface IEquipType {
+  type_id: string;
+  type_name: string;
+  created_at?: Date;
 }
 
 export interface INote {
