@@ -1,10 +1,9 @@
 import UserProfile from "@features/UserProfile";
 import {
   Button,
-  Checkbox,
-  Divider,
   Form,
   Input,
+  List,
   Modal,
   Space,
   Table,
@@ -21,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 import { IPatient } from "@constants/interface";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { useAuth } from "@components/AuthProvider";
-import Paragraph from "antd/es/skeleton/Paragraph";
 
 export default function Patient() {
   const router = useNavigate();
@@ -48,31 +46,27 @@ export default function Patient() {
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
   };
-  const [stateModal, setStateModal] = useState("STATE_1");
+  const [stateModal, setStateModal] = useState("");
   const onCancel = () => {
     setStateModal("");
   };
-  const onChangeState = (state: string) => {
-    if (state == "STATE_1") {
-      setStateModal("STATE_2");
-    } else if (state == "STATE_2") {
-      setStateModal("STATE_3");
-    }
+  const onChangeState = () => {
+    setStateModal((currentState) => {
+      const currentStateNumber = parseInt(currentState.split("_")[1]);
+      const nextState = `STATE_${currentStateNumber + 1}`;
+      return nextState;
+    });
   };
-  const { Paragraph, Text } = Typography;
-
+  const { Paragraph } = Typography;
   const [hnNumber, setHnNumber] = useState("");
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setHnNumber(e.target.value);
     if (inputValue.length === 2 && hnNumber.length > inputValue.length) {
-      // If the user is deleting, remove the hyphen
       setHnNumber(inputValue);
     } else if (inputValue.length === 2) {
-      // Format the input value by adding a hyphen at position 2
       setHnNumber(inputValue.slice(0, 2) + "-");
     } else {
-      // For other cases, update the state normally
       setHnNumber(inputValue);
     }
   };
@@ -99,9 +93,7 @@ export default function Patient() {
                 htmlType="submit"
                 className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
                 style={{ borderWidth: "1.5px" }}
-                onClick={() => {
-                  onChangeState("STATE_1");
-                }}
+                onClick={onChangeState}
               >
                 Save
               </Button>
@@ -160,9 +152,7 @@ export default function Patient() {
                 htmlType="submit"
                 className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
                 style={{ borderWidth: "1.5px" }}
-                onClick={() => {
-                  onChangeState("STATE_2");
-                }}
+                onClick={onChangeState}
               >
                 Save
               </Button>
@@ -211,7 +201,9 @@ export default function Patient() {
               <p className="text-[#61708C]">
                 Your code for connect with line is
               </p>
-              <Paragraph copyable className="text-[#1677ff] text-base">KI3456</Paragraph>
+              <Paragraph copyable className="text-[#1677ff] text-base">
+                KI3456
+              </Paragraph>
             </div>
           </Content>
         </Modal>
@@ -237,75 +229,82 @@ export default function Patient() {
                     segmented
                   />
                   {/* Body */}
-                  <Content
-                    id="content__patient"
-                    className="pt-7 flex flex-wrap gap-3"
-                  >
-                    {view == "Image" ? (
-                      patients.map((patient: IPatient, index: number) => {
-                        let image = patient.imagePreview[0]?.img_path
-                          ? patient.imagePreview[0].img_path.replace(/\\/g, "/")
-                          : null;
+                  <List>
+                    <Content
+                      id="content__patient"
+                      className="pt-7 flex flex-wrap gap-3"
+                    >
+                      {view == "Image" ? (
+                        patients.map((patient: IPatient, index: number) => {
+                          let image = patient.imagePreview[0]?.img_path
+                            ? patient.imagePreview[0].img_path.replace(
+                                /\\/g,
+                                "/"
+                              )
+                            : null;
 
-                        return (
-                          <div
-                            key={index}
-                            onClick={() =>
-                              router(`/patient/${patient.case_id}`)
-                            }
-                            className="flex flex-wrap gap-2 cursor-pointer"
-                          >
+                          return (
                             <div
-                              className="flex flex-col w-64 h-44 patient_img p-3 justify-between"
-                              style={{
-                                backgroundImage: `url("http://localhost:3000/${image}")`,
-                              }}
+                              key={index}
+                              onClick={() =>
+                                router(`/patient/${patient.case_id}`)
+                              }
+                              className="flex flex-wrap gap-2 cursor-pointer"
                             >
-                              <div className="flex flex-row justify-between text-white jura border-b-2">
-                                <p className="w-24 truncate">{patient.hn_id}</p>
-                                <p>
-                                  {new Date(
-                                    patient.updated_at
-                                  ).toLocaleTimeString()}
-                                </p>
-                              </div>
-                              <div className="flex flex-row justify-between h-8 border-2 rounded-full">
-                                <p className="jura text-white p-1 pl-3">
-                                  View result
-                                </p>
-                                <img
-                                  className="pt-0.5 pb-0.5"
-                                  src={ViewResult}
-                                  alt=""
-                                />
+                              <div
+                                className="flex flex-col w-64 h-44 patient_img p-3 justify-between"
+                                style={{
+                                  backgroundImage: `url("http://localhost:3000/${image}")`,
+                                }}
+                              >
+                                <div className="flex flex-row justify-between text-white jura border-b-2">
+                                  <p className="w-24 truncate">
+                                    {patient.hn_id}
+                                  </p>
+                                  <p>
+                                    {new Date(
+                                      patient.updated_at
+                                    ).toLocaleTimeString()}
+                                  </p>
+                                </div>
+                                <div className="flex flex-row justify-between h-8 border-2 rounded-full">
+                                  <p className="jura text-white p-1 pl-3">
+                                    View result
+                                  </p>
+                                  <img
+                                    className="pt-0.5 pb-0.5"
+                                    src={ViewResult}
+                                    alt=""
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <Table
-                        id="management__table__patient"
-                        dataSource={patients}
-                        columns={columns}
-                        loading={loading}
-                        tableLayout="fixed"
-                        rowKey={(record) => `row__patient__${record.case_id}`}
-                        onRow={(record: IPatient, _) => ({
-                          onClick: (event: any) => {
-                            const index = event.target.cellIndex;
-                            if (index != 7) {
-                              router(`/patient/${record.case_id}`);
-                            }
-                          },
-                        })}
-                        pagination={{
-                          defaultPageSize: 10,
-                          showSizeChanger: false,
-                        }}
-                      />
-                    )}
-                  </Content>
+                          );
+                        })
+                      ) : (
+                        <Table
+                          id="management__table__patient"
+                          dataSource={patients}
+                          columns={columns}
+                          loading={loading}
+                          tableLayout="fixed"
+                          rowKey={(record) => `row__patient__${record.case_id}`}
+                          onRow={(record: IPatient, _) => ({
+                            onClick: (event: any) => {
+                              const index = event.target.cellIndex;
+                              if (index != 7) {
+                                router(`/patient/${record.case_id}`);
+                              }
+                            },
+                          })}
+                          pagination={{
+                            defaultPageSize: 10,
+                            showSizeChanger: false,
+                          }}
+                        />
+                      )}
+                    </Content>
+                  </List>
                 </div>
               </div>
             </Content>

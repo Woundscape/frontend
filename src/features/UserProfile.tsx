@@ -1,3 +1,4 @@
+import Avatar from "react-avatar";
 import { Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
@@ -5,6 +6,7 @@ import UndefinedProfile from "@assets/undefined-profile-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
 import { useState } from "react";
 import NotiModal from "@components/NotiModal";
+import { useAuth } from "@components/AuthProvider";
 
 const items: MenuProps["items"] = [
   {
@@ -35,6 +37,8 @@ const items: MenuProps["items"] = [
   },
 ];
 export default function UserProfile() {
+  const { me } = useAuth();
+  const fullName = me?.firstname + " " + me?.lastname;
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);
@@ -47,20 +51,19 @@ export default function UserProfile() {
           src={NotificationIcon}
           width={45}
           height={45}
-          alt=""
         />
         <NotiModal isOpen={openModal} setModal={handleModal} />
-        <img src={UndefinedProfile} width={40} height={40} alt="" />
+        <Avatar name={fullName} size="40" round="20px" />
         <div className="jura">
           <p id="user_fullname" className="text-[#535352]">
-            Phufa R.
+            {fullName}
           </p>
           <span id="user_role" className="text-[#4C577C]">
-            doctor
+            {me?.doctor_type}
           </span>
         </div>
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <img className="pl-2" src={DownOutlinedIcon} alt="" />
+          <img className="pl-2" src={DownOutlinedIcon} />
         </Dropdown>
       </div>
     </div>

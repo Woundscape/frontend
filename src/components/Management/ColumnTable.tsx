@@ -1,17 +1,19 @@
-// columnsConfig.ts
+import EditIcon from "@assets/icons/edit_user_icon.svg";
+import DeleteIcon from "@assets/icons/delete_user_icon.svg";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
-import { formatTimeDifference } from "@features/FormatDate";
 import { IDoctor } from "@constants/interface";
+import { ACTION_MANAGE } from "@constants/defaultState";
+import { formatTimeDifference } from "@features/FormatDate";
 
 interface ColumnsManageUserProps {
-  isEditable: boolean;
-  onChangeDoctor: () => void;
+  onAprrove: (action: string, doctor_id: string) => void;
+  onToggleRowEdit: (rowIndex: number) => void;
 }
 
 export const getColumnManageUser = ({
-  isEditable,
-  onChangeDoctor,
+  onAprrove,
+  onToggleRowEdit,
 }: ColumnsManageUserProps): ColumnsType<IDoctor> => [
   {
     title: "User id.",
@@ -34,10 +36,9 @@ export const getColumnManageUser = ({
     render(value, record, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} className="jura truncate capitalize">
             {record.doctor_firstname + " " + record.doctor_lastname}
           </Typography>
-          {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
       );
     },
@@ -46,12 +47,12 @@ export const getColumnManageUser = ({
     title: "Doctor",
     dataIndex: "doctor",
     key: "doctor",
-    render(value, record, index) {
+    render(_, record, index) {
       return (
         <Checkbox
           key={`checkbox__doctor__${index}`}
           checked={record.doctor_verified}
-          onChange={onChangeDoctor}
+          disabled={!record.isRowEditable}
         />
       );
     },
@@ -60,12 +61,13 @@ export const getColumnManageUser = ({
     title: "Admin",
     dataIndex: "equip_type",
     key: "equip_type",
-    render(value, record, index) {
+    render(_, record, index) {
       return (
         <>
-          <Space direction="horizontal">
-            <Checkbox />
-          </Space>
+          <Checkbox
+            key={`checkbox__admin__${index}`}
+            disabled={!record.isRowEditable}
+          />
         </>
       );
     },
@@ -84,13 +86,80 @@ export const getColumnManageUser = ({
     title: "Action",
     dataIndex: "action",
     key: "action",
-    render: (_, record, index) => (
-      <Space id="action_management__table">
-        <Button type="text" className="button_add">
-          Approve
-        </Button>
-        <Button>Reject</Button>
-      </Space>
-    ),
+    render: (_, record, index) => {
+      const isRowEditButton = () => {
+        return (
+          <>
+            <Button
+              type="text"
+              className="jura text-[#4C577C]"
+              onClick={() => onToggleRowEdit(index)}
+            >
+              Done
+            </Button>
+            <Button
+              type="text"
+              className="jura text-[#4C577C]"
+              onClick={() => onToggleRowEdit(index)}
+            >
+              Cancel
+            </Button>
+          </>
+        );
+      };
+      const isNotRowEditButton = () => {
+        return (
+          <>
+            <Button
+              type="text"
+              className="jura text-[] text-[#4C577C] flex justify-cente items-center"
+              onClick={() => onToggleRowEdit(index)}
+              icon={<img src={EditIcon} />}
+            >
+              Edit
+            </Button>
+            <Button
+              type="text"
+              className="jura text-[#4C577C] flex justify-cente items-center"
+              icon={<img src={DeleteIcon} />}
+            >
+              Delete
+            </Button>
+          </>
+        );
+      };
+      return (
+        <Space id="action_management__table">
+          {record.doctor_verified ? (
+            record.isRowEditable ? (
+              isRowEditButton()
+            ) : (
+              isNotRowEditButton()
+            )
+          ) : (
+            <>
+              <Button
+                type="text"
+                className="button_add"
+                onClick={() =>
+                  onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
+                }
+              >
+                Approve
+              </Button>
+              <Button
+                type="text"
+                className="button_reject"
+                onClick={() =>
+                  onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
+                }
+              >
+                Reject
+              </Button>
+            </>
+          )}
+        </Space>
+      );
+    },
   },
 ];

@@ -49,7 +49,7 @@ export default function UploadImage() {
         });
         form.append("hn_id", user?.hn_id ?? "");
         const data = await lineUpload(form);
-        console.log(data);
+        liff.closeWindow();
       } catch (error) {
         console.error("Error during file upload:", error);
       }

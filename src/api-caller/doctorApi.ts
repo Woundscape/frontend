@@ -16,3 +16,14 @@ export default async function getAllDoctor(
     throw formattedError(error);
   }
 }
+
+export async function verifiedDoctor(doctor_id: string): Promise<boolean> {
+  try {
+    const { data } = await getInstanceLocal().put(
+      `/doctor/verified/${doctor_id}`
+    );
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}

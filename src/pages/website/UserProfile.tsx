@@ -1,7 +1,6 @@
 import BgProfile from "@assets/profile_bg.svg";
 import ImgProfile from "@assets/profile_img.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
-import logo_line from "@assets/line_logo.svg";
 import { Divider, Input, Typography } from "antd";
 import { useAuth } from "@components/AuthProvider";
 export default function Account() {

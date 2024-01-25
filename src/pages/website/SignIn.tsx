@@ -41,8 +41,7 @@ function Signin() {
         router("/dashboard");
       },
       onError: (e) => {
-        console.log(1);
-
+        console.log(e);
         if (e.message) {
           setLoginFailed(e.message);
           notification.error({

@@ -77,7 +77,6 @@ export default function DefaultInput({
           prefix={<img className="pr-1" src={SearchIcon} />}
           onChange={onFilter}
         />
-        <RangePicker size="middle" />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <img className="w-5" src={SortBy} alt="" />
           <p className="text-[#BFBFBF]">Sort by :</p>

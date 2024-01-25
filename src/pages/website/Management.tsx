@@ -1,6 +1,4 @@
 import { UseMutationResult, useMutation } from "react-query";
-import { LeftOutlined } from "@ant-design/icons";
-import { IUpdateCase, updateCase } from "@api-caller/caseApi";
 import { IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
 import { Table } from "antd";
@@ -8,38 +6,75 @@ import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
-import getAllDoctor from "@api-caller/doctorApi";
+import getAllDoctor, { verifiedDoctor } from "@api-caller/doctorApi";
 import ConfirmModal from "@components/ConfirmModal";
+import { ACTION_MANAGE } from "@constants/defaultState";
 
 export default function Management() {
-  const updateMutation: UseMutationResult<
+  const verifyMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    IUpdateCase
-  > = useMutation(updateCase);
+    string
+  > = useMutation(verifiedDoctor);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   useEffect(() => {
+    getDoctor();
+  }, []);
+  async function getDoctor() {
     getAllDoctor(false).then((doctors) => {
-      setDoctors(doctors);
+      const doctorWithRowEditable = doctors.map((doctor) => ({
+        ...doctor,
+        isRowEditable: false,
+      }));
+      setDoctors(doctorWithRowEditable);
       setLoading(false);
     });
-  }, []);
+  }
   const [loading, setLoading] = useState(true);
-  const [isEditable, setIsEditable] = useState(false);
-  const [isConfirmmOpen, setIsConfirmOpen] = useState(false);
+  const [titleModal, setTitleModal] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const onCancel = () => {
-    setIsConfirmOpen(!isConfirmmOpen);
-  };
-  const onSubmit = () => {
-    setConfirmLoading(true);
-    // setIsConfirmOpen(!isConfirmmOpen);
-  };
-  const onChangeDoctor = () => {};
-  const columns: ColumnsType<IDoctor> = getColumnManageUser({
-    isEditable,
-    onChangeDoctor,
+
+  const [formState, setFormState] = useState({
+    action: "",
+    doctor_id: "",
   });
+  const columns: ColumnsType<IDoctor> = getColumnManageUser({
+    onAprrove: (action: string, doctor_id: string) => {
+      setFormState({ action, doctor_id });
+      if (action == ACTION_MANAGE.APPROVE) {
+        setIsModalOpen(true);
+        setTitleModal("Approve User");
+        setDescription("Approve: Kid kom hai noew");
+      }
+    },
+    onToggleRowEdit: (rowIndex: number) => {
+      setDoctors((prevData) => {
+        const updatedData = [...prevData];
+        updatedData[rowIndex].isRowEditable =
+          !updatedData[rowIndex].isRowEditable;
+        return updatedData;
+      });
+    },
+  });
+  const onSubmit = () => {
+    try {
+      setConfirmLoading(true);
+      if (formState.action == ACTION_MANAGE.APPROVE) {
+        verifyMutation.mutate(formState.doctor_id, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setConfirmLoading(false);
+            getDoctor();
+          },
+        });
+      }
+    } catch (error) {}
+  };
+  const onCancel = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <>
       <div className="w-full h-screen relative">
@@ -47,7 +82,6 @@ export default function Management() {
           <div className="w-full h-full flex flex-col">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
-                <LeftOutlined />
                 <p className="jura text-xl">User Management</p>
               </div>
               <div className="w-[30rem]">
@@ -66,14 +100,16 @@ export default function Management() {
                       columns={columns}
                       loading={loading}
                       tableLayout="fixed"
-                      rowKey={(_, index) => `table__row__${index}`}
+                      rowKey={(record) => `table__row__${record.doctor_id}`}
+                      pagination={{
+                        defaultPageSize: 10,
+                        showSizeChanger: false,
+                      }}
                     />
                     <ConfirmModal
-                      title="Change new doctor"
-                      description={
-                        "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
-                      }
-                      isOpen={isConfirmmOpen}
+                      title={titleModal}
+                      description={description}
+                      isOpen={isModalOpen}
                       confirmLoading={confirmLoading}
                       onSubmit={onSubmit}
                       onCancel={onCancel}
