@@ -58,7 +58,6 @@
   color: var(--black);
 }
 
-
 div {
   user-select: none;
 }
@@ -95,14 +94,6 @@ div {
   display: none !important;
 }
 
-/* .ant-tabs-nav-list{
-  width: 100%;
-  .ant-tabs-tab{
-    width: 50%;
-    display: flex;
-    justify-content: center;
-  }
-} */
 #tabs-container_antd > div.ant-tabs-content-holder,
 #tabs-container_antd > div.ant-tabs-content-holder > div,
 #tabs-container_antd > div.ant-tabs-content-holder > div > div {

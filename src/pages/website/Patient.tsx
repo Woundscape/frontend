@@ -1,5 +1,5 @@
 import UserProfile from "@features/UserProfile";
-import { Table } from "antd";
+import { List, Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import ViewResult from "@assets/view_result.svg";
 import { useEffect, useState } from "react";
@@ -20,13 +20,11 @@ export default function Patient() {
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getCaseByDoctorId({ params: me?.doctor_id as string }).then(
-      (response) => {
-        setData(response);
-        setPatients(response);
-        setLoading(false);
-      }
-    );
+    getCaseByDoctorId({ params: me?.doctor_id as string }).then((response) => {
+      setData(response);
+      setPatients(response);
+      setLoading(false);
+    });
   }, []);
   const columns: ColumnsType<any> = getColumns();
   const filterPatient = (e: any) => {
@@ -64,6 +62,7 @@ export default function Patient() {
                     segmented
                   />
                   {/* Body */}
+                  <List>
                   <Content
                     id="content__patient"
                     className="pt-7 flex flex-wrap gap-3"
@@ -133,6 +132,7 @@ export default function Patient() {
                       />
                     )}
                   </Content>
+                  </List>
                 </div>
               </div>
             </Content>

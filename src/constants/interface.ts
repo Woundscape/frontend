@@ -50,6 +50,7 @@ export interface IDoctor {
   doctor_verified: boolean;
   line_uid: string | null;
   created_at: Date;
+  isRowEditable?: boolean;
 }
 
 export interface IPatient {

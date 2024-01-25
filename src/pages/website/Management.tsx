@@ -1,6 +1,4 @@
 import { UseMutationResult, useMutation } from "react-query";
-import { LeftOutlined } from "@ant-design/icons";
-import { IUpdateCase, updateCase } from "@api-caller/caseApi";
 import { IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
 import { Table } from "antd";
@@ -8,24 +6,27 @@ import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
-import getAllDoctor from "@api-caller/doctorApi";
+import getAllDoctor, { verifiedDoctor } from "@api-caller/doctorApi";
 import ConfirmModal from "@components/ConfirmModal";
 
 export default function Management() {
-  const updateMutation: UseMutationResult<
+  const verifyMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    IUpdateCase
-  > = useMutation(updateCase);
+    string
+  > = useMutation(verifiedDoctor);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   useEffect(() => {
     getAllDoctor(false).then((doctors) => {
-      setDoctors(doctors);
+      const doctorWithRowEditable = doctors.map((doctor) => ({
+        ...doctor,
+        isRowEditable: false,
+      }));
+      setDoctors(doctorWithRowEditable);
       setLoading(false);
     });
   }, []);
   const [loading, setLoading] = useState(true);
-  const [isEditable, setIsEditable] = useState(false);
   const [isConfirmmOpen, setIsConfirmOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const onCancel = () => {
@@ -35,10 +36,16 @@ export default function Management() {
     setConfirmLoading(true);
     // setIsConfirmOpen(!isConfirmmOpen);
   };
-  const onChangeDoctor = () => {};
   const columns: ColumnsType<IDoctor> = getColumnManageUser({
-    isEditable,
-    onChangeDoctor,
+    onToggleRowEdit: (rowIndex: number) => {
+      setDoctors((prevData) => {
+        const updatedData = [...prevData];
+        updatedData[rowIndex].isRowEditable =
+          !updatedData[rowIndex].isRowEditable;
+        return updatedData;
+      });
+    },
+    onChangeDoctor: () => {},
   });
   return (
     <>
@@ -47,7 +54,6 @@ export default function Management() {
           <div className="w-full h-full flex flex-col">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
-                <LeftOutlined />
                 <p className="jura text-xl">User Management</p>
               </div>
               <div className="w-[30rem]">

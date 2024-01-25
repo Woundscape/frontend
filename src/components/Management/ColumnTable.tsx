@@ -5,13 +5,13 @@ import { formatTimeDifference } from "@features/FormatDate";
 import { IDoctor } from "@constants/interface";
 
 interface ColumnsManageUserProps {
-  isEditable: boolean;
   onChangeDoctor: () => void;
+  onToggleRowEdit: (rowIndex: number) => void;
 }
 
 export const getColumnManageUser = ({
-  isEditable,
   onChangeDoctor,
+  onToggleRowEdit,
 }: ColumnsManageUserProps): ColumnsType<IDoctor> => [
   {
     title: "User id.",
@@ -34,10 +34,9 @@ export const getColumnManageUser = ({
     render(value, record, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} className="jura truncate capitalize">
             {record.doctor_firstname + " " + record.doctor_lastname}
           </Typography>
-          {/* <Input disabled={!test} value={value} bordered={test} key={index} className="jura truncate" /> */}
         </>
       );
     },
@@ -52,6 +51,7 @@ export const getColumnManageUser = ({
           key={`checkbox__doctor__${index}`}
           checked={record.doctor_verified}
           onChange={onChangeDoctor}
+          disabled={record.isRowEditable}
         />
       );
     },
@@ -63,9 +63,10 @@ export const getColumnManageUser = ({
     render(value, record, index) {
       return (
         <>
-          <Space direction="horizontal">
-            <Checkbox />
-          </Space>
+          <Checkbox
+            key={`checkbox__admin__${index}`}
+            disabled={record.isRowEditable}
+          />
         </>
       );
     },
@@ -86,10 +87,23 @@ export const getColumnManageUser = ({
     key: "action",
     render: (_, record, index) => (
       <Space id="action_management__table">
-        <Button type="text" className="button_add">
-          Approve
-        </Button>
-        <Button>Reject</Button>
+        {record.doctor_verified ? (
+          <>
+            <Button type="text" onClick={() => onToggleRowEdit(index)}>
+              {record.isRowEditable ? "Done" : "Edit"}
+            </Button>
+            <Button type="text">
+              {record.isRowEditable ? "Cancel" : "Delete"}
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button type="text" className="button_add">
+              Approve
+            </Button>
+            <Button>Reject</Button>
+          </>
+        )}
       </Space>
     ),
   },
