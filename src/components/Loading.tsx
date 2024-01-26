@@ -37,13 +37,13 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 255, 255, 0.8)",
               zIndex: 9999,
             }}
           >
             <Spin size="large" />
-            {children}
           </div>
+          {children}
         </>
       ) : (
         children
