@@ -60,7 +60,7 @@ export const getColumnEquipment = ({
     key: "equip_type",
     render(value, _, index) {
       const filteredTypes = type.filter((item) => item.type_id === value);
-      return(filteredTypes[0]?.type_name)
+      return filteredTypes[0]?.type_name;
       // return <p>{filteredTypes[0].type_name}</p>;
     },
   },
@@ -90,7 +90,11 @@ export const getColumnEquipment = ({
     fixed: "right",
     width: 100,
     render: (_, record, index) => (
-      <div id="action_table" onClick={(e) => e.stopPropagation()}>
+      <div
+        id="action_table"
+        className="bg-red-200"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Dropdown
           placement="bottomRight"
           menu={{

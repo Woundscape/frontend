@@ -8,12 +8,14 @@ import { formatTimeDifference } from "@features/FormatDate";
 
 interface ColumnsManageUserProps {
   onAprrove: (action: string, doctor_id: string) => void;
-  onToggleRowEdit: (rowIndex: number) => void;
+  onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => void;
+  onChecked: (type: string, record: IDoctor) => void;
 }
 
 export const getColumnManageUser = ({
   onAprrove,
   onToggleRowEdit,
+  onChecked,
 }: ColumnsManageUserProps): ColumnsType<IDoctor> => [
   {
     title: "User id.",
@@ -21,11 +23,9 @@ export const getColumnManageUser = ({
     key: "user_id",
     render(value: string, _, index) {
       return (
-        <>
-          <Typography key={index} className="jura truncate">
-            {value}
-          </Typography>
-        </>
+        <Typography key={index} className="jura truncate">
+          {value}
+        </Typography>
       );
     },
   },
@@ -33,13 +33,11 @@ export const getColumnManageUser = ({
     title: "Name",
     dataIndex: "user_fullname",
     key: "user_fullname",
-    render(value, record, index) {
+    render(_, record, index) {
       return (
-        <>
-          <Typography key={index} className="jura truncate capitalize">
-            {record.doctor_firstname + " " + record.doctor_lastname}
-          </Typography>
-        </>
+        <Typography key={index} className="jura truncate capitalize">
+          {record.doctor_firstname + " " + record.doctor_lastname}
+        </Typography>
       );
     },
   },
@@ -51,8 +49,9 @@ export const getColumnManageUser = ({
       return (
         <Checkbox
           key={`checkbox__doctor__${index}`}
-          checked={record.doctor_verified}
+          defaultChecked={record.isDoctor}
           disabled={!record.isRowEditable}
+          onChange={() => onChecked("isDoctor", record)}
         />
       );
     },
@@ -63,12 +62,12 @@ export const getColumnManageUser = ({
     key: "equip_type",
     render(_, record, index) {
       return (
-        <>
-          <Checkbox
-            key={`checkbox__admin__${index}`}
-            disabled={!record.isRowEditable}
-          />
-        </>
+        <Checkbox
+          key={`checkbox__admin__${index}`}
+          defaultChecked={record.isExpert}
+          disabled={!record.isRowEditable}
+          onChange={() => onChecked("isExpert", record)}
+        />
       );
     },
   },
@@ -93,14 +92,16 @@ export const getColumnManageUser = ({
             <Button
               type="text"
               className="jura text-[#4C577C]"
-              onClick={() => onToggleRowEdit(index)}
+              onClick={() => onToggleRowEdit(ACTION_MANAGE.DONE, index, record)}
             >
               Done
             </Button>
             <Button
               type="text"
               className="jura text-[#4C577C]"
-              onClick={() => onToggleRowEdit(index)}
+              onClick={() =>
+                onToggleRowEdit(ACTION_MANAGE.CANCEL, index, record)
+              }
             >
               Cancel
             </Button>
@@ -113,7 +114,7 @@ export const getColumnManageUser = ({
             <Button
               type="text"
               className="jura text-[] text-[#4C577C] flex justify-cente items-center"
-              onClick={() => onToggleRowEdit(index)}
+              onClick={() => onToggleRowEdit(ACTION_MANAGE.EDIT, index, record)}
               icon={<img src={EditIcon} />}
             >
               Edit
@@ -121,6 +122,9 @@ export const getColumnManageUser = ({
             <Button
               type="text"
               className="jura text-[#4C577C] flex justify-cente items-center"
+              onClick={() =>
+                onToggleRowEdit(ACTION_MANAGE.DELETE, index, record)
+              }
               icon={<img src={DeleteIcon} />}
             >
               Delete

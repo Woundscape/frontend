@@ -26,9 +26,9 @@ export const AuthProvider = ({ children }: any) => {
     try {
       if (token) {
         const response: IMe = await getMe(token.accessToken);
-        changeLoading(false);
         setIsAuthenticated(true);
         setMe(response);
+        changeLoading(false);
       } else {
         router("/signin");
       }

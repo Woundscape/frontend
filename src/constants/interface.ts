@@ -29,6 +29,14 @@ export interface ICase {
 export enum UserType {
   Patient = "Patient",
   Doctor = "Doctor",
+  Admin = "Admin",
+}
+
+export enum DoctorType {
+  General = "General",
+  Doctor = "Doctor",
+  Expert = "Expert",
+  Admin = "Admin",
 }
 
 export interface IUser {
@@ -51,6 +59,8 @@ export interface IDoctor {
   line_uid: string | null;
   created_at: Date;
   isRowEditable?: boolean;
+  isDoctor?: boolean;
+  isExpert?: boolean;
 }
 
 export interface IPatient {

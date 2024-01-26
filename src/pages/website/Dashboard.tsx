@@ -10,31 +10,37 @@ import { useEffect, useState } from "react";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
 import { useAuth } from "@components/AuthProvider";
-
-export interface CardPatient {
-  title: string;
-  value: string;
-}
+import { CardPatient, getDashboard } from "@api-caller/doctorApi";
 
 export default function Dashboard() {
   const { me } = useAuth();
-  const card: CardPatient[] = [
+  const [card, setCard] = useState<CardPatient[]>([
     {
       title: "Total",
-      value: "22",
+      value: "0",
     },
     {
       title: "Special Cases",
-      value: "19",
+      value: "0",
     },
     {
       title: "Unread",
-      value: "3",
+      value: "0",
     },
-  ];
+  ]);
   const [isConnect, setIsConnect] = useState(false);
   useEffect(() => {
-    const connectedLine = localStorage.getItem("line_LIFF_SCAN_QRCODE");
+    async function getCard() {
+      if (me) {
+        const dashboard = await getDashboard(me.doctor_id);
+        setCard(dashboard);
+      }
+    }
+    getCard();
+  }, []);
+  useEffect(() => {
+    const connectedLine =
+      me?.line_uid || localStorage.getItem("line_LIFF_SCAN_QRCODE");
     if (!connectedLine) {
       setIsConnect(true);
     }
@@ -130,11 +136,11 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="relative flex justify-center items-center">
-                    <div className="w-24 border-2 rounded-xl absolute right-0">
+                    <a href="/patient" className="w-24 border-2 rounded-xl absolute right-0">
                       <p className="jura text-center text-[#9198AF]">
                         View all
                       </p>
-                    </div>
+                    </a>
                   </div>
                   <div id="footer-content-dashboard" className="pt-3 pb-5 grow">
                     <DashboardTable />

@@ -2,7 +2,6 @@ import Avatar from "react-avatar";
 import { Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
-import UndefinedProfile from "@assets/undefined-profile-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
 import { useState } from "react";
 import NotiModal from "@components/NotiModal";
@@ -38,7 +37,7 @@ const items: MenuProps["items"] = [
 ];
 export default function UserProfile() {
   const { me } = useAuth();
-  const fullName = me?.firstname + " " + me?.lastname;
+  const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "");
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);

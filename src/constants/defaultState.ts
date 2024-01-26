@@ -8,7 +8,8 @@ export enum AddPatientState {
 export enum ACTION_MANAGE {
   APPROVE = "APPROVE",
   REJECT = "REJECT",
+  EDIT = "EDIT",
   CANCEL = "CANCEL",
   DONE = "DONE",
+  DELETE = "DELETE",
 }
-
