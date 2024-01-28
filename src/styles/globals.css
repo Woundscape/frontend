@@ -592,10 +592,13 @@ input[type="range"]::-moz-range-thumb {
   flex: auto;
   overflow: scroll;
 }
+.main {
+  position: relative;
+  /* position: absolute; */
+}
 
-
-
-th,td.ant-table-cell {
+th,
+td.ant-table-cell {
   color: var(--text-primary) !important;
 }
 

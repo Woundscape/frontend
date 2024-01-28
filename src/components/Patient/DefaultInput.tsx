@@ -23,9 +23,10 @@ import UploadModal from "./UploadModal";
 
 const { RangePicker } = DatePicker;
 
-interface IDefaultInputProps {
+interface IDefaultPatientInputProps {
   placeholder?: string;
   segmented?: boolean;
+  addPatient?: () => void;
   images?: boolean;
   onFilter: (e: any) => void;
   onRender: () => void;
@@ -35,11 +36,12 @@ interface IDefaultInputProps {
 export default function DefaultInput({
   placeholder,
   segmented,
+  addPatient,
   images,
   onFilter,
   onRender,
   onChangeView,
-}: IDefaultInputProps) {
+}: IDefaultPatientInputProps) {
   const uploadMutation: UseMutationResult<
     string,
     IFormattedErrorResponse,
@@ -99,7 +101,11 @@ export default function DefaultInput({
           />
         )}
         {!images ? (
-          <Button className="button_add" icon={<UserAddOutlined />}>
+          <Button
+            onClick={addPatient}
+            className="button_add"
+            icon={<UserAddOutlined />}
+          >
             Add Patient
           </Button>
         ) : (

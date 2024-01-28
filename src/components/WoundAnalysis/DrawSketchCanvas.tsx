@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Button, Popover, Slider, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -20,6 +20,7 @@ import { IUpdateImage, updateImage } from "@api-caller/imageApi";
 import { UseMutationResult, useMutation } from "react-query";
 import { DefaultTissue } from "@constants/defaultForm";
 import FormatImage from "@features/FormatImage";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface DrawSketchCanvasProps {
   data: IImage;
@@ -242,6 +243,19 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
       </div>
     );
   }
+  const [transformValues, setTransformValues] = useState({
+    scale: 1,
+    positionX: 0,
+    positionY: 0,
+  });
+  const handleZoom = (values: any) => {
+    setTransformValues({
+      scale: values.state.scale,
+      positionX: values.state.positionX,
+      positionY: values.state.positionY,
+    });
+    console.log(transformValues);
+  };
   return (
     <>
       <Content
@@ -314,27 +328,44 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
               }`}
             >
               {resolution.width > 0 && resolution.height > 0 && image && (
-                <div
-                  style={{
-                    width: resolution.width + "px",
-                    height: resolution.height + "px",
-                  }}
+                <TransformWrapper
+                  initialScale={1}
+                  disabled={true}
+                  minScale={0.5}
+                  maxScale={1}
+                  limitToBounds={false}
+                  // onPanning={updateXarrow}
+                  onZoom={handleZoom}
+                  pinch={{ step: 5 }}
                 >
-                  <ReactSketchCanvas
-                    ref={canvasRef}
-                    allowOnlyPointerType={pointer}
-                    exportWithBackgroundImage={true}
-                    backgroundImage={FormatImage(image.img_path)}
-                    // backgroundImage="transparent"
-                    style={{
-                      // height: canvasHeight,
-                      border: "0.0625rem solid #9c9c9c",
-                      borderRadius: "0.25rem",
-                    }}
-                    strokeWidth={strokeWidth}
-                    strokeColor={colorPaint}
-                  />
-                </div>
+                  <TransformComponent contentClass="main">
+                    <div
+                      style={{
+                        width: resolution.width + "px",
+                        height: resolution.height + "px",
+                        // position: "absolute",
+                        // top: "0",
+                        left: "0",
+                        // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
+                      }}
+                    >
+                      <ReactSketchCanvas
+                        ref={canvasRef}
+                        allowOnlyPointerType={pointer}
+                        exportWithBackgroundImage={true}
+                        backgroundImage={FormatImage(image.img_path)}
+                        // backgroundImage="transparent"
+                        style={{
+                          // height: canvasHeight,
+                          border: "0.0625rem solid #9c9c9c",
+                          borderRadius: "0.25rem",
+                        }}
+                        strokeWidth={strokeWidth}
+                        strokeColor={colorPaint}
+                      />
+                    </div>
+                  </TransformComponent>
+                </TransformWrapper>
               )}
             </div>
           </div>
