@@ -23,7 +23,7 @@ export const getColumnManageUser = ({
     key: "user_id",
     render(value: string, _, index) {
       return (
-        <Typography key={index} className="jura truncate">
+        <Typography key={index} id="text__primary" className="jura truncate">
           {value}
         </Typography>
       );
@@ -35,7 +35,11 @@ export const getColumnManageUser = ({
     key: "user_fullname",
     render(_, record, index) {
       return (
-        <Typography key={index} className="jura truncate capitalize">
+        <Typography
+          key={index}
+          id="text__primary"
+          className="jura truncate capitalize"
+        >
           {record.doctor_firstname + " " + record.doctor_lastname}
         </Typography>
       );

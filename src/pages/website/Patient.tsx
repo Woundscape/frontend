@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { IPatient } from "@constants/interface";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { useAuth } from "@components/AuthProvider";
+import { httpAPI } from "@config";
 
 export default function Patient() {
   const router = useNavigate();
@@ -69,6 +70,9 @@ export default function Patient() {
     } else {
       setHnNumber(inputValue);
     }
+  };
+  const test = () => {
+    setStateModal("STATE_1");
   };
   return (
     <>
@@ -225,6 +229,7 @@ export default function Patient() {
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
+                    addPatient={test}
                     onRender={() => {}}
                     segmented
                   />
@@ -254,7 +259,7 @@ export default function Patient() {
                               <div
                                 className="flex flex-col w-64 h-44 patient_img p-3 justify-between"
                                 style={{
-                                  backgroundImage: `url("http://localhost:3000/${image}")`,
+                                  backgroundImage: `url("${httpAPI}/${image}")`,
                                 }}
                               >
                                 <div className="flex flex-row justify-between text-white jura border-b-2">

@@ -1,4 +1,3 @@
-import { useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Button, Popover, Slider, Typography } from "antd";
@@ -17,64 +16,24 @@ import {
   IImage,
   TissueType,
 } from "@constants/interface";
-import { IUpdateImage, getImageById, updateImage } from "@api-caller/imageApi";
+import { IUpdateImage, updateImage } from "@api-caller/imageApi";
 import { UseMutationResult, useMutation } from "react-query";
-import { httpAPI } from "@config";
+import { DefaultTissue } from "@constants/defaultForm";
+import FormatImage from "@features/FormatImage";
 
-export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
+interface DrawSketchCanvasProps {
+  data: IImage;
+}
+
+export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     IUpdateImage
   > = useMutation(updateImage);
-  const [tissueData, setTissueData] = useState<TissueType[]>([
-    {
-      title: "eschar",
-      value: 10,
-      color: "#EEEEEE",
-    },
-    {
-      title: "slough",
-      value: 14,
-      color: "#CFEDD9",
-    },
-    {
-      title: "epithelization",
-      value: 0,
-      color: "#E0FCC5",
-    },
-    {
-      title: "callus",
-      value: 23,
-      color: "#FFFDC5",
-    },
-    {
-      title: "periwound",
-      value: 7,
-      color: "#FFE8BF",
-    },
-    {
-      title: "wound",
-      value: 28,
-      color: "#FFE1E1",
-    },
-    {
-      title: "granulation",
-      value: 10,
-      color: "#E6D1ED",
-    },
-    {
-      title: "deep structure",
-      value: 8,
-      color: "#D3DDFF",
-    },
-    {
-      title: "marceration",
-      value: 0,
-      color: "#D4F3F3",
-    },
-  ]);
+  const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
+  const Viewer = useRef(null);
   const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
@@ -82,33 +41,52 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
   const [openSelectSize, setOpenSelectSize] = useState(false);
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
   const [editable, setEditable] = useState(false);
-  // const canvasDiv = useRef<HTMLDivElement | null>(null);
-  // const [canvasHeight, setCanvasHeight] = useState(0);
   const [selectTools, setSelectTools] = useState("none");
   const [pointer, setPointer] = useState("none");
   const [original, setOriginal] = useState<any>([]);
   // const { isLoading, changeLoading } = useLoading();
+  const [resolution, setResolution] = useState({
+    width: 0,
+    height: 0,
+  });
   useEffect(() => {
-    if (img_id) {
-      getImage();
-      // if (canvasDiv) {
-      //   setCanvasHeight(canvasDiv.current?.clientHeight || 0);
-      // }
+    if (data) {
+      if (canvasRef.current && data.img_tissue) {
+        console.log(canvasRef);
+        canvasRef.current.loadPaths(data.img_tissue);
+        setOriginal(data.img_tissue);
+      }
+      setImage(data);
     }
-  }, []);
+  }, [resolution]);
+
+  // useEffect(() => {
+  // window.addEventListener("resize", () => {
+  //   window.location.reload();
+  // });
+  // }, []);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      window.location.reload();
-    });
-  }, []);
-  async function getImage() {
-    const response = await getImageById(img_id as string);
-    if (canvasRef.current && response.img_tissue) {
-      canvasRef.current.loadPaths(response.img_tissue);
-      setOriginal(response.img_tissue);
+    if (image) {
+      const imageUrl = FormatImage(image.img_path);
+      const img = new Image();
+      const handleImageLoad = () => {
+        setResolution({ width: img.width, height: img.height });
+        getImage();
+      };
+      img.onload = handleImageLoad;
+      img.src = imageUrl;
+      return () => {
+        img.onload = null;
+      };
     }
-    setImage(response);
+  }, [image?.img_path]);
+  async function getImage() {
+    if (canvasRef.current && data.img_tissue) {
+      canvasRef.current.loadPaths(data.img_tissue);
+      setOriginal(data.img_tissue);
+    }
+    setImage(data);
   }
   const handleCanvasExportImage = async () => {
     const a = await canvasRef.current?.exportImage("png");
@@ -167,6 +145,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
     }
   }
   const onCancel = () => {
+    handleCanvasEditor("none");
     canvasRef.current?.clearCanvas();
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
@@ -183,6 +162,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
           console.log("eiei");
         },
       });
+      handleCanvasEditor("none");
       console.log(paths);
       setOriginal(paths);
     }
@@ -262,7 +242,6 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
       </div>
     );
   }
-
   return (
     <>
       <Content
@@ -326,42 +305,37 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
         <Content className="w-full h-full flex flex-col p-3 space-x-3">
           <div
             id="canvas_editor___container"
-            className="relative grow flex min-h-0 min-w-0"
+            className="relative grow overflow-scroll flex min-h-0 min-w-0"
           >
             <div
               id="canvas_editor___sketch"
-              className={`relative overflow-auto grow ${
+              className={`relative grow min-h-0 min-w-0 max-w-[30rem] ${
                 selectTools == "pen" ? "canvas__cursor___paint" : ""
               }`}
-              // style={{
-              //   backgroundImage: `url("http://localhost:3000/${image?.img_path.replace(
-              //     /\\/g,
-              //     "/"
-              //   )}")`,
-              //   backgroundSize: "cover",
-              //   backgroundPosition: "center center",
-              // }}
             >
-              <ReactSketchCanvas
-                ref={canvasRef}
-                allowOnlyPointerType={pointer}
-                exportWithBackgroundImage={true}
-                backgroundImage={`${httpAPI}/${image?.img_path.replace(
-                  /\\/g,
-                  "/"
-                )}`}
-                // width={"1000px"}
-                // height={"1000px"}
-                // preserveBackgroundImageAspectRatio="xMaxYMid meet"
-                // backgroundImage="transparent"
-                style={{
-                  // height: canvasHeight,
-                  border: "0.0625rem solid #9c9c9c",
-                  borderRadius: "0.25rem",
-                }}
-                strokeWidth={strokeWidth}
-                strokeColor={colorPaint}
-              />
+              {resolution.width > 0 && resolution.height > 0 && image && (
+                <div
+                  style={{
+                    width: resolution.width + "px",
+                    height: resolution.height + "px",
+                  }}
+                >
+                  <ReactSketchCanvas
+                    ref={canvasRef}
+                    allowOnlyPointerType={pointer}
+                    exportWithBackgroundImage={true}
+                    backgroundImage={FormatImage(image.img_path)}
+                    // backgroundImage="transparent"
+                    style={{
+                      // height: canvasHeight,
+                      border: "0.0625rem solid #9c9c9c",
+                      borderRadius: "0.25rem",
+                    }}
+                    strokeWidth={strokeWidth}
+                    strokeColor={colorPaint}
+                  />
+                </div>
+              )}
             </div>
           </div>
           {editable && (
@@ -369,17 +343,18 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
               id="canvas_editor___tools"
               className="flex justify-center items-center relative"
             >
-              <div className="border border-[#D9D9D9] bg-[#FDFCFC] p-0.5 flex rounded-md">
+              <div className="border border-[#D9D9D9] bg-[#FDFCFC] py-1.5 flex rounded-md space-x-2">
                 <Button
                   type="text"
-                  className={`px-2 flex justify-center rounded-md ${
+                  className={`flex justify-center rounded-md ${
                     selectTools == "none" ? "bg-[#F0ECEC]" : ""
                   }`}
                   title="Cursor"
                   onClick={() => handleCanvasEditor("none")}
                 >
-                  <img src={CanvasSelectIcon} />
+                  <img width={25} src={CanvasSelectIcon} />
                 </Button>
+                |
                 <Button
                   type="text"
                   title="Pen"
@@ -389,14 +364,15 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
                 >
                   <Popover
                     content={renderSelectTissue}
-                    placement="rightTop"
+                    placement="topLeft"
                     trigger={"click"}
                     open={openSelectPaint}
                     onOpenChange={handleOpenSelectPaint}
                   >
-                    <img src={CanvasPenIcon} alt="" />
+                    <img width={25} src={CanvasPenIcon} alt="" />
                   </Popover>
                 </Button>
+                |
                 <Button
                   type="text"
                   title="Eraser"
@@ -405,8 +381,9 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
                   }`}
                   onClick={() => handleCanvasEditor("eraser")}
                 >
-                  <img src={CanvasEraserIcon} alt="" />
+                  <img width={25} src={CanvasEraserIcon} alt="" />
                 </Button>
+                |
                 <Button
                   type="text"
                   className={`flex justify-center rounded-md ${

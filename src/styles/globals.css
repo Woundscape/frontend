@@ -593,6 +593,12 @@ input[type="range"]::-moz-range-thumb {
   overflow: scroll;
 }
 
+
+
+th,td.ant-table-cell {
+  color: var(--text-primary) !important;
+}
+
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
   border-bottom: 1.5px solid var(--gray) !important;

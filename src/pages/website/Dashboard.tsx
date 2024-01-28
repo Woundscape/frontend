@@ -125,7 +125,7 @@ export default function Dashboard() {
                             className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
                           >
                             <p className="text-5xl text-[#9198AF] jura">
-                              {item.value}
+                              {item.value.toString().padStart(2, "0")}
                             </p>
                             <p className="text-lg text-[#4C577C] prompt">
                               {item.title}
@@ -136,7 +136,10 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="relative flex justify-center items-center">
-                    <a href="/patient" className="w-24 border-2 rounded-xl absolute right-0">
+                    <a
+                      href="/patient"
+                      className="w-24 border-2 rounded-xl absolute right-0"
+                    >
                       <p className="jura text-center text-[#9198AF]">
                         View all
                       </p>

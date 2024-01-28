@@ -1,5 +1,6 @@
-import { List, Tabs, Button, Typography, InputNumber, Modal, Form } from "antd";
-import UserProfile from "@features/UserProfile";
+import { useParams } from "react-router-dom";
+import { UseMutationResult, useMutation } from "react-query";
+import { List, Tabs, Button, Typography, InputNumber } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeOutlined,
@@ -8,106 +9,96 @@ import {
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
-
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import {
+  IEquipment,
   IFormattedErrorResponse,
   IImage,
   INote,
   TissueType,
 } from "@constants/interface";
-import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
 import AddNote from "@components/AddNote";
-import { UseMutationResult, useMutation } from "react-query";
 import addNoteImage from "@api-caller/noteApi";
-import { useParams } from "react-router-dom";
 import { getImageById } from "@api-caller/imageApi";
+import UserProfile from "@features/UserProfile";
 import { useAuth } from "@components/AuthProvider";
+import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
+import getAllEquipment from "@api-caller/equipApi";
+import { DefaultChart, DefaultTissue } from "@constants/defaultForm";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
-  const {me} = useAuth()
-  console.log(me);
+  const addNoteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    INote
+  > = useMutation(addNoteImage);
+  const { me } = useAuth();
   const { img_id } = useParams();
   const { TabPane } = Tabs;
   const [image, setImage] = useState<IImage>();
-  const [tissueData, setTissueData] = useState<TissueType[]>([
-    {
-      title: "eschar",
-      value: 10,
-      color: "#EEEEEE",
-    },
-    {
-      title: "slough",
-      value: 14,
-      color: "#CFEDD9",
-    },
-    {
-      title: "epithelization",
-      value: 0,
-      color: "#E0FCC5",
-    },
-    {
-      title: "callus",
-      value: 23,
-      color: "#FFFDC5",
-    },
-    {
-      title: "periwound",
-      value: 7,
-      color: "#FFE8BF",
-    },
-    {
-      title: "wound",
-      value: 28,
-      color: "#FFE1E1",
-    },
-    {
-      title: "granulation",
-      value: 10,
-      color: "#E6D1ED",
-    },
-    {
-      title: "deep structure",
-      value: 8,
-      color: "#D3DDFF",
-    },
-    {
-      title: "marceration",
-      value: 0,
-      color: "#D4F3F3",
-    },
-  ]);
+  const [equipment, setEquipment] = useState<IEquipment[]>([]);
+  const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
+  const [opacityVal, setOpacityVal] = useState(100);
+  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
+  const [pieChart, setPieChart] = useState(DefaultChart);
+  const [hideTissue, setHideTissue] = useState<string[]>([]);
   useEffect(() => {
     if (img_id) {
       getImage();
     }
   }, []);
+
+  useEffect(() => {
+    if (image && image.img_tissue) {
+      const colorCounts = image.img_tissue
+        .flatMap((item: any) =>
+          item.paths.map((path: any) => ({ color: item.strokeColor, path }))
+        )
+        .reduce((counts: any, { color }: any) => {
+          counts[color] = (counts[color] || 0) + 1;
+          return counts;
+        }, {});
+      const summaryData = tissueData.map((item) => ({
+        ...item,
+        value: colorCounts[item.color] || 0,
+      }));
+      console.log(summaryData);
+      setTissueData(summaryData);
+      settingPieChart(summaryData);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    getAllEquipment().then((response: any) => {
+      setEquipment(response);
+    });
+  }, []);
   async function getImage() {
     const response = await getImageById(img_id as string);
     setImage(response);
   }
-  const data: any = {
-    labels: tissueData
-      .filter((tissue) => tissue.value > 0)
-      .map((tissue) => tissue.title),
-    datasets: [
-      {
-        label: "Data is",
-        data: tissueData
-          .filter((tissue) => tissue.value > 0)
-          .map((tissue) => tissue.value),
-        backgroundColor: tissueData
-          .filter((tissue) => tissue.value > 0)
-          .map((tissue) => tissue.color),
-      },
-    ],
-  };
-  const [opacityVal, setOpacityVal] = useState(100);
-  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
-  const [hideTissue, setHideTissue] = useState<string[]>([]);
+  async function settingPieChart(data: TissueType[]) {
+    const filterDataSet: any = {
+      labels: data
+        .filter((tissue) => tissue?.value !== undefined)
+        .map((tissue) => tissue.title),
+      datasets: [
+        {
+          label: "Data is",
+          data: tissueData
+            .filter((tissue) => tissue?.value !== undefined)
+            .map((tissue) => tissue?.value),
+          backgroundColor: tissueData
+            .filter((tissue) => tissue?.value !== undefined)
+            .map((tissue) => tissue.color),
+        },
+      ],
+    };
+    setPieChart(filterDataSet);
+  }
   function handleOpacity(value: string) {
     setOpacityVal(parseInt(value));
   }
@@ -125,12 +116,6 @@ export default function WoundAnalysis() {
       canvasRef.current.loadPaths(newData);
     }
   }
-
-  const addNoteMutation: UseMutationResult<
-    boolean,
-    IFormattedErrorResponse,
-    INote
-  > = useMutation(addNoteImage);
   return (
     <>
       <div className="w-full h-screen relative">
@@ -153,7 +138,7 @@ export default function WoundAnalysis() {
                     HN. 6643793
                   </Button>
                 </div>
-                <DrawSketchCanvas img_id={img_id as string} />
+                {image && <DrawSketchCanvas data={image} />}
               </div>
               <div className="w-full pb-10">
                 <AddNote id={img_id as string} mutation={addNoteMutation} />
@@ -247,7 +232,7 @@ export default function WoundAnalysis() {
                           </div>
                         </List>
                         <Pie
-                          data={data}
+                          data={pieChart}
                           options={{
                             plugins: {
                               legend: {
@@ -268,7 +253,9 @@ export default function WoundAnalysis() {
                     }
                     key="2"
                   >
-                    <EquipmentTab />
+                    {image && equipment && (
+                      <EquipmentTab image={image} allEquipment={equipment} />
+                    )}
                   </TabPane>
                 </Tabs>
               </div>

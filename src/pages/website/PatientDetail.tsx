@@ -16,6 +16,7 @@ import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
 import AdditionalData from "@components/Patient/AdditionalData";
 import DeleteModal from "@components/DeleteModal";
+import { httpAPI } from "@config";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -83,7 +84,7 @@ export default function PatientDetail() {
           <div
             className="w-64 h-44 patient_img p-3 flex justify-end items-start "
             style={{
-              backgroundImage: `url("http://localhost:3000/${imgPath}")`,
+              backgroundImage: `url("${httpAPI}/${imgPath}")`,
             }}
           >
             {/* <div className="absolute w-full h-full bg-green-500">dsa</div> */}

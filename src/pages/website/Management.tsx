@@ -39,11 +39,6 @@ export default function Management() {
     action: "",
     doctor_id: "",
   });
-  const [typeState, setTypeState] = useState({
-    roleIndex: 0,
-    role: "",
-    doctor_id: "",
-  });
   useEffect(() => {
     getDoctor();
   }, []);
@@ -79,25 +74,7 @@ export default function Management() {
       }
     },
     onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => {
-      if (action == ACTION_MANAGE.EDIT) {
-        const arr = ["General", "Doctor", "Expert", "Admin"];
-        setTypeState({
-          roleIndex: arr.indexOf(record.doctor_type),
-          role: record.doctor_type,
-          doctor_id: record.doctor_id,
-        });
-        setDoctors((prevData) => {
-          const updatedData = [...prevData];
-          updatedData[rowIndex].isRowEditable =
-            !updatedData[rowIndex].isRowEditable;
-          return updatedData;
-        });
-      } else if (action == ACTION_MANAGE.CANCEL) {
-        setTypeState({
-          roleIndex: 0,
-          role: "",
-          doctor_id: "",
-        });
+      if (action == ACTION_MANAGE.EDIT || action == ACTION_MANAGE.CANCEL) {
         setDoctors((prevData) => {
           const updatedData = [...prevData];
           updatedData[rowIndex].isRowEditable =
@@ -105,7 +82,23 @@ export default function Management() {
           return updatedData;
         });
       } else if (action == ACTION_MANAGE.DONE) {
-        console.log(record);
+        updateTypeMutation.mutate(
+          {
+            isDoctor: record.isDoctor ?? false,
+            isExpert: record.isExpert ?? false,
+            doctor_id: record.doctor_id,
+          },
+          {
+            onSuccess: () => {
+              setDoctors((prevData) => {
+                const updatedData = [...prevData];
+                updatedData[rowIndex].isRowEditable =
+                  !updatedData[rowIndex].isRowEditable;
+                return updatedData;
+              });
+            },
+          }
+        );
       }
     },
 

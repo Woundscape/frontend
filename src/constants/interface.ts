@@ -10,7 +10,7 @@ export interface IFormattedErrorResponse {
 
 export interface TissueType {
   title: string;
-  value: number;
+  value?: number;
   color: string;
 }
 

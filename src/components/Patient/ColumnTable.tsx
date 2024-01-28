@@ -39,7 +39,7 @@ export const getColumns = (): ColumnsType<any> => [
     render(value: string, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value}
           </Typography>
         </>
@@ -53,7 +53,7 @@ export const getColumns = (): ColumnsType<any> => [
     render(value, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value.toString().padStart(3, "0")}
           </Typography>
         </>
