@@ -48,7 +48,7 @@ export default function Patient() {
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
   };
-  const [stateModal, setStateModal] = useState("STATE_1");
+  const [stateModal, setStateModal] = useState("");
   const onCancel = () => {
     setStateModal("");
   };
@@ -76,12 +76,17 @@ export default function Patient() {
       setHnNumber(inputValue);
     }
   };
+  const addPatient = () => {
+    console.log(1);
+
+    setStateModal("STATE_1");
+  };
   return (
     <>
       <div className="w-full h-screen relative">
         <Modal
-          title={"Add patient"}
           open={stateModal == "STATE_1"}
+          title={"Add patient"}
           footer={[
             <div
               key={"footer"}
@@ -211,7 +216,9 @@ export default function Patient() {
               <p className="text-[#61708C]">
                 Your code for connect with line is
               </p>
-              <Paragraph copyable className="text-[#1677ff] text-base">KI3456</Paragraph>
+              <Paragraph copyable className="text-[#1677ff] text-base">
+                KI3456
+              </Paragraph>
             </div>
           </Content>
         </Modal>
@@ -233,6 +240,7 @@ export default function Patient() {
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
+                    addPatient={addPatient}
                     onRender={() => {}}
                     segmented
                   />

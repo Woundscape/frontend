@@ -5,32 +5,40 @@ import UndefinedProfile from "@assets/undefined-profile-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
 import { useState } from "react";
 import NotiModal from "@components/NotiModal";
+import LogoutIcon from "@assets/icons/logout.svg";
+import EditProfileIcon from "@assets/icons/editProfile.svg";
 
 const items: MenuProps["items"] = [
   {
     key: "1",
     label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-        className="jura"
-      >
-        Edit Profile
-      </a>
+      <div className="flex gap-1">
+        <img src={EditProfileIcon} width={20} height={20} alt="" />
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+          className="jura text-[#424241] hover:text-[#424241]"
+        >
+          Edit Profile
+        </a>
+      </div>
     ),
   },
   {
     key: "2",
     label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-        className="jura"
-      >
-        Logout
-      </a>
+      <div className="flex gap-1">
+        <img src={LogoutIcon} width={20} height={20} alt="" />
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+          className="jura text-[#424241] hover:text-[#424241]"
+        >
+          Logout
+        </a>
+      </div>
     ),
   },
 ];

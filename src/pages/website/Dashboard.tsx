@@ -86,16 +86,8 @@ export default function Dashboard() {
                 <div className="h-full flex flex-col space-y-2">
                   <div id="body-content-dashboard" className="space-y-6">
                     <div id="head-dashboard" className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <h1 className="jura text-xl">Dashboard</h1>
-                        <div>
-                          <input
-                            type="text"
-                            id="search_dashboard"
-                            className="bg-[#EFEFEF] text-gray-900 text-sm text-center rounded-full border-none focus:outline-none block w-72 p-2.5"
-                            placeholder="Search HN, Disease, Doctor"
-                          />
-                        </div>
+                      <div className="flex items-center">
+                        <h1 className="jura text-xl">Dashboard</h1>   
                       </div>
                       <div
                         id="watermark-wound"
