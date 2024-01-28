@@ -5,6 +5,8 @@ import { Button, Checkbox, Space, Typography } from "antd";
 import { IDoctor } from "@constants/interface";
 import { ACTION_MANAGE } from "@constants/defaultState";
 import { formatTimeDifference } from "@features/FormatDate";
+import Done from "@assets/icons/done.svg"
+import Cancel from "@assets/icons/cancel.svg"
 
 interface ColumnsManageUserProps {
   onAprrove: (action: string, doctor_id: string) => void;
@@ -91,18 +93,20 @@ export const getColumnManageUser = ({
           <>
             <Button
               type="text"
-              className="jura text-[#4C577C]"
+              className="jura flex text-[#4C577C]"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.DONE, index, record)}
             >
+              <img src={Done} width={20} alt="" />
               Done
             </Button>
             <Button
               type="text"
-              className="jura text-[#4C577C]"
+              className="jura flex text-[#4C577C]"
               onClick={() =>
                 onToggleRowEdit(ACTION_MANAGE.CANCEL, index, record)
               }
             >
+              <img src={Cancel} width={20} alt="" />
               Cancel
             </Button>
           </>
@@ -113,20 +117,20 @@ export const getColumnManageUser = ({
           <>
             <Button
               type="text"
-              className="jura text-[] text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-2 w-[4rem] text-[#4C577C] flex justify-cente items-center"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.EDIT, index, record)}
-              icon={<img src={EditIcon} />}
             >
+              <img src={EditIcon} width={17} />
               Edit
             </Button>
             <Button
               type="text"
-              className="jura text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-1 w-[6rem] text-[#4C577C] flex justify-cente items-center"
               onClick={() =>
                 onToggleRowEdit(ACTION_MANAGE.DELETE, index, record)
               }
-              icon={<img src={DeleteIcon} />}
             >
+              <img src={DeleteIcon} width={18} />
               Delete
             </Button>
           </>
@@ -149,6 +153,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                 }
               >
+                <img src={Done} alt="" />
                 Approve
               </Button>
               <Button
@@ -158,6 +163,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                 }
               >
+                <img src={Cancel} alt="" />
                 Reject
               </Button>
             </>
