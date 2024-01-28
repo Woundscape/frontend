@@ -3,11 +3,16 @@ import UserProfile from "@features/UserProfile";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table";
-import { IEquipment, IFormattedErrorResponse } from "@constants/interface";
+import {
+  IEquipType,
+  IEquipment,
+  IFormattedErrorResponse,
+} from "@constants/interface";
 import DefaultInput from "@components/Equipment/DefaultInput";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
 import getAllEquipment, {
   deleteEquipment,
+  getTypeEquipment,
   updateEquipment,
 } from "@api-caller/equipApi";
 import DeleteModal from "@components/DeleteModal";
@@ -30,6 +35,7 @@ export default function Equipment() {
   const [forms] = Form.useForm<IEquipment>();
   const [data, setData] = useState<IEquipment[]>([]);
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
+  const [type, setType] = useState<IEquipType[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [submitDelete, setSubmitDelete] = useState(false);
@@ -45,10 +51,15 @@ export default function Equipment() {
   }, []);
   async function getEquipment() {
     getAllEquipment().then((response) => {
+      getType();
       setData(response);
       setEquipment(response);
-      setLoading(false);
     });
+  }
+  async function getType() {
+    const data: IEquipType[] = await getTypeEquipment();
+    setType(data);
+    setLoading(false);
   }
   const handleActionClick = (key: string, record: IEquipment) => {
     setForm(record);
@@ -58,8 +69,10 @@ export default function Equipment() {
       setIsDeleteOpen(true);
     }
   };
-  const columns: ColumnsType<IEquipment> =
-    getColumnEquipment(handleActionClick);
+  const columns: ColumnsType<IEquipment> = getColumnEquipment({
+    handleActionClick,
+    type,
+  });
   const filterEquipmentId = (e: any) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredpatient = data.filter((item) =>
@@ -118,7 +131,7 @@ export default function Equipment() {
     <>
       <div className="w-full h-screen relative">
         <div className="w-full h-full py-8 bg-white">
-          <div className="w-full h-full">
+          <div className="w-full h-full flex flex-col">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
                 <p className="jura text-xl text-[#424241]">Equipment</p>
@@ -127,9 +140,9 @@ export default function Equipment() {
                 <UserProfile />
               </div>
             </header>
-            <Content className="px-6 pt-6">
-              <div className="flex flex-row">
-                <div className="w-full flex flex-col">
+            <Content className="px-6 pt-6 flex grow">
+              <div className="flex">
+                <div className="w-full h-full flex flex-col">
                   {/* Input Filter */}
                   <DefaultInput
                     placeholder="Search by Equipment Name"
@@ -137,7 +150,7 @@ export default function Equipment() {
                     onRender={getEquipment}
                   />
                   {/* Body */}
-                  <Content id="content__patient" className="pt-7">
+                  <Content id="content__patient" className="pt-7 w-full h-full grow">
                     <Table
                       id="management__table__patient"
                       dataSource={equipment}

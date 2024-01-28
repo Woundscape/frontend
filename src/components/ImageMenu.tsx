@@ -1,4 +1,5 @@
 import { getAllImageById } from "@api-caller/imageApi";
+import { httpAPI } from "@config";
 import { IImage } from "@constants/interface";
 import { List, Typography } from "antd";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export default function ImageMenu() {
             <div className="w-full h-40 rounded-lg">
               <a href={`/wound/${image.img_id}`}>
                 <img
-                  src={`http://localhost:3000/${imgPath}`}
+                  src={`${httpAPI}/${imgPath}`}
                   className="w-full h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
                 />
               </a>

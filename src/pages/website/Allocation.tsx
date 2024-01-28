@@ -1,4 +1,3 @@
-import { LeftOutlined } from "@ant-design/icons";
 import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
 import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import UserProfile from "@features/UserProfile";
@@ -40,7 +39,6 @@ export default function Allocation() {
           <div className="w-full h-full flex flex-col">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
-                <LeftOutlined />
                 <p className="jura text-xl">Allocation</p>
               </div>
               <div className="w-[30rem]">

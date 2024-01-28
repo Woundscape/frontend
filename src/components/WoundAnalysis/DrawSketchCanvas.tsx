@@ -97,11 +97,11 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
     }
   }, []);
 
-  // useEffect(() => {
-  //   window.addEventListener("resize", () => {
-  //     window.location.reload();
-  //   });
-  // }, []);
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.location.reload();
+    });
+  }, []);
   async function getImage() {
     const response = await getImageById(img_id as string);
     if (canvasRef.current && response.img_tissue) {
@@ -178,7 +178,6 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
         img_id: image?.img_id || "",
         img_tissue: paths,
       };
-      console.log(body);
       updateMutation.mutate(body, {
         onSuccess: () => {
           console.log("eiei");

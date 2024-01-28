@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UserAddOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, DatePicker, Form, Input, Select } from "antd";
+import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { UseMutationResult, useMutation } from "react-query";
@@ -9,7 +9,6 @@ import { ICreateEquip, addEquipment } from "@api-caller/equipApi";
 import { DefaultEquipForm } from "@constants/defaultForm";
 import EquipmentModal from "./EquipmentModal";
 
-const { RangePicker } = DatePicker;
 
 interface IDefaultEquipProps {
   placeholder?: string;
@@ -77,7 +76,6 @@ export default function DefaultInput({
           prefix={<img className="pr-1" src={SearchIcon} />}
           onChange={onFilter}
         />
-        <RangePicker size="middle" />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <img className="w-5" src={SortBy} alt="" />
           <p className="text-[#BFBFBF]">Sort by :</p>
@@ -90,13 +88,13 @@ export default function DefaultInput({
           >
             <Select
               id="select__sortBy"
-              className="w-24 outline-none border-[white] text-[#868686]"
+              className="outline-none border-[white] text-[#868686] text-center"
               defaultValue="All"
               bordered={false}
-              placeholder=""
               options={[
                 { value: "All", label: "All" },
-                { value: "Unread", label: "Unread" },
+                { value: "Name", label: "Name" },
+                { value: "Last Updated", label: "Last Updated" },
               ]}
             />
           </ConfigProvider>

@@ -1,5 +1,5 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { IEquipment } from "@constants/interface";
+import { IEquipType, IEquipment } from "@constants/interface";
 import { formattedError } from "@utils";
 
 export interface ICreateEquip {
@@ -11,6 +11,26 @@ export interface ICreateEquip {
 export default async function getAllEquipment(): Promise<IEquipment[]> {
   try {
     const { data } = await getInstanceLocal().get("/equipment");
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getTypeEquipment(): Promise<IEquipType[]> {
+  try {
+    const { data } = await getInstanceLocal().get("/equipment/type");
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function addTypeEquipment(type_name: string): Promise<IEquipType> {
+  try {
+    const { data } = await getInstanceLocal().post("/equipment/type", {
+      type_name,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

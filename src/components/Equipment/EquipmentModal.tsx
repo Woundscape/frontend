@@ -1,6 +1,11 @@
 import { PlusOutlined } from "@ant-design/icons";
+import { addTypeEquipment, getTypeEquipment } from "@api-caller/equipApi";
 import { filterOptions, filterSort } from "@config";
-import { IEquipment } from "@constants/interface";
+import {
+  IEquipType,
+  IEquipment,
+  IFormattedErrorResponse,
+} from "@constants/interface";
 import {
   Button,
   Divider,
@@ -13,7 +18,8 @@ import {
   Space,
   Typography,
 } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
 
 interface IEquipmentModalProps {
   data?: IEquipment;
@@ -28,7 +34,6 @@ interface IEquipmentModalProps {
   onSelect: (e: string, name: string) => void;
 }
 
-let index = 0;
 export default function EquipmentModal({
   isOpen,
   confirmLoading,
@@ -40,22 +45,43 @@ export default function EquipmentModal({
   onChange,
   onSelect,
 }: IEquipmentModalProps) {
-  const [items, setItems] = useState(["jack", "lucy"]);
+  const addTypeMutation: UseMutationResult<
+    IEquipType,
+    IFormattedErrorResponse,
+    string
+  > = useMutation(addTypeEquipment);
+  const [type, setType] = useState<IEquipType[]>([]);
   const [name, setName] = useState("");
+  const [loadingSelect, setLoadingSelect] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
-  const addItem = (
+  const addItem = async (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
   ) => {
     e.preventDefault();
-    setItems([...items, name || `New item ${index++}`]);
-    setName("");
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 0);
+    if (name) {
+      setLoadingSelect(true);
+      addTypeMutation.mutate(name, {
+        onSuccess: (response) => {
+          setType((previous) => [...previous, response]);
+          setName("");
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 0);
+          setLoadingSelect(false);
+        },
+      });
+    }
   };
+  useEffect(() => {
+    getType();
+  }, []);
+  async function getType() {
+    const type: IEquipType[] = await getTypeEquipment();
+    setType(type);
+  }
   return (
     <>
       <Modal
@@ -127,43 +153,49 @@ export default function EquipmentModal({
           >
             <Space.Compact className="space-y-2" direction="vertical" block>
               <Typography id="text__primary" className="text-md">
-                Equipment Subtype :
+                Equipment type :
               </Typography>
               <Select
+                loading={loadingSelect}
                 value={data?.equip_type}
-                placeholder="Select Equipment Subtype"
+                placeholder="Select Equipment Type"
                 filterOption={filterOptions}
                 filterSort={filterSort}
                 dropdownRender={(menu) => (
                   <>
                     {menu}
                     <Divider style={{ margin: "8px 0" }} />
-                    <Space style={{ padding: "0 8px 4px" }}>
+                    <div className="flex" style={{ padding: "0 8px 4px" }}>
                       <Input
-                        placeholder="Please enter item"
+                        placeholder="Please enter new equipment type"
                         ref={inputRef}
                         value={name}
                         onChange={onNameChange}
+                        className="w-full"
                         onKeyDown={(e) => e.stopPropagation()}
                       />
                       <Button
+                        id="text__primary"
                         type="text"
                         icon={<PlusOutlined />}
                         onClick={addItem}
                       >
                         Add item
                       </Button>
-                    </Space>
+                    </div>
                   </>
                 )}
-                options={items.map((item) => ({ label: item, value: item }))}
+                options={type?.map((item) => ({
+                  label: item.type_name,
+                  value: item.type_id,
+                }))}
                 onChange={(e) => {
                   onSelect(e, "equip_type");
                 }}
               />
             </Space.Compact>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="equip_subtype"
             initialValue={data?.equip_subtype}
             rules={[
@@ -172,11 +204,11 @@ export default function EquipmentModal({
           >
             <Space.Compact className="space-y-2" direction="vertical" block>
               <Typography id="text__primary" className="text-md">
-                Equipment type :
+                Equipment subtype :
               </Typography>
               <Select
                 value={data?.equip_subtype}
-                placeholder="Select Equipment Type"
+                placeholder="Select Equipment SubType"
                 filterOption={filterOptions}
                 filterSort={filterSort}
                 dropdownRender={(menu) => (
@@ -207,7 +239,7 @@ export default function EquipmentModal({
                 }}
               />
             </Space.Compact>
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Modal>
     </>

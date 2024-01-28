@@ -3,8 +3,10 @@ import ImgProfile from "@assets/profile_img.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
 import { Divider, Input, Typography } from "antd";
 import { useAuth } from "@components/AuthProvider";
+import Avatar from "react-avatar";
 export default function Account() {
   const { me } = useAuth();
+  const fullName = me?.firstname + " " + me?.lastname;
   return (
     <>
       <div className="w-full h-screen relative">
@@ -14,6 +16,7 @@ export default function Account() {
               <div className="h-72 w-full">
                 <div className="w-full relative flex justify-center">
                   <img src={BgProfile} alt="" />
+                  {/* <Avatar name={fullName} className="absolute w-36 top-[8rem]" size="40" round="20px" /> */}
                   <img
                     src={ImgProfile}
                     className="absolute w-36 top-[8rem]"
@@ -21,13 +24,9 @@ export default function Account() {
                   />
                 </div>
               </div>
-              <p className="jura text-3xl text-[#505152]">
-                {me?.firstname} {me?.lastname}
-              </p>
+              <p className="jura text-3xl text-[#505152]">{fullName}</p>
               <div className="jura flex gap-5 text-[#4C577C] text-lg">
-                <p>Doctor</p>
-                <p>|</p>
-                <p>Admin</p>
+                <p>{me?.doctor_type}</p>
               </div>
               <div className="flex flex-col items-center jura text-[#868686] text-sm gap-7">
                 <div className="relative w-full">
@@ -59,7 +58,7 @@ export default function Account() {
                     Please scan to connect your account with line
                   </Typography>
                 </div>
-                
+
                 {/* <Divider>
                   <Typography className="prompt text-[#868686] text-xs">
                   PROFILE CONNECTED

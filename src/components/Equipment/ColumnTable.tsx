@@ -2,7 +2,7 @@
 import { ColumnsType } from "antd/es/table";
 import { Dropdown, Typography } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
-import { IEquipment } from "@constants/interface";
+import { IEquipType, IEquipment } from "@constants/interface";
 import MoreIcon from "@assets/icons/more_icon.svg";
 
 const items = [
@@ -16,9 +16,15 @@ const items = [
   },
 ];
 
-export const getColumnEquipment = (
-  handleActionClick: (key: string, record: IEquipment) => void
-): ColumnsType<IEquipment> => [
+interface ColumnsEquipProps {
+  handleActionClick: (key: string, record: IEquipment) => void;
+  type: IEquipType[];
+}
+
+export const getColumnEquipment = ({
+  handleActionClick,
+  type,
+}: ColumnsEquipProps): ColumnsType<IEquipment> => [
   // ... other columns
   {
     title: "Equipment id.",
@@ -52,6 +58,11 @@ export const getColumnEquipment = (
     title: "Equipment Type",
     dataIndex: "equip_type",
     key: "equip_type",
+    render(value, _, index) {
+      const filteredTypes = type.filter((item) => item.type_id === value);
+      return filteredTypes[0]?.type_name;
+      // return <p>{filteredTypes[0].type_name}</p>;
+    },
   },
   {
     title: "Last Updated",
@@ -79,7 +90,11 @@ export const getColumnEquipment = (
     fixed: "right",
     width: 100,
     render: (_, record, index) => (
-      <div id="action_table" onClick={(e) => e.stopPropagation()}>
+      <div
+        id="action_table"
+        className="bg-red-200"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Dropdown
           placement="bottomRight"
           menu={{

@@ -1,12 +1,13 @@
+import Avatar from "react-avatar";
 import { Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
-import UndefinedProfile from "@assets/undefined-profile-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
 import { useState } from "react";
 import NotiModal from "@components/NotiModal";
 import LogoutIcon from "@assets/icons/logout.svg";
 import EditProfileIcon from "@assets/icons/editProfile.svg";
+import { useAuth } from "@components/AuthProvider";
 
 const items: MenuProps["items"] = [
   {
@@ -14,14 +15,7 @@ const items: MenuProps["items"] = [
     label: (
       <div className="flex gap-1">
         <img src={EditProfileIcon} width={20} height={20} alt="" />
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-          className="jura text-[#424241] hover:text-[#424241]"
-        >
-          Edit Profile
-        </a>
+        <p className="jura text-[#424241] hover:text-[#424241]">Edit Profile</p>
       </div>
     ),
   },
@@ -30,19 +24,14 @@ const items: MenuProps["items"] = [
     label: (
       <div className="flex gap-1">
         <img src={LogoutIcon} width={20} height={20} alt="" />
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-          className="jura text-[#424241] hover:text-[#424241]"
-        >
-          Logout
-        </a>
+        <p className="jura text-[#424241] hover:text-[#424241]">Logout</p>
       </div>
     ),
   },
 ];
 export default function UserProfile() {
+  const { me } = useAuth();
+  const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "");
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);
@@ -55,20 +44,19 @@ export default function UserProfile() {
           src={NotificationIcon}
           width={45}
           height={45}
-          alt=""
         />
         <NotiModal isOpen={openModal} setModal={handleModal} />
-        <img src={UndefinedProfile} width={40} height={40} alt="" />
+        <Avatar name={fullName} size="40" round="20px" />
         <div className="jura">
           <p id="user_fullname" className="text-[#535352]">
-            Phufa R.
+            {fullName}
           </p>
           <span id="user_role" className="text-[#4C577C]">
-            doctor
+            {me?.doctor_type}
           </span>
         </div>
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <img className="pl-2" src={DownOutlinedIcon} alt="" />
+          <img className="pl-2" src={DownOutlinedIcon} />
         </Dropdown>
       </div>
     </div>

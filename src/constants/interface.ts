@@ -29,6 +29,14 @@ export interface ICase {
 export enum UserType {
   Patient = "Patient",
   Doctor = "Doctor",
+  Admin = "Admin",
+}
+
+export enum DoctorType {
+  General = "General",
+  Doctor = "Doctor",
+  Expert = "Expert",
+  Admin = "Admin",
 }
 
 export interface IUser {
@@ -50,6 +58,9 @@ export interface IDoctor {
   doctor_verified: boolean;
   line_uid: string | null;
   created_at: Date;
+  isRowEditable?: boolean;
+  isDoctor?: boolean;
+  isExpert?: boolean;
 }
 
 export interface IPatient {
@@ -77,8 +88,9 @@ export interface IMe {
 
 export interface IImage {
   img_id: string;
-  img_tissue?: any | [];
+  img_tissue?: any;
   img_equip?: any;
+  img_equipPath?: string | null;
   img_path: string;
   img_status: boolean;
   created_at: Date;
@@ -95,6 +107,12 @@ export interface IEquipment {
   equip_subtype?: string;
   created_at?: Date;
   updated_at?: Date;
+}
+
+export interface IEquipType {
+  type_id: string;
+  type_name: string;
+  created_at?: Date;
 }
 
 export interface INote {
