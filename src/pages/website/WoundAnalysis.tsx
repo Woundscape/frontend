@@ -157,9 +157,15 @@ export default function WoundAnalysis() {
                 </div>
                 {image && <DrawSketchCanvas data={image} />}
               </div>
-              <div className="w-full pb-10">
-                <AddNote id={img_id as string} mutation={addNoteMutation} />
-              </div>
+              {equipment.length && (
+                <div className="w-full pb-10">
+                  <AddNote
+                    id={img_id as string}
+                    equipment={equipment}
+                    mutation={addNoteMutation}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div className="w-[30rem] h-full bg-white relative py-4 px-4">
@@ -273,7 +279,7 @@ export default function WoundAnalysis() {
                     key="2"
                   >
                     {image && equipment && (
-                      <EquipmentTab image={image} allEquipment={equipment} />
+                      <EquipmentTab image={image} equipment={equipment} />
                     )}
                   </TabPane>
                 </Tabs>

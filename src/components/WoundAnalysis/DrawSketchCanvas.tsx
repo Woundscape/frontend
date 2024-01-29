@@ -35,11 +35,10 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
   const Viewer = useRef(null);
-  const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
-  const [openSelectSize, setOpenSelectSize] = useState(false);
+  // const [openSelectSize, setOpenSelectSize] = useState(false);
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
   const [editable, setEditable] = useState(false);
   const [selectTools, setSelectTools] = useState("none");
@@ -96,13 +95,13 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
   }
-  function handleOpenSelectSize(newOpen: boolean) {
-    setOpenSelectSize(newOpen);
-  }
-  function handleStrokeWidth(size: number) {
-    setStrokeWidth(size);
-    setOpenSelectSize(false);
-  }
+  // function handleOpenSelectSize(newOpen: boolean) {
+  //   setOpenSelectSize(newOpen);
+  // }
+  // function handleStrokeWidth(size: number) {
+  //   setStrokeWidth(size);
+  //   setOpenSelectSize(false);
+  // }
   function handleColorPaint(value: string) {
     setPointer("mouse");
     setSelectTools("pen");
@@ -188,63 +187,61 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
             <p className="jura text-[#424241]">{item.title}</p>
           </Button>
         ))}
-        <Slider
-          min={0}
-          max={100}
-          value={opacityVal}
-          railStyle={{ height: 10, borderRadius: "0.625rem" }}
-          handleStyle={{
-            height: "100%",
-          }}
-          trackStyle={{
-            padding: 10,
-            borderRadius: "0.625rem",
-            backgroundColor: "#D8C290",
-          }}
-        />
+        <div className="canvas__slider___range">
+          <input
+            title={strokeWidth + "px"}
+            type="range"
+            min={0}
+            max={10}
+            value={strokeWidth}
+            onChange={(e) => {
+              setStrokeWidth(parseInt(e.target.value));
+            }}
+          />
+        </div>
       </div>
     );
   }
-  function renderSelectSize() {
-    return (
-      <div id="popover__select__size">
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(1)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">1px</p>
-          <div className="w-14 h-px bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(3)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">3px</p>
-          <div className="w-14 h-0.5 bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(5)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">5px</p>
-          <div className="w-14 h-1 bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(8)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">8px</p>
-          <div className="w-14 h-2 bg-black"></div>
-        </Button>
-      </div>
-    );
-  }
+  // function renderSelectSize() {
+  //   return (
+  //     <div id="popover__select__size">
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(1)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">1px</p>
+  //         <div className="w-14 h-px bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(3)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">3px</p>
+  //         <div className="w-14 h-0.5 bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(5)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">5px</p>
+  //         <div className="w-14 h-1 bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(8)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">8px</p>
+  //         <div className="w-14 h-2 bg-black"></div>
+  //       </Button>
+  //     </div>
+  //   );
+  // }
   const [transformValues, setTransformValues] = useState({
-    scale: 0.5,
+    scale: 1,
     positionX: 0,
     positionY: 0,
   });
@@ -418,8 +415,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
                 >
                   <img width={25} src={CanvasEraserIcon} alt="" />
                 </Button>
-                |
-                <Button
+                {/* <Button
                   type="text"
                   className={`flex justify-center rounded-md ${
                     selectTools == "size" ? "bg-[#F0ECEC]" : ""
@@ -434,7 +430,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
                   >
                     <img src={CanvasSizeIcon} alt="" />
                   </Popover>
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}

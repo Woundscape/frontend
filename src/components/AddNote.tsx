@@ -34,10 +34,11 @@ import { Content } from "antd/es/layout/layout";
 
 interface INoteProps {
   id: string;
+  equipment?: IEquipment[];
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
 }
 
-export default function AddNote({ id, mutation }: INoteProps) {
+export default function AddNote({ id, equipment, mutation }: INoteProps) {
   const [notes, setNotes] = useState<INote[]>([]);
   const [equip, setEquip] = useState<IEquipment[]>([]);
   const [form, setForm] = useState<INote>({ ...DefaultNoteForm, img_id: id });
@@ -46,8 +47,13 @@ export default function AddNote({ id, mutation }: INoteProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   useEffect(() => {
     async function getEquipment() {
-      const data = await getAllEquipment();
-      setEquip(data);
+      console.log(equipment);
+      if (!equipment) {
+        const data = await getAllEquipment();
+        setEquip(data);
+      } else {
+        setEquip(equipment);
+      }
     }
     async function getNote() {
       const data = await getNoteImageById(id);
@@ -109,7 +115,10 @@ export default function AddNote({ id, mutation }: INoteProps) {
                 <Typography id="text__primary">{item.note_desc}</Typography>
                 {item.note_equip.map((equip: string, index: number) => (
                   <Tag key={index} color={"geekblue"} className="jura">
-                    {equip}
+                    {
+                      equipment?.find((list) => list.equip_id == equip)
+                        ?.equip_name
+                    }
                   </Tag>
                 ))}
                 <div className="flex gap-3">

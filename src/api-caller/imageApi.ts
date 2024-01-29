@@ -7,6 +7,11 @@ export interface IUpdateImage {
   img_tissue: any;
 }
 
+export interface IUpdateEquipment {
+  img_id: string;
+  equip_id: string[];
+}
+
 export async function updateImage({
   img_id,
   img_tissue,
@@ -56,6 +61,21 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
 export default async function uploadImage(formData: FormData): Promise<any> {
   try {
     const { data } = await getInstanceLocal().post("/image/", formData);
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function updateEquipment({
+  img_id,
+  equip_id,
+}: IUpdateEquipment): Promise<any> {
+  try {
+    const { data } = await getInstanceLocal().put("/image/equipment/", {
+      img_id: img_id,
+      equip_id: equip_id,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

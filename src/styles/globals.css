@@ -602,6 +602,17 @@ td.ant-table-cell {
   color: var(--text-primary) !important;
 }
 
+[aria-label="cancel_icon_editable"]::after {
+  color: #b4b4b4;
+  content: "\2573";
+}
+
+[aria-label="disabled_select"] > div {
+  color: #61708c !important;
+  cursor: default;
+  font-family: jura;
+}
+
 #management__table__patient > div > div > table > tbody > tr > td {
   border-top: 1.5px solid var(--gray) !important;
   border-bottom: 1.5px solid var(--gray) !important;
