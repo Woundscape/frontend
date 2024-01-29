@@ -91,7 +91,6 @@ export const getColumnEquipment = ({
     render: (_, record, index) => (
       <div
         id="action_table"
-        className="bg-red-200"
         onClick={(e) => e.stopPropagation()}
       >
         <Dropdown
@@ -105,8 +104,8 @@ export const getColumnEquipment = ({
           trigger={["click"]}
           className="h-full"
         >
-          <div className="mr-6 flex justify-center">
-            <img src={MoreIcon} alt="" />
+          <div className="mr-6 py-3 flex justify-center">
+            <img src={MoreIcon} width={20} alt="" />
           </div>
         </Dropdown>
       </div>

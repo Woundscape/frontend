@@ -76,19 +76,6 @@ function Signin() {
             <img className="w-20" src={logo_wound} alt="" />
             <h1 className="michroma text-4xl text-[#424241]">Woundscape</h1>
           </div>
-          <button
-            type="button"
-            className="relative w-1/2 p-2.5 border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer"
-          >
-            <img
-              className="w-6 absolute left-3 bottom-2"
-              src={logo_google}
-              alt=""
-            />
-            <div className="jura text-sm text-center text-[#626060]">
-              SIGN IN WITH GOOGLE
-            </div>
-          </button>
           <div className="relative w-1/2 p-2.5 text-sm text-center border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer">
             <img
               className="w-6 absolute left-3 bottom-2"

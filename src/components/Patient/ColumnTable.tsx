@@ -3,30 +3,26 @@ import { ColumnsType } from "antd/es/table";
 import { Typography, Tag, Dropdown, MenuProps } from "antd";
 import { formatTimeDifference } from "@features/FormatDate";
 import MoreIcon from "@assets/icons/more_icon.svg";
+import EditIcon from "@assets/icons/edit_user_icon.svg";
+import DelIcon from "@assets/icons/delete_user_icon.svg";
 
 const items: MenuProps["items"] = [
   {
     key: "1",
     label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-      >
-        Edit
-      </a>
+      <div className="flex gap-1">
+        <img src={EditIcon} width={15} height={15} alt="" />
+        <p className="jura text-[#4C577C]">Edit</p>
+      </div>
     ),
   },
   {
     key: "2",
     label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-      >
-        Delete
-      </a>
+      <div className="flex gap-1">
+        <img src={DelIcon} width={15} height={15} alt="" />
+        <p className="jura text-[#4C577C]">Delete</p>
+      </div>
     ),
   },
 ];
@@ -123,8 +119,8 @@ export const getColumns = (): ColumnsType<any> => [
     render: () => (
       <div id="action_table" onClick={(e) => e.stopPropagation()}>
         <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
-          <div className="mr-6 flex justify-center">
-            <img src={MoreIcon} alt="" />
+          <div className="mr-6 py-4 flex justify-center">
+            <img src={MoreIcon} width={20} alt="" />
           </div>
         </Dropdown>
       </div>
