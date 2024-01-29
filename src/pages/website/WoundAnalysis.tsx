@@ -65,7 +65,6 @@ export default function WoundAnalysis() {
         ...item,
         value: colorCounts[item.color] || 0,
       }));
-      console.log(summaryData);
       setTissueData(summaryData);
       settingPieChart(summaryData);
     }
@@ -231,16 +230,18 @@ export default function WoundAnalysis() {
                             Result
                           </div>
                         </List>
-                        <Pie
-                          data={pieChart}
-                          options={{
-                            plugins: {
-                              legend: {
-                                display: false,
+                        {pieChart && (
+                          <Pie
+                            data={pieChart}
+                            options={{
+                              plugins: {
+                                legend: {
+                                  display: false,
+                                },
                               },
-                            },
-                          }}
-                        />
+                            }}
+                          />
+                        )}
                       </div>
                     </Content>
                   </TabPane>

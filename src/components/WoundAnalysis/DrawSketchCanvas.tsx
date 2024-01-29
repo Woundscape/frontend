@@ -330,7 +330,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
               {resolution.width > 0 && resolution.height > 0 && image && (
                 <TransformWrapper
                   initialScale={1}
-                  disabled={true}
+                  disabled={false}
                   minScale={0.5}
                   maxScale={1}
                   limitToBounds={false}
