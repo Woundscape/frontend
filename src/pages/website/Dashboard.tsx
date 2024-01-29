@@ -106,7 +106,7 @@ export default function Dashboard() {
                       >
                         <div className="jura space-y-3">
                           <p className="font-bold text-2xl text-[#505152]">
-                            Hello, puipui
+                            Hello, {me?.firstname + " " + me?.lastname}
                           </p>
                           <p className="font-bold text-xl text-[#4C577C]">
                             Welcome to Woundscape

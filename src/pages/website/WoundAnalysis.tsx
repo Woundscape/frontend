@@ -66,15 +66,33 @@ export default function WoundAnalysis() {
         value: colorCounts[item.color] || 0,
       }));
       setTissueData(summaryData);
-      settingPieChart(summaryData);
     }
   }, [image]);
 
+  useEffect(() => {
+    settingPieChart(tissueData);
+  }, [tissueData]);
   useEffect(() => {
     getAllEquipment().then((response: any) => {
       setEquipment(response);
     });
   }, []);
+
+  function convertToPercentage(data: TissueType[]): TissueType[] {
+    const total = tissueData.reduce(
+      (acc, entry) => acc + (entry.value ?? 0),
+      0
+    );
+    if (total === 0) {
+      return data.map((entry) => ({ ...entry, value: 0 }));
+    }
+    const percentageData: TissueType[] = data.map((entry) => ({
+      ...entry,
+      value: ((entry.value ?? 0) / total) * 100,
+    }));
+    return percentageData;
+  }
+
   async function getImage() {
     const response = await getImageById(img_id as string);
     setImage(response);

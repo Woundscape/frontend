@@ -244,7 +244,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
     );
   }
   const [transformValues, setTransformValues] = useState({
-    scale: 1,
+    scale: 0.5,
     positionX: 0,
     positionY: 0,
   });
@@ -329,24 +329,24 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
             >
               {resolution.width > 0 && resolution.height > 0 && image && (
                 <TransformWrapper
-                  initialScale={1}
-                  disabled={false}
+                  initialScale={transformValues.scale}
+                  disabled={true}
                   minScale={0.5}
                   maxScale={1}
                   limitToBounds={false}
+                  initialPositionX={transformValues.positionX}
+                  initialPositionY={transformValues.positionY}
                   // onPanning={updateXarrow}
                   onZoom={handleZoom}
                   pinch={{ step: 5 }}
                 >
-                  <TransformComponent contentClass="main">
+                  <TransformComponent contentClass="main" wrapperStyle={{}}>
                     <div
                       style={{
+                        // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
                         width: resolution.width + "px",
                         height: resolution.height + "px",
-                        // position: "absolute",
-                        // top: "0",
-                        left: "0",
-                        // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
+                        position: "relative",
                       }}
                     >
                       <ReactSketchCanvas
@@ -359,6 +359,10 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
                           // height: canvasHeight,
                           border: "0.0625rem solid #9c9c9c",
                           borderRadius: "0.25rem",
+                          position: "absolute",
+                          top: "0",
+                          left: "0",
+                          // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
                         }}
                         strokeWidth={strokeWidth}
                         strokeColor={colorPaint}

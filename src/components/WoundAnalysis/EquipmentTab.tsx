@@ -1,7 +1,6 @@
 import { Image, List, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
-import getAllEquipment from "@api-caller/equipApi";
 import { IEquipment, IImage } from "@constants/interface";
 import FormatImage from "@features/FormatImage";
 import { formatTimeDifference } from "@features/FormatDate";
@@ -16,20 +15,14 @@ export default function EquipmentTab({
   allEquipment,
 }: EquipmentTabProps) {
   const [equipment, setEquipment] = useState([]);
-  useEffect(() => {
-    getAllEquipment().then((response: any) => {
-      setEquipment(response);
-    });
-  }, []);
-
-  const [btnEquip, setBtnEquip] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   function handleEquip() {
-    setBtnEquip(!btnEquip);
+    setIsEditable(!isEditable);
   }
   return (
     <div className="w-full h-full overflow-y-auto">
       <Content className="space-y-3 grow">
-        {equipment?.map((item: any, index: number) => (
+        {allEquipment?.map((item: any, index: number) => (
           <div
             key={index}
             className="w-full px-4 py-1.5 flex items-center rounded-xl space-x-2"
@@ -47,7 +40,7 @@ export default function EquipmentTab({
           </div>
         ))}
 
-        {btnEquip ? (
+        {!isEditable ? (
           <div className="flex justify-end">
             <button
               onClick={handleEquip}
