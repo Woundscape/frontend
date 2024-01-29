@@ -33,7 +33,7 @@ export const getColumnEquipment = ({
     render(value: string, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value}
           </Typography>
         </>
@@ -47,7 +47,7 @@ export const getColumnEquipment = ({
     render(value, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value}
           </Typography>
         </>
@@ -61,7 +61,6 @@ export const getColumnEquipment = ({
     render(value, _, index) {
       const filteredTypes = type.filter((item) => item.type_id === value);
       return filteredTypes[0]?.type_name;
-      // return <p>{filteredTypes[0].type_name}</p>;
     },
   },
   {

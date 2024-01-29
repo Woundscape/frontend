@@ -27,7 +27,7 @@ export const getColumns = ({
     render(value: string, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="truncate">
             {value}
           </Typography>
         </>
@@ -41,8 +41,8 @@ export const getColumns = ({
     render(value, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
-            {value}
+          <Typography key={index} id="text__primary" className="truncate">
+            {value || "-"}
           </Typography>
         </>
       );
@@ -65,11 +65,13 @@ export const getColumns = ({
     title: "Status",
     dataIndex: "status",
     key: "status",
+    render: (value) => <div id="text__primary">{value || "-"}</div>,
   },
   {
     title: "Progression Stage",
     dataIndex: "stage",
     key: "stage",
+    render: (value) => <div id="text__primary">{value || "-"}</div>,
   },
   {
     title: "Last Updated",
@@ -97,7 +99,7 @@ export const getColumns = ({
     key: "disease",
     render: (_, { disease }) => (
       <div className="flex items-center">
-        {disease && disease.length > 0 && (
+        {disease && disease.length > 0 ? (
           <>
             <Tag
               color={disease[0].length > 5 ? "geekblue" : "green"}
@@ -109,6 +111,8 @@ export const getColumns = ({
               <Typography id="text__disease">+{disease.length - 1}</Typography>
             )}
           </>
+        ) : (
+          <div className="jura text-center">-</div>
         )}
       </div>
     ),
