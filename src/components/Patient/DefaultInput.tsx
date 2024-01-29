@@ -30,6 +30,7 @@ interface IDefaultInputProps {
   onFilter: (e: any) => void;
   onRender: () => void;
   onChangeView?: (e: SegmentedValue) => void;
+  addPatient?: () => void;
 }
 
 export default function DefaultInput({
@@ -39,6 +40,7 @@ export default function DefaultInput({
   onFilter,
   onRender,
   onChangeView,
+  addPatient
 }: IDefaultInputProps) {
   const uploadMutation: UseMutationResult<
     string,
@@ -99,7 +101,7 @@ export default function DefaultInput({
           />
         )}
         {!images ? (
-          <Button className="button_add" icon={<UserAddOutlined />}>
+          <Button onClick={addPatient} className="button_add" icon={<UserAddOutlined />}>
             Add Patient
           </Button>
         ) : (

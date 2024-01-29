@@ -70,12 +70,17 @@ export default function Patient() {
       setHnNumber(inputValue);
     }
   };
+  const addPatient = () => {
+    console.log(1);
+
+    setStateModal("STATE_1");
+  };
   return (
     <>
       <div className="w-full h-screen relative">
         <Modal
-          title={"Add patient"}
           open={stateModal == "STATE_1"}
+          title={"Add patient"}
           footer={[
             <div
               key={"footer"}
@@ -225,6 +230,7 @@ export default function Patient() {
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
+                    addPatient={addPatient}
                     onRender={() => {}}
                     segmented
                   />
