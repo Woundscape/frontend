@@ -1,6 +1,6 @@
+import { IDoctor } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
-import { IDoctor } from "@constants/interface";
 
 export interface IUpdateDoctorType {
   isDoctor: boolean;

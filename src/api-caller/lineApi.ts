@@ -1,6 +1,6 @@
-import { getInstanceLocal } from "@api/apiClient";
-import { UserType } from "@constants/interface";
+import { UserType } from "@constants";
 import { formattedError } from "@utils";
+import { getInstanceLocal } from "@api/apiClient";
 
 export interface LineCredential {
   userId: string;

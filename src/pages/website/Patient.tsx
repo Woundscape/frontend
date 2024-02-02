@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ViewResult from "@assets/view_result.svg";
 import UserProfile from "@features/UserProfile";
 import {
   Button,
@@ -9,18 +12,15 @@ import {
   Table,
   Typography,
 } from "antd";
-import { Content } from "antd/es/layout/layout";
-import ViewResult from "@assets/view_result.svg";
-import { useEffect, useState } from "react";
-import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { ColumnsType } from "antd/es/table";
-import { getColumns } from "@components/Patient/ColumnTable";
+import { Content } from "antd/es/layout/layout";
 import { SegmentedValue } from "antd/es/segmented";
-import { useNavigate } from "react-router-dom";
-import { IPatient } from "@constants/interface";
-import DefaultInput from "@components/Patient/DefaultInput";
-import { useAuth } from "@components/AuthProvider";
 import { httpAPI } from "@config";
+import { IPatient } from "@constants";
+import { useAuth } from "@components/AuthProvider";
+import DefaultInput from "@components/Patient/DefaultInput";
+import { getColumns } from "@components/Patient/ColumnTable";
+import { getCaseByDoctorId } from "@api-caller/caseApi";
 
 export default function Patient() {
   const router = useNavigate();

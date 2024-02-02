@@ -1,4 +1,4 @@
-import { IFormattedErrorResponse } from "@constants/interface";
+import { IFormattedErrorResponse } from "@constants";
 import { AxiosError, isAxiosError } from "axios";
 
 export function formattedError(

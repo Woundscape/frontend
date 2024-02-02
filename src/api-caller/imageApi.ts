@@ -1,6 +1,6 @@
-import { getInstanceLocal } from "@api/apiClient";
-import { IImage } from "@constants/interface";
+import { IImage } from "@constants";
 import { formattedError } from "@utils";
+import { getInstanceLocal } from "@api/apiClient";
 
 export interface IUpdateImage {
   img_id: string;

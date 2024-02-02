@@ -1,28 +1,24 @@
 import moment from "moment";
-import { UseMutationResult, useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UseMutationResult, useMutation } from "react-query";
+import { Segmented, Checkbox, Button, List } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
-import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import {
-  IFormattedErrorResponse,
-  IImage,
-  IPatient,
-} from "@constants/interface";
-import { optionSegmented } from "@utils/option";
-import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
-import UserProfile from "@features/UserProfile";
-import DefaultInput from "@components/Patient/DefaultInput";
+import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
+import { optionSegmented } from "@utils";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import AdditionalData from "@components/Patient/AdditionalData";
-import DeleteModal from "@components/DeleteModal";
 import { httpAPI } from "@config";
-import { getCaseByCaseId } from "@api-caller/caseApi";
+import UserProfile from "@features/UserProfile";
 import { formatTimeDifference } from "@features/FormatDate";
+import DeleteModal from "@components/DeleteModal";
+import DefaultInput from "@components/Patient/DefaultInput";
+import AdditionalData from "@components/Patient/AdditionalData";
+import { getCaseByCaseId } from "@api-caller/caseApi";
+import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<

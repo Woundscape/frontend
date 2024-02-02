@@ -1,5 +1,5 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { IEquipType, IEquipment } from "@constants/interface";
+import { IEquipType, IEquipment } from "@constants";
 import { formattedError } from "@utils";
 
 export interface ICreateEquip {

@@ -1,22 +1,22 @@
+import { useEffect, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
+import { Table } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { ColumnsType } from "antd/es/table";
 import {
   DoctorType,
   IDoctor,
   IFormattedErrorResponse,
-} from "@constants/interface";
-import UserProfile from "@features/UserProfile";
-import { Table } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { useEffect, useState } from "react";
-import { ColumnsType } from "antd/es/table";
-import { getColumnManageUser } from "@components/Management/ColumnTable";
+  ACTION_MANAGE,
+} from "@constants";
 import getAllDoctor, {
   IUpdateDoctorType,
   updateDoctorType,
   verifiedDoctor,
 } from "@api-caller/doctorApi";
+import UserProfile from "@features/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
-import { ACTION_MANAGE } from "@constants/defaultState";
+import { getColumnManageUser } from "@components/Management/ColumnTable";
 
 export default function Management() {
   const updateTypeMutation: UseMutationResult<

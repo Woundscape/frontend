@@ -1,4 +1,4 @@
-import { NotificationMessage, NotificationType } from "@constants/notification";
+import { NotificationMessage, NotificationType } from "@constants";
 import { notification } from "antd";
 
 export function displayNotification(type: NotificationType) {
