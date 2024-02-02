@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,23 +11,20 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import UserProfile from "@features/UserProfile";
-import { Button, Collapse, DatePicker, Modal, Tabs } from "antd";
+import { Line } from "react-chartjs-2";
+import { Button, Collapse, DatePicker, Tabs } from "antd";
 import { Content } from "antd/es/layout/layout";
+import TabPane from "antd/es/tabs/TabPane";
+import TextArea from "antd/es/input/TextArea";
 import Export from "@assets/export.svg";
 import Eye from "@assets/eye_input.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import WoundImg from "@assets/wound/img_6.jpg";
-import { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
-import TabPane from "antd/es/tabs/TabPane";
-import TextArea from "antd/es/input/TextArea";
-import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse, INote } from "@constants/interface";
-import addNoteImage from "@api-caller/noteApi";
 import AddNote from "@components/AddNote";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import UserProfile from "@features/UserProfile";
+import { IFormattedErrorResponse, INote } from "@constants";
+import addNoteImage from "@api-caller/noteApi";
 
 const { RangePicker } = DatePicker;
 

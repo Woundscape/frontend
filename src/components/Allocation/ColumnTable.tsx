@@ -1,10 +1,10 @@
 // columnsConfig.ts
-import { ColumnsType } from "antd/es/table";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
-import { DropdownField } from "@components/Allocation/DropdownField";
-import { UseMutationResult } from "react-query";
 import { Typography, Tag } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { UseMutationResult } from "react-query";
+import { DropdownField } from "@components/Allocation/DropdownField";
 import { formatTimeDifference } from "@features/FormatDate";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 import { IUpdateCase } from "@api-caller/caseApi";
 
 interface ColumnsConfigProps {

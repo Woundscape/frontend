@@ -1,6 +1,6 @@
 // columnsConfig.ts
-import { ColumnsType } from "antd/es/table";
 import { Typography, Tag, Dropdown, MenuProps } from "antd";
+import { ColumnsType } from "antd/es/table";
 import { formatTimeDifference } from "@features/FormatDate";
 import MoreIcon from "@assets/icons/more_icon.svg";
 import EditIcon from "@assets/icons/edit_user_icon.svg";

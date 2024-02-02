@@ -1,12 +1,11 @@
+import Done from "@assets/icons/done.svg";
+import Cancel from "@assets/icons/cancel.svg";
 import EditIcon from "@assets/icons/edit_user_icon.svg";
 import DeleteIcon from "@assets/icons/delete_user_icon.svg";
+import { ACTION_MANAGE, IDoctor } from "@constants";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
-import { IDoctor } from "@constants/interface";
-import { ACTION_MANAGE } from "@constants/defaultState";
 import { formatTimeDifference } from "@features/FormatDate";
-import Done from "@assets/icons/done.svg"
-import Cancel from "@assets/icons/cancel.svg"
 
 interface ColumnsManageUserProps {
   onAprrove: (action: string, doctor_id: string) => void;
@@ -157,7 +156,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                 }
               >
-                <img src={Done} alt="" />
+                {/* <img src={Done} alt="" /> */}
                 Approve
               </Button>
               <Button
@@ -167,7 +166,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                 }
               >
-                <img src={Cancel} alt="" />
+                {/* <img src={Cancel} alt="" /> */}
                 Reject
               </Button>
             </>

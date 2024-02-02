@@ -1,11 +1,7 @@
+import { useEffect, useRef, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
 import { PlusOutlined } from "@ant-design/icons";
-import { addTypeEquipment, getTypeEquipment } from "@api-caller/equipApi";
 import { filterOptions, filterSort } from "@config";
-import {
-  IEquipType,
-  IEquipment,
-  IFormattedErrorResponse,
-} from "@constants/interface";
 import {
   Button,
   Divider,
@@ -18,8 +14,8 @@ import {
   Space,
   Typography,
 } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { UseMutationResult, useMutation } from "react-query";
+import { addTypeEquipment, getTypeEquipment } from "@api-caller/equipApi";
+import { IEquipType, IEquipment, IFormattedErrorResponse } from "@constants";
 
 interface IEquipmentModalProps {
   data?: IEquipment;

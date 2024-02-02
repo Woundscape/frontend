@@ -1,32 +1,36 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
-import { Button, Popover, Slider, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
+import { Button, Popover, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import LoadPath from "@libs/images_2.json";
+// import LoadPath from "@libs/images_2.json";
+import {
+  DefaultTissue,
+  IFormattedErrorResponse,
+  IImage,
+  TissueType,
+} from "@constants";
 import DefaultButton from "@components/WoundAnalysis/DefaultButton";
 import CanvasSelectIcon from "@assets/icons/canvas_icon_select.svg";
 import CanvasPenIcon from "@assets/icons/canvas_icon_pen.svg";
 import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
-import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
-import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+// import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
-import {
-  IFormattedErrorResponse,
-  IImage,
-  TissueType,
-} from "@constants/interface";
-import { IUpdateImage, updateImage } from "@api-caller/imageApi";
-import { UseMutationResult, useMutation } from "react-query";
-import { DefaultTissue } from "@constants/defaultForm";
+import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
 import FormatImage from "@features/FormatImage";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { formatTimeDifference } from "@features/FormatDate";
+import { IUpdateImage, updateImage } from "@api-caller/imageApi";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
 interface DrawSketchCanvasProps {
   data: IImage;
+  setRef: (ref: any) => void;
 }
 
-export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
+export default function DrawSketchCanvas({
+  data,
+  setRef,
+}: DrawSketchCanvasProps) {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -34,17 +38,16 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   > = useMutation(updateImage);
   const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
-  const Viewer = useRef(null);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
-  // const [openSelectSize, setOpenSelectSize] = useState(false);
-  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
+  const [canvasRef, setCanvasRef] = useState(
+    useRef<ReactSketchCanvasRef | null>(null)
+  );
   const [editable, setEditable] = useState(false);
   const [selectTools, setSelectTools] = useState("none");
   const [pointer, setPointer] = useState("none");
   const [original, setOriginal] = useState<any>([]);
-  // const { isLoading, changeLoading } = useLoading();
   const [resolution, setResolution] = useState({
     width: 0,
     height: 0,
@@ -52,19 +55,25 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   useEffect(() => {
     if (data) {
       if (canvasRef.current && data.img_tissue) {
-        console.log(canvasRef);
+        // console.log("before", data.img_tissue[0]);
+        // const testFilter = data.img_tissue[0].paths.filter(
+        //   (_: any, index: number) => index % 5 === 0
+        // );
+        // const eiei = [
+        //   {
+        //     drawMode: true,
+        //     paths: testFilter,
+        //     strokeColor: "#D3DDFF",
+        //     strokeWidth: 4,
+        //   },
+        // ];
         canvasRef.current.loadPaths(data.img_tissue);
         setOriginal(data.img_tissue);
+        setRef(canvasRef);
       }
       setImage(data);
     }
   }, [resolution]);
-
-  // useEffect(() => {
-  // window.addEventListener("resize", () => {
-  //   window.location.reload();
-  // });
-  // }, []);
 
   useEffect(() => {
     if (image) {
@@ -81,6 +90,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
       };
     }
   }, [image?.img_path]);
+  //NOTE -  have for wut ?
   async function getImage() {
     if (canvasRef.current && data.img_tissue) {
       canvasRef.current.loadPaths(data.img_tissue);
@@ -163,7 +173,6 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
         },
       });
       handleCanvasEditor("none");
-      console.log(paths);
       setOriginal(paths);
     }
     setEditable(!editable);
@@ -240,19 +249,6 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
   //     </div>
   //   );
   // }
-  const [transformValues, setTransformValues] = useState({
-    scale: 1,
-    positionX: 0,
-    positionY: 0,
-  });
-  const handleZoom = (values: any) => {
-    setTransformValues({
-      scale: values.state.scale,
-      positionX: values.state.positionX,
-      positionY: values.state.positionY,
-    });
-    console.log(transformValues);
-  };
   return (
     <>
       <Content
@@ -287,7 +283,7 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
             </div>
           )}
           <Typography className="border border-[#B4B4B4] flex justify-center items-center p-4 rounded-2xl jura text-[#908F8F]">
-            Feb 14, 2023 18:42
+            {formatTimeDifference(image?.created_at)}
           </Typography>
           <div className="flex space-x-4">
             {!editable ? (
@@ -325,48 +321,26 @@ export default function DrawSketchCanvas({ data }: DrawSketchCanvasProps) {
               }`}
             >
               {resolution.width > 0 && resolution.height > 0 && image && (
-                <TransformWrapper
-                  initialScale={transformValues.scale}
-                  disabled={true}
-                  minScale={0.5}
-                  maxScale={1}
-                  limitToBounds={false}
-                  initialPositionX={transformValues.positionX}
-                  initialPositionY={transformValues.positionY}
-                  // onPanning={updateXarrow}
-                  onZoom={handleZoom}
-                  pinch={{ step: 5 }}
+                <div
+                  style={{
+                    width: resolution.width + "px",
+                    height: resolution.height + "px",
+                  }}
                 >
-                  <TransformComponent contentClass="main" wrapperStyle={{}}>
-                    <div
-                      style={{
-                        // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
-                        width: resolution.width + "px",
-                        height: resolution.height + "px",
-                        position: "relative",
-                      }}
-                    >
-                      <ReactSketchCanvas
-                        ref={canvasRef}
-                        allowOnlyPointerType={pointer}
-                        exportWithBackgroundImage={true}
-                        backgroundImage={FormatImage(image.img_path)}
-                        // backgroundImage="transparent"
-                        style={{
-                          // height: canvasHeight,
-                          border: "0.0625rem solid #9c9c9c",
-                          borderRadius: "0.25rem",
-                          position: "absolute",
-                          top: "0",
-                          left: "0",
-                          // transform: `scale(${transformValues.scale}) translate(${transformValues.positionX}px, ${transformValues.positionY}px)`,
-                        }}
-                        strokeWidth={strokeWidth}
-                        strokeColor={colorPaint}
-                      />
-                    </div>
-                  </TransformComponent>
-                </TransformWrapper>
+                  <ReactSketchCanvas
+                    id="canvas"
+                    ref={canvasRef}
+                    allowOnlyPointerType={pointer}
+                    exportWithBackgroundImage={true}
+                    backgroundImage={FormatImage(image.img_path)}
+                    style={{
+                      border: "0.0625rem solid #9c9c9c",
+                      borderRadius: "0.25rem",
+                    }}
+                    strokeWidth={strokeWidth}
+                    strokeColor={colorPaint}
+                  />
+                </div>
               )}
             </div>
           </div>

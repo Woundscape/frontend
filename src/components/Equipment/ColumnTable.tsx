@@ -1,9 +1,9 @@
 // columnsConfig.ts
-import { ColumnsType } from "antd/es/table";
-import { Dropdown, Typography } from "antd";
-import { formatTimeDifference } from "@features/FormatDate";
-import { IEquipType, IEquipment } from "@constants/interface";
 import MoreIcon from "@assets/icons/more_icon.svg";
+import { Dropdown, Typography } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { IEquipType, IEquipment } from "@constants";
+import { formatTimeDifference } from "@features/FormatDate";
 
 const items = [
   {
@@ -89,10 +89,7 @@ export const getColumnEquipment = ({
     fixed: "right",
     width: 100,
     render: (_, record, index) => (
-      <div
-        id="action_table"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div id="action_table" onClick={(e) => e.stopPropagation()}>
         <Dropdown
           placement="bottomRight"
           menu={{

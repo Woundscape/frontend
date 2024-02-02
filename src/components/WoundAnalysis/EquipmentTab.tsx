@@ -1,23 +1,24 @@
-import { Image, List, Select, Typography } from "antd";
+import { useState } from "react";
+import { IEquipment, IFormattedErrorResponse, IImage } from "@constants";
+import { UseMutationResult, useMutation } from "react-query";
+import { Image, Select, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useEffect, useState } from "react";
-import {
-  IEquipment,
-  IFormattedErrorResponse,
-  IImage,
-} from "@constants/interface";
 import FormatImage from "@features/FormatImage";
 import { formatTimeDifference } from "@features/FormatDate";
 import { filterOptions, filterSort } from "@config";
 import { IUpdateEquipment, updateEquipment } from "@api-caller/imageApi";
-import { UseMutationResult, useMutation } from "react-query";
 
 interface EquipmentTabProps {
   image: IImage;
   equipment: IEquipment[];
+  updateImage: (name: string, value: any) => void;
 }
 
-export default function EquipmentTab({ image, equipment }: EquipmentTabProps) {
+export default function EquipmentTab({
+  image,
+  equipment,
+  updateImage,
+}: EquipmentTabProps) {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -26,17 +27,17 @@ export default function EquipmentTab({ image, equipment }: EquipmentTabProps) {
   const [select, setSelect] = useState("");
   const [isEditable, setIsEditable] = useState(false);
   function handleEquip() {
-    const body: IUpdateEquipment = {
-      img_id: image.img_id,
-      equip_id: [...image.img_equip, select],
-    };
     if (isEditable && select) {
+      const body: IUpdateEquipment = {
+        img_id: image.img_id,
+        equip_id: [...(image.img_equip ?? []), select],
+      };
       updateMutation.mutate(body, {
-        onSuccess: (e) => {
-          console.log(e);
+        onSuccess: () => {
+          updateImage("img_equip", body.equip_id);
+          setSelect("");
         },
       });
-      setSelect("");
     }
     setIsEditable(!isEditable);
   }
@@ -84,7 +85,7 @@ export default function EquipmentTab({ image, equipment }: EquipmentTabProps) {
               }}
             >
               <Typography className="text-3xl text-[#E7E5E5]">
-                {image.img_equip.length + 1}
+                {image.img_equip ? image.img_equip.length + 1 : 1}
               </Typography>
               <Select
                 bordered={false}
@@ -101,7 +102,7 @@ export default function EquipmentTab({ image, equipment }: EquipmentTabProps) {
             </div>
             <div className="flex justify-between">
               <button
-                onClick={handleEquip}
+                onClick={() => setIsEditable(false)}
                 className="text-center text-[#4C577C] jura px-4 rounded-xl border border-[#D9D9D9]"
               >
                 cancel

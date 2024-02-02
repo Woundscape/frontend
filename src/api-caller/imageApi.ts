@@ -36,6 +36,17 @@ export async function getImageById(img_id: string): Promise<IImage> {
   }
 }
 
+export async function getCoupleImage(imageList: string[]): Promise<IImage[]> {
+  try {
+    const { data } = await getInstanceLocal().get(
+      `/image/couple/${imageList[0]}/${imageList[1]}`
+    );
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
 export async function getAllImageByCaseId(case_id: string): Promise<IImage[]> {
   try {
     const { data } = await getInstanceLocal().get(

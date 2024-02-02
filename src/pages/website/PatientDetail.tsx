@@ -6,7 +6,11 @@ import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { IFormattedErrorResponse, IImage } from "@constants/interface";
+import {
+  IFormattedErrorResponse,
+  IImage,
+  IPatient,
+} from "@constants/interface";
 import { optionSegmented } from "@utils/option";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import UserProfile from "@features/UserProfile";
@@ -17,6 +21,8 @@ import WoundHist from "@assets/wound/img_10.jpg";
 import AdditionalData from "@components/Patient/AdditionalData";
 import DeleteModal from "@components/DeleteModal";
 import { httpAPI } from "@config";
+import { getCaseByCaseId } from "@api-caller/caseApi";
+import { formatTimeDifference } from "@features/FormatDate";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -32,7 +38,7 @@ export default function PatientDetail() {
     limit: false,
   });
   const [checkedList, setCheckList] = useState<string[]>([]);
-
+  const [cases, setCases] = useState<IPatient>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   async function formatDateImages(images: IImage[]) {
@@ -48,6 +54,12 @@ export default function PatientDetail() {
     });
     return sortImage;
   }
+
+  useEffect(() => {
+    getImage();
+    getCase();
+  }, []);
+
   async function getImage() {
     if (case_id) {
       const images: IImage[] = await getAllImageByCaseId(case_id as string);
@@ -55,9 +67,11 @@ export default function PatientDetail() {
       setImages(format);
     }
   }
-  useEffect(() => {
-    getImage();
-  }, []);
+  async function getCase() {
+    const _case: IPatient = await getCaseByCaseId(case_id as string);
+    setCases(_case);
+  }
+
   const handleImage = (image_id: string) => {
     if (stageSegmented.stage == "Overview") {
       router(`/wound/${image_id}`);
@@ -95,7 +109,7 @@ export default function PatientDetail() {
             {stageSegmented.stage == "Overview" ? (
               <div className="w-full h-full flex flex-col justify-between">
                 <div className="flex flex-row justify-between text-white jura border-b">
-                  <p>HN.9877065</p>
+                  <p>HN. {cases?.hn_id}</p>
                   <p>{new Date(image.created_at).toLocaleTimeString()}</p>
                 </div>
                 <div className="flex flex-row justify-between h-8 border rounded-full">
@@ -141,7 +155,7 @@ export default function PatientDetail() {
           setStageSegmented({ stage: "Overview", limit: false });
           break;
         case "Comparative Imaging":
-          router("/compare", { state: { myData: "Hello from source page" } });
+          router("/compare", { state: { imageList: checkedList } });
           break;
         case "Wound Progression":
           router("/progress", { state: { imageList: checkedList } });
@@ -165,7 +179,7 @@ export default function PatientDetail() {
               <div className="flex justify-between">
                 <div className="flex items-center space-x-4">
                   <LeftOutlined onClick={() => router("/patient")} />
-                  <p className="jura text-xl">HN. {case_id}</p>
+                  <p className="jura text-xl">HN. {cases?.hn_id}</p>
                 </div>
                 <div className="w-[30rem]">
                   <UserProfile />
@@ -195,8 +209,8 @@ export default function PatientDetail() {
                     onRender={getImage}
                     images
                   />
-                  {stageSegmented.stage == "Overview" && (
-                    <AdditionalData case_id={case_id} />
+                  {stageSegmented.stage == "Overview" && cases && (
+                    <AdditionalData data={cases} />
                   )}
                   {/* Body */}
                   <div
@@ -237,8 +251,10 @@ export default function PatientDetail() {
                       </div>
                       <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
                         <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
-                          <p className="text-[#4C577C]">Jul 19, 2023 08:23</p>
-                          <p className="text-[#626060]">HN.6643793</p>
+                          <p className="text-[#4C577C]">
+                            {formatTimeDifference(cases?.created_at)}
+                          </p>
+                          <p className="text-[#626060]">HN. {cases?.hn_id}</p>
                         </div>
                         <div className="flex pt-3">
                           <img

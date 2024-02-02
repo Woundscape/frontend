@@ -1,33 +1,20 @@
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import { Content } from "antd/es/layout/layout";
 import { Checkbox, Divider, Layout, List, Modal, Typography } from "antd";
-// import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
 import ListNotification from "@features/ListNotification";
 import UserProfile from "@features/UserProfile";
-import Calendar from "react-calendar";
-import { Content } from "antd/es/layout/layout";
 import DashboardTable from "@features/PatientTable";
-import { useEffect, useState } from "react";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
+import { DefaultTotalDashboard } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import { CardPatient, getDashboard } from "@api-caller/doctorApi";
 
 export default function Dashboard() {
   const { me } = useAuth();
-  const [card, setCard] = useState<CardPatient[]>([
-    {
-      title: "Total",
-      value: "0",
-    },
-    {
-      title: "Special Cases",
-      value: "0",
-    },
-    {
-      title: "Unread",
-      value: "0",
-    },
-  ]);
+  const [card, setCard] = useState<CardPatient[]>(DefaultTotalDashboard);
   const [isConnect, setIsConnect] = useState(false);
   useEffect(() => {
     async function getCard() {
@@ -90,7 +77,7 @@ export default function Dashboard() {
                   <div id="body-content-dashboard" className="space-y-6">
                     <div id="head-dashboard" className="space-y-4">
                       <div className="flex items-center">
-                        <h1 className="jura text-xl">Dashboard</h1>   
+                        <h1 className="jura text-xl">Dashboard</h1>
                       </div>
                       <div
                         id="watermark-wound"

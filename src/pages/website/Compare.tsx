@@ -1,13 +1,34 @@
-import {
-  LeftOutlined,
-} from "@ant-design/icons";
-import UserProfile from "@features/UserProfile";
-import ArrowDown from "@assets/icons/arrow_left_down.svg";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UseMutationResult, useMutation } from "react-query";
+import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
+import UserProfile from "@features/UserProfile";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";
-import WoundCom from "@assets/wound/img_10.jpg";
+import ArrowDown from "@assets/icons/arrow_left_down.svg";
+import AddNote from "@components/AddNote";
+import { formatTimeDifference } from "@features/FormatDate";
+import FormatImage from "@features/FormatImage";
+import addNoteImage from "@api-caller/noteApi";
+import { getCoupleImage } from "@api-caller/imageApi";
+import { IFormattedErrorResponse, IImage, INote } from "@constants";
 
-export default function Patient() {
+export default function Compare() {
+  const addNoteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    INote
+  > = useMutation(addNoteImage);
+  const router = useNavigate();
+  const location = useLocation();
+  const { imageList } = location.state || [];
+  const [images, setImage] = useState<IImage[]>([]);
+  useEffect(() => {
+    getCoupleImage(imageList).then((data) => {
+      setImage(data);
+      console.log(data);
+    });
+  }, []);
   return (
     <>
       <div className="w-full h-screen relative">
@@ -24,93 +45,68 @@ export default function Patient() {
             </header>
             <Content className="px-6 pt-6 jura">
               <div className="flex flex-row space-x-5">
-                <div className="flex flex-col w-[65%]">
-                  <div className="flex border-2 flex-col rounded ">
+                <div className="w-full flex flex-col">
+                  <div className="grow flex border-2 flex-col rounded">
                     <div className="border-b-2 p-3">
                       <p className="jura text-[#4C577C] text-lg text-center">
                         Comparative Imaging
                       </p>
                     </div>
-                    <div className="flex flex-row space-x-9">
-                      {/* left compare */}
-                      <div className="space-y-2 w-1/2 pl-5 py-5">
-                        <p className="text-[#949CB6]"> Feb 14, 2023 18:42</p>
-                        <img className="w-80 rounded" src={WoundCom} alt="" />
-                        <div className="border-b-2 ">
-                          <p className="text-[#4C577C] text-base mt-3 mb-2">
-                            Equipment
-                          </p>
-                        </div>
-                        <div className="flex flex-row text-[#4C577C] space-x-2">
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Intrasite Gel</p>
+                    <div className="flex flex-row space-x-">
+                      {images?.map((image: IImage) => {
+                        return (
+                          <div className="space-y-2 w-1/2 p-5">
+                            <p className="text-[#949CB6]">
+                              {formatTimeDifference(image.created_at)}
+                            </p>
+                            <img
+                              className="rounded"
+                              src={FormatImage(image.img_path)}
+                              alt=""
+                            />
+                            <div className="border-b-2">
+                              <p className="text-[#4C577C] text-base mt-3 mb-2">
+                                Equipment
+                              </p>
+                            </div>
+                            <div className="flex flex-row text-[#4C577C] space-x-2">
+                              <div className="px-4 rounded-sm bg-[#D2D4EB]">
+                                <p>Intrasite Gel</p>
+                              </div>
+                              <div className="px-4 rounded-sm bg-[#D2D4EB]">
+                                <p>Mepitel</p>
+                              </div>
+                              <div className="px-4 rounded-sm bg-[#D2D4EB]">
+                                <p>Mepitel</p>
+                              </div>
+                            </div>
+                            <div className="border-b-2">
+                              <p className="text-[#4C577C] text-base mt-3 mb-2">
+                                Note
+                              </p>
+                            </div>
+                            <p className="indent-8 text-[#9198AF]">
+                              Lorem Ipsum is simply dummy text of the printing
+                              and typesetting industry. Lorem Ipsum has been the
+                              industry's standard dummy.
+                            </p>
                           </div>
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Mepitel</p>
-                          </div>
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Mepitel</p>
-                          </div>
-                        </div>
-                        <div className="border-b-2">
-                          <p className="text-[#4C577C] text-base mt-3 mb-2">
-                            Note
-                          </p>
-                        </div>
-                        <p className="indent-8 text-[#9198AF]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy.
-                        </p>
-                      </div>
-
-                      <div className="border-l-2 "></div>
-                      {/* right compare */}
-                      <div className="space-y-2 w-1/2 py-5 pr-5">
-                        <p className="text-[#949CB6]"> Feb 14, 2023 18:42</p>
-                        <img className="w-80 rounded" src={WoundCom} alt="" />
-                        <div className="border-b-2 ">
-                          <p className="text-[#4C577C] text-base mt-3 mb-2">
-                            Equipment
-                          </p>
-                        </div>
-                        <div className="flex flex-row text-[#4C577C] space-x-2">
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Intrasite Gel</p>
-                          </div>
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Mepitel</p>
-                          </div>
-                          <div className="px-4 rounded-sm bg-[#D2D4EB]">
-                            <p>Mepitel</p>
-                          </div>
-                        </div>
-                        <div className="border-b-2">
-                          <p className="text-[#4C577C] text-base mt-3 mb-2">
-                            Note
-                          </p>
-                        </div>
-                        <p className="indent-8 text-[#9198AF]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy.
-                        </p>
-                      </div>
+                        );
+                      })}
                     </div>
                   </div>
-
                   {/* Add Note */}
-                  {/* <div className="flex border-2 mt-4 items-center p-3">
-                    <img src={AddNote} alt="" />
-                    <p className="text-[#4C577C]">ADD NOTE</p>
-                  </div> */}
-
-
+                  {/* {equipment.length && (
+                    <div className="w-full pb-10">
+                      <AddNote
+                        id={img_id as string}
+                        equipment={equipment}
+                        mutation={addNoteMutation}
+                      />
+                    </div>
+                  )} */}
                 </div>
-
-
-
-                <div className="flex flex-col w-[35%] space-y-3">
+                <div className="flex flex-col w-[28rem] space-y-3">
                   <div className="flex flex-row items-center justify-between h-9 bg-[#F2F2F2] text-[#868686] rounded-lg">
                     <div className="w-1/2 ">
                       <p className="text-center">Tissue</p>

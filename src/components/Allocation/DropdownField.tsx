@@ -1,12 +1,12 @@
 // Used In: { Management }
 import { useEffect, useState } from "react";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
 import { ConfigProvider, Select, notification } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
 import { IUpdateCase } from "@api-caller/caseApi";
 import { filterOptions, filterSort } from "@config";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 
 interface DropdownFieldProps {
   data: ICase;
@@ -30,6 +30,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
   const [selectValue, setSelectValue] = useState(data.doctor_assign);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  //NOTE - Seperate it to Component
   const openNotificationWithIcon = () => {
     api["success"]({
       message: "Notification Title",

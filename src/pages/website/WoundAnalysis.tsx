@@ -1,33 +1,34 @@
+import { useEffect, useRef, useState } from "react";
+import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import { useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
+import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
+import { Pie } from "react-chartjs-2";
 import { List, Tabs, Button, Typography, InputNumber } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeOutlined,
   LeftOutlined,
 } from "@ant-design/icons";
-import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
-import { Pie } from "react-chartjs-2";
 import { Content } from "antd/es/layout/layout";
-import { useEffect, useRef, useState } from "react";
-import { ReactSketchCanvasRef } from "react-sketch-canvas";
-import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import {
   IEquipment,
   IFormattedErrorResponse,
-  IImage,
   INote,
   TissueType,
-} from "@constants/interface";
-import AddNote from "@components/AddNote";
-import addNoteImage from "@api-caller/noteApi";
-import { getImageById } from "@api-caller/imageApi";
+  DefaultChart,
+  DefaultTissue,
+} from "@constants";
 import UserProfile from "@features/UserProfile";
+import AddNote from "@components/AddNote";
 import { useAuth } from "@components/AuthProvider";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
+import addNoteImage from "@api-caller/noteApi";
+import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
+import { getImageById } from "@api-caller/imageApi";
 import getAllEquipment from "@api-caller/equipApi";
-import { DefaultChart, DefaultTissue } from "@constants/defaultForm";
 
+const { TabPane } = Tabs;
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
   const addNoteMutation: UseMutationResult<
@@ -37,12 +38,13 @@ export default function WoundAnalysis() {
   > = useMutation(addNoteImage);
   const { me } = useAuth();
   const { img_id } = useParams();
-  const { TabPane } = Tabs;
-  const [image, setImage] = useState<IImage>();
+  const [image, setImage] = useState<any>();
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [opacityVal, setOpacityVal] = useState(100);
-  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
+  const [canvasRef, setCanvasRef] = useState(
+    useRef<ReactSketchCanvasRef | null>(null)
+  );
   const [pieChart, setPieChart] = useState(DefaultChart);
   const [hideTissue, setHideTissue] = useState<string[]>([]);
   useEffect(() => {
@@ -65,6 +67,7 @@ export default function WoundAnalysis() {
         ...item,
         value: colorCounts[item.color] || 0,
       }));
+      console.log(summaryData);
       setTissueData(summaryData);
     }
   }, [image]);
@@ -72,6 +75,7 @@ export default function WoundAnalysis() {
   useEffect(() => {
     settingPieChart(tissueData);
   }, [tissueData]);
+
   useEffect(() => {
     getAllEquipment().then((response: any) => {
       setEquipment(response);
@@ -97,6 +101,7 @@ export default function WoundAnalysis() {
     const response = await getImageById(img_id as string);
     setImage(response);
   }
+
   async function settingPieChart(data: TissueType[]) {
     const filterDataSet: any = {
       labels: data
@@ -116,16 +121,32 @@ export default function WoundAnalysis() {
     };
     setPieChart(filterDataSet);
   }
+
   function handleOpacity(value: string) {
     setOpacityVal(parseInt(value));
   }
+
+  function handleCanvasRef(ref: any) {
+    setCanvasRef(ref);
+  }
+
+  function updateImage(name: string, value: any) {
+    if (image) {
+      setImage((prevImage: any) => ({ ...prevImage, [name]: value }));
+    }
+  }
   async function renderTissueData(strokeColor: string) {
     if (canvasRef.current) {
-      const test = await canvasRef.current.exportPaths();
+      const tempPath = await canvasRef.current.exportPaths();
       let newData: any;
       if (hideTissue.includes(strokeColor)) {
+        let tempTissue = hideTissue.filter((color) => color !== strokeColor);
+        newData = await image.img_tissue.filter(
+          (value: any) => !tempTissue.includes(value.strokeColor)
+        );
+        setHideTissue(tempTissue);
       } else {
-        newData = await test.filter(
+        newData = await tempPath.filter(
           (value) => value.strokeColor != strokeColor
         );
       }
@@ -155,7 +176,9 @@ export default function WoundAnalysis() {
                     HN. 6643793
                   </Button>
                 </div>
-                {image && <DrawSketchCanvas data={image} />}
+                {image && (
+                  <DrawSketchCanvas data={image} setRef={handleCanvasRef} />
+                )}
               </div>
               {equipment.length && (
                 <div className="w-full pb-10">
@@ -201,8 +224,8 @@ export default function WoundAnalysis() {
                               <p>{item.value + ""}%</p>
                             </div>
                             <div
-                              id="tools_tissue"
                               title="Hidden"
+                              id="tools_tissue"
                               onClick={() => {
                                 if (hideTissue.includes(item.color)) {
                                   let tissue = hideTissue.filter(
@@ -279,7 +302,11 @@ export default function WoundAnalysis() {
                     key="2"
                   >
                     {image && equipment && (
-                      <EquipmentTab image={image} equipment={equipment} />
+                      <EquipmentTab
+                        image={image}
+                        equipment={equipment}
+                        updateImage={updateImage}
+                      />
                     )}
                   </TabPane>
                 </Tabs>

@@ -1,5 +1,21 @@
 import { ICreateEquip } from "@api-caller/equipApi";
 import { IEquipment, UserType } from "./interface";
+import { CardPatient } from "@api-caller/doctorApi";
+
+export const DefaultTotalDashboard: CardPatient[] = [
+  {
+    title: "Total",
+    value: "0",
+  },
+  {
+    title: "Special Cases",
+    value: "0",
+  },
+  {
+    title: "Unread",
+    value: "0",
+  },
+];
 
 export const DefaultNoteForm = {
   note_title: "",

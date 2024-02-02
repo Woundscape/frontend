@@ -1,13 +1,13 @@
-import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
+import { useState, useEffect } from "react";
 import UserProfile from "@features/UserProfile";
-import { UseMutationResult, useMutation } from "react-query";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
-import { useState, useEffect } from "react";
+import { UseMutationResult, useMutation } from "react-query";
 import { getColumns } from "@components/Allocation/ColumnTable";
 import getAllDoctor from "@api-caller/doctorApi";
+import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
+import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 
 export default function Allocation() {
   const updateMutation: UseMutationResult<

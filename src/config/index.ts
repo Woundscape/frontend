@@ -21,7 +21,7 @@ export const themeConfig: ThemeConfig = {
       colorPrimaryHover: "#D9D9D9",
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
-      colorBgBase:'red'
+      colorBgBase: "red",
     },
     Button: {
       colorPrimaryHover: "none",
