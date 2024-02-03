@@ -1,5 +1,5 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import NotiAll from "@assets/icons/all_noti.svg"
 import PatientNote from "@assets/icons/patient_note_noti.svg"
 import Suggest from "@assets/icons/sugggest_noti.svg"

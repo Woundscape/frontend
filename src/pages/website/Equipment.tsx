@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
-import { Form, Table, notification } from "antd";
+import { Form, Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import {
@@ -8,6 +8,7 @@ import {
   IEquipment,
   IFormattedErrorResponse,
   DefaultEquipment,
+  NotificationType,
 } from "@constants";
 import UserProfile from "@features/UserProfile";
 import DefaultInput from "@components/Equipment/DefaultInput";
@@ -19,6 +20,7 @@ import getAllEquipment, {
 import DeleteModal from "@components/DeleteModal";
 import EquipmentModal from "@components/Equipment/EquipmentModal";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
+import { displayNotification } from "@utils";
 
 export default function Equipment() {
   const updateMutation: UseMutationResult<
@@ -91,6 +93,7 @@ export default function Equipment() {
             setIsUpdateOpen(false);
             setConfirmLoading(false);
             forms.resetFields();
+            displayNotification(NotificationType.SUCCESS);
           },
           onError: () => {
             setConfirmLoading(false);
@@ -104,13 +107,10 @@ export default function Equipment() {
     if (form) {
       deleteMutation.mutate(form.equip_id, {
         onSuccess: () => {
-          notification.success({
-            message: "Success",
-            description: "Delete successful!",
-          });
           getEquipment();
           setIsDeleteOpen(false);
           setSubmitDelete(false);
+          displayNotification(NotificationType.SUCCESS);
         },
       });
     }

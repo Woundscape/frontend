@@ -6,7 +6,13 @@ import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import SortBy from "@assets/icons/sortBy.svg";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import { ICreateEquip, addEquipment } from "@api-caller/equipApi";
-import { DefaultEquipForm, IFormattedErrorResponse } from "@constants";
+import {
+  DefaultEquipForm,
+  IFormattedErrorResponse,
+  NotificationMessage,
+  NotificationType,
+} from "@constants";
+import { displayNotification } from "@utils";
 
 interface IDefaultEquipProps {
   placeholder?: string;
@@ -54,6 +60,7 @@ export default function DefaultInput({
             onRender();
             setIsModalOpen(false);
             setConfirmLoading(false);
+            displayNotification(NotificationType.SUCCESS);
           },
           onError: () => {},
         });
