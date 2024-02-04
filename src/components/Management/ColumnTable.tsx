@@ -5,7 +5,7 @@ import DeleteIcon from "@assets/icons/delete_user_icon.svg";
 import { ACTION_MANAGE, IDoctor } from "@constants";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatDate } from "@utils";
 
 interface ColumnsManageUserProps {
   onAprrove: (action: string, doctor_id: string) => void;
@@ -82,7 +82,7 @@ export const getColumnManageUser = ({
     key: "created_at",
     render: (_, { created_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(created_at)}
+        {formatDate(created_at)}
       </Typography>
     ),
   },

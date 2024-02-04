@@ -1,6 +1,3 @@
-import logo_wound from "@assets/logo/logo-wound.svg";
-import logo_it from "@assets/it-logo.svg";
-import doctor_women from "@assets/doctor_women.svg";
 import { Button } from "antd";
 function NotApprove() {
   return (
@@ -11,7 +8,9 @@ function NotApprove() {
             <p>You don't have permission</p>
             <p>on this server</p>
           </div>
-          <Button className="jura border-[#8087A7] text-[#6a718f] bg-[#D2D4EB]">Go back to homepage</Button>
+          <Button className="jura border-[#8087A7] text-[#6a718f] bg-[#D2D4EB]">
+            Go back to homepage
+          </Button>
         </div>
       </div>
     </div>

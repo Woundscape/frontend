@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ViewResult from "@assets/view_result.svg";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import {
   Button,
   Form,

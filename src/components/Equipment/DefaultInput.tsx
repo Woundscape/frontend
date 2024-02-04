@@ -9,7 +9,6 @@ import { ICreateEquip, addEquipment } from "@api-caller/equipApi";
 import {
   DefaultEquipForm,
   IFormattedErrorResponse,
-  NotificationMessage,
   NotificationType,
 } from "@constants";
 import { displayNotification } from "@utils";

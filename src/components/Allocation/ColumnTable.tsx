@@ -3,7 +3,7 @@ import { Typography, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { UseMutationResult } from "react-query";
 import { DropdownField } from "@components/Allocation/DropdownField";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatDate } from "@utils";
 import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 import { IUpdateCase } from "@api-caller/caseApi";
 
@@ -79,7 +79,7 @@ export const getColumns = ({
     key: "updated_at",
     render: (_, { updated_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(updated_at)}
+        {formatDate(updated_at)}
       </Typography>
     ),
   },
@@ -89,7 +89,7 @@ export const getColumns = ({
     key: "created_at",
     render: (_, { created_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(created_at)}
+        {formatDate(created_at)}
       </Typography>
     ),
   },

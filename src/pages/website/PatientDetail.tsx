@@ -6,14 +6,13 @@ import { Segmented, Checkbox, Button, List } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { LeftOutlined } from "@ant-design/icons";
-import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
-import { optionSegmented } from "@utils";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
 import { httpAPI } from "@config";
-import UserProfile from "@features/UserProfile";
-import { formatTimeDifference } from "@features/FormatDate";
+import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
+import { optionSegmented, formatDate } from "@utils";
+import UserProfile from "@components/UserProfile";
 import DeleteModal from "@components/DeleteModal";
 import DefaultInput from "@components/Patient/DefaultInput";
 import AdditionalData from "@components/Patient/AdditionalData";
@@ -248,7 +247,7 @@ export default function PatientDetail() {
                       <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
                         <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
                           <p className="text-[#4C577C]">
-                            {formatTimeDifference(cases?.created_at)}
+                            {formatDate(cases?.created_at)}
                           </p>
                           <p className="text-[#626060]">HN. {cases?.hn_id}</p>
                         </div>

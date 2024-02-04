@@ -1,5 +1,5 @@
 import { httpAPI } from "@config";
 
-export default function FormatImage(path: string) {
+export function formatImage(path: string) {
   return `${httpAPI}/${path}`;
 }

@@ -30,7 +30,7 @@ import {
 } from "@constants";
 import { filterOptions, filterSort, httpAPI } from "@config";
 import { getNoteImageById } from "@api-caller/noteApi";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatDate } from "@utils/formatDate";
 
 interface INoteProps {
   id: string;
@@ -105,7 +105,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
                       {item.note_title}
                     </p>
                     <p className="text-[#4C577C] text-md">
-                      {formatTimeDifference(item.created_at)}
+                      {formatDate(item.created_at)}
                     </p>
                   </div>
                 </Content>

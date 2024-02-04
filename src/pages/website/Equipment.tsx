@@ -10,7 +10,7 @@ import {
   DefaultEquipment,
   NotificationType,
 } from "@constants";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import DefaultInput from "@components/Equipment/DefaultInput";
 import getAllEquipment, {
   deleteEquipment,
