@@ -71,6 +71,7 @@ export default function Menu() {
   function ListMenu() {
     return menus?.map((item, index) => {
       if (
+        true ||
         me?.doctor_type == DoctorType.Admin ||
         item.required == me?.doctor_type
       )

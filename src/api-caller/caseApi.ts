@@ -56,3 +56,18 @@ export const updateCase = async ({
     throw formattedError(error);
   }
 };
+
+export const updateDoctor = async ({
+  case_id,
+  body,
+}: IUpdateCase): Promise<boolean> => {
+  try {
+    const { data } = await getInstanceLocal().put(`/case/doctor`, {
+      case_id: case_id,
+      ...body,
+    });
+    return data === "Successfully";
+  } catch (error) {
+    throw formattedError(error);
+  }
+};
