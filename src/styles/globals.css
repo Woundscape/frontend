@@ -676,6 +676,14 @@ td.ant-table-cell {
   background-image: url("../assets/contact_bg.svg");
 }
 
+/* NotApprove page */
+.noApprove-background {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("../assets/bg-NotFound.svg");
+}
+
 /* Dashboard Page */
 .card_background {
   background-size: contain;
