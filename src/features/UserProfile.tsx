@@ -9,33 +9,35 @@ import LogoutIcon from "@assets/icons/logout.svg";
 import EditProfileIcon from "@assets/icons/editProfile.svg";
 import { useAuth } from "@components/AuthProvider";
 
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: (
-      <div className="flex gap-1">
-        <img src={EditProfileIcon} width={20} height={20} alt="" />
-        <p className="jura text-[#424241] hover:text-[#424241]">Edit Profile</p>
-      </div>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <div className="flex gap-1">
-        <img src={LogoutIcon} width={20} height={20} alt="" />
-        <p className="jura text-[#424241] hover:text-[#424241]">Logout</p>
-      </div>
-    ),
-  },
-];
 export default function UserProfile() {
-  const { me } = useAuth();
+  const { me, logout } = useAuth();
   const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "");
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);
   };
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <div className="flex gap-1">
+          <img src={EditProfileIcon} width={20} height={20} alt="" />
+          <p className="jura text-[#424241] hover:text-[#424241]">
+            Edit Profile
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div onClick={logout} className="flex gap-1">
+          <img src={LogoutIcon} width={20} height={20} alt="" />
+          <p className="jura text-[#424241] hover:text-[#424241]">Logout</p>
+        </div>
+      ),
+    },
+  ];
   return (
     <div id="user-profile" className="px-4 select-none">
       <div className="flex justify-end items-center space-x-3">

@@ -23,13 +23,13 @@ export const getCaseByCaseId = async (params: string): Promise<any> => {
 };
 
 export const getCaseByDoctorId = async ({
-  params,
+  doctor_id,
 }: {
-  params: string;
+  doctor_id: string;
 }): Promise<any> => {
   try {
     const { data } = await getInstanceLocal().get(
-      `/case/getByDoctorId/${params}`
+      `/case/getByDoctorId/${doctor_id}`
     );
     return data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const updateCase = async ({
   body,
 }: IUpdateCase): Promise<boolean> => {
   try {
-    const { data } = await getInstanceLocal().put(`/case/`, {
+    const { data } = await getInstanceLocal().put(`/case`, {
       case_id: case_id,
       ...body,
     });
