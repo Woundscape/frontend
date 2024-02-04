@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";

@@ -4,7 +4,7 @@ import { Content } from "antd/es/layout/layout";
 import { Checkbox, Divider, Layout, List, Modal, Typography } from "antd";
 import DynamicTime from "@components/DynamicTime";
 import ListNotification from "@features/ListNotification";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import DashboardTable from "@features/PatientTable";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";

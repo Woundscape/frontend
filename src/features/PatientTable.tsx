@@ -1,6 +1,6 @@
 import { Dropdown, MenuProps, Tag, Typography } from "antd";
 import MoreIcon from "@assets/icons/more_icon.svg";
-import { formatTimeDifference } from "./FormatDate";
+import { formatDate } from "../utils/formatDate";
 import { useEffect, useState } from "react";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { useAuth } from "@components/AuthProvider";
@@ -117,9 +117,7 @@ export default function DashboardTable() {
                         <div className="jura text-center">-</div>
                       )}
                     </td>
-                    <td className="w-1/6">
-                      {formatTimeDifference(item.updated_at)}
-                    </td>
+                    <td className="w-1/6">{formatDate(item.updated_at)}</td>
                     <td className="w-1/6 flex justify-center items-center">
                       <Dropdown menu={{ items }} trigger={["click"]}>
                         <img src={MoreIcon} alt="" />

@@ -19,7 +19,7 @@ import {
   DefaultChart,
   DefaultTissue,
 } from "@constants";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import AddNote from "@components/AddNote";
 import { useAuth } from "@components/AuthProvider";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";

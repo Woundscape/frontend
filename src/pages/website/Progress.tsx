@@ -22,7 +22,7 @@ import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import WoundImg from "@assets/wound/img_6.jpg";
 import AddNote from "@components/AddNote";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import { IFormattedErrorResponse, INote } from "@constants";
 import addNoteImage from "@api-caller/noteApi";
 

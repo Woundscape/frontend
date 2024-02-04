@@ -15,7 +15,7 @@ import getAllDoctor, {
   updateDoctorType,
   verifiedDoctor,
 } from "@api-caller/doctorApi";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
 import { displayNotification } from "@utils";

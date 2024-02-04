@@ -1,7 +1,7 @@
 // columnsConfig.ts
 import { Typography, Tag, Dropdown, MenuProps } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatDate } from "@utils";
 import MoreIcon from "@assets/icons/more_icon.svg";
 import EditIcon from "@assets/icons/edit_user_icon.svg";
 import DelIcon from "@assets/icons/delete_user_icon.svg";
@@ -97,7 +97,7 @@ export const getColumns = (): ColumnsType<any> => [
     key: "updated_at",
     render: (_, { updated_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(updated_at)}
+        {formatDate(updated_at)}
       </Typography>
     ),
   },
@@ -107,7 +107,7 @@ export const getColumns = (): ColumnsType<any> => [
     key: "created_at",
     render: (_, { created_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(created_at)}
+        {formatDate(created_at)}
       </Typography>
     ),
   },

@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { IEquipment, IFormattedErrorResponse, IImage } from "@constants";
 import { UseMutationResult, useMutation } from "react-query";
 import { Image, Select, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import FormatImage from "@features/FormatImage";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatDate, formatImage } from "@utils";
 import { filterOptions, filterSort } from "@config";
+import { IEquipment, IFormattedErrorResponse, IImage } from "@constants";
 import { IUpdateEquipment, updateEquipment } from "@api-caller/imageApi";
 
 interface EquipmentTabProps {
@@ -124,12 +123,12 @@ export default function EquipmentTab({
           </h2>
           <div className="w-full h-48 text-center">
             <Image
-              src={FormatImage(image?.img_equipPath)}
+              src={formatImage(image?.img_equipPath)}
               width={"100%"}
               alt=""
             />
             <Typography className="jura text-[#9198AF]">
-              {formatTimeDifference(image.created_at)}
+              {formatDate(image.created_at)}
             </Typography>
           </div>
         </div>

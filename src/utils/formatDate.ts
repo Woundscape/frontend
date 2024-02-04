@@ -1,9 +1,9 @@
 import moment from "moment";
 
-export function formatTimeDifference(inputDate: Date | undefined) {
+export function formatDate(inputDate: Date | undefined) {
   const currentDate: any = new Date();
-  if (!inputDate){
-    return 'Unknown'
+  if (!inputDate) {
+    return "Unknown";
   }
   const targetDate: any = new Date(inputDate);
 

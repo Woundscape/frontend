@@ -3,12 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import UserProfile from "@features/UserProfile";
+import UserProfile from "@components/UserProfile";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";
 import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import AddNote from "@components/AddNote";
-import { formatTimeDifference } from "@features/FormatDate";
-import FormatImage from "@features/FormatImage";
+import { formatDate, formatImage } from "@utils";
 import addNoteImage from "@api-caller/noteApi";
 import { getCoupleImage } from "@api-caller/imageApi";
 import { IFormattedErrorResponse, IImage, INote } from "@constants";
@@ -57,11 +56,11 @@ export default function Compare() {
                         return (
                           <div className="space-y-2 w-1/2 p-5">
                             <p className="text-[#949CB6]">
-                              {formatTimeDifference(image.created_at)}
+                              {formatDate(image.created_at)}
                             </p>
                             <img
                               className="rounded"
-                              src={FormatImage(image.img_path)}
+                              src={formatImage(image.img_path)}
                               alt=""
                             />
                             <div className="border-b-2">

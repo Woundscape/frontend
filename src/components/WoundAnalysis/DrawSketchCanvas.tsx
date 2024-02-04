@@ -17,8 +17,7 @@ import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
 import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
-import FormatImage from "@features/FormatImage";
-import { formatTimeDifference } from "@features/FormatDate";
+import { formatImage, formatDate } from "@utils";
 import { IUpdateImage, updateImage } from "@api-caller/imageApi";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
@@ -77,7 +76,7 @@ export default function DrawSketchCanvas({
 
   useEffect(() => {
     if (image) {
-      const imageUrl = FormatImage(image.img_path);
+      const imageUrl = formatImage(image.img_path);
       const img = new Image();
       const handleImageLoad = () => {
         setResolution({ width: img.width, height: img.height });
@@ -314,7 +313,7 @@ export default function DrawSketchCanvas({
             </div>
           )}
           <Typography className="border border-[#B4B4B4] flex justify-center items-center p-4 rounded-2xl jura text-[#908F8F]">
-            {formatTimeDifference(image?.created_at)}
+            {formatDate(image?.created_at)}
           </Typography>
           <div className="flex space-x-4">
             {!editable ? (
@@ -363,7 +362,7 @@ export default function DrawSketchCanvas({
                     ref={canvasRef}
                     allowOnlyPointerType={pointer}
                     exportWithBackgroundImage={true}
-                    backgroundImage={FormatImage(image.img_path)}
+                    backgroundImage={formatImage(image.img_path)}
                     style={{
                       border: "0.0625rem solid #9c9c9c",
                       borderRadius: "0.25rem",

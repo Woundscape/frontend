@@ -2,8 +2,8 @@
 import MoreIcon from "@assets/icons/more_icon.svg";
 import { Dropdown, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
+import { formatDate } from "@utils";
 import { IEquipType, IEquipment } from "@constants";
-import { formatTimeDifference } from "@features/FormatDate";
 
 const items = [
   {
@@ -69,7 +69,7 @@ export const getColumnEquipment = ({
     key: "updated_at",
     render: (_, { updated_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(updated_at)}
+        {formatDate(updated_at)}
       </Typography>
     ),
   },
@@ -79,7 +79,7 @@ export const getColumnEquipment = ({
     key: "created_at",
     render: (_, { created_at }, index) => (
       <Typography key={index} id="text__primary">
-        {formatTimeDifference(created_at)}
+        {formatDate(created_at)}
       </Typography>
     ),
   },
