@@ -1,9 +1,10 @@
+import { IDoctor } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
-import { DoctorType, IDoctor } from "@constants/interface";
 
 export interface IUpdateDoctorType {
-  type: DoctorType;
+  isDoctor: boolean;
+  isExpert: boolean;
   doctor_id: string;
 }
 
@@ -28,14 +29,15 @@ export default async function getAllDoctor(
 }
 
 export async function updateDoctorType({
-  type,
+  isDoctor,
+  isExpert,
   doctor_id,
 }: IUpdateDoctorType): Promise<boolean> {
   try {
-    const { data } = await getInstanceLocal().put(
-      `/doctor/type/${type}/${doctor_id}`,
-      {}
-    );
+    const { data } = await getInstanceLocal().put(`/doctor/type/${doctor_id}`, {
+      isDoctor,
+      isExpert,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

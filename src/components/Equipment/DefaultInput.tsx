@@ -1,14 +1,18 @@
+import EquipmentModal from "./EquipmentModal";
 import { useState } from "react";
 import { UserAddOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Form, Input, Select } from "antd";
-import SearchIcon from "@assets/icon-search-upload.svg";
-import SortBy from "@assets/icons/sortBy.svg";
 import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse } from "@constants/interface";
+import { Button, ConfigProvider, Form, Input, Select } from "antd";
+import SortBy from "@assets/icons/sortBy.svg";
+import SearchIcon from "@assets/icon-search-upload.svg";
 import { ICreateEquip, addEquipment } from "@api-caller/equipApi";
-import { DefaultEquipForm } from "@constants/defaultForm";
-import EquipmentModal from "./EquipmentModal";
-
+import {
+  DefaultEquipForm,
+  IFormattedErrorResponse,
+  NotificationMessage,
+  NotificationType,
+} from "@constants";
+import { displayNotification } from "@utils";
 
 interface IDefaultEquipProps {
   placeholder?: string;
@@ -56,6 +60,7 @@ export default function DefaultInput({
             onRender();
             setIsModalOpen(false);
             setConfirmLoading(false);
+            displayNotification(NotificationType.SUCCESS);
           },
           onError: () => {},
         });

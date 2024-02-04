@@ -1,114 +1,102 @@
-import { useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
-import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
-import { Button, Popover, Slider, Typography } from "antd";
+import { UseMutationResult, useMutation } from "react-query";
+import { Button, Popover, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import LoadPath from "@libs/images_2.json";
+// import LoadPath from "@libs/images_2.json";
+import {
+  DefaultTissue,
+  IFormattedErrorResponse,
+  IImage,
+  TissueType,
+} from "@constants";
 import DefaultButton from "@components/WoundAnalysis/DefaultButton";
 import CanvasSelectIcon from "@assets/icons/canvas_icon_select.svg";
 import CanvasPenIcon from "@assets/icons/canvas_icon_pen.svg";
 import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
-import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
-import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+// import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
-import {
-  IFormattedErrorResponse,
-  IImage,
-  TissueType,
-} from "@constants/interface";
-import { IUpdateImage, getImageById, updateImage } from "@api-caller/imageApi";
-import { UseMutationResult, useMutation } from "react-query";
-import { httpAPI } from "@config";
+import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+import FormatImage from "@features/FormatImage";
+import { formatTimeDifference } from "@features/FormatDate";
+import { IUpdateImage, updateImage } from "@api-caller/imageApi";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
-export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
+interface DrawSketchCanvasProps {
+  data: IImage;
+  setRef: (ref: any) => void;
+}
+
+export default function DrawSketchCanvas({
+  data,
+  setRef,
+}: DrawSketchCanvasProps) {
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     IUpdateImage
   > = useMutation(updateImage);
-  const [tissueData, setTissueData] = useState<TissueType[]>([
-    {
-      title: "eschar",
-      value: 10,
-      color: "#EEEEEE",
-    },
-    {
-      title: "slough",
-      value: 14,
-      color: "#CFEDD9",
-    },
-    {
-      title: "epithelization",
-      value: 0,
-      color: "#E0FCC5",
-    },
-    {
-      title: "callus",
-      value: 23,
-      color: "#FFFDC5",
-    },
-    {
-      title: "periwound",
-      value: 7,
-      color: "#FFE8BF",
-    },
-    {
-      title: "wound",
-      value: 28,
-      color: "#FFE1E1",
-    },
-    {
-      title: "granulation",
-      value: 10,
-      color: "#E6D1ED",
-    },
-    {
-      title: "deep structure",
-      value: 8,
-      color: "#D3DDFF",
-    },
-    {
-      title: "marceration",
-      value: 0,
-      color: "#D4F3F3",
-    },
-  ]);
+  const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
-  const [opacityVal, setOpacityVal] = useState(100);
   const [colorPaint, setColorPaint] = useState("black");
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
-  const [openSelectSize, setOpenSelectSize] = useState(false);
-  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
+  const [canvasRef, setCanvasRef] = useState(
+    useRef<ReactSketchCanvasRef | null>(null)
+  );
   const [editable, setEditable] = useState(false);
-  // const canvasDiv = useRef<HTMLDivElement | null>(null);
-  // const [canvasHeight, setCanvasHeight] = useState(0);
   const [selectTools, setSelectTools] = useState("none");
   const [pointer, setPointer] = useState("none");
   const [original, setOriginal] = useState<any>([]);
-  // const { isLoading, changeLoading } = useLoading();
+  const [resolution, setResolution] = useState({
+    width: 0,
+    height: 0,
+  });
   useEffect(() => {
-    if (img_id) {
-      getImage();
-      // if (canvasDiv) {
-      //   setCanvasHeight(canvasDiv.current?.clientHeight || 0);
-      // }
+    if (data) {
+      if (canvasRef.current && data.img_tissue) {
+        // console.log("before", data.img_tissue[0]);
+        // const testFilter = data.img_tissue[0].paths.filter(
+        //   (_: any, index: number) => index % 5 === 0
+        // );
+        // const eiei = [
+        //   {
+        //     drawMode: true,
+        //     paths: testFilter,
+        //     strokeColor: "#D3DDFF",
+        //     strokeWidth: 4,
+        //   },
+        // ];
+        canvasRef.current.loadPaths(data.img_tissue);
+        setOriginal(data.img_tissue);
+        setRef(canvasRef);
+      }
+      setImage(data);
     }
-  }, []);
+  }, [resolution]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      window.location.reload();
-    });
-  }, []);
-  async function getImage() {
-    const response = await getImageById(img_id as string);
-    if (canvasRef.current && response.img_tissue) {
-      canvasRef.current.loadPaths(response.img_tissue);
-      setOriginal(response.img_tissue);
+    if (image) {
+      const imageUrl = FormatImage(image.img_path);
+      const img = new Image();
+      const handleImageLoad = () => {
+        setResolution({ width: img.width, height: img.height });
+        getImage();
+      };
+      img.onload = handleImageLoad;
+      img.src = imageUrl;
+      return () => {
+        img.onload = null;
+      };
     }
-    setImage(response);
+  }, [image?.img_path]);
+  //NOTE -  have for wut ?
+  async function getImage() {
+    if (canvasRef.current && data.img_tissue) {
+      canvasRef.current.loadPaths(data.img_tissue);
+      setOriginal(data.img_tissue);
+    }
+    setImage(data);
   }
   const handleCanvasExportImage = async () => {
     const a = await canvasRef.current?.exportImage("png");
@@ -117,13 +105,13 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
   }
-  function handleOpenSelectSize(newOpen: boolean) {
-    setOpenSelectSize(newOpen);
-  }
-  function handleStrokeWidth(size: number) {
-    setStrokeWidth(size);
-    setOpenSelectSize(false);
-  }
+  // function handleOpenSelectSize(newOpen: boolean) {
+  //   setOpenSelectSize(newOpen);
+  // }
+  // function handleStrokeWidth(size: number) {
+  //   setStrokeWidth(size);
+  //   setOpenSelectSize(false);
+  // }
   function handleColorPaint(value: string) {
     setPointer("mouse");
     setSelectTools("pen");
@@ -167,6 +155,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
     }
   }
   const onCancel = () => {
+    handleCanvasEditor("none");
     canvasRef.current?.clearCanvas();
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
@@ -183,7 +172,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
           console.log("eiei");
         },
       });
-      console.log(paths);
+      handleCanvasEditor("none");
       setOriginal(paths);
     }
     setEditable(!editable);
@@ -207,62 +196,59 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
             <p className="jura text-[#424241]">{item.title}</p>
           </Button>
         ))}
-        <Slider
-          min={0}
-          max={100}
-          value={opacityVal}
-          railStyle={{ height: 10, borderRadius: "0.625rem" }}
-          handleStyle={{
-            height: "100%",
-          }}
-          trackStyle={{
-            padding: 10,
-            borderRadius: "0.625rem",
-            backgroundColor: "#D8C290",
-          }}
-        />
+        <div className="canvas__slider___range">
+          <input
+            title={strokeWidth + "px"}
+            type="range"
+            min={0}
+            max={10}
+            value={strokeWidth}
+            onChange={(e) => {
+              setStrokeWidth(parseInt(e.target.value));
+            }}
+          />
+        </div>
       </div>
     );
   }
-  function renderSelectSize() {
-    return (
-      <div id="popover__select__size">
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(1)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">1px</p>
-          <div className="w-14 h-px bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(3)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">3px</p>
-          <div className="w-14 h-0.5 bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(5)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">5px</p>
-          <div className="w-14 h-1 bg-black"></div>
-        </Button>
-        <Button
-          type="text"
-          onClick={() => handleStrokeWidth(8)}
-          className="flex items-center space-x-2"
-        >
-          <p className="jura text-xs">8px</p>
-          <div className="w-14 h-2 bg-black"></div>
-        </Button>
-      </div>
-    );
-  }
-
+  // function renderSelectSize() {
+  //   return (
+  //     <div id="popover__select__size">
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(1)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">1px</p>
+  //         <div className="w-14 h-px bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(3)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">3px</p>
+  //         <div className="w-14 h-0.5 bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(5)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">5px</p>
+  //         <div className="w-14 h-1 bg-black"></div>
+  //       </Button>
+  //       <Button
+  //         type="text"
+  //         onClick={() => handleStrokeWidth(8)}
+  //         className="flex items-center space-x-2"
+  //       >
+  //         <p className="jura text-xs">8px</p>
+  //         <div className="w-14 h-2 bg-black"></div>
+  //       </Button>
+  //     </div>
+  //   );
+  // }
   return (
     <>
       <Content
@@ -297,7 +283,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
             </div>
           )}
           <Typography className="border border-[#B4B4B4] flex justify-center items-center p-4 rounded-2xl jura text-[#908F8F]">
-            Feb 14, 2023 18:42
+            {formatTimeDifference(image?.created_at)}
           </Typography>
           <div className="flex space-x-4">
             {!editable ? (
@@ -326,42 +312,36 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
         <Content className="w-full h-full flex flex-col p-3 space-x-3">
           <div
             id="canvas_editor___container"
-            className="relative grow flex min-h-0 min-w-0"
+            className="relative grow overflow-scroll flex min-h-0 min-w-0"
           >
             <div
               id="canvas_editor___sketch"
-              className={`relative overflow-auto grow ${
+              className={`relative grow min-h-0 min-w-0 max-w-[30rem] ${
                 selectTools == "pen" ? "canvas__cursor___paint" : ""
               }`}
-              // style={{
-              //   backgroundImage: `url("http://localhost:3000/${image?.img_path.replace(
-              //     /\\/g,
-              //     "/"
-              //   )}")`,
-              //   backgroundSize: "cover",
-              //   backgroundPosition: "center center",
-              // }}
             >
-              <ReactSketchCanvas
-                ref={canvasRef}
-                allowOnlyPointerType={pointer}
-                exportWithBackgroundImage={true}
-                backgroundImage={`${httpAPI}/${image?.img_path.replace(
-                  /\\/g,
-                  "/"
-                )}`}
-                // width={"1000px"}
-                // height={"1000px"}
-                // preserveBackgroundImageAspectRatio="xMaxYMid meet"
-                // backgroundImage="transparent"
-                style={{
-                  // height: canvasHeight,
-                  border: "0.0625rem solid #9c9c9c",
-                  borderRadius: "0.25rem",
-                }}
-                strokeWidth={strokeWidth}
-                strokeColor={colorPaint}
-              />
+              {resolution.width > 0 && resolution.height > 0 && image && (
+                <div
+                  style={{
+                    width: resolution.width + "px",
+                    height: resolution.height + "px",
+                  }}
+                >
+                  <ReactSketchCanvas
+                    id="canvas"
+                    ref={canvasRef}
+                    allowOnlyPointerType={pointer}
+                    exportWithBackgroundImage={true}
+                    backgroundImage={FormatImage(image.img_path)}
+                    style={{
+                      border: "0.0625rem solid #9c9c9c",
+                      borderRadius: "0.25rem",
+                    }}
+                    strokeWidth={strokeWidth}
+                    strokeColor={colorPaint}
+                  />
+                </div>
+              )}
             </div>
           </div>
           {editable && (
@@ -369,17 +349,18 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
               id="canvas_editor___tools"
               className="flex justify-center items-center relative"
             >
-              <div className="border border-[#D9D9D9] bg-[#FDFCFC] p-0.5 flex rounded-md">
+              <div className="border border-[#D9D9D9] bg-[#FDFCFC] py-1.5 flex rounded-md space-x-2">
                 <Button
                   type="text"
-                  className={`px-2 flex justify-center rounded-md ${
+                  className={`flex justify-center rounded-md ${
                     selectTools == "none" ? "bg-[#F0ECEC]" : ""
                   }`}
                   title="Cursor"
                   onClick={() => handleCanvasEditor("none")}
                 >
-                  <img src={CanvasSelectIcon} />
+                  <img width={25} src={CanvasSelectIcon} />
                 </Button>
+                |
                 <Button
                   type="text"
                   title="Pen"
@@ -389,14 +370,15 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
                 >
                   <Popover
                     content={renderSelectTissue}
-                    placement="rightTop"
+                    placement="topLeft"
                     trigger={"click"}
                     open={openSelectPaint}
                     onOpenChange={handleOpenSelectPaint}
                   >
-                    <img src={CanvasPenIcon} alt="" />
+                    <img width={25} src={CanvasPenIcon} alt="" />
                   </Popover>
                 </Button>
+                |
                 <Button
                   type="text"
                   title="Eraser"
@@ -405,9 +387,9 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
                   }`}
                   onClick={() => handleCanvasEditor("eraser")}
                 >
-                  <img src={CanvasEraserIcon} alt="" />
+                  <img width={25} src={CanvasEraserIcon} alt="" />
                 </Button>
-                <Button
+                {/* <Button
                   type="text"
                   className={`flex justify-center rounded-md ${
                     selectTools == "size" ? "bg-[#F0ECEC]" : ""
@@ -422,7 +404,7 @@ export default function DrawSketchCanvas({ img_id }: { img_id: string }) {
                   >
                     <img src={CanvasSizeIcon} alt="" />
                   </Popover>
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}

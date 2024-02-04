@@ -1,9 +1,10 @@
+import Done from "@assets/icons/done.svg";
+import Cancel from "@assets/icons/cancel.svg";
 import EditIcon from "@assets/icons/edit_user_icon.svg";
 import DeleteIcon from "@assets/icons/delete_user_icon.svg";
+import { ACTION_MANAGE, IDoctor } from "@constants";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
-import { IDoctor } from "@constants/interface";
-import { ACTION_MANAGE } from "@constants/defaultState";
 import { formatTimeDifference } from "@features/FormatDate";
 
 interface ColumnsManageUserProps {
@@ -23,7 +24,7 @@ export const getColumnManageUser = ({
     key: "user_id",
     render(value: string, _, index) {
       return (
-        <Typography key={index} className="jura truncate">
+        <Typography key={index} id="text__primary" className="jura truncate">
           {value}
         </Typography>
       );
@@ -35,7 +36,11 @@ export const getColumnManageUser = ({
     key: "user_fullname",
     render(_, record, index) {
       return (
-        <Typography key={index} className="jura truncate capitalize">
+        <Typography
+          key={index}
+          id="text__primary"
+          className="jura truncate capitalize"
+        >
           {record.doctor_firstname + " " + record.doctor_lastname}
         </Typography>
       );
@@ -91,18 +96,20 @@ export const getColumnManageUser = ({
           <>
             <Button
               type="text"
-              className="jura text-[#4C577C]"
+              className="jura flex text-[#4C577C]"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.DONE, index, record)}
             >
+              <img src={Done} width={20} alt="" />
               Done
             </Button>
             <Button
               type="text"
-              className="jura text-[#4C577C]"
+              className="jura flex text-[#4C577C]"
               onClick={() =>
                 onToggleRowEdit(ACTION_MANAGE.CANCEL, index, record)
               }
             >
+              <img src={Cancel} width={20} alt="" />
               Cancel
             </Button>
           </>
@@ -113,20 +120,20 @@ export const getColumnManageUser = ({
           <>
             <Button
               type="text"
-              className="jura text-[] text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-2 w-[4rem] text-[#4C577C] flex justify-cente items-center"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.EDIT, index, record)}
-              icon={<img src={EditIcon} />}
             >
+              <img src={EditIcon} width={17} />
               Edit
             </Button>
             <Button
               type="text"
-              className="jura text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-1 w-[6rem] text-[#4C577C] flex justify-cente items-center"
               onClick={() =>
                 onToggleRowEdit(ACTION_MANAGE.DELETE, index, record)
               }
-              icon={<img src={DeleteIcon} />}
             >
+              <img src={DeleteIcon} width={18} />
               Delete
             </Button>
           </>
@@ -149,6 +156,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                 }
               >
+                {/* <img src={Done} alt="" /> */}
                 Approve
               </Button>
               <Button
@@ -158,6 +166,7 @@ export const getColumnManageUser = ({
                   onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                 }
               >
+                {/* <img src={Cancel} alt="" /> */}
                 Reject
               </Button>
             </>

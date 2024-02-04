@@ -1,22 +1,22 @@
+import { useEffect, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
+import { Table } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { ColumnsType } from "antd/es/table";
 import {
   DoctorType,
   IDoctor,
   IFormattedErrorResponse,
-} from "@constants/interface";
-import UserProfile from "@features/UserProfile";
-import { Table } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { useEffect, useState } from "react";
-import { ColumnsType } from "antd/es/table";
-import { getColumnManageUser } from "@components/Management/ColumnTable";
+  ACTION_MANAGE,
+} from "@constants";
 import getAllDoctor, {
   IUpdateDoctorType,
   updateDoctorType,
   verifiedDoctor,
 } from "@api-caller/doctorApi";
+import UserProfile from "@features/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
-import { ACTION_MANAGE } from "@constants/defaultState";
+import { getColumnManageUser } from "@components/Management/ColumnTable";
 
 export default function Management() {
   const updateTypeMutation: UseMutationResult<
@@ -37,11 +37,6 @@ export default function Management() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [approveState, setApproveState] = useState({
     action: "",
-    doctor_id: "",
-  });
-  const [typeState, setTypeState] = useState({
-    roleIndex: 0,
-    role: "",
     doctor_id: "",
   });
   useEffect(() => {
@@ -79,25 +74,7 @@ export default function Management() {
       }
     },
     onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => {
-      if (action == ACTION_MANAGE.EDIT) {
-        const arr = ["General", "Doctor", "Expert", "Admin"];
-        setTypeState({
-          roleIndex: arr.indexOf(record.doctor_type),
-          role: record.doctor_type,
-          doctor_id: record.doctor_id,
-        });
-        setDoctors((prevData) => {
-          const updatedData = [...prevData];
-          updatedData[rowIndex].isRowEditable =
-            !updatedData[rowIndex].isRowEditable;
-          return updatedData;
-        });
-      } else if (action == ACTION_MANAGE.CANCEL) {
-        setTypeState({
-          roleIndex: 0,
-          role: "",
-          doctor_id: "",
-        });
+      if (action == ACTION_MANAGE.EDIT || action == ACTION_MANAGE.CANCEL) {
         setDoctors((prevData) => {
           const updatedData = [...prevData];
           updatedData[rowIndex].isRowEditable =
@@ -105,7 +82,23 @@ export default function Management() {
           return updatedData;
         });
       } else if (action == ACTION_MANAGE.DONE) {
-        console.log(record);
+        updateTypeMutation.mutate(
+          {
+            isDoctor: record.isDoctor ?? false,
+            isExpert: record.isExpert ?? false,
+            doctor_id: record.doctor_id,
+          },
+          {
+            onSuccess: () => {
+              setDoctors((prevData) => {
+                const updatedData = [...prevData];
+                updatedData[rowIndex].isRowEditable =
+                  !updatedData[rowIndex].isRowEditable;
+                return updatedData;
+              });
+            },
+          }
+        );
       }
     },
 

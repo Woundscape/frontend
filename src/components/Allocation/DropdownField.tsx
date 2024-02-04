@@ -1,12 +1,18 @@
 // Used In: { Management }
 import { useEffect, useState } from "react";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constants/interface";
-import { ConfigProvider, Select, notification } from "antd";
+import { ConfigProvider, Select } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
 import { IUpdateCase } from "@api-caller/caseApi";
 import { filterOptions, filterSort } from "@config";
+import {
+  ICase,
+  IDoctor,
+  IFormattedErrorResponse,
+  NotificationType,
+} from "@constants";
+import { displayNotification } from "@utils";
 
 interface DropdownFieldProps {
   data: ICase;
@@ -29,14 +35,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
   const [selectLoading, setSelectLoading] = useState(true);
   const [selectValue, setSelectValue] = useState(data.doctor_assign);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
-  const openNotificationWithIcon = () => {
-    api["success"]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-    });
-  };
+  //NOTE - Seperate it to Component
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -56,7 +55,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           setIsModalOpen(false);
           setOpen(false);
           setSubmitLoading(false);
-          openNotificationWithIcon();
+          displayNotification(NotificationType.SUCCESS);
         },
       }
     );
@@ -69,7 +68,6 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
   }, [data]);
   return (
     <>
-      {contextHolder}
       <div className="w-auto flex justify-end items-center gap-3">
         {data?.doctor_assign && (
           <CheckCircleOutlined style={{ color: "#A0A7DB" }} />

@@ -1,8 +1,8 @@
-import { Credentials, getMe } from "@api-caller/authenApi";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
-import { IMe } from "@constants/interface";
+import { IMe } from "@constants";
+import { Credentials, getMe } from "@api-caller/authenApi";
 
 const AuthContext = createContext({
   me: undefined as IMe | undefined,

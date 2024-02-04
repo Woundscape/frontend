@@ -1,33 +1,20 @@
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import { Content } from "antd/es/layout/layout";
 import { Checkbox, Divider, Layout, List, Modal, Typography } from "antd";
-// import InfiniteScroll from "react-infinite-scroll-component";
 import DynamicTime from "@components/DynamicTime";
 import ListNotification from "@features/ListNotification";
 import UserProfile from "@features/UserProfile";
-import Calendar from "react-calendar";
-import { Content } from "antd/es/layout/layout";
 import DashboardTable from "@features/PatientTable";
-import { useEffect, useState } from "react";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
+import { DefaultTotalDashboard } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import { CardPatient, getDashboard } from "@api-caller/doctorApi";
 
 export default function Dashboard() {
   const { me } = useAuth();
-  const [card, setCard] = useState<CardPatient[]>([
-    {
-      title: "Total",
-      value: "0",
-    },
-    {
-      title: "Special Cases",
-      value: "0",
-    },
-    {
-      title: "Unread",
-      value: "0",
-    },
-  ]);
+  const [card, setCard] = useState<CardPatient[]>(DefaultTotalDashboard);
   const [isConnect, setIsConnect] = useState(false);
   useEffect(() => {
     async function getCard() {
@@ -89,16 +76,8 @@ export default function Dashboard() {
                 <div className="h-full flex flex-col space-y-2">
                   <div id="body-content-dashboard" className="space-y-6">
                     <div id="head-dashboard" className="space-y-4">
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center">
                         <h1 className="jura text-xl">Dashboard</h1>
-                        <div>
-                          <input
-                            type="text"
-                            id="search_dashboard"
-                            className="bg-[#EFEFEF] text-gray-900 text-sm text-center rounded-full border-none focus:outline-none block w-72 p-2.5"
-                            placeholder="Search HN, Disease, Doctor"
-                          />
-                        </div>
                       </div>
                       <div
                         id="watermark-wound"
@@ -106,7 +85,7 @@ export default function Dashboard() {
                       >
                         <div className="jura space-y-3">
                           <p className="font-bold text-2xl text-[#505152]">
-                            Hello, puipui
+                            Hello, {me?.firstname + " " + me?.lastname}
                           </p>
                           <p className="font-bold text-xl text-[#4C577C]">
                             Welcome to Woundscape
@@ -125,7 +104,7 @@ export default function Dashboard() {
                             className="rounded-xl border-2 border-[#D2D7EB] px-6 py-4 space-y-1"
                           >
                             <p className="text-5xl text-[#9198AF] jura">
-                              {item.value}
+                              {item.value.toString().padStart(2, "0")}
                             </p>
                             <p className="text-lg text-[#4C577C] prompt">
                               {item.title}
@@ -136,7 +115,10 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="relative flex justify-center items-center">
-                    <a href="/patient" className="w-24 border-2 rounded-xl absolute right-0">
+                    <a
+                      href="/patient"
+                      className="w-24 border-2 rounded-xl absolute right-0"
+                    >
                       <p className="jura text-center text-[#9198AF]">
                         View all
                       </p>

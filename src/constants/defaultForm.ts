@@ -1,5 +1,21 @@
 import { ICreateEquip } from "@api-caller/equipApi";
 import { IEquipment, UserType } from "./interface";
+import { CardPatient } from "@api-caller/doctorApi";
+
+export const DefaultTotalDashboard: CardPatient[] = [
+  {
+    title: "Total",
+    value: "0",
+  },
+  {
+    title: "Special Cases",
+    value: "0",
+  },
+  {
+    title: "Unread",
+    value: "0",
+  },
+];
 
 export const DefaultNoteForm = {
   note_title: "",
@@ -29,4 +45,57 @@ export const DefaultUserForm = {
   user_password: "",
   user_tel: "",
   user_type: UserType.Doctor,
+};
+
+export const DefaultTissue = [
+  {
+    title: "eschar",
+    value: 0,
+    color: "#EEEEEE",
+  },
+  {
+    title: "slough",
+    value: 0,
+    color: "#CFEDD9",
+  },
+  {
+    title: "epithelization",
+    value: 0,
+    color: "#E0FCC5",
+  },
+  {
+    title: "callus",
+    value: 0,
+    color: "#FFFDC5",
+  },
+  {
+    title: "periwound",
+    value: 0,
+    color: "#FFE8BF",
+  },
+  {
+    title: "wound",
+    value: 0,
+    color: "#FFE1E1",
+  },
+  {
+    title: "granulation",
+    value: 0,
+    color: "#E6D1ED",
+  },
+  {
+    title: "deep structure",
+    value: 0,
+    color: "#D3DDFF",
+  },
+  {
+    title: "marceration",
+    value: 0,
+    color: "#D4F3F3",
+  },
+];
+
+export const DefaultChart = {
+  labels: [],
+  datasets: [],
 };

@@ -1,10 +1,15 @@
-import { getInstanceLocal } from "@api/apiClient";
-import { IImage } from "@constants/interface";
+import { IImage } from "@constants";
 import { formattedError } from "@utils";
+import { getInstanceLocal } from "@api/apiClient";
 
 export interface IUpdateImage {
   img_id: string;
   img_tissue: any;
+}
+
+export interface IUpdateEquipment {
+  img_id: string;
+  equip_id: string[];
 }
 
 export async function updateImage({
@@ -25,6 +30,17 @@ export async function updateImage({
 export async function getImageById(img_id: string): Promise<IImage> {
   try {
     const { data } = await getInstanceLocal().get(`/image/${img_id}`);
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getCoupleImage(imageList: string[]): Promise<IImage[]> {
+  try {
+    const { data } = await getInstanceLocal().get(
+      `/image/couple/${imageList[0]}/${imageList[1]}`
+    );
     return data;
   } catch (error) {
     throw formattedError(error);
@@ -56,6 +72,21 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
 export default async function uploadImage(formData: FormData): Promise<any> {
   try {
     const { data } = await getInstanceLocal().post("/image/", formData);
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function updateEquipment({
+  img_id,
+  equip_id,
+}: IUpdateEquipment): Promise<any> {
+  try {
+    const { data } = await getInstanceLocal().put("/image/equipment/", {
+      img_id: img_id,
+      equip_id: equip_id,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

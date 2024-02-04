@@ -4,8 +4,8 @@ import { BaseOptionType } from "antd/es/select";
 export const httpAPI: string = "http://localhost:3000";
 export enum lineLiffID {
   UPLOAD_IMAGE = "2001180435-mZ7YAEj4",
-  SIGNIN = "2001180435-eBkJB6ZQ"
-};
+  SIGNIN = "2001180435-eBkJB6ZQ",
+}
 
 export const themeConfig: ThemeConfig = {
   components: {
@@ -21,6 +21,7 @@ export const themeConfig: ThemeConfig = {
       colorPrimaryHover: "#D9D9D9",
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
+      colorBgBase: "red",
     },
     Button: {
       colorPrimaryHover: "none",

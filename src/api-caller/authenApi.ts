@@ -1,6 +1,6 @@
+import { IMe, IUser } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
-import { IMe, IUser } from "@constants/interface";
 
 export interface IFormInputsLogin {
   user_email: string;
@@ -32,7 +32,7 @@ export async function webRegister(request: IUser): Promise<boolean> {
 }
 export async function getMe(token: string): Promise<IMe> {
   try {
-    const { data } = await getInstanceLocal().get('/user/me', {
+    const { data } = await getInstanceLocal().get("/user/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { UseMutationResult } from "react-query";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -14,30 +16,29 @@ import {
   Typography,
   Upload,
 } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import AddImageIcon from "@assets/icons/add_image_icon.svg";
-import { useEffect, useState } from "react";
-import getAllEquipment from "@api-caller/equipApi";
+import { Content } from "antd/es/layout/layout";
 import { UploadChangeParam } from "antd/es/upload";
+import TextArea from "antd/es/input/TextArea";
+import getAllEquipment from "@api-caller/equipApi";
+import AddImageIcon from "@assets/icons/add_image_icon.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import {
   IEquipment,
   IFormattedErrorResponse,
   INote,
-} from "@constants/interface";
-import { UseMutationResult } from "react-query";
+  DefaultNoteForm,
+} from "@constants";
 import { filterOptions, filterSort, httpAPI } from "@config";
-import { DefaultNoteForm } from "@constants/defaultForm";
 import { getNoteImageById } from "@api-caller/noteApi";
 import { formatTimeDifference } from "@features/FormatDate";
-import { Content } from "antd/es/layout/layout";
 
 interface INoteProps {
   id: string;
+  equipment?: IEquipment[];
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
 }
 
-export default function AddNote({ id, mutation }: INoteProps) {
+export default function AddNote({ id, equipment, mutation }: INoteProps) {
   const [notes, setNotes] = useState<INote[]>([]);
   const [equip, setEquip] = useState<IEquipment[]>([]);
   const [form, setForm] = useState<INote>({ ...DefaultNoteForm, img_id: id });
@@ -46,8 +47,13 @@ export default function AddNote({ id, mutation }: INoteProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   useEffect(() => {
     async function getEquipment() {
-      const data = await getAllEquipment();
-      setEquip(data);
+      console.log(equipment);
+      if (!equipment) {
+        const data = await getAllEquipment();
+        setEquip(data);
+      } else {
+        setEquip(equipment);
+      }
     }
     async function getNote() {
       const data = await getNoteImageById(id);
@@ -106,10 +112,15 @@ export default function AddNote({ id, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Typography id="text__primary">{item.note_desc}</Typography>
+                <Typography id="text__primary" className="indent-10">
+                  {item.note_desc}
+                </Typography>
                 {item.note_equip.map((equip: string, index: number) => (
                   <Tag key={index} color={"geekblue"} className="jura">
-                    {equip}
+                    {
+                      equipment?.find((list) => list.equip_id == equip)
+                        ?.equip_name
+                    }
                   </Tag>
                 ))}
                 <div className="flex gap-3">
@@ -221,11 +232,15 @@ export default function AddNote({ id, mutation }: INoteProps) {
             title="Description"
             extra={"Hospital No. 642846"}
             id="text__primary"
+            bodyStyle={{
+              padding: "12px 10px",
+            }}
           >
             <div className="flex justify-between pb-4">
               <TextArea
                 // value={value}
                 // onChange={(e) => setValue(e.target.value)}
+                maxLength={1024}
                 placeholder="Type your message . . ."
                 style={{ height: 100, color: "#9198AF" }}
                 autoSize={{ minRows: 6, maxRows: 6 }}
@@ -240,7 +255,7 @@ export default function AddNote({ id, mutation }: INoteProps) {
             </div>
             <div
               id="addNote__upload__wrapper"
-              className="flex justify-between items-end"
+              className="flex justify-between items-end pl-2"
             >
               <Upload
                 multiple

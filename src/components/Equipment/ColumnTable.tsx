@@ -1,9 +1,9 @@
 // columnsConfig.ts
-import { ColumnsType } from "antd/es/table";
-import { Dropdown, Typography } from "antd";
-import { formatTimeDifference } from "@features/FormatDate";
-import { IEquipType, IEquipment } from "@constants/interface";
 import MoreIcon from "@assets/icons/more_icon.svg";
+import { Dropdown, Typography } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { IEquipType, IEquipment } from "@constants";
+import { formatTimeDifference } from "@features/FormatDate";
 
 const items = [
   {
@@ -33,7 +33,7 @@ export const getColumnEquipment = ({
     render(value: string, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value}
           </Typography>
         </>
@@ -47,7 +47,7 @@ export const getColumnEquipment = ({
     render(value, _, index) {
       return (
         <>
-          <Typography key={index} className="jura truncate">
+          <Typography key={index} id="text__primary" className="jura truncate">
             {value}
           </Typography>
         </>
@@ -61,7 +61,6 @@ export const getColumnEquipment = ({
     render(value, _, index) {
       const filteredTypes = type.filter((item) => item.type_id === value);
       return filteredTypes[0]?.type_name;
-      // return <p>{filteredTypes[0].type_name}</p>;
     },
   },
   {
@@ -90,11 +89,7 @@ export const getColumnEquipment = ({
     fixed: "right",
     width: 100,
     render: (_, record, index) => (
-      <div
-        id="action_table"
-        className="bg-red-200"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div id="action_table" onClick={(e) => e.stopPropagation()}>
         <Dropdown
           placement="bottomRight"
           menu={{
@@ -106,8 +101,8 @@ export const getColumnEquipment = ({
           trigger={["click"]}
           className="h-full"
         >
-          <div className="mr-6 flex justify-center">
-            <img src={MoreIcon} alt="" />
+          <div className="mr-6 py-3 flex justify-center">
+            <img src={MoreIcon} width={20} alt="" />
           </div>
         </Dropdown>
       </div>

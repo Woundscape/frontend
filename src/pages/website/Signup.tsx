@@ -2,12 +2,17 @@ import { useState } from "react";
 import logo_wound from "@assets/logo/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
-import { Button, Form, Input, notification } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { IUser, IFormattedErrorResponse } from "@constants/interface";
-import { UseMutationResult, useMutation } from "react-query";
+import { Button, Form, Input } from "antd";
+import {
+  DefaultUserForm,
+  IFormattedErrorResponse,
+  IUser,
+  NotificationType,
+} from "@constants";
+import { displayNotification } from "@utils";
 import { webRegister } from "@api-caller/authenApi";
-import { DefaultUserForm } from "@constants/defaultForm";
+import { UseMutationResult, useMutation } from "react-query";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function Signup() {
   const registerMutation: UseMutationResult<
@@ -23,11 +28,8 @@ function Signup() {
       const values = await forms.validateFields();
       if (values) {
         registerMutation.mutate(form, {
-          onSuccess: (e) => {
-            notification.success({
-              message: "Success",
-              description: "Registration successful!",
-            });
+          onSuccess: () => {
+            displayNotification(NotificationType.SUCCESS);
             setForm(DefaultUserForm);
             forms.resetFields();
             setRegistrationFailed("");
@@ -35,10 +37,7 @@ function Signup() {
           onError: (e) => {
             if (e.message) {
               setRegistrationFailed(e.message);
-              notification.error({
-                message: "Error",
-                description: e.message,
-              });
+              displayNotification(NotificationType.ERROR);
             }
           },
         });

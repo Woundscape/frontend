@@ -1,10 +1,5 @@
 import { useState } from "react";
 import {
-  AppstoreOutlined,
-  BarsOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
-import {
   Button,
   ConfigProvider,
   DatePicker,
@@ -12,20 +7,26 @@ import {
   Segmented,
   Select,
 } from "antd";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
+import { SegmentedValue } from "antd/es/segmented";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import AddImageIcon from "@assets/icons/add_image_icon2.svg";
 import SortBy from "@assets/icons/sortBy.svg";
-import { SegmentedValue } from "antd/es/segmented";
-import uploadImage from "@api-caller/imageApi";
-import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse } from "@constants/interface";
 import UploadModal from "./UploadModal";
+import uploadImage from "@api-caller/imageApi";
+import { IFormattedErrorResponse } from "@constants";
+import { UseMutationResult, useMutation } from "react-query";
 
 const { RangePicker } = DatePicker;
 
-interface IDefaultInputProps {
+interface IDefaultPatientInputProps {
   placeholder?: string;
   segmented?: boolean;
+  addPatient?: () => void;
   images?: boolean;
   onFilter: (e: any) => void;
   onRender: () => void;
@@ -35,11 +36,12 @@ interface IDefaultInputProps {
 export default function DefaultInput({
   placeholder,
   segmented,
+  addPatient,
   images,
   onFilter,
   onRender,
   onChangeView,
-}: IDefaultInputProps) {
+}: IDefaultPatientInputProps) {
   const uploadMutation: UseMutationResult<
     string,
     IFormattedErrorResponse,
@@ -99,7 +101,11 @@ export default function DefaultInput({
           />
         )}
         {!images ? (
-          <Button className="button_add" icon={<UserAddOutlined />}>
+          <Button
+            onClick={addPatient}
+            className="button_add"
+            icon={<UserAddOutlined />}
+          >
             Add Patient
           </Button>
         ) : (

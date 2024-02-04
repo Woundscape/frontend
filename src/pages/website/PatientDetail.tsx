@@ -1,21 +1,24 @@
 import moment from "moment";
-import { UseMutationResult, useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UseMutationResult, useMutation } from "react-query";
+import { Segmented, Checkbox, Button, List } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
-import { Segmented, Checkbox, Button, List } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { IFormattedErrorResponse, IImage } from "@constants/interface";
-import { optionSegmented } from "@utils/option";
-import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
-import UserProfile from "@features/UserProfile";
-import DefaultInput from "@components/Patient/DefaultInput";
+import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
+import { optionSegmented } from "@utils";
 import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import AdditionalData from "@components/Patient/AdditionalData";
+import { httpAPI } from "@config";
+import UserProfile from "@features/UserProfile";
+import { formatTimeDifference } from "@features/FormatDate";
 import DeleteModal from "@components/DeleteModal";
+import DefaultInput from "@components/Patient/DefaultInput";
+import AdditionalData from "@components/Patient/AdditionalData";
+import { getCaseByCaseId } from "@api-caller/caseApi";
+import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -26,9 +29,12 @@ export default function PatientDetail() {
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
-  const [stageSegmented, setStageSegmented] = useState("Overview");
+  const [stageSegmented, setStageSegmented] = useState({
+    stage: "Overview",
+    limit: false,
+  });
   const [checkedList, setCheckList] = useState<string[]>([]);
-
+  const [cases, setCases] = useState<IPatient>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   async function formatDateImages(images: IImage[]) {
@@ -44,6 +50,12 @@ export default function PatientDetail() {
     });
     return sortImage;
   }
+
+  useEffect(() => {
+    getImage();
+    getCase();
+  }, []);
+
   async function getImage() {
     if (case_id) {
       const images: IImage[] = await getAllImageByCaseId(case_id as string);
@@ -51,11 +63,13 @@ export default function PatientDetail() {
       setImages(format);
     }
   }
-  useEffect(() => {
-    getImage();
-  }, []);
+  async function getCase() {
+    const _case: IPatient = await getCaseByCaseId(case_id as string);
+    setCases(_case);
+  }
+
   const handleImage = (image_id: string) => {
-    if (stageSegmented == "Overview") {
+    if (stageSegmented.stage == "Overview") {
       router(`/wound/${image_id}`);
     } else {
       checkedOnChange(image_id);
@@ -65,7 +79,8 @@ export default function PatientDetail() {
     if (checkedList.includes(image_id)) {
       setCheckList(checkedList.filter((item) => item !== image_id));
     } else {
-      setCheckList((previous) => [...previous, image_id]);
+      if (!(checkedList.length == 2 && stageSegmented.limit))
+        setCheckList((previous) => [...previous, image_id]);
     }
   };
 
@@ -83,14 +98,14 @@ export default function PatientDetail() {
           <div
             className="w-64 h-44 patient_img p-3 flex justify-end items-start "
             style={{
-              backgroundImage: `url("http://localhost:3000/${imgPath}")`,
+              backgroundImage: `url("${httpAPI}/${imgPath}")`,
             }}
           >
             {/* <div className="absolute w-full h-full bg-green-500">dsa</div> */}
-            {stageSegmented == "Overview" ? (
+            {stageSegmented.stage == "Overview" ? (
               <div className="w-full h-full flex flex-col justify-between">
                 <div className="flex flex-row justify-between text-white jura border-b">
-                  <p>HN.9877065</p>
+                  <p>HN. {cases?.hn_id}</p>
                   <p>{new Date(image.created_at).toLocaleTimeString()}</p>
                 </div>
                 <div className="flex flex-row justify-between h-8 border rounded-full">
@@ -111,12 +126,16 @@ export default function PatientDetail() {
     });
   }
   const onSubmit = async () => {
-    if (stageSegmented == "Delete" && !isModalOpen && checkedList.length > 0) {
+    if (
+      stageSegmented.stage == "Delete" &&
+      !isModalOpen &&
+      checkedList.length > 0
+    ) {
       setIsModalOpen(true);
     } else {
-      switch (stageSegmented) {
+      switch (stageSegmented.stage) {
         case "Overview":
-          setStageSegmented("Delete");
+          setStageSegmented({ stage: "Delete", limit: false });
           break;
         case "Delete":
           if (checkedList.length > 0) {
@@ -129,10 +148,10 @@ export default function PatientDetail() {
               },
             });
           }
-          setStageSegmented("Overview");
+          setStageSegmented({ stage: "Overview", limit: false });
           break;
         case "Comparative Imaging":
-          router("/compare", { state: { myData: "Hello from source page" } });
+          router("/compare", { state: { imageList: checkedList } });
           break;
         case "Wound Progression":
           router("/progress", { state: { imageList: checkedList } });
@@ -156,7 +175,7 @@ export default function PatientDetail() {
               <div className="flex justify-between">
                 <div className="flex items-center space-x-4">
                   <LeftOutlined onClick={() => router("/patient")} />
-                  <p className="jura text-xl">HN. {case_id}</p>
+                  <p className="jura text-xl">HN. {cases?.hn_id}</p>
                 </div>
                 <div className="w-[30rem]">
                   <UserProfile />
@@ -166,7 +185,10 @@ export default function PatientDetail() {
                 className="jura mt-4 select-none"
                 options={optionSegmented}
                 onChange={(stage: any) => {
-                  setStageSegmented(stage);
+                  setStageSegmented({
+                    stage: stage,
+                    limit: stage == "Comparative Imaging",
+                  });
                   setCheckList([]);
                   let test = document.getElementById("timeline-container");
                   if (test) test.scrollTop = 0;
@@ -183,8 +205,8 @@ export default function PatientDetail() {
                     onRender={getImage}
                     images
                   />
-                  {stageSegmented == "Overview" && (
-                    <AdditionalData case_id={case_id} />
+                  {stageSegmented.stage == "Overview" && cases && (
+                    <AdditionalData data={cases} />
                   )}
                   {/* Body */}
                   <div
@@ -215,56 +237,65 @@ export default function PatientDetail() {
                     </div>
                   </div>
                 </div>
-                {stageSegmented != "Overview" && stageSegmented != "Delete" && (
-                  <Content id="history" className="flex flex-col">
-                    <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
-                      <p className="jura text-[#555554] text-lg p-3">History</p>
-                    </div>
-                    <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
-                      <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
-                        <p className="text-[#4C577C]">Jul 19, 2023 08:23</p>
-                        <p className="text-[#626060]">HN.6643793</p>
-                      </div>
-                      <div className="flex pt-3">
-                        <img
-                          className="w-16 rounded-lg"
-                          src={WoundHist}
-                          alt=""
-                        />
-                        <p className="text-[#4C577C] p-3.5">
-                          Jul 14, 2023 18:44
+                {stageSegmented.stage != "Overview" &&
+                  stageSegmented.stage != "Delete" && (
+                    <Content id="history" className="flex flex-col">
+                      <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
+                        <p className="jura text-[#555554] text-lg p-3">
+                          History
                         </p>
                       </div>
-                      <div className="flex pt-3">
-                        <img
-                          className="w-16 rounded-lg"
-                          src={WoundHist}
-                          alt=""
-                        />
-                        <p className="text-[#4C577C] p-3.5">
-                          Jul 14, 2023 18:44
-                        </p>
-                      </div>
-                      <div className="flex flex-row space-x-1.5 mt-1">
-                        <div className="w-24 bg-[#F4DEE7] rounded mt-2">
-                          <p className="text-center text-[#4C577C]">Diabetes</p>
+                      <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
+                        <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
+                          <p className="text-[#4C577C]">
+                            {formatTimeDifference(cases?.created_at)}
+                          </p>
+                          <p className="text-[#626060]">HN. {cases?.hn_id}</p>
                         </div>
-                        <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                          <p className="text-center text-[#4C577C]">Pressure</p>
+                        <div className="flex pt-3">
+                          <img
+                            className="w-16 rounded-lg"
+                            src={WoundHist}
+                            alt=""
+                          />
+                          <p className="text-[#4C577C] p-3.5">
+                            Jul 14, 2023 18:44
+                          </p>
                         </div>
-                        <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                          <p className="text-center text-[#4C577C]">Asthma</p>
+                        <div className="flex pt-3">
+                          <img
+                            className="w-16 rounded-lg"
+                            src={WoundHist}
+                            alt=""
+                          />
+                          <p className="text-[#4C577C] p-3.5">
+                            Jul 14, 2023 18:44
+                          </p>
+                        </div>
+                        <div className="flex flex-row space-x-1.5 mt-1">
+                          <div className="w-24 bg-[#F4DEE7] rounded mt-2">
+                            <p className="text-center text-[#4C577C]">
+                              Diabetes
+                            </p>
+                          </div>
+                          <div className="w-20 bg-[#F4DEE7] rounded mt-2">
+                            <p className="text-center text-[#4C577C]">
+                              Pressure
+                            </p>
+                          </div>
+                          <div className="w-20 bg-[#F4DEE7] rounded mt-2">
+                            <p className="text-center text-[#4C577C]">Asthma</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
+                          <p className="jura text-[#9198AF] p-1 pl-3">
+                            View result
+                          </p>
+                          <img className="pr-1" src={ViewResultHist} alt="" />
                         </div>
                       </div>
-                      <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
-                        <p className="jura text-[#9198AF] p-1 pl-3">
-                          View result
-                        </p>
-                        <img className="pr-1" src={ViewResultHist} alt="" />
-                      </div>
-                    </div>
-                  </Content>
-                )}
+                    </Content>
+                  )}
               </div>
             </Content>
             <div
@@ -278,14 +309,18 @@ export default function PatientDetail() {
                 <Button
                   onClick={onSubmit}
                   className={`w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF] 
-                  ${stageSegmented == "Delete" && "bg-[#F7AD9E]"}
+                  ${stageSegmented.stage == "Delete" && "bg-[#F7AD9E]"}
                   ${
-                    stageSegmented == "Comparative Imaging" && "bg-[#90A4D8]"
-                  } ${stageSegmented == "Wound Progression" && "bg-[#D8C290]"}`}
+                    stageSegmented.stage == "Comparative Imaging" &&
+                    "bg-[#90A4D8]"
+                  } ${
+                    stageSegmented.stage == "Wound Progression" &&
+                    "bg-[#D8C290]"
+                  }`}
                 >
-                  {stageSegmented === "Overview"
+                  {stageSegmented.stage === "Overview"
                     ? "Select"
-                    : stageSegmented === "Delete"
+                    : stageSegmented.stage === "Delete"
                     ? "Delete"
                     : "Confirm"}
                 </Button>

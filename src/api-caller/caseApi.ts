@@ -1,6 +1,6 @@
-import { ICase } from "@constants/interface";
-import { getInstanceLocal } from "../api/apiClient";
+import { ICase } from "@constants";
 import { formattedError } from "@utils";
+import { getInstanceLocal } from "../api/apiClient";
 
 export const getAllCase = async (): Promise<ICase[]> => {
   try {

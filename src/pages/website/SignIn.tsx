@@ -1,17 +1,15 @@
-import logo_wound from "@assets/logo/logo-wound.svg";
-import arrow_start from "@assets/arrow-start.svg";
-import logo_it from "@assets/it-logo.svg";
-import logo_google from "@assets/google_logo.svg";
-import logo_line from "@assets/line_logo.svg";
-import { Button, Form, Input, notification } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { useGoogleLogin } from "@react-oauth/google";
-import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { useState } from "react";
-import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import logo_it from "@assets/it-logo.svg";
+import logo_line from "@assets/line_logo.svg";
+import arrow_start from "@assets/arrow-start.svg";
+import logo_wound from "@assets/logo/logo-wound.svg";
 import { UseMutationResult, useMutation } from "react-query";
-import { IFormattedErrorResponse } from "@constants/interface";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { displayNotification } from "@utils";
+import { IFormattedErrorResponse, NotificationType } from "@constants";
+import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
 function Signin() {
   const router = useNavigate();
   const [loginFailed, setLoginFailed] = useState<string>();
@@ -41,30 +39,13 @@ function Signin() {
         router("/dashboard");
       },
       onError: (e) => {
-        console.log(e);
         if (e.message) {
           setLoginFailed(e.message);
-          notification.error({
-            message: "Error",
-            description: "Email or password is Incorrect",
-          });
+          displayNotification(NotificationType.ERROR);
         }
       },
     });
   };
-  const signInGoogleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      getOAuthInstance()
-        .get(`/oauth2/v1/userinfo`, {
-          params: {
-            access_token: tokenResponse.access_token,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-        });
-    },
-  });
   return (
     <div className="wound-background w-full bg-white h-screen">
       <div className="w-full h-full flex flex-row justify-between p-4">
@@ -76,19 +57,6 @@ function Signin() {
             <img className="w-20" src={logo_wound} alt="" />
             <h1 className="michroma text-4xl text-[#424241]">Woundscape</h1>
           </div>
-          <button
-            type="button"
-            className="relative w-1/2 p-2.5 border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer"
-          >
-            <img
-              className="w-6 absolute left-3 bottom-2"
-              src={logo_google}
-              alt=""
-            />
-            <div className="jura text-sm text-center text-[#626060]">
-              SIGN IN WITH GOOGLE
-            </div>
-          </button>
           <div className="relative w-1/2 p-2.5 text-sm text-center border border-[#B4B4B4] border-1 rounded-[50px] outline-none cursor-pointer">
             <img
               className="w-6 absolute left-3 bottom-2"
@@ -165,7 +133,10 @@ function Signin() {
           </Button>
           <div className="flex space-x-2">
             <span className="text-[#A7A6A5]">Don’t have an account yet?</span>
-            <a href="/signup" className="text-[#A3802D] underline cursor-pointer hover:text-[#A3802D] ">
+            <a
+              href="/signup"
+              className="text-[#A3802D] underline cursor-pointer hover:text-[#A3802D] "
+            >
               SIGN UP
             </a>
           </div>

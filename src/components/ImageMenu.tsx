@@ -1,9 +1,9 @@
-import { getAllImageById } from "@api-caller/imageApi";
-import { httpAPI } from "@config";
-import { IImage } from "@constants/interface";
-import { List, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { List, Typography } from "antd";
+import { httpAPI } from "@config";
+import { IImage } from "@constants";
+import { getAllImageById } from "@api-caller/imageApi";
 
 export default function ImageMenu() {
   const { img_id } = useParams();
@@ -26,7 +26,6 @@ export default function ImageMenu() {
     const response = await getAllImageById(img_id as string);
     setImages(response);
   }
-
   return (
     <>
       {images?.map((image, index) => {

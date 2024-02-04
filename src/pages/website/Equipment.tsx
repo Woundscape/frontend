@@ -1,24 +1,26 @@
-import { Form, Table, notification } from "antd";
-import UserProfile from "@features/UserProfile";
-import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
+import { Form, Table } from "antd";
+import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import {
   IEquipType,
   IEquipment,
   IFormattedErrorResponse,
-} from "@constants/interface";
+  DefaultEquipment,
+  NotificationType,
+} from "@constants";
+import UserProfile from "@features/UserProfile";
 import DefaultInput from "@components/Equipment/DefaultInput";
-import { getColumnEquipment } from "@components/Equipment/ColumnTable";
 import getAllEquipment, {
   deleteEquipment,
   getTypeEquipment,
   updateEquipment,
 } from "@api-caller/equipApi";
 import DeleteModal from "@components/DeleteModal";
-import { UseMutationResult, useMutation } from "react-query";
 import EquipmentModal from "@components/Equipment/EquipmentModal";
-import { DefaultEquipment } from "@constants/defaultForm";
+import { getColumnEquipment } from "@components/Equipment/ColumnTable";
+import { displayNotification } from "@utils";
 
 export default function Equipment() {
   const updateMutation: UseMutationResult<
@@ -91,6 +93,7 @@ export default function Equipment() {
             setIsUpdateOpen(false);
             setConfirmLoading(false);
             forms.resetFields();
+            displayNotification(NotificationType.SUCCESS);
           },
           onError: () => {
             setConfirmLoading(false);
@@ -104,13 +107,10 @@ export default function Equipment() {
     if (form) {
       deleteMutation.mutate(form.equip_id, {
         onSuccess: () => {
-          notification.success({
-            message: "Success",
-            description: "Delete successful!",
-          });
           getEquipment();
           setIsDeleteOpen(false);
           setSubmitDelete(false);
+          displayNotification(NotificationType.SUCCESS);
         },
       });
     }
@@ -150,7 +150,10 @@ export default function Equipment() {
                     onRender={getEquipment}
                   />
                   {/* Body */}
-                  <Content id="content__patient" className="pt-7 w-full h-full grow">
+                  <Content
+                    id="content__patient"
+                    className="pt-7 w-full h-full grow"
+                  >
                     <Table
                       id="management__table__patient"
                       dataSource={equipment}

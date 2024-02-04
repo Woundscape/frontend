@@ -11,7 +11,7 @@ import arrow_start from "@assets/arrow-start.svg";
 import google_icon from "@assets/icons/google_icon.svg";
 import line_icon from "@assets/icons/line_icon.svg";
 import { LineCredential, lineLogin } from "@api-caller/lineApi";
-import { UserType } from "@constants/interface";
+import { UserType } from "@constants";
 import { lineLiffID } from "@config";
 
 export default function SignIn() {
