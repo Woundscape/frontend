@@ -32,6 +32,7 @@ export default function Dashboard() {
       setIsConnect(true);
     }
   }, []);
+
   return (
     <>
       <Layout className="w-full h-screen relative">

@@ -47,6 +47,7 @@ export interface IUser {
   user_tel: string;
   user_type: UserType;
   line_uid?: string | null;
+  ref_code?: string;
 }
 
 export interface IDoctor {

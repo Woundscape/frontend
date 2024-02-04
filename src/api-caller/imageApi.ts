@@ -17,7 +17,7 @@ export async function updateImage({
   img_tissue,
 }: IUpdateImage): Promise<boolean> {
   try {
-    const { data } = await getInstanceLocal().put("/image/", {
+    const { data } = await getInstanceLocal().put("/image", {
       img_id,
       img_tissue,
     });
@@ -83,7 +83,7 @@ export async function updateEquipment({
   equip_id,
 }: IUpdateEquipment): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().put("/image/equipment/", {
+    const { data } = await getInstanceLocal().put("/image/equipment", {
       img_id: img_id,
       equip_id: equip_id,
     });
@@ -95,7 +95,7 @@ export async function updateEquipment({
 
 export async function deleteImage(img_id: any): Promise<boolean> {
   try {
-    const { data } = await getInstanceLocal().delete(`/image/`, {
+    const { data } = await getInstanceLocal().delete(`/image`, {
       data: {
         img_id: img_id,
       },

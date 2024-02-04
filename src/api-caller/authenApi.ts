@@ -30,6 +30,16 @@ export async function webRegister(request: IUser): Promise<boolean> {
     throw formattedError(error);
   }
 }
+
+export async function lineRegister(request: IUser): Promise<any> {
+  try {
+    const { data } = await getInstanceLocal().post("/line/signup", request);
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
 export async function getMe(token: string): Promise<IMe> {
   try {
     const { data } = await getInstanceLocal().get("/user/me", {

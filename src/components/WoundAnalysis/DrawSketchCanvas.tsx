@@ -67,9 +67,9 @@ export default function DrawSketchCanvas({
         //     strokeWidth: 4,
         //   },
         // ];
-        canvasRef.current.loadPaths(data.img_tissue);
-        setOriginal(data.img_tissue);
         setRef(canvasRef);
+        setOriginal(data.img_tissue.paths);
+        canvasRef.current.loadPaths(data.img_tissue?.paths);
       }
       setImage(data);
     }
@@ -94,24 +94,20 @@ export default function DrawSketchCanvas({
   async function getImage() {
     if (canvasRef.current && data.img_tissue) {
       canvasRef.current.loadPaths(data.img_tissue);
-      setOriginal(data.img_tissue);
+      setOriginal(data.img_tissue.paths);
     }
     setImage(data);
   }
+
   const handleCanvasExportImage = async () => {
     const a = await canvasRef.current?.exportImage("png");
     console.log(a);
   };
+
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
   }
-  // function handleOpenSelectSize(newOpen: boolean) {
-  //   setOpenSelectSize(newOpen);
-  // }
-  // function handleStrokeWidth(size: number) {
-  //   setStrokeWidth(size);
-  //   setOpenSelectSize(false);
-  // }
+
   function handleColorPaint(value: string) {
     setPointer("mouse");
     setSelectTools("pen");
@@ -145,6 +141,7 @@ export default function DrawSketchCanvas({
     undo: handleUndo,
     redo: handleRedo,
   };
+
   function handleCanvasEditor(value: string) {
     const toolHandler = toolHandlers[value];
     if (toolHandler) {
@@ -154,18 +151,24 @@ export default function DrawSketchCanvas({
       canvasRef.current?.eraseMode(false);
     }
   }
+
   const onCancel = () => {
     handleCanvasEditor("none");
     canvasRef.current?.clearCanvas();
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
   };
+
   const onSubmit = async () => {
     if (editable) {
       const paths = await canvasRef.current?.exportPaths();
+      const result = await convertToPercentage(paths);
       const body: IUpdateImage = {
         img_id: image?.img_id || "",
-        img_tissue: paths,
+        img_tissue: {
+          paths,
+          result,
+        },
       };
       updateMutation.mutate(body, {
         onSuccess: () => {
@@ -177,6 +180,34 @@ export default function DrawSketchCanvas({
     }
     setEditable(!editable);
   };
+
+  async function convertToPercentage(data: any) {
+    const colorCounts = await data
+      .flatMap((item: any) =>
+        item.paths.map((path: any) => ({ color: item.strokeColor, path }))
+      )
+      .reduce((counts: any, { color }: any) => {
+        counts[color] = (counts[color] || 0) + 1;
+        return counts;
+      }, {});
+
+    const summaryData = await tissueData.map((item) => ({
+      ...item,
+      value: colorCounts[item.color] || 0,
+    }));
+    const total = await summaryData.reduce(
+      (acc, entry) => acc + (entry.value ?? 0),
+      0
+    );
+    if (total === 0) {
+      return summaryData.map((entry) => ({ ...entry, value: 0 }));
+    }
+    const percentageData: TissueType[] = await summaryData.map((entry) => ({
+      ...entry,
+      value: Math.round(((entry.value ?? 0) / total) * 100),
+    }));
+    return percentageData;
+  }
   function renderSelectTissue() {
     return (
       <div id="popover__select__tissue">

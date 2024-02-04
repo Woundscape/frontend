@@ -306,6 +306,20 @@ export default function PatientDetail() {
                 <Typography id="text__primary">
                   Select {checkedList.length} Images
                 </Typography>
+                {stageSegmented.stage == "Delete" && (
+                  <Button
+                    onClick={() => {
+                      setStageSegmented({
+                        stage: "Overview",
+                        limit: false,
+                      });
+                      setCheckList([]);
+                    }}
+                    className="w-36 py-0.5 jura rounded-md"
+                  >
+                    Cancel
+                  </Button>
+                )}
                 <Button
                   onClick={onSubmit}
                   className={`w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF] 

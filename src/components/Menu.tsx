@@ -9,11 +9,14 @@ import UserManage_LOGO from "@assets/logo/user_manage_logo.svg";
 import Account_LOGO from "@assets/logo/account_logo.svg";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import ImageMenu from "./ImageMenu";
+import { DoctorType } from "@constants";
+import { useAuth } from "./AuthProvider";
 
 interface IMenu {
   title: string;
   pathname: string;
   icon: string;
+  required: string;
 }
 
 const defaultMenuRoutes: IMenu[] = [
@@ -21,16 +24,19 @@ const defaultMenuRoutes: IMenu[] = [
     title: "Dashboard",
     pathname: "/dashboard",
     icon: Dashboard_LOGO,
+    required: DoctorType.Doctor,
   },
   {
     title: "Patient",
     pathname: "/patient",
     icon: Patient_LOGO,
+    required: DoctorType.Doctor,
   },
   {
     title: "Equipment",
     pathname: "/equipment",
     icon: Equipment_LOGO,
+    required: DoctorType.Doctor,
   },
   // {
   //   title: "Archive",
@@ -41,16 +47,19 @@ const defaultMenuRoutes: IMenu[] = [
     title: "Allocation",
     pathname: "/allocation",
     icon: Allocation_LOGO,
+    required: DoctorType.Doctor,
   },
   {
     title: "Users Management",
     pathname: "/management",
     icon: UserManage_LOGO,
+    required: DoctorType.Doctor,
   },
   {
     title: "Account",
     pathname: "/account",
     icon: Account_LOGO,
+    required: DoctorType.Doctor,
   },
 ];
 
@@ -58,22 +67,29 @@ export default function Menu() {
   const [menus] = useState<IMenu[]>(defaultMenuRoutes);
   const location = useLocation();
   const pathName = location?.pathname;
+  const { me } = useAuth();
   function ListMenu() {
-    return menus?.map((item, index) => (
-      <List.Item className="" key={index}>
-        <NavLink
-          to={item.pathname}
-          className={`flex py-3 px-4 rounded-lg ${
-            pathName.startsWith(item.pathname)
-              ? "bg-[#D2D7EB]"
-              : "hover:bg-[#EEEEEE]"
-          }`}
-        >
-          <img src={item.icon} width={20} alt="" />
-          <span className="ml-3 text-sm jura">{item.title}</span>
-        </NavLink>
-      </List.Item>
-    ));
+    return menus?.map((item, index) => {
+      if (
+        me?.doctor_type == DoctorType.Admin ||
+        item.required == me?.doctor_type
+      )
+        return (
+          <List.Item key={index}>
+            <NavLink
+              to={item.pathname}
+              className={`flex py-3 px-4 rounded-lg ${
+                pathName.startsWith(item.pathname)
+                  ? "bg-[#D2D7EB]"
+                  : "hover:bg-[#EEEEEE]"
+              }`}
+            >
+              <img src={item.icon} width={20} alt="" />
+              <span className="ml-3 text-sm jura">{item.title}</span>
+            </NavLink>
+          </List.Item>
+        );
+    });
   }
   return (
     <>

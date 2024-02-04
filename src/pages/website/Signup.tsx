@@ -5,6 +5,7 @@ import logo_it from "@assets/it-logo.svg";
 import { Button, Form, Input } from "antd";
 import {
   DefaultUserForm,
+  UserField,
   IFormattedErrorResponse,
   IUser,
   NotificationType,
@@ -65,7 +66,7 @@ function Signup() {
         <Form
           form={forms}
           action=""
-          className="bg-rd-200 w-1/2 h-full flex flex-col justify-center items-center  space-y-6"
+          className="w-1/2 h-full flex flex-col justify-center items-center space-y-6"
         >
           <div className="w-1/2">
             <img className="w-14" src={logo_wound} alt="" />
@@ -74,7 +75,7 @@ function Signup() {
           <Form.Item
             hasFeedback
             validateDebounce={1000}
-            name={"user_firstname"}
+            name={UserField.FIRSTNAME}
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your first name" },
@@ -82,17 +83,17 @@ function Signup() {
             ]}
           >
             <Input
-              name="user_firstname"
-              className="input__authentication"
-              placeholder="Firstname"
               type="text"
+              name={UserField.FIRSTNAME}
+              placeholder="Firstname"
+              className="input__authentication"
               onChange={handleInputChange}
             />
           </Form.Item>
           <Form.Item
             hasFeedback
             validateDebounce={1000}
-            name={"user_lastname"}
+            name={UserField.LASTNAME}
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your last name" },
@@ -100,10 +101,10 @@ function Signup() {
             ]}
           >
             <Input
-              name="user_lastname"
-              className="input__authentication"
-              placeholder="Lastname"
               type="text"
+              name={UserField.LASTNAME}
+              placeholder="Lastname"
+              className="input__authentication"
               onChange={handleInputChange}
             />
           </Form.Item>
@@ -120,10 +121,10 @@ function Signup() {
             ]}
           >
             <Input
-              name="user_email"
-              className="input__authentication"
-              placeholder="Email"
               type="text"
+              name={UserField.EMAIL}
+              placeholder="Email"
+              className="input__authentication"
               onChange={handleInputChange}
             />
           </Form.Item>
@@ -133,7 +134,7 @@ function Signup() {
             validateStatus={
               registrationFailed == "Tel already exists" ? "error" : undefined
             }
-            name={"user_tel"}
+            name={UserField.TEL}
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your phone number" },
@@ -144,15 +145,15 @@ function Signup() {
             ]}
           >
             <Input
-              name="user_tel"
-              className="input__authentication"
-              placeholder="Tel"
               type="text"
+              name={UserField.TEL}
+              placeholder="Tel"
+              className="input__authentication"
               onChange={handleInputChange}
             />
           </Form.Item>
           <Form.Item
-            name={"user_password"}
+            name={UserField.PASSWORD}
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your password" },
@@ -160,7 +161,7 @@ function Signup() {
             ]}
           >
             <Input.Password
-              name="user_password"
+              name={UserField.PASSWORD}
               placeholder="Password"
               className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
               iconRender={(visible) =>
@@ -170,7 +171,7 @@ function Signup() {
             />
           </Form.Item>
           <Form.Item
-            name={"user_cpassword"}
+            name={UserField.CONFIRM_PASSWORD}
             className="w-1/2"
             rules={[
               { required: true, message: "Enter your password" },
@@ -178,7 +179,7 @@ function Signup() {
             ]}
           >
             <Input.Password
-              name="user_cpassword"
+              name={UserField.CONFIRM_PASSWORD}
               placeholder="Confirm Password"
               className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
               iconRender={(visible) =>
@@ -191,7 +192,7 @@ function Signup() {
             type="text"
             htmlType="submit"
             onClick={onSubmit}
-            className="w-1/2 py-5 justify-between text-lg text-[#424241] jura font-bold flex items-center btn-homepage cursor-pointer"
+            className="w-1/2 py-5 flex items-center justify-between text-lg text-[#424241] jura font-bold btn-homepage cursor-pointer"
           >
             <p>SIGN UP</p>
             <img className="w-14" src={arrow_start} alt="" />

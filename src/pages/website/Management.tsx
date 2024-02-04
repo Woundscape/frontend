@@ -8,6 +8,7 @@ import {
   IDoctor,
   IFormattedErrorResponse,
   ACTION_MANAGE,
+  NotificationType,
 } from "@constants";
 import getAllDoctor, {
   IUpdateDoctorType,
@@ -17,6 +18,7 @@ import getAllDoctor, {
 import UserProfile from "@features/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
+import { displayNotification } from "@utils";
 
 export default function Management() {
   const updateTypeMutation: UseMutationResult<
@@ -135,6 +137,7 @@ export default function Management() {
           onSuccess: () => {
             setIsModalOpen(false);
             setConfirmLoading(false);
+            displayNotification(NotificationType.SUCCESS);
             getDoctor();
           },
         });

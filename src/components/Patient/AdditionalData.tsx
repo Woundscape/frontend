@@ -51,16 +51,12 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  // useEffect(() => {
-  //   if (case_id) {
-  //     getCase();
-  //   }
-  // }, []);
   async function getCase() {
     const _case: IPatient = await getCaseByCaseId(data.case_id as string);
     setCases(_case);
     setTags(_case.disease);
   }
+
   const handleClose = (e: React.MouseEvent<HTMLElement>, value: string) => {
     e.preventDefault();
     let disease = tags.filter((item) => item != value);
@@ -89,12 +85,15 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
     setEditInputIndex(-1);
     setEditInputValue("");
   };
+
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const onCancel = () => {
     setIsModalOpen(!isModalOpen);
   };
+
   const onSubmit = () => {
     setSubmitLoading(true);
     let body: IUpdateCase = {
@@ -103,7 +102,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
     };
     updateMutation.mutate(body, {
       onSuccess: () => {
-        if (data.stage == "case_disease") {
+        if (tag.stage == "case_disease") {
           setInputVisible(false);
           setInputValue("");
         }
@@ -113,12 +112,6 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
       },
     });
   };
-  // const handleClose = (removedTag: string) => {
-
-  // const newTags = tags.filter((tag) => tag !== removedTag);
-  // console.log(newTags);
-  // setTags(newTags);
-  // };
   return (
     <>
       <div className="flex space-x-2 items-center">
@@ -177,24 +170,14 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
                 key={tag}
                 closable
                 style={{
-                  userSelect: "none",
                   color: "#4C577C",
                   fontFamily: "jura",
+                  userSelect: "none",
                 }}
                 color="#F4DEE7"
                 onClose={(e) => handleClose(e, tag)}
               >
-                <span
-                // onDoubleClick={(e) => {
-                //   if (index !== 0) {
-                //     setEditInputIndex(index);
-                //     setEditInputValue(tag);
-                //     e.preventDefault();
-                //   }
-                // }}
-                >
-                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                </span>
+                <span>{isLongTag ? `${tag.slice(0, 20)}...` : tag}</span>
               </Tag>
             );
             return isLongTag ? (
@@ -210,8 +193,8 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
               ref={inputRef}
               type="text"
               size="small"
-              style={tagInputStyle}
               value={inputValue}
+              style={tagInputStyle}
               onChange={handleInputChange}
               onBlur={handleInputConfirm}
               onPressEnter={handleInputConfirm}

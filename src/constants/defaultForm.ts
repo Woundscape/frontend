@@ -45,6 +45,7 @@ export const DefaultUserForm = {
   user_password: "",
   user_tel: "",
   user_type: UserType.Doctor,
+  ref_code: "",
 };
 
 export const DefaultTissue = [

@@ -30,7 +30,7 @@ export default async function addNoteImage({
       let fileBlob = file.originFileObj ?? new Blob();
       formData.append("file", fileBlob);
     });
-    const { data } = await getInstanceLocal().post("/note/image/", formData, {
+    const { data } = await getInstanceLocal().post("/note/image", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

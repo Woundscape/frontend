@@ -1,96 +1,23 @@
-import { Dropdown, MenuProps, Tag } from "antd";
+import { Dropdown, MenuProps, Tag, Typography } from "antd";
 import MoreIcon from "@assets/icons/more_icon.svg";
-interface TableType {
-  id: Number;
-  hn_id: String;
-  admit_no: String;
-  status: String;
-  disease: String;
-  last_updated: String;
-}
+import { formatTimeDifference } from "./FormatDate";
+import { useEffect, useState } from "react";
+import { getCaseByDoctorId } from "@api-caller/caseApi";
+import { useAuth } from "@components/AuthProvider";
+import { IPatient } from "@constants";
+
 export default function DashboardTable() {
-  const tableData: TableType[] = [
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-    {
-      id: 1,
-      hn_id: "9877065",
-      admit_no: "001",
-      status: "In progress",
-      disease: "Disease",
-      last_updated: "21 Minutes ago",
-    },
-  ];
+  const { me } = useAuth();
+  const [cases, setCases] = useState<IPatient[]>();
+  useEffect(() => {
+    async function getCase() {
+      if (me) {
+        const _cases = await getCaseByDoctorId({ doctor_id: me.doctor_id });
+        setCases(_cases);
+      }
+    }
+    getCase();
+  }, []);
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -159,36 +86,48 @@ export default function DashboardTable() {
             </tr>
           </thead>
           <tbody className="bg-grey-light flex flex-col items-center w-full h-full overflow-y-auto">
-            {tableData?.map((item, index) => {
-              return (
-                <tr
-                  key={index}
-                  className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
-                >
-                  <td className="w-1/6">{item.hn_id}</td>
-                  <td className="w-1/6">{item.admit_no}</td>
-                  <td className="w-1/6">{item.status}</td>
-                  <td className="w-1/6">
-                    <Tag
-                      color="#EBD2DD"
-                      style={{
-                        color: "#4C577C",
-                        fontFamily: "jura",
-                      }}
-                    >
-                      {item.disease}
-                    </Tag>
-                  </td>
-                  <td className="w-1/6">{item.last_updated}</td>
-                  <td className="w-1/6 flex justify-center items-center">
-                    <Dropdown menu={{ items }} trigger={["click"]}>
-                      <img src={MoreIcon} alt="" />
-                      {/* <EllipsisOutlined style={{fontSize:24}} /> */}
-                    </Dropdown>
-                  </td>
-                </tr>
-              );
-            })}
+            {cases &&
+              cases?.map((item, index) => {
+                return (
+                  <tr
+                    key={index}
+                    className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
+                  >
+                    <td className="w-1/6">{item.hn_id}</td>
+                    <td className="w-1/6">{item.admit_no}</td>
+                    <td className="w-1/6">{item.status}</td>
+                    <td className="w-1/6 flex justify-center items-center">
+                      {item.disease && item.disease?.length > 0 ? (
+                        <>
+                          <Tag
+                            color={
+                              item.disease[0].length > 5 ? "geekblue" : "green"
+                            }
+                            className="jura"
+                          >
+                            {item.disease[0]}
+                          </Tag>
+                          {item.disease.length > 1 && (
+                            <Typography id="text__disease">
+                              +{item.disease.length - 1}
+                            </Typography>
+                          )}
+                        </>
+                      ) : (
+                        <div className="jura text-center">-</div>
+                      )}
+                    </td>
+                    <td className="w-1/6">
+                      {formatTimeDifference(item.updated_at)}
+                    </td>
+                    <td className="w-1/6 flex justify-center items-center">
+                      <Dropdown menu={{ items }} trigger={["click"]}>
+                        <img src={MoreIcon} alt="" />
+                      </Dropdown>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

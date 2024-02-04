@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = () => {
+    console.log('1');
     sessionStorage.removeItem("token");
     setIsAuthenticated(false);
     router("/signin");

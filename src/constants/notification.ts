@@ -5,7 +5,15 @@ export enum NotificationType {
   ERROR = "error",
 }
 
-export const NotificationMessage: Record<NotificationType, { TITLE: string; CONTENT: string }> = {
+export interface NotificationContent {
+  TITLE: string;
+  CONTENT: string;
+}
+
+export const NotificationMessage: Record<
+  NotificationType,
+  NotificationContent
+> = {
   [NotificationType.SUCCESS]: {
     TITLE: "Header",
     CONTENT: "test",
