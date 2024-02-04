@@ -81,7 +81,7 @@ export default function DashboardTable() {
                 Last updated
               </th>
               <th scope="col" className="w-1/6">
-                Action
+                Start date & time
               </th>
             </tr>
           </thead>
@@ -119,9 +119,7 @@ export default function DashboardTable() {
                     </td>
                     <td className="w-1/6">{formatDate(item.updated_at)}</td>
                     <td className="w-1/6 flex justify-center items-center">
-                      <Dropdown menu={{ items }} trigger={["click"]}>
-                        <img src={MoreIcon} alt="" />
-                      </Dropdown>
+                      {formatDate(item.created_at)}
                     </td>
                   </tr>
                 );

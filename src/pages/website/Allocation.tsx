@@ -6,7 +6,7 @@ import { ColumnsType } from "antd/es/table";
 import { UseMutationResult, useMutation } from "react-query";
 import { getColumns } from "@components/Allocation/ColumnTable";
 import getAllDoctor from "@api-caller/doctorApi";
-import { IUpdateCase, getAllCase, updateCase } from "@api-caller/caseApi";
+import { IUpdateCase, getAllCase, updateDoctor } from "@api-caller/caseApi";
 import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 
 export default function Allocation() {
@@ -14,7 +14,7 @@ export default function Allocation() {
     boolean,
     IFormattedErrorResponse,
     IUpdateCase
-  > = useMutation(updateCase);
+  > = useMutation(updateDoctor);
   useEffect(() => {
     getAllCase().then((data) => {
       const sortedData = data.sort(

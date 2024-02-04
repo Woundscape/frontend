@@ -101,7 +101,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               header={
                 <Content className="py-1 flex space-x-3">
                   <div className="w-full jura flex justify-between">
-                    <p className="text-[#4C577C] text-base uppercase">
+                    <p className="text-[#4C577C] text-base">
                       {item.note_title}
                     </p>
                     <p className="text-[#4C577C] text-md">
