@@ -17,6 +17,7 @@ export default async function addNoteImage({
   note_desc,
   note_img,
   img_id,
+  author_id,
 }: INote): Promise<boolean> {
   try {
     const formData = new FormData();
@@ -25,6 +26,7 @@ export default async function addNoteImage({
     formData.append("note_desc", note_desc);
     formData.append("note_equip", JSON.stringify(note_equip));
     formData.append("img_id", img_id);
+    formData.append("author_id", author_id);
 
     note_img.forEach((file, _) => {
       let fileBlob = file.originFileObj ?? new Blob();

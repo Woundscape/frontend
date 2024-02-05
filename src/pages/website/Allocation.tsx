@@ -52,7 +52,7 @@ export default function Allocation() {
                   {/* Body */}
                   <Content className="w-full h-full grow">
                     <Table
-                      id="management__table__patient"
+                      id="table__primary"
                       dataSource={data}
                       columns={columns}
                       loading={loading}

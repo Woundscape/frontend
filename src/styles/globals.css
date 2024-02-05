@@ -556,10 +556,7 @@ input[type="range"]::-moz-range-thumb {
   padding-bottom: 1rem;
 }
 /* management */
-#management__table__patient
-  > .ant-table-container
-  > .ant-table-content
-  > table {
+#table__primary > .ant-table-container > .ant-table-content > table {
   border-spacing: 0 8px;
   font-family: jura;
 }
@@ -602,36 +599,34 @@ td.ant-table-cell {
   color: var(--text-primary) !important;
 }
 
-[aria-label="cancel_icon_editable"]::after {
-  color: #b4b4b4;
-  content: "\2573";
-}
-
 [aria-label="disabled_select"] > div {
   color: #61708c !important;
   cursor: default;
   font-family: jura;
 }
 
-#management__table__patient > div > div > table > tbody > tr > td {
-  border-top: 1.5px solid var(--gray) !important;
-  border-bottom: 1.5px solid var(--gray) !important;
+#table__primary[aria-label="pointer"] {
   cursor: pointer;
 }
 
-#management__table__patient > div > div > table > tbody > tr > td:first-child {
+#table__primary > div > div > table > tbody > tr > td {
+  border-top: 1.5px solid var(--gray) !important;
+  border-bottom: 1.5px solid var(--gray) !important;
+}
+
+#table__primary > div > div > table > tbody > tr > td:first-child {
   border-left: 1.5px solid var(--gray);
   border-top-left-radius: 0.8125rem;
   border-bottom-left-radius: 0.8125rem;
 }
 
-#management__table__patient > div > div > table > tbody > tr > td:last-child {
+#table__primary > div > div > table > tbody > tr > td:last-child {
   border-right: 1.5px solid var(--gray);
   border-top-right-radius: 0.8125rem;
   border-bottom-right-radius: 0.8125rem;
 }
 
-#management__table__patient
+#table__primary
   > .ant-table-container
   > .ant-table-content
   > table
@@ -641,7 +636,7 @@ td.ant-table-cell {
   background-color: #edefff !important;
 }
 
-#management__table__patient
+#table__primary
   > .ant-table-container
   > .ant-table-content
   > table
@@ -652,7 +647,7 @@ td.ant-table-cell {
   border-bottom-left-radius: 0.8125rem;
 }
 
-#management__table__patient
+#table__primary
   > .ant-table-container
   > .ant-table-content
   > table

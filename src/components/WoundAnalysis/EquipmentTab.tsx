@@ -4,6 +4,7 @@ import { Image, Select, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { formatDate, formatImage } from "@utils";
 import { filterOptions, filterSort } from "@config";
+import { GoX } from "react-icons/go";
 import { IEquipment, IFormattedErrorResponse, IImage } from "@constants";
 import { IUpdateEquipment, updateEquipment } from "@api-caller/imageApi";
 
@@ -23,23 +24,27 @@ export default function EquipmentTab({
     IFormattedErrorResponse,
     IUpdateEquipment
   > = useMutation(updateEquipment);
-  const [select, setSelect] = useState("");
+  const [select, setSelect] = useState<string>();
   const [isEditable, setIsEditable] = useState(false);
-  function handleEquip() {
-    if (isEditable && select) {
+  const handleEquip = async () => {
+    if (isEditable) {
+      const updatedEquipId = select
+        ? [...(image.img_equip ?? []), select]
+        : [...(image.img_equip ?? [])];
       const body: IUpdateEquipment = {
         img_id: image.img_id,
-        equip_id: [...(image.img_equip ?? []), select],
+        equip_id: updatedEquipId,
       };
       updateMutation.mutate(body, {
         onSuccess: () => {
           updateImage("img_equip", body.equip_id);
-          setSelect("");
+          setSelect(undefined);
         },
       });
     }
     setIsEditable(!isEditable);
-  }
+  };
+
   return (
     <div className="w-full h-full overflow-y-auto">
       <Content className="space-y-3 grow">
@@ -56,12 +61,26 @@ export default function EquipmentTab({
               {index + 1}
             </Typography>
             <div
-              aria-label={isEditable ? "cancel_icon_editable" : ""}
+              // aria-label={isEditable ? "cancel_icon_editable" : ""}
               className="w-full flex justify-between items-center rounded-md py-1.5 px-3"
             >
               <p className="jura text-md text-[#61708C]">
                 {equipment?.find((list) => list.equip_id == item)?.equip_name}
               </p>
+              {isEditable && (
+                <GoX
+                  color="#b4b4b4"
+                  size={24}
+                  onClick={() => {
+                    updateImage(
+                      "img_equip",
+                      image.img_equip.filter(
+                        (equip_id: string) => equip_id != item
+                      )
+                    );
+                  }}
+                />
+              )}
             </div>
           </div>
         ))}
@@ -92,10 +111,12 @@ export default function EquipmentTab({
                 placeholder="Add Equipment"
                 filterOption={filterOptions}
                 filterSort={filterSort}
-                options={equipment?.map((item) => ({
-                  label: item.equip_name,
-                  value: item.equip_id,
-                }))}
+                options={equipment
+                  ?.filter((item) => !image.img_equip?.includes(item.equip_id))
+                  .map((item) => ({
+                    label: item.equip_name,
+                    value: item.equip_id,
+                  }))}
                 onChange={setSelect}
               />
             </div>

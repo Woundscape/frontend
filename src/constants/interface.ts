@@ -123,6 +123,7 @@ export interface INote {
   note_img: UploadFile<any>[];
   img_id: string;
   created_at?: Date;
+  author_id: string;
 }
 
 export enum IStage {

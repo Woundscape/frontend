@@ -244,19 +244,15 @@ export default function Patient() {
                       {view == "Image" ? (
                         patients.map((patient: IPatient, index: number) => {
                           let image = patient.imagePreview[0]?.img_path
-                            ? patient.imagePreview[0].img_path.replace(
-                                /\\/g,
-                                "/"
-                              )
+                            ? patient.imagePreview[0].img_path
                             : null;
-
                           return (
                             <div
                               key={index}
                               onClick={() =>
                                 router(`/patient/${patient.case_id}`)
                               }
-                              className="flex flex-wrap gap-2 cursor-pointer"
+                              className={`flex flex-wrap gap-2 cursor-pointer`}
                             >
                               <div
                                 className="flex flex-col w-64 h-44 patient_img p-3 justify-between"
@@ -290,7 +286,7 @@ export default function Patient() {
                         })
                       ) : (
                         <Table
-                          id="management__table__patient"
+                          id="table__primary"
                           dataSource={patients}
                           columns={columns}
                           loading={loading}
