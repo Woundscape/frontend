@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ViewResult from "@assets/view_result.svg";
 import UserProfile from "@components/UserProfile";
 import {
+  Badge,
   Button,
   Form,
   Input,
@@ -15,10 +15,10 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { Content } from "antd/es/layout/layout";
 import { SegmentedValue } from "antd/es/segmented";
-import { httpAPI } from "@config";
 import { IPatient } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import DefaultInput from "@components/Patient/DefaultInput";
+import CardPatient from "@components/Patient/CardPatient";
 import { getColumns } from "@components/Patient/ColumnTable";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 
@@ -243,45 +243,14 @@ export default function Patient() {
                     >
                       {view == "Image" ? (
                         patients.map((patient: IPatient, index: number) => {
-                          let image = patient.imagePreview[0]?.img_path
-                            ? patient.imagePreview[0].img_path
-                            : null;
                           return (
-                            <div
-                              key={index}
-                              onClick={() =>
-                                router(`/patient/${patient.case_id}`)
-                              }
-                              className={`flex flex-wrap gap-2 cursor-pointer`}
+                            <Badge
+                              count={"new"}
+                              color="#F27961"
+                              offset={[-15, 10]}
                             >
-                              <div
-                                className="flex flex-col w-64 h-44 patient_img p-3 justify-between"
-                                style={{
-                                  backgroundImage: `url("${httpAPI}/${image}")`,
-                                }}
-                              >
-                                <div className="flex flex-row justify-between text-white jura border-b-2">
-                                  <p className="w-24 truncate">
-                                    {patient.hn_id}
-                                  </p>
-                                  <p>
-                                    {new Date(
-                                      patient.updated_at
-                                    ).toLocaleTimeString()}
-                                  </p>
-                                </div>
-                                <div className="flex flex-row justify-between h-8 border-2 rounded-full">
-                                  <p className="jura text-white p-1 pl-3">
-                                    View result
-                                  </p>
-                                  <img
-                                    className="pt-0.5 pb-0.5"
-                                    src={ViewResult}
-                                    alt=""
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                              <CardPatient index={index} patient={patient} />
+                            </Badge>
                           );
                         })
                       ) : (
