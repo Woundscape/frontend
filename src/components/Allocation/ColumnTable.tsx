@@ -16,7 +16,7 @@ interface ColumnsConfigProps {
   doctors: IDoctor[];
 }
 
-export const getColumns = ({
+export const getColumnsAllocation = ({
   updateMutation,
   doctors,
 }: ColumnsConfigProps): ColumnsType<ICase> => [

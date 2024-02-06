@@ -4,6 +4,7 @@ import UserProfile from "@components/UserProfile";
 import {
   Badge,
   Button,
+  Empty,
   Form,
   Input,
   List,
@@ -246,7 +247,7 @@ export default function Patient() {
           </Content>
         </Modal>
         <div className="w-full h-full py-8 bg-white">
-          <div className="w-full h-full">
+          <div className="w-full h-full flex flex-col">
             <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
               <div className="flex items-center space-x-4">
                 <p className="jura text-xl text-[#424241]">Patient</p>
@@ -255,7 +256,7 @@ export default function Patient() {
                 <UserProfile />
               </div>
             </header>
-            <Content className="px-6 pt-6">
+            <Content className="px-6 pt-6 grow">
               <div className="flex flex-row">
                 <div className="w-full flex flex-col">
                   {/* Input Filter */}
@@ -268,12 +269,12 @@ export default function Patient() {
                     segmented
                   />
                   {/* Body */}
-                  <List>
-                    <Content
-                      id="content__patient"
-                      className="pt-7 flex flex-wrap gap-3"
-                    >
-                      {view == "Image" ? (
+                  <Content
+                    id="content__patient"
+                    className="pt-7 flex flex-wrap gap-3"
+                  >
+                    {view === "Image" ? (
+                      patients && patients.length > 0 ? (
                         patients.map((patient: IPatient, index: number) => {
                           const hasUnreadImages = patient.imagePreview.some(
                             (image: any) => !image.img_read
@@ -296,29 +297,33 @@ export default function Patient() {
                           );
                         })
                       ) : (
-                        <Table
-                          id="table__primary"
-                          dataSource={patients}
-                          columns={columns}
-                          loading={loading}
-                          tableLayout="fixed"
-                          rowKey={(record) => `row__patient__${record.case_id}`}
-                          onRow={(record: IPatient, _) => ({
-                            onClick: (event: any) => {
-                              const index = event.target.cellIndex;
-                              if (index != 7) {
-                                router(`/patient/${record.case_id}`);
-                              }
-                            },
-                          })}
-                          pagination={{
-                            defaultPageSize: 10,
-                            showSizeChanger: false,
-                          }}
-                        />
-                      )}
-                    </Content>
-                  </List>
+                        <Content>
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </Content>
+                      )
+                    ) : (
+                      <Table
+                        id="table__primary"
+                        dataSource={patients}
+                        columns={columns}
+                        loading={loading}
+                        tableLayout="fixed"
+                        rowKey={(record) => `row__patient__${record.case_id}`}
+                        onRow={(record: IPatient, _) => ({
+                          onClick: (event: any) => {
+                            const index = event.target.cellIndex;
+                            if (index !== 7) {
+                              router(`/patient/${record.case_id}`);
+                            }
+                          },
+                        })}
+                        pagination={{
+                          defaultPageSize: 7,
+                          showSizeChanger: false,
+                        }}
+                      />
+                    )}
+                  </Content>
                 </div>
               </div>
             </Content>

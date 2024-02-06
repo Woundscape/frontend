@@ -174,7 +174,7 @@ export default function Management() {
                       tableLayout="fixed"
                       rowKey={(record) => `table__row__${record.doctor_id}`}
                       pagination={{
-                        defaultPageSize: 10,
+                        defaultPageSize: 7,
                         showSizeChanger: false,
                       }}
                     />

@@ -38,7 +38,18 @@ export const DefaultEquipment: IEquipment = {
   equip_subtype: "",
 };
 
-export const DefaultUserForm = {
+export const DefaultPatientForm = {
+  user_firstname: "",
+  user_lastname: "",
+  user_email: "",
+  user_password: "",
+  user_tel: "",
+  line_uid: "",
+  user_type: UserType.Patient,
+  ref_code: "",
+};
+
+export const DefaultDoctorForm = {
   user_firstname: "",
   user_lastname: "",
   user_email: "",

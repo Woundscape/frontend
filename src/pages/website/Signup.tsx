@@ -4,11 +4,11 @@ import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
 import { Button, Form, Input } from "antd";
 import {
-  DefaultUserForm,
   UserField,
   IFormattedErrorResponse,
   IUser,
   NotificationType,
+  DefaultDoctorForm,
 } from "@constants";
 import { displayNotification } from "@utils";
 import { webRegister } from "@api-caller/authenApi";
@@ -21,7 +21,7 @@ function Signup() {
     IFormattedErrorResponse,
     IUser
   > = useMutation(webRegister);
-  const [form, setForm] = useState<IUser>(DefaultUserForm);
+  const [form, setForm] = useState<IUser>(DefaultDoctorForm);
   const [forms] = Form.useForm();
   const [registrationFailed, setRegistrationFailed] = useState<string>("");
   const onSubmit = async () => {
@@ -31,7 +31,7 @@ function Signup() {
         registerMutation.mutate(form, {
           onSuccess: () => {
             displayNotification(NotificationType.SUCCESS);
-            setForm(DefaultUserForm);
+            setForm(DefaultDoctorForm);
             forms.resetFields();
             setRegistrationFailed("");
           },
@@ -187,9 +187,7 @@ function Signup() {
               }
             />
           </Form.Item>
-
           <Button
-            type="text"
             htmlType="submit"
             onClick={onSubmit}
             className="w-1/2 py-5 flex items-center justify-between text-lg text-[#424241] jura font-bold btn-homepage cursor-pointer"

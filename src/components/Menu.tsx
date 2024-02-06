@@ -47,13 +47,13 @@ const defaultMenuRoutes: IMenu[] = [
     title: "Allocation",
     pathname: "/allocation",
     icon: Allocation_LOGO,
-    required: DoctorType.Doctor,
+    required: DoctorType.Expert,
   },
   {
     title: "Users Management",
     pathname: "/management",
     icon: UserManage_LOGO,
-    required: DoctorType.Doctor,
+    required: DoctorType.Expert,
   },
   {
     title: "Account",
@@ -71,7 +71,6 @@ export default function Menu() {
   function ListMenu() {
     return menus?.map((item, index) => {
       if (
-        true ||
         me?.doctor_type == DoctorType.Admin ||
         item.required == me?.doctor_type
       )

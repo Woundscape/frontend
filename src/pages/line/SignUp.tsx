@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_wound from "@assets/logo/logo-wound.svg";
 import footer_watermark from "@assets/footer_watermark.svg";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import {
-  DefaultUserForm,
+  DefaultPatientForm,
   UserField,
   IUser,
   IFormattedErrorResponse,
 } from "@constants";
 import { UseMutationResult, useMutation } from "react-query";
 import { lineRegister } from "@api-caller/authenApi";
+import liff from "@line/liff";
+import { lineLiffID } from "@config";
+import { LineCredential } from "@api-caller/lineApi";
 
 export default function SignUp() {
   const registerMutation: UseMutationResult<
@@ -19,7 +22,7 @@ export default function SignUp() {
     IFormattedErrorResponse,
     IUser
   > = useMutation(lineRegister);
-  const [form, setForm] = useState<IUser>(DefaultUserForm);
+  const [form, setForm] = useState<IUser>(DefaultPatientForm);
   const [forms] = Form.useForm();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,15 +32,46 @@ export default function SignUp() {
     }));
   };
 
+  // useEffect(() => {
+  //   liff
+  //     .init({
+  //       liffId: lineLiffID.SIGNUP,
+  //     })
+  //     .then(() => {
+  //       if (liff.isLoggedIn()) {
+  //         liff.getProfile().then((profile) => {
+  //           // setForm((prevValues) => ({
+  //           //   ...prevValues,
+  //           //   line_uid: profile.userId,
+  //           // }));
+  //         });
+  //       } else {
+  //         liff.login();
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(`error ${err}`);
+  //     });
+  // }, []);
+
   const onSubmit = async () => {
     try {
-      console.log(form);
+      const values = await forms.validateFields();
+      if (values) {
+        registerMutation.mutate(form, {
+          onSuccess: (response) => {
+            console.log(response);
+            
+            forms.resetFields()
+          },
+        });
+      }
     } catch (error) {}
   };
 
   const validateConfirmPassword = ({ getFieldValue }: any) => ({
     validator(_: any, value: any) {
-      if (!value || getFieldValue("user_password") === value) {
+      if (!value || getFieldValue(UserField.PASSWORD) === value) {
         return Promise.resolve();
       }
       return Promise.reject(new Error("The confirm passwords do not match!"));
@@ -86,30 +120,34 @@ export default function SignUp() {
             >
               <Input
                 type="text"
-                name="lastname"
+                name={UserField.LASTNAME}
                 placeholder="Lastname"
                 className="input__authentication"
+                onChange={handleInputChange}
               />
             </Form.Item>
             <Form.Item
-            hasFeedback
-            name={"user_email"}
-            className="w-full"
-            rules={[
-              { required: true, message: "Enter your email address" },
-              { type: "email", message: "Please enter a valid email address" },
-            ]}
-          >
-            <Input
-              name="user_email"
-              className="input__authentication"
-              placeholder="Email"
-              type="text"
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-              name={"user_password"}
+              hasFeedback
+              name={UserField.EMAIL}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your email address" },
+                {
+                  type: "email",
+                  message: "Please enter a valid email address",
+                },
+              ]}
+            >
+              <Input
+                name={UserField.EMAIL}
+                className="input__authentication"
+                placeholder="Email"
+                type="text"
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+            <Form.Item
+              name={UserField.PASSWORD}
               className="w-full"
               rules={[
                 { required: true, message: "Enter your password" },
@@ -117,7 +155,7 @@ export default function SignUp() {
               ]}
             >
               <Input.Password
-                name="user_password"
+                name={UserField.PASSWORD}
                 placeholder="Password"
                 className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
                 iconRender={(visible) =>
@@ -127,61 +165,52 @@ export default function SignUp() {
               />
             </Form.Item>
             <Form.Item
-            name={UserField.CONFIRM_PASSWORD}
-            className="w-full"
-            rules={[
-              { required: true, message: "Enter your confirm password" },
-              validateConfirmPassword,
-            ]}
-          >
-            <Input.Password
               name={UserField.CONFIRM_PASSWORD}
-              placeholder="Confirm Password"
-              className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-          <Form.Item
-            hasFeedback
-            name={UserField.TEL}
-            className="w-full"
-            rules={[
-              { required: true, message: "Enter your phone number" },
-              {
-                pattern: /^[0-9]{10}$/,
-                message: "Please enter a valid 10-digit phone number",
-              },
-            ]}
-          >
-            <Input
-              type="text"
-              name={UserField.TEL}
-              placeholder="Tel"
-              className="input__authentication"
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
-              hasFeedback
-              validateDebounce={1000}
-              name={UserField.FIRSTNAME}
               className="w-full"
               rules={[
-                { required: true, message: "Enter your Referral code" },
-                { min: 6, message: "Please enter a valid Referral code" },
+                { required: true, message: "Enter your confirm password" },
+                validateConfirmPassword,
+              ]}
+            >
+              <Input.Password
+                name={UserField.CONFIRM_PASSWORD}
+                placeholder="Confirm Password"
+                className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              hasFeedback
+              name={UserField.TEL}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your phone number" },
+                {
+                  pattern: /^[0-9]{10}$/,
+                  message: "Please enter a valid 10-digit phone number",
+                },
               ]}
             >
               <Input
                 type="text"
-                placeholder="Referral code"
+                name={UserField.TEL}
+                placeholder="Tel"
+                className="input__authentication"
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+            <Form.Item name={UserField.REFERAL_CODE} className="w-full">
+              <Input
+                type="text"
+                name={UserField.REFERAL_CODE}
+                placeholder="Referral code (Optional)"
                 className="input__authentication"
                 onChange={handleInputChange}
               />
             </Form.Item>
             <Button
-              type="text"
               htmlType="submit"
               onClick={onSubmit}
               className="w-full py-5 text-left text-md jura font-bold flex items-center justify-between cursor-pointer btn-homepage"

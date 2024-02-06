@@ -1,6 +1,5 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import MyApp from "./App.tsx";
 import { ConfigProvider } from "antd";
 import { themeConfig } from "@config/index.ts";
