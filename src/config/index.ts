@@ -15,13 +15,15 @@ export const themeConfig: ThemeConfig = {
       itemHoverBg: "transparent",
     },
     Checkbox: {
-      colorBgContainer: "#D9D9D9",
-      colorBorder: "#FFF",
-      colorPrimary: "#D9D9D9",
-      colorPrimaryHover: "#D9D9D9",
+      colorTextDisabled:'#B4B4B4',
+      colorBorder:'#D9D9D9',
+      colorBgContainerDisabled:'#eeee',
+      colorBgContainer: "#E1E7FF",
+      colorPrimary: "#E1E7FF",
+      colorPrimaryHover: "#eeee",
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
-      colorBgBase: "red",
+      borderRadiusSM:4
     },
     Button: {
       colorPrimaryHover: "none",
