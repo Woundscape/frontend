@@ -167,7 +167,7 @@ export default function Management() {
                   {/* Body */}
                   <Content className="w-full h-full grow">
                     <Table
-                      id="management__table__patient"
+                      id="table__primary"
                       dataSource={doctors}
                       columns={columns}
                       loading={loading}

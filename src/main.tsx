@@ -9,13 +9,11 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId={"7084720936-8m878qplb5v9blu95bdsk47p5h6rqaro.apps.googleusercontent.com"}>
-    {/* <StrictMode> */}
+  // <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ConfigProvider theme={themeConfig}>
         <MyApp />
       </ConfigProvider>
     </QueryClientProvider>
-    {/* </StrictMode> */}
-  </GoogleOAuthProvider>
+  // </StrictMode>
 );

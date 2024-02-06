@@ -27,7 +27,7 @@ const items: MenuProps["items"] = [
   },
 ];
 
-export const getColumns = (): ColumnsType<any> => [
+export const getColumnsPatient = (): ColumnsType<any> => [
   {
     title: "Hospital No.",
     dataIndex: "hn_id",

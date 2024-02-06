@@ -155,7 +155,8 @@ export default function Equipment() {
                     className="pt-7 w-full h-full grow"
                   >
                     <Table
-                      id="management__table__patient"
+                      id="table__primary"
+                      aria-label={'pointer'}
                       dataSource={equipment}
                       columns={columns}
                       loading={loading}

@@ -34,7 +34,6 @@ function Signin() {
     const values = await forms.validateFields();
     loginMutation.mutate(formInputs, {
       onSuccess: (data) => {
-        console.log(data);
         sessionStorage.setItem("token", JSON.stringify(data));
         router("/dashboard");
       },

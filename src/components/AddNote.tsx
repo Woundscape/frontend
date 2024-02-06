@@ -31,6 +31,7 @@ import {
 import { filterOptions, filterSort, httpAPI } from "@config";
 import { getNoteImageById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
+import { useAuth } from "./AuthProvider";
 
 interface INoteProps {
   id: string;
@@ -39,42 +40,50 @@ interface INoteProps {
 }
 
 export default function AddNote({ id, equipment, mutation }: INoteProps) {
+  const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>([]);
   const [equip, setEquip] = useState<IEquipment[]>([]);
-  const [form, setForm] = useState<INote>({ ...DefaultNoteForm, img_id: id });
+  const [form, setForm] = useState<INote>({
+    ...DefaultNoteForm,
+    img_id: id,
+    author_id: me?.user_id || "",
+  });
   const [forms] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
   useEffect(() => {
-    async function getEquipment() {
-      console.log(equipment);
-      if (!equipment) {
-        const data = await getAllEquipment();
-        setEquip(data);
-      } else {
-        setEquip(equipment);
-      }
-    }
-    async function getNote() {
-      const data = await getNoteImageById(id);
-      setNotes(data);
-    }
     getNote();
     getEquipment();
   }, []);
+
+  async function getEquipment() {
+    if (!equipment) {
+      const data = await getAllEquipment();
+      setEquip(data);
+    } else {
+      setEquip(equipment);
+    }
+  }
+
+  async function getNote() {
+    const data = await getNoteImageById(id);
+    setNotes(data);
+  }
   const handleModal = () => {
     setOpenModal(!openModal);
   };
   const onSubmit = async () => {
-    setConfirmLoading(true);
     const values = await forms.validateFields();
     if (values) {
-      setForm({ ...DefaultNoteForm, img_id: id });
+      setConfirmLoading(true);
+      setForm({ ...DefaultNoteForm, img_id: id, author_id: me?.user_id || "" });
       mutation.mutate(form, {
-        onSuccess: (response) => {
+        onSuccess: () => {
+          forms.resetFields()
           setOpenModal(false);
           setConfirmLoading(false);
-          console.log(response);
+          getNote();
         },
       });
     }

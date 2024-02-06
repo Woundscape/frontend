@@ -15,22 +15,38 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { Content } from "antd/es/layout/layout";
 import { SegmentedValue } from "antd/es/segmented";
-import { httpAPI } from "@config";
-import { IPatient } from "@constants";
+import {
+  AddPatientState,
+  IFormattedErrorResponse,
+  IPatient,
+  IRefer,
+} from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import DefaultInput from "@components/Patient/DefaultInput";
-import { getColumns } from "@components/Patient/ColumnTable";
-import { getCaseByDoctorId } from "@api-caller/caseApi";
-import ViewBtn from "@assets/view_result_hist.svg";
 import CardPatient from "@components/Patient/CardPatient";
+import { getColumnsPatient } from "@components/Patient/ColumnTable";
+import { getCaseByDoctorId } from "@api-caller/caseApi";
+import { UseMutationResult, useMutation } from "react-query";
+import { createReferral } from "@api-caller/refer";
 
+const { Paragraph } = Typography;
 export default function Patient() {
+  const createReferrlMutation: UseMutationResult<
+    IRefer,
+    IFormattedErrorResponse,
+    any
+  > = useMutation(createReferral);
   const router = useNavigate();
   const { me } = useAuth();
   const [data, setData] = useState<IPatient[]>([]);
   const [patients, setPatients] = useState<IPatient[]>([]);
   const [view, setView] = useState("Image");
   const [loading, setLoading] = useState(true);
+  const [stateModal, setStateModal] = useState<string>("");
+  const [hnNumber, setHnNumber] = useState<string>("");
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [referCode, setReferCode] = useState("");
+  const columns: ColumnsType<any> = getColumnsPatient();
   useEffect(() => {
     getCaseByDoctorId({ doctor_id: me?.doctor_id as string }).then(
       (response) => {
@@ -40,7 +56,7 @@ export default function Patient() {
       }
     );
   }, []);
-  const columns: ColumnsType<any> = getColumns();
+
   const filterPatient = (e: any) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredpatient = data.filter((item) =>
@@ -51,19 +67,31 @@ export default function Patient() {
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
   };
-  const [stateModal, setStateModal] = useState("");
   const onCancel = () => {
     setStateModal("");
   };
   const onChangeState = () => {
-    setStateModal((currentState) => {
-      const currentStateNumber = parseInt(currentState.split("_")[1]);
-      const nextState = `STATE_${currentStateNumber + 1}`;
-      return nextState;
-    });
+    if (stateModal == AddPatientState.CONFIRM_HN) {
+      setSubmitLoading(true);
+      createReferrlMutation.mutate(me, {
+        onSuccess: (response) => {
+          setSubmitLoading(false);
+          setStateModal((currentState) => {
+            const currentStateNumber = parseInt(currentState.split("_")[1]);
+            const nextState = `STATE_${currentStateNumber + 1}`;
+            return nextState;
+          });
+          setReferCode(response.ref_code);
+        },
+      });
+    } else {
+      setStateModal((currentState) => {
+        const currentStateNumber = parseInt(currentState.split("_")[1]);
+        const nextState = `STATE_${currentStateNumber + 1}`;
+        return nextState;
+      });
+    }
   };
-  const { Paragraph } = Typography;
-  const [hnNumber, setHnNumber] = useState("");
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setHnNumber(e.target.value);
@@ -76,13 +104,13 @@ export default function Patient() {
     }
   };
   const addPatient = () => {
-    setStateModal("STATE_1");
+    setStateModal(AddPatientState.REDEEM_HN);
   };
   return (
     <>
       <div className="w-full h-screen relative">
         <Modal
-          open={stateModal == "STATE_1"}
+          open={stateModal == AddPatientState.REDEEM_HN}
           title={"Add patient"}
           footer={[
             <div
@@ -141,7 +169,7 @@ export default function Patient() {
         </Modal>
         <Modal
           title={"Add patient"}
-          open={stateModal == "STATE_2"}
+          open={stateModal == AddPatientState.CONFIRM_HN}
           onCancel={() => setStateModal("")}
           footer={[
             <div
@@ -149,6 +177,7 @@ export default function Patient() {
               className="px-4 py-2 flex justify-between gap-4 text-center"
             >
               <Button
+                disabled={submitLoading}
                 htmlType="reset"
                 className="w-36 jura text-[#4C577C] border-[#D2D4EB]"
                 style={{ borderWidth: "1.5px" }}
@@ -157,6 +186,7 @@ export default function Patient() {
                 Cancel
               </Button>
               <Button
+                loading={submitLoading}
                 htmlType="submit"
                 className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
                 style={{ borderWidth: "1.5px" }}
@@ -176,7 +206,7 @@ export default function Patient() {
               </p>
               <div className="flex gap-1">
                 <p className="text-[#61708C]">you entered is</p>
-                <p className="text-[#4D934B]">9877069</p>
+                <p className="text-[#4D934B]">{hnNumber}</p>
                 <p className="text-[#61708C]">?</p>
               </div>
             </div>
@@ -184,7 +214,7 @@ export default function Patient() {
         </Modal>
         <Modal
           title={"Referral code"}
-          open={stateModal == "STATE_3"}
+          open={stateModal == AddPatientState.REFERAL_CODE}
           onCancel={() => setStateModal("")}
           footer={[
             <div
@@ -210,7 +240,7 @@ export default function Patient() {
                 Your code for connect with line is
               </p>
               <Paragraph copyable className="text-[#1677ff] text-base">
-                KI3456
+                {referCode}
               </Paragraph>
             </div>
           </Content>
@@ -245,19 +275,29 @@ export default function Patient() {
                     >
                       {view == "Image" ? (
                         patients.map((patient: IPatient, index: number) => {
+                          const hasUnreadImages = patient.imagePreview.some(
+                            (image: any) => !image.img_read
+                          );
                           return (
-                            <Badge
-                              count={"new"}
-                              color="#F27961"
-                              offset={[-15, 10]}
-                            >
-                              <CardPatient index={index} patient={patient} />
-                            </Badge>
+                            <div key={index}>
+                              {hasUnreadImages && (
+                                <Badge
+                                  count={"new"}
+                                  color="#F27961"
+                                  offset={[-15, 10]}
+                                >
+                                  <CardPatient patient={patient} />
+                                </Badge>
+                              )}
+                              {!hasUnreadImages && (
+                                <CardPatient patient={patient} />
+                              )}
+                            </div>
                           );
                         })
                       ) : (
                         <Table
-                          id="management__table__patient"
+                          id="table__primary"
                           dataSource={patients}
                           columns={columns}
                           loading={loading}

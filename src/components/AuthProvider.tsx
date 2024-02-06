@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
-import { IMe } from "@constants";
+import { DoctorType, IMe } from "@constants";
 import { Credentials, getMe } from "@api-caller/authenApi";
 
 const AuthContext = createContext({
@@ -26,6 +26,9 @@ export const AuthProvider = ({ children }: any) => {
     try {
       if (token) {
         const response: IMe = await getMe(token.accessToken);
+        if (response.doctor_type == DoctorType.General) {
+          router("noApprove");
+        }
         setIsAuthenticated(true);
         setMe(response);
         changeLoading(false);
@@ -43,7 +46,6 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = () => {
-    console.log('1');
     sessionStorage.removeItem("token");
     setIsAuthenticated(false);
     router("/signin");

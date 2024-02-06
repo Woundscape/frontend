@@ -18,6 +18,7 @@ import DefaultInput from "@components/Patient/DefaultInput";
 import AdditionalData from "@components/Patient/AdditionalData";
 import { getCaseByCaseId } from "@api-caller/caseApi";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
+import { useAuth } from "@components/AuthProvider";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -25,6 +26,7 @@ export default function PatientDetail() {
     IFormattedErrorResponse,
     string[]
   > = useMutation(deleteImage);
+  const { me } = useAuth();
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
@@ -65,6 +67,8 @@ export default function PatientDetail() {
   async function getCase() {
     const _case: IPatient = await getCaseByCaseId(case_id as string);
     setCases(_case);
+    console.log(_case);
+    // console.log(_case.doctor_id.includes(me?.doctor_id as string));
   }
 
   const handleImage = (image_id: string) => {
@@ -87,7 +91,7 @@ export default function PatientDetail() {
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
       if (!image.img_status) return null;
-      const imgPath = image.img_path.replace(/\\/g, "/");
+      const imgPath = image.img_path;
       return (
         <div
           key={index}
