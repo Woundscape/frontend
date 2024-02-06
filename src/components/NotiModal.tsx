@@ -1,7 +1,18 @@
-import { Avatar, ConfigProvider, Divider, List, Modal, Segmented } from "antd";
+import {
+  Avatar,
+  ConfigProvider,
+  Divider,
+  List,
+  Modal,
+  Segmented,
+  Collapse,
+  Image,
+} from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
 import { optionNotification } from "@utils/option";
-
+import DoctorMock from "@assets/icons/doctor_mock.svg";
+import ImgMock from "@assets/wound/img_5.jpg";
+const Panel = Collapse.Panel;
 interface NotificationModalProps {
   isOpen: boolean;
   setModal: () => void;
@@ -104,28 +115,58 @@ export default function NotiModal({
             />
 
             {/* noti with button in Sugggestion Tab */}
-            <div className="flex p-4 jura hover:bg-[#f2f1f1]">
-              <div className="flex h-16">
-                <img src={UnreadIcon} className="w-8" alt="" />
-              </div>
-              <div className="flex p-4 space-x-1">
-                <div className="flex flex-col">
-                  <div className="flex">
-                    <p className="">Dr.Prasert has sent you a message</p>
-                    <p className="text-[#61708C]">Consult #6643793</p>
-                  </div>
-                  <p className="text-[#908F8F]">1 hour ago</p>
-                  <div className="flex space-x-3 mt-3">
-                    <div className=" px-5 text-[.8rem] bg-[#D2D4EB] text-[#4C577C] border-[#8087A7] border-2 rounded">
-                      Accept
+            <Collapse bordered={false} className="">
+              <Panel
+                showArrow={false}
+                header={
+                  <div className="flex jura hover:bg-[#f2f1f1]">
+                    <div className="flex h-16">
+                      <img src={UnreadIcon} className="w-8" alt="" />
                     </div>
-                    <div className="px-5 text-[.8rem] rounded border-2 border-[#8087A7] ">
-                      Decline
+                    <div className="flex p-4 space-x-1">
+                      <div className="flex flex-col">
+                        <div className="flex gap-2">
+                          <p className="">Dr.Prasert has sent you a message</p>
+                          <p className="text-[#61708C]">Consult #6643793</p>
+                        </div>
+                        <p className="text-[#908F8F]">1 hour ago</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+                key="1"
+              >
+                <div className="border rounded">
+                  <div className="border-b-2 flex p-3 gap-3">
+                    <img src={DoctorMock} className="w-8" alt="" />
+                    <div className="jura flex flex-col">
+                      <p className="text-[#424241]">Dr.Prasert</p>
+                      <p className="text-xs text-[#B4B4B4]">
+                        Doctor
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex p-3">
+                    <div className="flex flex-col space-y-3">
+                      <div className="text-lg jura text-[#61708C]">Title na kub</div>
+                        <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis iusto hic magni autem esse est placeat temporibus earum. Dolor architecto adipisci ipsam laboriosam officiis odio necessitatibus id porro eaque ipsum.</p>
+                      <Image
+                        width={100}
+                        src={ImgMock}
+                      />
+                      <div className="flex gap-3">
+                        <div className=" px-5 text-[.8rem] bg-[#D2D4EB] text-[#4C577C] border-[#8087A7] border-2 rounded">
+                          Accept
+                        </div>
+                        <div className="px-5 text-[.8rem] rounded border-2 border-[#8087A7] ">
+                          Decline
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </Panel>
+            </Collapse>
           </div>
         </div>
       </Modal>
