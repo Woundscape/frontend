@@ -85,6 +85,7 @@ export interface IMe {
   line_uid: string;
   doctor_id: string;
   doctor_type: string;
+  doctor_verified: string;
 }
 
 export interface IImage {
@@ -124,6 +125,15 @@ export interface INote {
   img_id: string;
   created_at?: Date;
   author_id: string;
+}
+
+export interface IRefer {
+  ref_id: string;
+  ref_code: string;
+  ref_status: boolean;
+  case_id: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export enum IStage {

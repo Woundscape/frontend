@@ -54,6 +54,7 @@ export default function DrawSketchCanvas({
   useEffect(() => {
     if (data) {
       if (canvasRef.current && data.img_tissue) {
+        //NOTE - Data Compressing
         // console.log("before", data.img_tissue[0]);
         // const testFilter = data.img_tissue[0].paths.filter(
         //   (_: any, index: number) => index % 5 === 0

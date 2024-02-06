@@ -1,8 +1,8 @@
 export enum AddPatientState {
   EMPTY = "EMPTY",
-  REDEEM_HN = "STAGE_1",
-  CONFIRM_HN = "STAGE_2",
-  REFERAL_CODE = "STAGE_3",
+  REDEEM_HN = "STATE_1",
+  CONFIRM_HN = "STATE_2",
+  REFERAL_CODE = "STATE_3",
 }
 
 export enum ACTION_MANAGE {

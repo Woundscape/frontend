@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dropdown, MenuProps, Tag, Typography } from "antd";
-import MoreIcon from "@assets/icons/more_icon.svg";
+import { MenuProps, Tag, Typography } from "antd";
 import { formatDate } from "../utils/formatDate";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { useAuth } from "@components/AuthProvider";

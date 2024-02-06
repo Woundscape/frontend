@@ -68,7 +68,7 @@ export default function PatientDetail() {
     const _case: IPatient = await getCaseByCaseId(case_id as string);
     setCases(_case);
     console.log(_case);
-    console.log(_case.doctor_id.includes(me?.doctor_id as string));
+    // console.log(_case.doctor_id.includes(me?.doctor_id as string));
   }
 
   const handleImage = (image_id: string) => {
@@ -91,7 +91,7 @@ export default function PatientDetail() {
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
       if (!image.img_status) return null;
-      const imgPath = image.img_path.replace(/\\/g, "/");
+      const imgPath = image.img_path;
       return (
         <div
           key={index}
