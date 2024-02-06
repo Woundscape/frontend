@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, Divider } from "antd";
+import { Input, Divider, Form } from "antd";
 import { useGoogleLogin } from "@react-oauth/google";
 import liff from "@line/liff";
 import { getOAuthInstance } from "@api/apiOAuthGoogle";
@@ -13,9 +13,22 @@ import line_icon from "@assets/icons/line_icon.svg";
 import { LineCredential, lineLogin } from "@api-caller/lineApi";
 import { UserType } from "@constants";
 import { lineLiffID } from "@config";
+import { IFormInputsLogin } from "@api-caller/authenApi";
 
 export default function SignIn() {
+  const [forms] = Form.useForm();
   const [user, setUser] = useState<LineCredential>();
+    const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
+      user_email: "",
+      user_password: "",
+    });
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormInputs((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    };
   useEffect(() => {
     liff
       .init({
@@ -73,7 +86,10 @@ export default function SignIn() {
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative select-none">
       <div className="container h-full mx-auto flex items-center relative">
-        <div className="w-full flex flex-col items-center justify-center p-10">
+        <Form
+          form={forms}
+          className="w-full flex flex-col items-center justify-center p-10"
+        >
           <div className="w-full space-y-2 flex flex-col items-center">
             <img className="w-16" src={logo_wound} alt="" />
             <h1 className="michroma text-lg">Woundscape</h1>
@@ -103,19 +119,42 @@ export default function SignIn() {
                 OR SIGN IN WITH EMAIL
               </span>
             </Divider>
+
+            <Form.Item
+            hasFeedback
+            name={"user_email"}
+            className="w-full"
+            rules={[
+              { required: true, message: "Enter your email address" },
+              { type: "email", message: "Please enter a valid email address" },
+            ]}
+          >
             <Input
-              className="w-full py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
-              type="email"
-              name="email"
+              name="user_email"
+              className="input__authentication"
               placeholder="Email"
+              type="text"
+              onChange={handleInputChange}
             />
-            <Input.Password
-              placeholder="Password"
-              className="w-full py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
+          </Form.Item>
+          <Form.Item
+              name={"user_password"}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your password" },
+                { min: 6, message: "Password must be at least 6 characters!" },
+              ]}
+            >
+              <Input.Password
+                name="user_password"
+                placeholder="Password"
+                className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                onChange={handleInputChange}
+              />
+            </Form.Item>
             <div
               className="w-full flex px-4 py-1.5 justify-between btn-homepage cursor-pointer text-md jura font-bold"
               onClick={() => {
@@ -135,7 +174,7 @@ export default function SignIn() {
               SIGN UP
             </a>
           </p>
-        </div>
+        </Form>
       </div>
       <div className="signup_line_footer_watermark relative w-full bottom-0 overflow-hidden">
         <img className="w-full" src={footer_watermark} alt="" />
