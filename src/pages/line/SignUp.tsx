@@ -91,38 +91,95 @@ export default function SignUp() {
                 className="input__authentication"
               />
             </Form.Item>
+            <Form.Item
+            hasFeedback
+            name={"user_email"}
+            className="w-full"
+            rules={[
+              { required: true, message: "Enter your email address" },
+              { type: "email", message: "Please enter a valid email address" },
+            ]}
+          >
             <Input
-              className="w-full input__authentication"
-              type="email"
-              name="email"
+              name="user_email"
+              className="input__authentication"
               placeholder="Email"
-            />
-            <Input.Password
-              placeholder="Password"
-              className="w-full input__authentication"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-            <Input.Password
-              placeholder="Confirm Password"
-              className="w-full input__authentication"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-            <Input
-              className="w-full input__authentication"
-              type="tel"
-              name="tel"
-              placeholder="Tel"
-            />
-            <Input
-              className="w-full input__authentication"
               type="text"
-              name="referral_code"
-              placeholder="Referral Code"
+              onChange={handleInputChange}
             />
+          </Form.Item>
+          <Form.Item
+              name={"user_password"}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your password" },
+                { min: 6, message: "Password must be at least 6 characters!" },
+              ]}
+            >
+              <Input.Password
+                name="user_password"
+                placeholder="Password"
+                className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+            <Form.Item
+            name={UserField.CONFIRM_PASSWORD}
+            className="w-full"
+            rules={[
+              { required: true, message: "Enter your confirm password" },
+              validateConfirmPassword,
+            ]}
+          >
+            <Input.Password
+              name={UserField.CONFIRM_PASSWORD}
+              placeholder="Confirm Password"
+              className="py-2 pl-4 text-sm text-[#626060] border border-[#B4B4B4] rounded-[50px] outline-none"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            hasFeedback
+            name={UserField.TEL}
+            className="w-full"
+            rules={[
+              { required: true, message: "Enter your phone number" },
+              {
+                pattern: /^[0-9]{10}$/,
+                message: "Please enter a valid 10-digit phone number",
+              },
+            ]}
+          >
+            <Input
+              type="text"
+              name={UserField.TEL}
+              placeholder="Tel"
+              className="input__authentication"
+              onChange={handleInputChange}
+            />
+          </Form.Item>
+          <Form.Item
+              hasFeedback
+              validateDebounce={1000}
+              name={UserField.FIRSTNAME}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your Referral code" },
+                { min: 6, message: "Please enter a valid Referral code" },
+              ]}
+            >
+              <Input
+                type="text"
+                placeholder="Referral code"
+                className="input__authentication"
+                onChange={handleInputChange}
+              />
+            </Form.Item>
             <Button
               type="text"
               htmlType="submit"
