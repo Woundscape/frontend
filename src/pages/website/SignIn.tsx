@@ -123,7 +123,6 @@ function Signin() {
             </div>
           </div>
           <Button
-            type="text"
             htmlType="submit"
             onClick={onSubmit}
             className="w-1/2 py-5 justify-between text-lg text-[#424241] jura font-bold flex items-center btn-homepage cursor-pointer"
