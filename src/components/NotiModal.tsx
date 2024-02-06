@@ -141,19 +141,22 @@ export default function NotiModal({
                     <img src={DoctorMock} className="w-8" alt="" />
                     <div className="jura flex flex-col">
                       <p className="text-[#424241]">Dr.Prasert</p>
-                      <p className="text-xs text-[#B4B4B4]">
-                        Doctor
-                      </p>
+                      <p className="text-xs text-[#B4B4B4]">Doctor</p>
                     </div>
                   </div>
                   <div className="flex p-3">
                     <div className="flex flex-col space-y-3">
-                      <div className="text-lg jura text-[#61708C]">Title na kub</div>
-                        <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis iusto hic magni autem esse est placeat temporibus earum. Dolor architecto adipisci ipsam laboriosam officiis odio necessitatibus id porro eaque ipsum.</p>
-                      <Image
-                        width={100}
-                        src={ImgMock}
-                      />
+                      <div className="text-lg jura text-[#61708C]">
+                        Title na kub
+                      </div>
+                      <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Facilis iusto hic magni autem esse est placeat
+                        temporibus earum. Dolor architecto adipisci ipsam
+                        laboriosam officiis odio necessitatibus id porro eaque
+                        ipsum.
+                      </p>
+                      <Image width={100} src={ImgMock} />
                       <div className="flex gap-3">
                         <div className=" px-5 text-[.8rem] bg-[#D2D4EB] text-[#4C577C] border-[#8087A7] border-2 rounded">
                           Accept
