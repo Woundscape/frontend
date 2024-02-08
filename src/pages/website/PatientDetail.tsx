@@ -2,14 +2,12 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
-import { Segmented, Checkbox, Button, List } from "antd";
+import { Segmented, Button, List } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { LeftOutlined } from "@ant-design/icons";
-import ViewResult from "@assets/view_result.svg";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import { httpAPI } from "@config";
 import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
 import { optionSegmented, formatDate } from "@utils";
 import UserProfile from "@components/UserProfile";
@@ -19,6 +17,7 @@ import AdditionalData from "@components/Patient/AdditionalData";
 import { getCaseByCaseId } from "@api-caller/caseApi";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import { useAuth } from "@components/AuthProvider";
+import CardPatientDetail from "@components/Patient/CardPatientDetail";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -90,41 +89,45 @@ export default function PatientDetail() {
   const filterPatient = (e: any) => {};
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
-      if (!image.img_status) return null;
-      const imgPath = image.img_path;
       return (
-        <div
+        <CardPatientDetail
           key={index}
-          onClick={() => handleImage(image.img_id)}
-          className="flex mt-4 cursor-pointer "
-        >
-          <div
-            className="w-64 h-44 patient_img p-3 flex justify-end items-start "
-            style={{
-              backgroundImage: `url("${httpAPI}/${imgPath}")`,
-            }}
-          >
-            {/* <div className="absolute w-full h-full bg-green-500">dsa</div> */}
-            {stageSegmented.stage == "Overview" ? (
-              <div className="w-full h-full flex flex-col justify-between">
-                <div className="flex flex-row justify-between text-white jura border-b">
-                  <p>HN. {cases?.hn_id}</p>
-                  <p>{new Date(image.created_at).toLocaleTimeString()}</p>
-                </div>
-                <div className="flex flex-row justify-between h-8 border rounded-full">
-                  <p className="jura text-white p-1 pl-3">Edit</p>
-                  <img className="pt-0.5 pb-0.5" src={ViewResult} alt="" />
-                </div>
-              </div>
-            ) : (
-              <Checkbox
-                key={`checkbox__image__${index}`}
-                value={image.img_id}
-                checked={checkedList.includes(image.img_id)}
-              />
-            )}
-          </div>
-        </div>
+          image={image}
+          checkedList={checkedList}
+          stageSegmented={stageSegmented}
+          onImage={handleImage}
+        />
+        // <div
+        //   key={index}
+        //   onClick={() => handleImage(image.img_id)}
+        //   className="flex mt-4 cursor-pointer "
+        // >
+        //   <div
+        //     className="w-64 h-44 patient_img p-3 flex justify-end items-start "
+        //     style={{
+        //       backgroundImage: `url("${httpAPI}/${imgPath}")`,
+        //     }}
+        //   >
+        //     {stageSegmented.stage == "Overview" ? (
+        //       <div className="w-full h-full flex flex-col justify-between">
+        //         <div className="flex flex-row justify-between text-white jura border-b">
+        //           <p>HN. {cases?.hn_id}</p>
+        //           <p>{new Date(image.created_at).toLocaleTimeString()}</p>
+        //         </div>
+        //         <div className="flex flex-row justify-between h-8 border rounded-full">
+        //           <p className="jura text-white p-1 pl-3">Edit</p>
+        //           <img className="pt-0.5 pb-0.5" src={ViewResult} alt="" />
+        //         </div>
+        //       </div>
+        //     ) : (
+        //       <Checkbox
+        //         key={`checkbox__image__${index}`}
+        //         value={image.img_id}
+        //         checked={checkedList.includes(image.img_id)}
+        //       />
+        //     )}
+        //   </div>
+        // </div>
       );
     });
   }

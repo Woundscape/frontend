@@ -150,23 +150,19 @@ export const getColumnManageUser = ({
           ) : (
             <>
               <Button
-                type="text"
                 className="button_add"
                 onClick={() =>
                   onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                 }
               >
-                {/* <img src={Done} alt="" /> */}
                 Approve
               </Button>
               <Button
-                type="text"
                 className="button_reject"
                 onClick={() =>
                   onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                 }
               >
-                {/* <img src={Cancel} alt="" /> */}
                 Reject
               </Button>
             </>

@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   Collapse,
+  Divider,
   Form,
   Image,
   Input,
@@ -38,10 +39,10 @@ interface INoteProps {
   equipment?: IEquipment[];
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
 }
-
+const { Paragraph, Text } = Typography;
 export default function AddNote({ id, equipment, mutation }: INoteProps) {
   const { me } = useAuth();
-  const [notes, setNotes] = useState<INote[]>([]);
+  const [notes, setNotes] = useState<INote[]>();
   const [equip, setEquip] = useState<IEquipment[]>([]);
   const [form, setForm] = useState<INote>({
     ...DefaultNoteForm,
@@ -80,7 +81,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
       setForm({ ...DefaultNoteForm, img_id: id, author_id: me?.user_id || "" });
       mutation.mutate(form, {
         onSuccess: () => {
-          forms.resetFields()
+          forms.resetFields();
           setOpenModal(false);
           setConfirmLoading(false);
           getNote();
@@ -121,9 +122,11 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Typography id="text__primary" className="indent-10">
+                <Paragraph id="text__primary" className="indent-10">
                   {item.note_desc}
-                </Typography>
+                </Paragraph>
+                <Text id="text__primary">Equipment</Text>
+                <Divider className="bg-[#E9EBF5]" />
                 {item.note_equip.map((equip: string, index: number) => (
                   <Tag key={index} color={"geekblue"} className="jura">
                     {
