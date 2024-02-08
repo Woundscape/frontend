@@ -78,10 +78,16 @@ export default function Management() {
     onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => {
       if (action == ACTION_MANAGE.EDIT || action == ACTION_MANAGE.CANCEL) {
         setDoctors((prevData) => {
-          const updatedData = [...prevData];
-          updatedData[rowIndex].isRowEditable =
-            !updatedData[rowIndex].isRowEditable;
-          return updatedData;
+          const doctorIndex = prevData.findIndex(
+            (doctor) => doctor.doctor_id === record.doctor_id
+          );
+          if (doctorIndex !== -1) {
+            const updatedData = [...prevData];
+            updatedData[doctorIndex].isRowEditable =
+              !updatedData[doctorIndex].isRowEditable;
+            return updatedData;
+          }
+          return prevData;
         });
       } else if (action == ACTION_MANAGE.DONE) {
         updateTypeMutation.mutate(
@@ -93,10 +99,16 @@ export default function Management() {
           {
             onSuccess: () => {
               setDoctors((prevData) => {
-                const updatedData = [...prevData];
-                updatedData[rowIndex].isRowEditable =
-                  !updatedData[rowIndex].isRowEditable;
-                return updatedData;
+                const doctorIndex = prevData.findIndex(
+                  (doctor) => doctor.doctor_id === record.doctor_id
+                );
+                if (doctorIndex !== -1) {
+                  const updatedData = [...prevData];
+                  updatedData[doctorIndex].isRowEditable =
+                    !updatedData[doctorIndex].isRowEditable;
+                  return updatedData;
+                }
+                return prevData;
               });
             },
           }
