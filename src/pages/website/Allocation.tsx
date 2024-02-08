@@ -4,7 +4,7 @@ import { Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { UseMutationResult, useMutation } from "react-query";
-import { getColumns } from "@components/Allocation/ColumnTable";
+import { getColumnsAllocation } from "@components/Allocation/ColumnTable";
 import getAllDoctor from "@api-caller/doctorApi";
 import { IUpdateCase, getAllCase, updateDoctor } from "@api-caller/caseApi";
 import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
@@ -17,11 +17,11 @@ export default function Allocation() {
   > = useMutation(updateDoctor);
   useEffect(() => {
     getAllCase().then((data) => {
-      const sortedData = data.sort(
-        (a: any, b: any) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      );
-      setData(sortedData);
+      // const sortedData = data.sort(
+      //   (a: any, b: any) =>
+      //     new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      // );
+      setData(data);
       getAllDoctor(true).then((doctors) => {
         setDoctors(doctors);
         setLoading(false);
@@ -31,7 +31,10 @@ export default function Allocation() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ICase[]>([]);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
-  const columns: ColumnsType<ICase> = getColumns({ updateMutation, doctors });
+  const columns: ColumnsType<ICase> = getColumnsAllocation({
+    updateMutation,
+    doctors,
+  });
   return (
     <>
       <div className="w-full h-screen relative">
@@ -58,6 +61,10 @@ export default function Allocation() {
                       loading={loading}
                       tableLayout="fixed"
                       rowKey={(_, index) => `table__row__${index}`}
+                      pagination={{
+                        defaultPageSize: 7,
+                        showSizeChanger: false,
+                      }}
                     />
                   </Content>
                 </div>

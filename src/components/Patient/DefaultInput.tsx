@@ -110,6 +110,7 @@ export default function DefaultInput({
           </Button>
         ) : (
           <>
+            <Button className="button_consult">Consult</Button>
             <Button
               onClick={() => setIsModalOpen(true)}
               className="button_add"

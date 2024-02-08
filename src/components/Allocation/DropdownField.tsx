@@ -66,10 +66,12 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
     }
     setSelectValue(data.doctor_assign);
   }, [data]);
+  console.log(data.doctor_assign);
+
   return (
     <>
       <div className="w-auto flex justify-end items-center gap-3">
-        {data?.doctor_assign && (
+        {data?.doctor_assign.length > 0 && (
           <CheckCircleOutlined style={{ color: "#A0A7DB" }} />
         )}
         <ConfigProvider
@@ -105,7 +107,6 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
             }}
           />
         </ConfigProvider>
-
         <ConfirmModal
           title="Change new doctor"
           description={

@@ -5,6 +5,7 @@ export const httpAPI: string = "http://localhost:3000";
 export enum lineLiffID {
   UPLOAD_IMAGE = "2001180435-mZ7YAEj4",
   SIGNIN = "2001180435-eBkJB6ZQ",
+  SIGNUP = "2001180435-Rxmw5e1B",
 }
 
 export const themeConfig: ThemeConfig = {
@@ -15,15 +16,15 @@ export const themeConfig: ThemeConfig = {
       itemHoverBg: "transparent",
     },
     Checkbox: {
-      colorTextDisabled:'#B4B4B4',
-      colorBorder:'#D9D9D9',
-      colorBgContainerDisabled:'#eeee',
+      colorTextDisabled: "#B4B4B4",
+      colorBorder: "#D9D9D9",
+      colorBgContainerDisabled: "#eeee",
       colorBgContainer: "#E1E7FF",
       colorPrimary: "#E1E7FF",
       colorPrimaryHover: "#eeee",
       colorWhite: "#4C577C",
       controlInteractiveSize: 24,
-      borderRadiusSM:4
+      borderRadiusSM: 4,
     },
     Button: {
       colorPrimaryHover: "none",
@@ -53,6 +54,8 @@ export const themeConfig: ThemeConfig = {
       colorText: "#555554",
     },
     Collapse: {
+      headerPadding: "0px 0px",
+      contentPadding: "0px 0px",
       headerBg: "white",
     },
     Card: {

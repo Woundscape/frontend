@@ -15,7 +15,7 @@ import ConfirmReset from "@pages/website/ConfirmReset";
 import ContactUs from "@pages/website/Contact";
 import NewPass from "@pages/website/NewPassword";
 import Progress from "@pages/website/Progress";
-import NoApprove from "@pages/website/NotApprove";
+import NoApprove from "@pages/website/NoApprove";
 
 import UploadImage from "@pages/line/UploadImage";
 import SignUpLine from "@pages/line/SignUp";

@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { Input, Divider, Form } from "antd";
-import { useGoogleLogin } from "@react-oauth/google";
 import liff from "@line/liff";
-import { getOAuthInstance } from "@api/apiOAuthGoogle";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-
 import logo_wound from "@assets/logo/logo-wound.svg";
 import footer_watermark from "@assets/footer_watermark.svg";
 import arrow_start from "@assets/arrow-start.svg";
-import google_icon from "@assets/icons/google_icon.svg";
 import line_icon from "@assets/icons/line_icon.svg";
 import { LineCredential, lineLogin } from "@api-caller/lineApi";
 import { UserType } from "@constants";
@@ -18,17 +14,17 @@ import { IFormInputsLogin } from "@api-caller/authenApi";
 export default function SignIn() {
   const [forms] = Form.useForm();
   const [user, setUser] = useState<LineCredential>();
-    const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
-      user_email: "",
-      user_password: "",
-    });
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormInputs((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
-    };
+  const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
+    user_email: "",
+    user_password: "",
+  });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormInputs((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
   useEffect(() => {
     liff
       .init({
@@ -70,19 +66,7 @@ export default function SignIn() {
       liff.login();
     }
   }
-  const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      getOAuthInstance()
-        .get(`/oauth2/v1/userinfo`, {
-          params: {
-            access_token: tokenResponse.access_token,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-        });
-    },
-  });
+
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative select-none">
       <div className="container h-full mx-auto flex items-center relative">
@@ -95,16 +79,6 @@ export default function SignIn() {
             <h1 className="michroma text-lg">Woundscape</h1>
           </div>
           <div className="w-full flex flex-col justify-center items-center mt-10 space-y-6">
-            <button
-              onClick={() => login()}
-              className="w-full flex py-2 px-4 text-sm border border-[#B4B4B4] rounded-[50px] text-center outline-none"
-            >
-              <img className="w-4 absolute" src={google_icon} alt="" />
-              <div className="w-full text-sm flex justify-center space-x-4 jura text-[#626060]">
-                SIGN IN WITH GOOGLE
-              </div>
-            </button>
-            {/* <GoogleLogin onSuccess={OAuthGoogle} /> */}
             <button
               className="w-full flex py-2 px-4 text-sm border border-[#B4B4B4] rounded-[50px] text-center outline-none"
               onClick={loginLiff}
@@ -119,25 +93,27 @@ export default function SignIn() {
                 OR SIGN IN WITH EMAIL
               </span>
             </Divider>
-
             <Form.Item
-            hasFeedback
-            name={"user_email"}
-            className="w-full"
-            rules={[
-              { required: true, message: "Enter your email address" },
-              { type: "email", message: "Please enter a valid email address" },
-            ]}
-          >
-            <Input
-              name="user_email"
-              className="input__authentication"
-              placeholder="Email"
-              type="text"
-              onChange={handleInputChange}
-            />
-          </Form.Item>
-          <Form.Item
+              hasFeedback
+              name={"user_email"}
+              className="w-full"
+              rules={[
+                { required: true, message: "Enter your email address" },
+                {
+                  type: "email",
+                  message: "Please enter a valid email address",
+                },
+              ]}
+            >
+              <Input
+                name="user_email"
+                className="input__authentication"
+                placeholder="Email"
+                type="text"
+                onChange={handleInputChange}
+              />
+            </Form.Item>
+            <Form.Item
               name={"user_password"}
               className="w-full"
               rules={[

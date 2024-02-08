@@ -1,5 +1,5 @@
 import { Button } from "antd";
-function NotApprove() {
+function NoApprove() {
   return (
     <div className=" w-full bg-white h-screen p-6">
       <div className="noApprove-background w-full h-full rounded-2xl flex flex-col justify-center items-center ">
@@ -17,4 +17,4 @@ function NotApprove() {
   );
 }
 
-export default NotApprove;
+export default NoApprove;

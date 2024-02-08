@@ -5,4 +5,5 @@ export enum UserField {
   TEL = "user_tel",
   PASSWORD = "user_password",
   CONFIRM_PASSWORD = "user_cpassword",
+  REFERAL_CODE = "ref_code",
 }

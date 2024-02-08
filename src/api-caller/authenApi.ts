@@ -33,7 +33,7 @@ export async function webRegister(request: IUser): Promise<boolean> {
 
 export async function lineRegister(request: IUser): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().post("/line/signup", request);
+    const { data } = await getInstanceLocal().post("/line/register", request);
     return data;
   } catch (error) {
     throw formattedError(error);

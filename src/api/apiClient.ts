@@ -25,5 +25,3 @@ export function createInstanceLocal(config?: CreateAxiosDefaults) {
     ...config,
   });
 }
-
-

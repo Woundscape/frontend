@@ -18,7 +18,7 @@ export interface ICase {
   case_id: string;
   hn_id: string;
   line_uid: string | null;
-  doctor_assign: string | null;
+  doctor_assign: string[] | [];
   status: string | null;
   stage: string | null;
   created_at: Date;
