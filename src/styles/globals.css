@@ -10,6 +10,7 @@
   --brown: #a3802d;
   --gray: #e8eaf4;
   --text-primary: #4c577c;
+  --gold: #f1e2bc;
 }
 
 * {
@@ -346,6 +347,16 @@ input::-webkit-inner-spin-button {
   border-color: #8087a7;
   border-width: 2px;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.button_consult {
+  font-family: jura;
+  background-color: var(--gold);
+  border-color: #8c8d95;
+  border-width: 2px;
+  color: var(--black);
   display: flex;
   align-items: center;
 }

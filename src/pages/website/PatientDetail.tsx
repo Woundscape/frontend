@@ -97,37 +97,6 @@ export default function PatientDetail() {
           stageSegmented={stageSegmented}
           onImage={handleImage}
         />
-        // <div
-        //   key={index}
-        //   onClick={() => handleImage(image.img_id)}
-        //   className="flex mt-4 cursor-pointer "
-        // >
-        //   <div
-        //     className="w-64 h-44 patient_img p-3 flex justify-end items-start "
-        //     style={{
-        //       backgroundImage: `url("${httpAPI}/${imgPath}")`,
-        //     }}
-        //   >
-        //     {stageSegmented.stage == "Overview" ? (
-        //       <div className="w-full h-full flex flex-col justify-between">
-        //         <div className="flex flex-row justify-between text-white jura border-b">
-        //           <p>HN. {cases?.hn_id}</p>
-        //           <p>{new Date(image.created_at).toLocaleTimeString()}</p>
-        //         </div>
-        //         <div className="flex flex-row justify-between h-8 border rounded-full">
-        //           <p className="jura text-white p-1 pl-3">Edit</p>
-        //           <img className="pt-0.5 pb-0.5" src={ViewResult} alt="" />
-        //         </div>
-        //       </div>
-        //     ) : (
-        //       <Checkbox
-        //         key={`checkbox__image__${index}`}
-        //         value={image.img_id}
-        //         checked={checkedList.includes(image.img_id)}
-        //       />
-        //     )}
-        //   </div>
-        // </div>
       );
     });
   }

@@ -54,6 +54,8 @@ export const themeConfig: ThemeConfig = {
       colorText: "#555554",
     },
     Collapse: {
+      headerPadding: "0px 0px",
+      contentPadding: "0px 0px",
       headerBg: "white",
     },
     Card: {
