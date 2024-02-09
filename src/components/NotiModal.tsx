@@ -174,7 +174,7 @@ export default function NotiModal({
                     </div>
                     <div className="flex p-3 w-full">
                       <div className="flex flex-col space-y-3">
-                        <div className="text-lg jura text-[#61708C]">
+                        <div className="text-lg jura text-[#61708C] underline ">
                           Title na kub
                         </div>
                         <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">
@@ -196,11 +196,11 @@ export default function NotiModal({
                     </div>
                     <div className="border-t-2 w-full"></div>
                     <div className="flex p-3 gap-3 justify-end">
-                      <Button className="px-9 h-7 flex items-center jura text-[.8rem] bg-[#D2D4EB] text-[#4C577C] border-[#8087A7] border-2 rounded">
-                        Accept
-                      </Button>
                       <Button className="px-9 h-7 flex items-center jura text-[.8rem] rounded border-2 text-[#4C577C] border-[#8087A7] ">
                         Decline
+                      </Button>
+                      <Button className="px-9 h-7 flex items-center jura text-[.8rem] bg-[#D2D4EB] text-[#4C577C] border-[#8087A7] border-2 rounded">
+                        Accept
                       </Button>
                     </div>
                   </div>
