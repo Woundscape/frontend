@@ -126,8 +126,8 @@ export default function NotiModal({
 
               {/* noti with button in Sugggestion Tab */}
               
-              <Collapse bordered={false} className="">
-                <Panel
+              <Collapse bordered={false}>
+                <Panel className="border-t border-[#F0F0F0]"
                   showArrow={false}
                   header={
                     <div
