@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
-import { Segmented, Button, List } from "antd";
+import { Segmented, Button, List, Divider, ConfigProvider } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import { LeftOutlined } from "@ant-design/icons";
@@ -18,6 +18,7 @@ import { getCaseByCaseId } from "@api-caller/caseApi";
 import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import { useAuth } from "@components/AuthProvider";
 import CardPatientDetail from "@components/Patient/CardPatientDetail";
+import { dividerConfig } from "@config";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -170,10 +171,10 @@ export default function PatientDetail() {
                 }}
               />
             </header>
-            <Content className="grow p-6 pb-0">
+            <Content className="grow px-6">
               <div className="flex h-full space-x-6">
                 {/* Input Filter */}
-                <div className="w-full h-full flex flex-col space-y-2">
+                <div className="w-full h-full flex flex-col space-y-2 pt-6">
                   <DefaultInput
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
@@ -214,61 +215,71 @@ export default function PatientDetail() {
                 </div>
                 {stageSegmented.stage != "Overview" &&
                   stageSegmented.stage != "Delete" && (
-                    <Content id="history" className="flex flex-col">
-                      <div className="head-history h-14 w-72 bg-[#EEEEEE] rounded-xl ">
-                        <p className="jura text-[#555554] text-lg p-3">
-                          History
-                        </p>
-                      </div>
-                      <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
-                        <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
-                          <p className="text-[#4C577C]">
-                            {formatDate(cases?.created_at)}
-                          </p>
-                          <p className="text-[#626060]">HN. {cases?.hn_id}</p>
-                        </div>
-                        <div className="flex pt-3">
-                          <img
-                            className="w-16 rounded-lg"
-                            src={WoundHist}
-                            alt=""
-                          />
-                          <p className="text-[#4C577C] p-3.5">
-                            Jul 14, 2023 18:44
+                    <Content id="history" className="flex flex-row">
+                      <ConfigProvider theme={dividerConfig}>
+                        <Divider
+                          type="vertical"
+                          className="pr-2 min-h-full border-[#E9EBF5]"
+                        />
+                      </ConfigProvider>
+                      <Content id="head-history" className="pt-6">
+                        <div className="h-14 w-72 bg-[#EEEEEE] rounded-xl">
+                          <p className="jura text-[#555554] text-lg p-3">
+                            History
                           </p>
                         </div>
-                        <div className="flex pt-3">
-                          <img
-                            className="w-16 rounded-lg"
-                            src={WoundHist}
-                            alt=""
-                          />
-                          <p className="text-[#4C577C] p-3.5">
-                            Jul 14, 2023 18:44
-                          </p>
-                        </div>
-                        <div className="flex flex-row space-x-1.5 mt-1">
-                          <div className="w-24 bg-[#F4DEE7] rounded mt-2">
-                            <p className="text-center text-[#4C577C]">
-                              Diabetes
+                        <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
+                          <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
+                            <p className="text-[#4C577C]">
+                              {formatDate(cases?.created_at)}
+                            </p>
+                            <p className="text-[#626060]">HN. {cases?.hn_id}</p>
+                          </div>
+                          <div className="flex pt-3">
+                            <img
+                              className="w-16 rounded-lg"
+                              src={WoundHist}
+                              alt=""
+                            />
+                            <p className="text-[#4C577C] p-3.5">
+                              Jul 14, 2023 18:44
                             </p>
                           </div>
-                          <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                            <p className="text-center text-[#4C577C]">
-                              Pressure
+                          <div className="flex pt-3">
+                            <img
+                              className="w-16 rounded-lg"
+                              src={WoundHist}
+                              alt=""
+                            />
+                            <p className="text-[#4C577C] p-3.5">
+                              Jul 14, 2023 18:44
                             </p>
                           </div>
-                          <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                            <p className="text-center text-[#4C577C]">Asthma</p>
+                          <div className="flex flex-row space-x-1.5 mt-1">
+                            <div className="w-24 bg-[#F4DEE7] rounded mt-2">
+                              <p className="text-center text-[#4C577C]">
+                                Diabetes
+                              </p>
+                            </div>
+                            <div className="w-20 bg-[#F4DEE7] rounded mt-2">
+                              <p className="text-center text-[#4C577C]">
+                                Pressure
+                              </p>
+                            </div>
+                            <div className="w-20 bg-[#F4DEE7] rounded mt-2">
+                              <p className="text-center text-[#4C577C]">
+                                Asthma
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
+                            <p className="jura text-[#9198AF] p-1 pl-3">
+                              View result
+                            </p>
+                            <img className="pr-1" src={ViewResultHist} alt="" />
                           </div>
                         </div>
-                        <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
-                          <p className="jura text-[#9198AF] p-1 pl-3">
-                            View result
-                          </p>
-                          <img className="pr-1" src={ViewResultHist} alt="" />
-                        </div>
-                      </div>
+                      </Content>
                     </Content>
                   )}
               </div>
