@@ -63,6 +63,10 @@ export const themeConfig: ThemeConfig = {
       colorText: "#4C577C",
       colorBorderSecondary: "#D9D9D9",
     },
+    Result: {
+      extraMargin:0,
+      paddingLG:0,
+    }
   },
 };
 
