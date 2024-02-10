@@ -23,7 +23,7 @@ import UserProfile from "@components/UserProfile";
 import AddNote from "@components/AddNote";
 import { useAuth } from "@components/AuthProvider";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
-import addNoteImage from "@api-caller/noteApi";
+import { addNoteImage } from "@api-caller/noteApi";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import { getImageById } from "@api-caller/imageApi";
 import getAllEquipment from "@api-caller/equipApi";

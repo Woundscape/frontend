@@ -24,7 +24,7 @@ import WoundImg from "@assets/wound/img_6.jpg";
 import AddNote from "@components/AddNote";
 import UserProfile from "@components/UserProfile";
 import { IFormattedErrorResponse, INote } from "@constants";
-import addNoteImage from "@api-caller/noteApi";
+import { addNoteImage } from "@api-caller/noteApi";
 
 const { RangePicker } = DatePicker;
 
@@ -71,7 +71,7 @@ export default function progress() {
     },
   ]);
   const [data, setData] = useState({
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+    labels: ["Jan 2023", "Feb", "Mar", "Apr", "May"],
     datasets: [...openEye],
   });
 

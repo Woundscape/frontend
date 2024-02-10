@@ -36,8 +36,7 @@ export default function CardPatientDetail({
         />
       )}
       <div className="flex justify-between w-full p-2 bg-[#F2F2F2] rounded-xl">
-        <p id="text__primary">HN.</p>
-
+        <p id="text__primary">{`No. 0000001`}</p>
         <p className="jura text-[#626060]">
           <ClockCircleOutlined style={{ color: "#626060", paddingRight: 2 }} />
           {new Date(image.created_at).toLocaleTimeString()}

@@ -1,7 +1,6 @@
 import {
   Avatar,
   ConfigProvider,
-  Divider,
   List,
   Modal,
   Segmented,
@@ -100,9 +99,6 @@ export default function NotiModal({
               </div>
             </div>
             <div className="flex flex-col h-24 overflow-y-auto grow">
-              {data.map((item, index) => {
-                return <div></div>;
-              })}
               <List
                 dataSource={data}
                 renderItem={(item, index) => (

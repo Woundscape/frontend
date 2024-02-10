@@ -54,8 +54,6 @@ export const themeConfig: ThemeConfig = {
       colorText: "#555554",
     },
     Collapse: {
-      headerPadding: "0px 0px",
-      contentPadding: "0px 0px",
       headerBg: "white",
     },
     Card: {
@@ -69,6 +67,15 @@ export const themeConfig: ThemeConfig = {
       extraMargin:0,
       paddingLG:0,
     }
+  },
+};
+
+export const dividerConfig: ThemeConfig = {
+  components: {
+    Divider: {
+      lineWidth: 2,
+      colorSplit: "#e5e7eb",
+    },
   },
 };
 
