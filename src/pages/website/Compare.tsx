@@ -35,7 +35,7 @@ export default function Compare() {
   useEffect(() => {
     getEquipment();
   }, []);
-
+ 
   async function getEquipment() {
     const data = await getAllEquipment();
     setEquipment(data);
