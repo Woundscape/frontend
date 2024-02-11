@@ -21,7 +21,7 @@ export function getInstanceLocal(config?: CreateAxiosDefaults) {
 
 export function createInstanceLocal(config?: CreateAxiosDefaults) {
   instance = axios.create({
-    baseURL: "https://woundscape-backend.vercel.app/api",
+    baseURL: "http://localhost:3000/api",
     ...config,
   });
 }
