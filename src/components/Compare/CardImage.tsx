@@ -3,7 +3,7 @@ import { IEquipment, IImage, INote } from "@constants";
 import { formatDate, formatImage } from "@utils";
 import { Tag, Divider, Image } from "antd";
 import { useEffect, useState } from "react";
-import {httpAPI} from "@config";
+import { httpAPI } from "@config";
 
 interface CardImageProps {
   image: IImage;
@@ -49,16 +49,16 @@ export default function CardImage({ image, equipment }: CardImageProps) {
             </div>
             <p className="bg-[#f6f6f6] rounded-sm p-2">{item.note_desc}</p>
             <div className="flex gap-3">
-                  {item.note_img.map((image, index) => (
-                    <Image
-                      key={index}
-                      width={80}
-                      height={80}
-                      src={`${httpAPI}/${image}`}
-                      className="rounded-md"
-                    />
-                  ))}
-                </div>
+              {item.note_img.map((image, index) => (
+                <Image
+                  key={index}
+                  width={80}
+                  height={80}
+                  src={`${httpAPI}/${image}`}
+                  className="rounded-md"
+                />
+              ))}
+            </div>
           </div>
         ))}
     </div>
