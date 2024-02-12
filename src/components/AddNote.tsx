@@ -267,7 +267,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               />
             </div>
             <div
-              id="addNote__upload__wrapper"
+              id="upload__wrapper"
               className="flex justify-between items-end pl-2"
             >
               <Upload

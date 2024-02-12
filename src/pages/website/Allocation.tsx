@@ -5,8 +5,12 @@ import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { UseMutationResult, useMutation } from "react-query";
 import { getColumnsAllocation } from "@components/Allocation/ColumnTable";
-import getAllDoctor from "@api-caller/doctorApi";
-import { IUpdateCase, getAllCase, updateDoctor } from "@api-caller/caseApi";
+import {
+  IUpdateCase,
+  getAllCase,
+  getAllDoctor,
+  updateDoctor,
+} from "@api-caller";
 import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
 
 export default function Allocation() {

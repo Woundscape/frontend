@@ -1,12 +1,6 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { IEquipType, IEquipment } from "@constants";
+import { ICreateEquip, IEquipType, IEquipment } from "@constants";
 import { formattedError } from "@utils";
-
-export interface ICreateEquip {
-  equip_name: string;
-  equip_type: string;
-  equip_subtype: string;
-}
 
 export default async function getAllEquipment(): Promise<IEquipment[]> {
   try {

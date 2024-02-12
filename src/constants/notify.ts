@@ -1,32 +1,29 @@
-export enum NotificationType {
+export enum NotifyType {
   SUCCESS = "success",
   INFO = "info",
   WARNING = "warning",
   ERROR = "error",
 }
 
-export interface NotificationContent {
+export interface NotifyContent {
   TITLE: string;
   CONTENT: string;
 }
 
-export const NotificationMessage: Record<
-  NotificationType,
-  NotificationContent
-> = {
-  [NotificationType.SUCCESS]: {
+export const NotificationMessage: Record<NotifyType, NotifyContent> = {
+  [NotifyType.SUCCESS]: {
     TITLE: "Header",
     CONTENT: "test",
   },
-  [NotificationType.INFO]: {
+  [NotifyType.INFO]: {
     TITLE: "Info Header",
     CONTENT: "info content",
   },
-  [NotificationType.WARNING]: {
+  [NotifyType.WARNING]: {
     TITLE: "Warning Header",
     CONTENT: "warning content",
   },
-  [NotificationType.ERROR]: {
+  [NotifyType.ERROR]: {
     TITLE: "Error Header",
     CONTENT: "error content",
   },

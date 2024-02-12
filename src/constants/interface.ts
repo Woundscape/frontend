@@ -136,11 +136,35 @@ export interface IRefer {
   updated_at: Date;
 }
 
+export interface ICreateEquip {
+  equip_name: string;
+  equip_type: string;
+  equip_subtype: string;
+}
+
+export interface ICreateNotification {
+  noti_type: string;
+  noti_title: string;
+  noti_desc: string;
+  noti_img?: any;
+  approveStatus: boolean;
+  sender_id: string | undefined;
+  recipient_id: string;
+}
+
 export enum IStage {
   SPECIAL = "Special",
   UNSTABLE = "Unstable",
   STABLE = "Stable",
   IMPROVE = "Improved",
+}
+
+export enum NotificationType {
+  CONSULT = "consult",
+  UPLOAD = "upload",
+  NOTE = "note",
+  ACCEPT = "accept",
+  CANCEL = "cancel",
 }
 
 export const selectStage: DefaultOptionType[] = [

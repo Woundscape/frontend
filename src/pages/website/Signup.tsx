@@ -7,7 +7,7 @@ import {
   UserField,
   IFormattedErrorResponse,
   IUser,
-  NotificationType,
+  NotifyType,
   DefaultDoctorForm,
 } from "@constants";
 import { displayNotification } from "@utils";
@@ -30,7 +30,7 @@ function Signup() {
       if (values) {
         registerMutation.mutate(form, {
           onSuccess: () => {
-            displayNotification(NotificationType.SUCCESS);
+            displayNotification(NotifyType.SUCCESS);
             setForm(DefaultDoctorForm);
             forms.resetFields();
             setRegistrationFailed("");
@@ -38,7 +38,7 @@ function Signup() {
           onError: (e) => {
             if (e.message) {
               setRegistrationFailed(e.message);
-              displayNotification(NotificationType.ERROR);
+              displayNotification(NotifyType.ERROR);
             }
           },
         });

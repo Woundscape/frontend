@@ -69,16 +69,16 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
   }
 }
 
-export default async function uploadImage(formData: FormData): Promise<any> {
+export async function uploadImage(form: FormData): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().post("/image/", formData);
+    const { data } = await getInstanceLocal().post("/image/", form);
     return data;
   } catch (error) {
     throw formattedError(error);
   }
 }
 
-export async function updateEquipment({
+export async function updateImageEquipment({
   img_id,
   equip_id,
 }: IUpdateEquipment): Promise<any> {

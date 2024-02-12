@@ -6,7 +6,7 @@ import { formatDate, formatImage } from "@utils";
 import { filterOptions, filterSort } from "@config";
 import { GoX } from "react-icons/go";
 import { IEquipment, IFormattedErrorResponse, IImage } from "@constants";
-import { IUpdateEquipment, updateEquipment } from "@api-caller/imageApi";
+import { IUpdateEquipment, updateImageEquipment } from "@api-caller/imageApi";
 
 interface EquipmentTabProps {
   image: IImage;
@@ -23,7 +23,7 @@ export default function EquipmentTab({
     boolean,
     IFormattedErrorResponse,
     IUpdateEquipment
-  > = useMutation(updateEquipment);
+  > = useMutation(updateImageEquipment);
   const [select, setSelect] = useState<string>();
   const [isEditable, setIsEditable] = useState(false);
   const handleEquip = async () => {
