@@ -8,7 +8,7 @@ import logo_wound from "@assets/logo/logo-wound.svg";
 import { UseMutationResult, useMutation } from "react-query";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { displayNotification } from "@utils";
-import { IFormattedErrorResponse, NotificationType } from "@constants";
+import { IFormattedErrorResponse, NotifyType } from "@constants";
 import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
 function Signin() {
   const router = useNavigate();
@@ -41,7 +41,7 @@ function Signin() {
       onError: (e) => {
         if (e.message) {
           setLoginFailed(e.message);
-          displayNotification(NotificationType.ERROR);
+          displayNotification(NotifyType.ERROR);
         }
       },
     });

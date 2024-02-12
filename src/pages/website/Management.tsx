@@ -8,13 +8,14 @@ import {
   IDoctor,
   IFormattedErrorResponse,
   ACTION_MANAGE,
-  NotificationType,
+  NotifyType,
 } from "@constants";
-import getAllDoctor, {
+import {
+  getAllDoctor,
   IUpdateDoctorType,
   updateDoctorType,
   verifiedDoctor,
-} from "@api-caller/doctorApi";
+} from "@api-caller";
 import UserProfile from "@components/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
@@ -45,8 +46,8 @@ export default function Management() {
     getDoctor();
   }, []);
   async function getDoctor() {
-    getAllDoctor(false).then((doctors) => {
-      const doctorWithRowEditable = doctors.map((doctor) => {
+    getAllDoctor(false).then((doctors: IDoctor[]) => {
+      const doctorWithRowEditable = doctors.map((doctor: IDoctor) => {
         const type = doctor.doctor_type;
         const roleAdmin = type == DoctorType.Admin;
         const roleDoctor = type == DoctorType.Doctor;
@@ -149,7 +150,7 @@ export default function Management() {
           onSuccess: () => {
             setIsModalOpen(false);
             setConfirmLoading(false);
-            displayNotification(NotificationType.SUCCESS);
+            displayNotification(NotifyType.SUCCESS);
             getDoctor();
           },
         });

@@ -1,7 +1,7 @@
-import { NotificationMessage, NotificationType } from "@constants";
+import { NotificationMessage, NotifyType } from "@constants";
 import { notification } from "antd";
 
-export function displayNotification(type: NotificationType) {
+export function displayNotification(type: NotifyType) {
   const notificationDetails = NotificationMessage[type];
 
   const { TITLE, CONTENT } = notificationDetails as {

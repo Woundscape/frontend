@@ -8,7 +8,7 @@ import {
   IEquipment,
   IFormattedErrorResponse,
   DefaultEquipment,
-  NotificationType,
+  NotifyType,
 } from "@constants";
 import UserProfile from "@components/UserProfile";
 import DefaultInput from "@components/Equipment/DefaultInput";
@@ -93,7 +93,7 @@ export default function Equipment() {
             setIsUpdateOpen(false);
             setConfirmLoading(false);
             forms.resetFields();
-            displayNotification(NotificationType.SUCCESS);
+            displayNotification(NotifyType.SUCCESS);
           },
           onError: () => {
             setConfirmLoading(false);
@@ -110,7 +110,7 @@ export default function Equipment() {
           getEquipment();
           setIsDeleteOpen(false);
           setSubmitDelete(false);
-          displayNotification(NotificationType.SUCCESS);
+          displayNotification(NotifyType.SUCCESS);
         },
       });
     }
@@ -156,7 +156,7 @@ export default function Equipment() {
                   >
                     <Table
                       id="table__primary"
-                      aria-label={'pointer'}
+                      aria-label={"pointer"}
                       dataSource={equipment}
                       columns={columns}
                       loading={loading}

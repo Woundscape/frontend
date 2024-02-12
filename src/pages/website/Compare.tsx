@@ -6,13 +6,19 @@ import { Content } from "antd/es/layout/layout";
 import UserProfile from "@components/UserProfile";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";
 import ArrowDown from "@assets/icons/arrow_left_down.svg";
-import { addNoteCompare } from "@api-caller/noteApi";
-import { getCoupleImage } from "@api-caller/imageApi";
-import { IEquipment, IFormattedErrorResponse, IImage, INote } from "@constants";
+import {
+  DefaultTissue,
+  IEquipment,
+  IFormattedErrorResponse,
+  IImage,
+  INote,
+  TissueType,
+} from "@constants";
 import { ConfigProvider, Divider } from "antd";
 import { dividerConfig } from "@config";
 import CardImage from "@components/Compare/CardImage";
 import AddNoteWithoutEquip from "@components/AddNoteWithoutEquip";
+import { addNoteCompare, getCoupleImage } from "@api-caller";
 import getAllEquipment from "@api-caller/equipApi";
 
 export default function Compare() {
@@ -26,6 +32,7 @@ export default function Compare() {
   const { imageList } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
+  const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   useEffect(() => {
     getCoupleImage(imageList).then((data) => {
       setImage(data);
@@ -35,7 +42,7 @@ export default function Compare() {
   useEffect(() => {
     getEquipment();
   }, []);
- 
+
   async function getEquipment() {
     const data = await getAllEquipment();
     setEquipment(data);
@@ -76,7 +83,10 @@ export default function Compare() {
                 </div>
                 <AddNoteWithoutEquip id={""} mutation={addNoteMutation} />
               </div>
-              <div id="result" className="flex flex-col w-[28rem] space-y-3">
+              <Content
+                id="result"
+                className="flex flex-col w-[28rem] space-y-3"
+              >
                 <div className="flex flex-row items-center justify-between h-9 bg-[#F2F2F2] text-[#868686] rounded-lg">
                   <div className="w-1/2 ">
                     <p className="text-center">Tissue</p>
@@ -85,27 +95,29 @@ export default function Compare() {
                     <p className="text-center">Status</p>
                   </div>
                 </div>
-                <div className=" flex flex-row border-2 rounded-lg p-4">
-                  <div className="flex flex-row w-1/2 space-x-3 ">
-                    <div className="w-6 h-6 rounded-xl bg-[#FFE1E1]"></div>
-                    <p>wound</p>
-                  </div>
-                  <div className="flex flex-row w-1/2 justify-center space-x-3">
-                    <img className="w-3" src={ArrowUp} alt="" />
-                    <p className="text-[#4C577C]">3.2%</p>
-                  </div>
-                </div>
-                <div className=" flex flex-row border-2 rounded-lg p-4">
-                  <div className="flex flex-row w-1/2 space-x-3 ">
-                    <div className="w-6 h-6 rounded-xl bg-[#C8FFFD]"></div>
-                    <p>periwound</p>
-                  </div>
-                  <div className="flex flex-row w-1/2 justify-center space-x-3">
-                    <img className="w-3" src={ArrowDown} alt="" />
-                    <p className="text-[#A3802D]">3.2%</p>
-                  </div>
-                </div>
-              </div>
+                {tissueData.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-row border-2 rounded-lg p-4"
+                    >
+                      <div className="flex flex-row w-1/2 space-x-3 ">
+                        <div
+                          className="w-6 h-6 rounded-xl"
+                          style={{
+                            backgroundColor: item.color,
+                          }}
+                        ></div>
+                        <p id="text__primary">{item.title}</p>
+                      </div>
+                      <div className="flex flex-row w-1/2 justify-center space-x-3">
+                        <img className="w-3" src={ArrowUp} alt="" />
+                        <p className="text-[#4C577C]">3.2%</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Content>
             </div>
           </Content>
         </div>

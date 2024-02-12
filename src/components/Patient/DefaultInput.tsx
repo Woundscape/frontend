@@ -1,25 +1,19 @@
 import { useState } from "react";
 import {
-  Button,
-  ConfigProvider,
-  DatePicker,
-  Input,
-  Segmented,
-  Select,
-} from "antd";
-import {
   AppstoreOutlined,
   BarsOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
+import { Button, DatePicker, Input, Segmented, Select } from "antd";
 import { SegmentedValue } from "antd/es/segmented";
+import { IFormattedErrorResponse } from "@constants";
+import { UseMutationResult, useMutation } from "react-query";
+import { uploadImage } from "@api-caller";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import AddImageIcon from "@assets/icons/add_image_icon2.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import UploadModal from "./UploadModal";
-import uploadImage from "@api-caller/imageApi";
-import { IFormattedErrorResponse } from "@constants";
-import { UseMutationResult, useMutation } from "react-query";
+import Consult from "./Consult";
 
 const { RangePicker } = DatePicker;
 
@@ -70,25 +64,17 @@ export default function DefaultInput({
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <img className="w-5" src={SortBy} alt="" />
           <p className="text-[#BFBFBF]">Sort by :</p>
-          <ConfigProvider
-            theme={{
-              components: {
-                Select: { colorBorder: "" },
-              },
-            }}
-          >
-            <Select
-              id="select__sortBy"
-              className="w-24 outline-none border-[white] text-[#868686]"
-              defaultValue="All"
-              bordered={false}
-              placeholder=""
-              options={[
-                { value: "All", label: "All" },
-                { value: "Unread", label: "Unread" },
-              ]}
-            />
-          </ConfigProvider>
+          <Select
+            id="select__sortBy"
+            className="w-24 outline-none border-[white] text-[#868686]"
+            defaultValue="All"
+            bordered={false}
+            placeholder="Sort by"
+            options={[
+              { value: "All", label: "All" },
+              { value: "Unread", label: "Unread" },
+            ]}
+          />
         </div>
         {segmented && (
           <Segmented
@@ -110,7 +96,7 @@ export default function DefaultInput({
           </Button>
         ) : (
           <>
-            <Button className="button_consult">Consult</Button>
+            <Consult />
             <Button
               onClick={() => setIsModalOpen(true)}
               className="button_add"

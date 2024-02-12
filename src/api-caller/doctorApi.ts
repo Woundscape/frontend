@@ -13,9 +13,7 @@ export interface CardPatient {
   value: string;
 }
 
-export default async function getAllDoctor(
-  verified: boolean
-): Promise<IDoctor[]> {
+export async function getAllDoctor(verified: boolean): Promise<IDoctor[]> {
   try {
     const { data } = await getInstanceLocal().get("/doctor/getAllDoctor", {
       params: {

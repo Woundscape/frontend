@@ -152,6 +152,7 @@ export default function EquipmentModal({
                 Equipment type :
               </Typography>
               <Select
+                showSearch
                 loading={loadingSelect}
                 value={data?.equip_type}
                 placeholder="Select Equipment Type"

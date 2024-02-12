@@ -1,6 +1,11 @@
-import { ICreateEquip } from "@api-caller/equipApi";
-import { IEquipment, UserType } from "./interface";
-import { CardPatient } from "@api-caller/doctorApi";
+import {
+  ICreateEquip,
+  ICreateNotification,
+  IEquipment,
+  NotificationType,
+  UserType,
+} from "./interface";
+import { CardPatient } from "@api-caller";
 
 export const DefaultTotalDashboard: CardPatient[] = [
   {
@@ -47,6 +52,16 @@ export const DefaultPatientForm = {
   line_uid: "",
   user_type: UserType.Patient,
   ref_code: "",
+};
+
+export const DefaultConsultForm: ICreateNotification = {
+  noti_type: NotificationType.CONSULT,
+  noti_title: "",
+  noti_desc: "",
+  noti_img: [],
+  approveStatus: false,
+  sender_id: "",
+  recipient_id: "",
 };
 
 export const DefaultDoctorForm = {

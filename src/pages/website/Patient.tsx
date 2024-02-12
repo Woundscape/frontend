@@ -27,7 +27,7 @@ import CardPatient from "@components/Patient/CardPatient";
 import { getColumnsPatient } from "@components/Patient/ColumnTable";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { UseMutationResult, useMutation } from "react-query";
-import { createReferral } from "@api-caller/refer";
+import { createReferral } from "@api-caller/referApi";
 
 const { Paragraph } = Typography;
 export default function Patient() {
