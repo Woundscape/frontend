@@ -10,7 +10,7 @@ import {
   selectStatus,
 } from "@constants";
 import { tagInputStyle, tagPlusStyle } from "@config";
-import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller/caseApi";
+import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller";
 
 interface IAdditionalDataProps {
   data: IPatient;

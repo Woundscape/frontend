@@ -10,7 +10,6 @@ import {
   Image,
   Input,
   Modal,
-  Select,
   Space,
   Spin,
   Tag,
@@ -29,7 +28,7 @@ import {
   INote,
   DefaultNoteForm,
 } from "@constants";
-import { filterOptions, filterSort, httpAPI } from "@config";
+import { httpAPI } from "@config";
 import { getNoteImageById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
 import { useAuth } from "./AuthProvider";
@@ -246,7 +245,7 @@ export default function AddNoteWithoutEquip({
               />
             </div>
             <div
-              id="addNote__upload__wrapper"
+              id="upload__wrapper"
               className="flex justify-between items-end pl-2"
             >
               <Upload

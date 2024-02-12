@@ -10,7 +10,7 @@ import {
   ICase,
   IDoctor,
   IFormattedErrorResponse,
-  NotificationType,
+  NotifyType,
 } from "@constants";
 import { displayNotification } from "@utils";
 
@@ -55,7 +55,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           setIsModalOpen(false);
           setOpen(false);
           setSubmitLoading(false);
-          displayNotification(NotificationType.SUCCESS);
+          displayNotification(NotifyType.SUCCESS);
         },
       }
     );

@@ -1,3 +1,4 @@
+import { httpAPI } from "@config";
 import axios, { AxiosInstance, CreateAxiosDefaults } from "axios";
 
 let instance: AxiosInstance;
@@ -21,7 +22,7 @@ export function getInstanceLocal(config?: CreateAxiosDefaults) {
 
 export function createInstanceLocal(config?: CreateAxiosDefaults) {
   instance = axios.create({
-    baseURL: "https://woundscape-backend.vercel.app/api",
+    baseURL: `${httpAPI}/api`,
     ...config,
   });
 }
