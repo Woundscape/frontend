@@ -2,9 +2,9 @@ import { INote } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "@api/apiClient";
 
-export async function getNoteImageById(note_id: string): Promise<any> {
+export async function getNoteImageById(image_id: string): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().get(`/note/image/${note_id}`);
+    const { data } = await getInstanceLocal().get(`/note/image/${image_id}`);
     return data;
   } catch (error) {
     throw formattedError(error);

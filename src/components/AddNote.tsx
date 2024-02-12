@@ -139,8 +139,8 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
                   {item.note_img.map((image, index) => (
                     <Image
                       key={index}
-                      width={120}
-                      height={120}
+                      width={80}
+                      height={80}
                       src={`${httpAPI}/${image}`}
                       className="rounded-md"
                     />
