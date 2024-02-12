@@ -122,7 +122,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary" className="indent-10">
+                <Paragraph id="text__primary">
                   {item.note_desc}
                 </Paragraph>
                 <Text id="text__primary">Equipment</Text>
