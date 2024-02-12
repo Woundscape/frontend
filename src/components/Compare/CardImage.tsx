@@ -18,7 +18,6 @@ export default function CardImage({ image, equipment }: CardImageProps) {
   async function getNote() {
     const data = await getNoteImageById(image.img_id);
     setNote(data);
-    console.log(data);
   }
   return (
     <div className="space-y-2 w-1/2 p-5">

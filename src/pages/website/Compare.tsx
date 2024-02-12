@@ -20,7 +20,17 @@ import CardImage from "@components/Compare/CardImage";
 import AddNoteWithoutEquip from "@components/AddNoteWithoutEquip";
 import { addNoteCompare, getCoupleImage } from "@api-caller";
 import getAllEquipment from "@api-caller/equipApi";
+import { all } from "axios";
+interface Tissue {
+  title: string;
+  value: number;
+  color: string;
+}
 
+interface TissueArrayElement {
+  paths: any[];
+  result: Tissue[];
+}
 export default function Compare() {
   const addNoteMutation: UseMutationResult<
     boolean,
@@ -33,6 +43,8 @@ export default function Compare() {
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
+  const [tissueResult, setTissueResult] = useState<TissueType[]>();
+  const [tissueArray, setTissueArray] = useState<TissueType[][]>([]);
   useEffect(() => {
     getCoupleImage(imageList).then((data) => {
       setImage(data);
@@ -41,8 +53,52 @@ export default function Compare() {
 
   useEffect(() => {
     getEquipment();
+    getTissueResult();
   }, []);
 
+  const allTissueData: TissueType[][] = [];
+  async function getTissueResult() {
+    const formattedTissueArrays: TissueType[][] = [];
+  
+    images?.forEach((image) => {
+      const formattedTissueArray: TissueType[] = [];
+  
+      if (image.img_tissue && image.img_tissue.result) {
+        image.img_tissue.result.forEach((tissue) => {
+          formattedTissueArray.push({
+            title: tissue.title,
+            value: tissue.value,
+            color: tissue.color,
+          });
+        });
+      }
+  
+      formattedTissueArrays.push(formattedTissueArray);
+    });
+  
+    setTissueArray(formattedTissueArrays);
+  
+    const updatedTissueData = DefaultTissue.map((defaultTissue) => {
+      const tissueArray1 = formattedTissueArrays[0];
+      const tissueArray2 = formattedTissueArrays[1];
+      const tissue1 = tissueArray1.find((t) => t.title === defaultTissue.title);
+      const tissue2 = tissueArray2.find((t) => t.title === defaultTissue.title);
+  
+      if (tissue1 && tissue2) {
+        const increase = tissue2.value - tissue1.value;
+        return {
+          ...defaultTissue,
+          value: increase,
+        };
+      } else {
+        return defaultTissue;
+      }
+    });
+  
+    setTissueData(updatedTissueData);
+  }
+  
+  
   async function getEquipment() {
     const data = await getAllEquipment();
     setEquipment(data);
@@ -87,7 +143,7 @@ export default function Compare() {
                 id="result"
                 className="flex flex-col w-[28rem] space-y-3"
               >
-                <div className="flex flex-row items-center justify-between h-9 bg-[#F2F2F2] text-[#868686] rounded-lg">
+                <div className="flex flex-row items-center justify-between py-2 bg-[#F2F2F2] text-[#868686] rounded-lg">
                   <div className="w-1/2 ">
                     <p className="text-center">Tissue</p>
                   </div>
@@ -110,9 +166,9 @@ export default function Compare() {
                         ></div>
                         <p id="text__primary">{item.title}</p>
                       </div>
-                      <div className="flex flex-row w-1/2 justify-center space-x-3">
-                        <img className="w-3" src={ArrowUp} alt="" />
-                        <p className="text-[#4C577C]">3.2%</p>
+                      <div className="flex flex-row w-1/2 items-center justify-center space-x-3">
+                        <img className="w-3" src={item.value<=0?ArrowUp:ArrowDown} alt="" />
+                        <p className="jura text-[#4C577C]">{item.value < 0 ? Math.abs(item.value) : item.value} %</p>
                       </div>
                     </div>
                   );
