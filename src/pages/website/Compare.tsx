@@ -20,7 +20,6 @@ import CardImage from "@components/Compare/CardImage";
 import AddNoteWithoutEquip from "@components/AddNoteWithoutEquip";
 import { addNoteCompare, getCoupleImage } from "@api-caller";
 import getAllEquipment from "@api-caller/equipApi";
-import { all } from "axios";
 interface Tissue {
   title: string;
   value: number;
@@ -37,34 +36,31 @@ export default function Compare() {
     IFormattedErrorResponse,
     INote
   > = useMutation(addNoteCompare);
-  const router = useNavigate();
   const location = useLocation();
   const { imageList } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
-  const [tissueResult, setTissueResult] = useState<TissueType[]>();
-  const [tissueArray, setTissueArray] = useState<TissueType[][]>([]);
+  const [isLoadingResult, setIsLoadingResult] = useState<boolean>(false)
   useEffect(() => {
     getCoupleImage(imageList).then((data) => {
+      getTissueResult(data);
       setImage(data);
     });
   }, []);
 
   useEffect(() => {
     getEquipment();
-    getTissueResult();
   }, []);
 
-  const allTissueData: TissueType[][] = [];
-  async function getTissueResult() {
+  async function getTissueResult(data:any) {
     const formattedTissueArrays: TissueType[][] = [];
   
-    images?.forEach((image) => {
+    data?.forEach((image:IImage) => {
       const formattedTissueArray: TissueType[] = [];
   
       if (image.img_tissue && image.img_tissue.result) {
-        image.img_tissue.result.forEach((tissue) => {
+        image.img_tissue.result.forEach((tissue:TissueType) => {
           formattedTissueArray.push({
             title: tissue.title,
             value: tissue.value,
@@ -76,26 +72,31 @@ export default function Compare() {
       formattedTissueArrays.push(formattedTissueArray);
     });
   
-    setTissueArray(formattedTissueArrays);
+
   
     const updatedTissueData = DefaultTissue.map((defaultTissue) => {
       const tissueArray1 = formattedTissueArrays[0];
       const tissueArray2 = formattedTissueArrays[1];
       const tissue1 = tissueArray1.find((t) => t.title === defaultTissue.title);
       const tissue2 = tissueArray2.find((t) => t.title === defaultTissue.title);
-  
-      if (tissue1 && tissue2) {
+      console.log(defaultTissue);
+      
+      if (tissue1?.value && tissue2?.value) {
         const increase = tissue2.value - tissue1.value;
         return {
           ...defaultTissue,
           value: increase,
         };
       } else {
-        return defaultTissue;
+        return {
+          ...defaultTissue,
+          value: tissue1?.value != 0 ? tissue1?.value : tissue2?.value
+        };
       }
     });
   
     setTissueData(updatedTissueData);
+    setIsLoadingResult(true)
   }
   
   
@@ -151,7 +152,7 @@ export default function Compare() {
                     <p className="text-center">Status</p>
                   </div>
                 </div>
-                {tissueData.map((item, index) => {
+                {isLoadingResult && tissueData.map((item, index) => {
                   return (
                     <div
                       key={index}
@@ -166,10 +167,10 @@ export default function Compare() {
                         ></div>
                         <p id="text__primary">{item.title}</p>
                       </div>
-                      <div className="flex flex-row w-1/2 items-center justify-center space-x-3">
+                      {typeof item.value == 'number' && <div className="jura flex flex-row w-1/2 items-center justify-center space-x-3">
                         <img className="w-3" src={item.value<=0?ArrowUp:ArrowDown} alt="" />
-                        <p className="jura text-[#4C577C]">{item.value < 0 ? Math.abs(item.value) : item.value} %</p>
-                      </div>
+                        <p className="text-[#4C577C]">{item.value < 0 ? Math.abs(item.value) : item.value} %</p>
+                      </div>}
                     </div>
                   );
                 })}
