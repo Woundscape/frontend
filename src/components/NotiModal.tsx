@@ -13,6 +13,7 @@ import { optionNotification } from "@utils/option";
 import DoctorMock from "@assets/icons/doctor_mock.svg";
 import ImgMock from "@assets/wound/img_5.jpg";
 import { useState } from "react";
+import { listConfig } from "@config";
 const Panel = Collapse.Panel;
 interface NotificationModalProps {
   isOpen: boolean;
@@ -72,22 +73,7 @@ export default function NotiModal({
           borderRadius: "1.25rem",
         }}
       >
-        <ConfigProvider
-          theme={{
-            components: {
-              Segmented: {
-                itemSelectedBg: "#EEEEEE",
-                itemSelectedColor: "#424241",
-                itemHoverBg: "transparent",
-                itemColor: "#4C577C",
-                colorBgContainer: "red",
-              },
-              List: {
-                itemPadding: "0px 0",
-              },
-            },
-          }}
-        >
+        <ConfigProvider theme={listConfig}>
           <div className="flex flex-col space-y-5 h-[30rem]">
             <div className="flex text-[#4C577C] space-x-7">
               <div id="head__notification">
@@ -107,7 +93,7 @@ export default function NotiModal({
                       avatar={
                         <Avatar src={UnreadIcon} className="rounded-none" />
                       }
-                      className="p-4 m-0 jura hover:bg-[#f2f1f1]"
+                      className="p-4 jura hover:bg-[#f2f1f1]"
                       title={
                         <p>
                           {item.message}{" "}
@@ -121,7 +107,7 @@ export default function NotiModal({
               />
 
               {/* noti with button in Sugggestion Tab */}
-              
+
               <Collapse bordered={false} className="">
                 <Panel
                   showArrow={false}

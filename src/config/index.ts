@@ -55,6 +55,8 @@ export const themeConfig: ThemeConfig = {
     },
     Collapse: {
       headerBg: "white",
+      // headerPadding: "0px 0px",
+      // contentPadding: "0px 0px",
     },
     Card: {
       fontFamily: "jura",
@@ -66,6 +68,21 @@ export const themeConfig: ThemeConfig = {
     Result: {
       extraMargin: 0,
       paddingLG: 0,
+    },
+  },
+};
+
+export const listConfig: ThemeConfig = {
+  components: {
+    Segmented: {
+      itemSelectedBg: "#EEEEEE",
+      itemSelectedColor: "#424241",
+      itemHoverBg: "transparent",
+      itemColor: "#4C577C",
+      colorBgContainer: "red",
+    },
+    List: {
+      itemPadding: "0px 0",
     },
   },
 };

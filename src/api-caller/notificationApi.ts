@@ -1,12 +1,12 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { ICreateNotification, IMe } from "@constants";
+import { IMe, ICreateNotification, INotification } from "@constants";
 import { formattedError } from "@utils";
 
-export async function getNotification(me: IMe): Promise<any> {
+export async function getNotification(me: IMe): Promise<INotification[]> {
   try {
-    const { data } = await getInstanceLocal().post("/refer", {
-      me,
-    });
+    const { data } = await getInstanceLocal().get(
+      `/notification/${me.user_id}`
+    );
     return data;
   } catch (error) {
     throw formattedError(error);

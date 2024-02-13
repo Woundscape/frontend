@@ -137,6 +137,18 @@ export interface IRefer {
   updated_at: Date;
 }
 
+export interface INotification {
+  noti_id: string;
+  noti_type: string;
+  noti_title: string;
+  noti_desc: string;
+  noti_img?: any;
+  approveStatus: boolean;
+  sender_id: string;
+  recipient_id: string;
+  created_at: Date;
+}
+
 export interface ICreateEquip {
   equip_name: string;
   equip_type: string;

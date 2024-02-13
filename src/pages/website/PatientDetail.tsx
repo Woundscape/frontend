@@ -58,8 +58,8 @@ export default function PatientDetail() {
   }
 
   useEffect(() => {
-    getImage();
     getCase();
+    getImage();
   }, []);
 
   async function getImage() {
@@ -72,8 +72,6 @@ export default function PatientDetail() {
   async function getCase() {
     const _case: IPatient = await getCaseByCaseId(case_id as string);
     setCases(_case);
-    console.log(_case);
-    // console.log(_case.doctor_id.includes(me?.doctor_id as string));
   }
 
   const handleImage = (image_id: string) => {

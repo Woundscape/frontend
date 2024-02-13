@@ -1,5 +1,5 @@
 import Avatar from "react-avatar";
-import { Dropdown } from "antd";
+import { Dropdown, Typography } from "antd";
 import type { MenuProps } from "antd";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
 import NotificationIcon from "@assets/noti-icon.svg";
@@ -8,6 +8,7 @@ import NotiModal from "@components/NotiModal";
 import LogoutIcon from "@assets/icons/logout.svg";
 import EditProfileIcon from "@assets/icons/editProfile.svg";
 import { useAuth } from "@components/AuthProvider";
+import { Content } from "antd/es/layout/layout";
 
 export default function UserProfile() {
   const { me, logout } = useAuth();
@@ -40,7 +41,7 @@ export default function UserProfile() {
   ];
   return (
     <div id="user-profile" className="px-4 select-none">
-      <div className="flex justify-end items-center space-x-3">
+      <Content className="flex justify-end items-center space-x-3">
         <img
           onClick={handleModal}
           src={NotificationIcon}
@@ -50,9 +51,9 @@ export default function UserProfile() {
         <NotiModal isOpen={openModal} setModal={handleModal} />
         <Avatar name={fullName} size="40" round="20px" />
         <div className="jura">
-          <p id="user_fullname" className="text-[#535352]">
+          <Typography id="user_fullname" className="text-[#535352] jura">
             {fullName}
-          </p>
+          </Typography>
           <span id="user_role" className="text-[#4C577C]">
             {me?.doctor_type}
           </span>
@@ -60,7 +61,7 @@ export default function UserProfile() {
         <Dropdown menu={{ items }} trigger={["click"]}>
           <img className="pl-2" src={DownOutlinedIcon} />
         </Dropdown>
-      </div>
+      </Content>
     </div>
   );
 }

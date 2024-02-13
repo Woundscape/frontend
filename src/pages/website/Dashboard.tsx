@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import { Content } from "antd/es/layout/layout";
 import { Checkbox, Divider, Layout, List, Modal, Typography } from "antd";
-import DynamicTime from "@components/DynamicTime";
-import ListNotification from "@features/ListNotification";
-import UserProfile from "@components/UserProfile";
 import DashboardTable from "@features/PatientTable";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
-import { DefaultTotalDashboard } from "@constants";
+import { DefaultTotalDashboard, INotification } from "@constants";
+import DynamicTime from "@components/DynamicTime";
+import ListNotification from "@features/ListNotification";
+import UserProfile from "@components/UserProfile";
 import { useAuth } from "@components/AuthProvider";
 import { CardPatient, getDashboard } from "@api-caller/doctorApi";
+import { getNotification } from "@api-caller";
 
 export default function Dashboard() {
   const { me } = useAuth();
   const [card, setCard] = useState<CardPatient[]>(DefaultTotalDashboard);
+  const [notification, setNotification] = useState<INotification[]>([]);
   const [isConnect, setIsConnect] = useState(false);
   useEffect(() => {
     async function getCard() {
@@ -30,6 +32,19 @@ export default function Dashboard() {
       me?.line_uid || localStorage.getItem("line_LIFF_SCAN_QRCODE");
     if (!connectedLine) {
       setIsConnect(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (me) {
+      getNotification(me).then((response: INotification[]) => {
+        setNotification(response);
+        console.log(
+          "%c 🐬 ~ Log from file: Dashboard.tsx:40 ~ response:",
+          "color: #00bcd4;",
+          response
+        );
+      });
     }
   }, []);
 
@@ -137,7 +152,7 @@ export default function Dashboard() {
             <div className="relative w-full h-full flex">
               <div className="flex flex-col w-full h-full space-y-3">
                 <UserProfile />
-                <ListNotification />
+                <ListNotification data={notification} />
                 <DynamicTime />
                 <div id="calendar">
                   <Calendar

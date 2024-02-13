@@ -1,48 +1,26 @@
-import UnreadIcon from "@assets/unread-noti-icon.svg";
-import { List, Avatar, Divider } from "antd";
 import { useState } from "react";
+import { List, Avatar, Divider, ConfigProvider } from "antd";
+import UnreadIcon from "@assets/unread-noti-icon.svg";
 import NotiModal from "@components/NotiModal";
+import { INotification, NotificationType } from "@constants";
+import { Content } from "antd/es/layout/layout";
+import { formatDate } from "@utils";
+import { listConfig } from "@config";
 
-export default function ListNotification() {
+interface IListNotificationProps {
+  data: INotification[];
+}
+
+export default function ListNotification({ data }: IListNotificationProps) {
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);
   };
-  const data = [
-    {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
-    },
-    {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
-    },
-    {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
-    },
-    {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
-    },
-    {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
-    },
-  ];
+  console.log(data);
+
   return (
     <>
-      <div
+      <Content
         id="notification-box"
         className="w-full h-full flex flex-col jura select-none bg-white rounded-xl"
       >
@@ -60,27 +38,36 @@ export default function ListNotification() {
           <NotiModal isOpen={openModal} setModal={handleModal} />
         </div>
         <Divider className="m-0" />
-        <div className="flex flex-col h-24 overflow-y-auto grow">
-          <List
-            dataSource={data}
-            renderItem={(item, index) => (
-              <List.Item key={index}>
-                <List.Item.Meta
-                  avatar={<Avatar src={UnreadIcon} className="rounded-none" />}
-                  className="px-4 jura hover:bg-[#EEE]"
-                  title={
-                    <p>
-                      {item.message}{" "}
-                      <span className="text-[#61708C]">{item.id}</span>
-                    </p>
-                  }
-                  description={item.time}
-                />
-              </List.Item>
-            )}
-          />
-        </div>
-      </div>
+        <ConfigProvider theme={listConfig}>
+          <div className="flex flex-col h-24 overflow-y-auto grow">
+            <List
+              dataSource={data}
+              renderItem={(item, index) => (
+                <List.Item key={index}>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar src={UnreadIcon} className="rounded-none" />
+                    }
+                    className="p-4 jura hover:bg-[#EEE]"
+                    title={
+                      <div className="space-x-2">
+                        <span>
+                          {item.noti_type == NotificationType.CONSULT &&
+                            "has sent you a message"}
+                        </span>
+                        <span className="text-[#61708C]">
+                          Consult #{item.noti_id}
+                        </span>
+                      </div>
+                    }
+                    description={formatDate(item.created_at)}
+                  />
+                </List.Item>
+              )}
+            />
+          </div>
+        </ConfigProvider>
+      </Content>
     </>
   );
 }
