@@ -26,6 +26,7 @@ import { LoadingProvider } from "@components/Loading";
 import { AuthProvider } from "@components/AuthProvider";
 import Account from "@pages/website/Account";
 import Management from "@pages/website/Management";
+import Manual from "@pages/line/Manual";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function LineRoutes() {
       <Route path="signup" element={<SignUpLine />} />
       <Route path="signin" element={<SignInLine />} />
       <Route path="history" element={<HistoryLine />} />
+      <Route path="manual" element={<Manual />} />
     </Routes>
   );
 }
