@@ -4,7 +4,7 @@ import { getInstanceLocal } from "@api/apiClient";
 
 export interface IUpdateImage {
   img_id: string;
-  img_tissue: any;
+  body: any;
 }
 
 export interface IUpdateEquipment {
@@ -14,13 +14,10 @@ export interface IUpdateEquipment {
 
 export async function updateImage({
   img_id,
-  img_tissue,
+  body,
 }: IUpdateImage): Promise<boolean> {
   try {
-    const { data } = await getInstanceLocal().put("/image", {
-      img_id,
-      img_tissue,
-    });
+    const { data } = await getInstanceLocal().put(`/image/${img_id}`, body);
     return data;
   } catch (error) {
     throw formattedError(error);

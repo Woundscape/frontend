@@ -2,6 +2,7 @@ import { IPatient } from "@constants";
 import { httpAPI } from "@config";
 import { useNavigate } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
+import { Badge } from "antd";
 
 interface CardPatientProps {
   patient: IPatient;

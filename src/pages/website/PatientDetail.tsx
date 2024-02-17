@@ -2,14 +2,19 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
-import { Segmented, Button, List, Divider, ConfigProvider } from "antd";
+import { Segmented, Button, List, Divider, ConfigProvider, Badge } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
-import { LeftOutlined } from "@ant-design/icons";
 import ViewResultHist from "@assets/view_result_hist.svg";
 import WoundHist from "@assets/wound/img_10.jpg";
-import { IFormattedErrorResponse, IImage, IPatient } from "@constants";
-import { optionSegmented, formatDate } from "@utils";
+import {
+  IFormattedErrorResponse,
+  IImage,
+  IPatient,
+  NotifyType,
+} from "@constants";
+import { optionSegmented, formatDate, displayNotification } from "@utils";
 import UserProfile from "@components/UserProfile";
 import DeleteModal from "@components/DeleteModal";
 import DefaultInput from "@components/Patient/DefaultInput";
@@ -90,14 +95,29 @@ export default function PatientDetail() {
   const filterPatient = (e: any) => {};
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
+      const isRead = image.img_read;
       return (
-        <CardPatientDetail
-          key={index}
-          image={image}
-          checkedList={checkedList}
-          stageSegmented={stageSegmented}
-          onImage={handleImage}
-        />
+        <div key={index}>
+          {!isRead && stageSegmented.stage == "Overview" ? (
+            <Badge count={"new"} color="#F27961" offset={[-15, 25]}>
+              <CardPatientDetail
+                key={index}
+                image={image}
+                checkedList={checkedList}
+                stageSegmented={stageSegmented}
+                onImage={handleImage}
+              />
+            </Badge>
+          ) : (
+            <CardPatientDetail
+              key={index}
+              image={image}
+              checkedList={checkedList}
+              stageSegmented={stageSegmented}
+              onImage={handleImage}
+            />
+          )}
+        </div>
       );
     });
   }
@@ -127,7 +147,11 @@ export default function PatientDetail() {
           setStageSegmented({ stage: "Overview", limit: false });
           break;
         case "Comparative Imaging":
-          router("/compare", { state: { imageList: checkedList } });
+          if (checkedList.length == 2) {
+            router("/compare", { state: { imageList: checkedList } });
+          } else {
+            displayNotification(NotifyType.WARNING);
+          }
           break;
         case "Wound Progression":
           router("/progress", { state: { imageList: checkedList } });
