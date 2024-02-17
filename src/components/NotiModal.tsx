@@ -105,9 +105,7 @@ export default function NotiModal({
                   </List.Item>
                 )}
               />
-
               {/* noti with button in Sugggestion Tab */}
-
               <Collapse bordered={false} className="">
                 <Panel
                   showArrow={false}
