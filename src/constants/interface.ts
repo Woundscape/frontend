@@ -95,6 +95,7 @@ export interface IImage {
   img_equipPath?: string | null;
   img_path: string;
   img_status: boolean;
+  img_read: boolean;
   created_at: Date;
   updated_at: Date;
   case_id: string;

@@ -90,6 +90,22 @@ export default function DrawSketchCanvas({
       };
     }
   }, [image?.img_path]);
+
+  useEffect(()=>{
+    if(typeof image?.img_read == 'boolean' && !image.img_read){
+      const body: IUpdateImage = {
+        img_id: image?.img_id || "",
+        body: {
+          img_read: true
+        },
+      };
+      updateMutation.mutate(body, {
+        onSuccess: () => {
+          console.log('read laew');
+        },
+      });
+    }
+  },[image?.img_read])
   //NOTE -  have for wut ?
   async function getImage() {
     if (canvasRef.current && data.img_tissue) {
@@ -165,9 +181,11 @@ export default function DrawSketchCanvas({
       const result = await convertToPercentage(paths);
       const body: IUpdateImage = {
         img_id: image?.img_id || "",
-        img_tissue: {
-          paths,
-          result,
+        body: {
+          img_tissue: {
+            paths,
+            result,
+          },
         },
       };
       updateMutation.mutate(body, {
