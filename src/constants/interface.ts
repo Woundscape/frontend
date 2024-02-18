@@ -37,6 +37,7 @@ export enum DoctorType {
   Doctor = "Doctor",
   Expert = "Expert",
   Admin = "Admin",
+  Reject = "Reject",
 }
 
 export interface IUser {
@@ -144,8 +145,8 @@ export interface INotification {
   noti_desc: string;
   noti_img?: any;
   approveStatus: boolean;
-  sender_id: string;
-  recipient_id: string;
+  sender: any;
+  recipient: any;
   created_at: Date;
 }
 
@@ -163,6 +164,13 @@ export interface ICreateNotification {
   approveStatus: boolean;
   sender_id: string | undefined;
   recipient_id: string;
+}
+
+export interface IFieldDoctorName {
+  user_id: string;
+  user_firstname: string | null;
+  user_lastname: string | null;
+  doctor_id: string;
 }
 
 export enum IStage {

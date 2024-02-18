@@ -1,10 +1,11 @@
-import { IDoctor } from "@constants";
+import { IDoctor, IFieldDoctorName } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
 
 export interface IUpdateDoctorType {
-  isDoctor: boolean;
-  isExpert: boolean;
+  isDoctor?: boolean;
+  isExpert?: boolean;
+  isReject?: boolean;
   doctor_id: string;
 }
 
@@ -29,12 +30,14 @@ export async function getAllDoctor(verified: boolean): Promise<IDoctor[]> {
 export async function updateDoctorType({
   isDoctor,
   isExpert,
+  isReject,
   doctor_id,
 }: IUpdateDoctorType): Promise<boolean> {
   try {
     const { data } = await getInstanceLocal().put(`/doctor/type/${doctor_id}`, {
       isDoctor,
       isExpert,
+      isReject,
     });
     return data;
   } catch (error) {
@@ -58,6 +61,15 @@ export async function getDashboard(doctor_id: string): Promise<CardPatient[]> {
     const { data } = await getInstanceLocal().get(
       `/doctor/dashboard/${doctor_id}`
     );
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getFieldDoctorName(): Promise<IFieldDoctorName[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/doctor/getFieldDoctorName`);
     return data;
   } catch (error) {
     throw formattedError(error);

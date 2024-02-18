@@ -215,7 +215,6 @@ export default function WoundAnalysis() {
                               ) : (
                                 <EyeOutlined style={{ fontSize: 18 }} />
                               )}
-                              {/* <LockOutlined style={{ fontSize: 18 }} /> */}
                             </div>
                           </div>
                         ))}

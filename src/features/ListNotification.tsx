@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { List, Avatar, Divider, ConfigProvider } from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
 import NotiModal from "@components/NotiModal";
-import { INotification, NotificationType } from "@constants";
+import { IFieldDoctorName, INotification, NotificationType } from "@constants";
 import { Content } from "antd/es/layout/layout";
 import { formatDate } from "@utils";
 import { listConfig } from "@config";
@@ -16,7 +16,6 @@ export default function ListNotification({ data }: IListNotificationProps) {
   const handleModal = () => {
     setOpenModal(!openModal);
   };
-  console.log(data);
 
   return (
     <>
@@ -42,28 +41,32 @@ export default function ListNotification({ data }: IListNotificationProps) {
           <div className="flex flex-col h-24 overflow-y-auto grow">
             <List
               dataSource={data}
-              renderItem={(item, index) => (
-                <List.Item key={index}>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar src={UnreadIcon} className="rounded-none" />
-                    }
-                    className="p-4 jura hover:bg-[#EEE]"
-                    title={
-                      <div className="space-x-2">
-                        <span>
-                          {item.noti_type == NotificationType.CONSULT &&
-                            "has sent you a message"}
-                        </span>
-                        <span className="text-[#61708C]">
-                          Consult #{item.noti_id}
-                        </span>
-                      </div>
-                    }
-                    description={formatDate(item.created_at)}
-                  />
-                </List.Item>
-              )}
+              renderItem={(item, index) => {
+                const senderName =
+                  item.sender.user_firstname + " " + item.sender.user_lastname;
+                return (
+                  <List.Item key={index}>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src={UnreadIcon} className="rounded-none" />
+                      }
+                      className="p-4 jura hover:bg-[#EEE]"
+                      title={
+                        <div className="space-x-2">
+                          <span>
+                            {item.noti_type == NotificationType.CONSULT &&
+                              `${senderName} has sent you a message`}
+                          </span>
+                          <span className="text-[#61708C]">
+                            Consult #{item.noti_id}
+                          </span>
+                        </div>
+                      }
+                      description={formatDate(item.created_at)}
+                    />
+                  </List.Item>
+                );
+              }}
             />
           </div>
         </ConfigProvider>

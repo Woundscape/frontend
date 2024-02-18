@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
-import { Button, Popover, Typography } from "antd";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
+import { Button, Divider, Popover, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 // import LoadPath from "@libs/images_2.json";
-import {
-  DefaultTissue,
-  IFormattedErrorResponse,
-  IImage,
-  TissueType,
-} from "@constants";
 import DefaultButton from "@components/WoundAnalysis/DefaultButton";
 import CanvasSelectIcon from "@assets/icons/canvas_icon_select.svg";
 import CanvasPenIcon from "@assets/icons/canvas_icon_pen.svg";
@@ -17,9 +12,24 @@ import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
 import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+import {
+  DefaultTissue,
+  IFormattedErrorResponse,
+  IImage,
+  TissueType,
+} from "@constants";
+import { TbZoomIn, TbZoomOut } from "react-icons/tb";
 import { formatImage, formatDate } from "@utils";
 import { IUpdateImage, updateImage } from "@api-caller/imageApi";
-import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
+import { GoZoomIn, GoZoomOut } from "react-icons/go";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+
+interface ICanvasPath {
+  drawMode: boolean;
+  paths: any;
+  strokeColor: string;
+  strokeWidth: number;
+}
 
 interface DrawSketchCanvasProps {
   data: IImage;
@@ -51,23 +61,12 @@ export default function DrawSketchCanvas({
     width: 0,
     height: 0,
   });
+  const [formatPath, setFormatPath] = useState<ICanvasPath[]>([]);
   useEffect(() => {
     if (data) {
       if (canvasRef.current && data.img_tissue) {
-        //NOTE - Data Compressing
-        // console.log("before", data.img_tissue[0]);
-        // const testFilter = data.img_tissue[0].paths.filter(
-        //   (_: any, index: number) => index % 5 === 0
-        // );
-        // const eiei = [
-        //   {
-        //     drawMode: true,
-        //     paths: testFilter,
-        //     strokeColor: "#D3DDFF",
-        //     strokeWidth: 4,
-        //   },
-        // ];
         setRef(canvasRef);
+        setFormatPath(data.img_tissue.paths);
         setOriginal(data.img_tissue.paths);
         canvasRef.current.loadPaths(data.img_tissue?.paths);
       }
@@ -91,21 +90,21 @@ export default function DrawSketchCanvas({
     }
   }, [image?.img_path]);
 
-  useEffect(()=>{
-    if(typeof image?.img_read == 'boolean' && !image.img_read){
+  useEffect(() => {
+    if (typeof image?.img_read == "boolean" && !image.img_read) {
       const body: IUpdateImage = {
         img_id: image?.img_id || "",
         body: {
-          img_read: true
+          img_read: true,
         },
       };
       updateMutation.mutate(body, {
         onSuccess: () => {
-          console.log('read laew');
+          console.log("read laew");
         },
       });
     }
-  },[image?.img_read])
+  }, [image?.img_read]);
   //NOTE -  have for wut ?
   async function getImage() {
     if (canvasRef.current && data.img_tissue) {
@@ -178,12 +177,24 @@ export default function DrawSketchCanvas({
   const onSubmit = async () => {
     if (editable) {
       const paths = await canvasRef.current?.exportPaths();
-      const result = await convertToPercentage(paths);
+      const result = await convertToPercentage(formatPath);
+      console.log(
+        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:178 ~ paths:",
+        "color: #00bcd4;",
+        paths
+      );
+      console.log("=-=-asd0sakdoaskdasd");
+      console.log(
+        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:180 ~ formatPath:",
+        "color: #00bcd4;",
+        formatPath
+      );
+
       const body: IUpdateImage = {
         img_id: image?.img_id || "",
         body: {
           img_tissue: {
-            paths,
+            paths: formatPath,
             result,
           },
         },
@@ -260,44 +271,6 @@ export default function DrawSketchCanvas({
       </div>
     );
   }
-  // function renderSelectSize() {
-  //   return (
-  //     <div id="popover__select__size">
-  //       <Button
-  //         type="text"
-  //         onClick={() => handleStrokeWidth(1)}
-  //         className="flex items-center space-x-2"
-  //       >
-  //         <p className="jura text-xs">1px</p>
-  //         <div className="w-14 h-px bg-black"></div>
-  //       </Button>
-  //       <Button
-  //         type="text"
-  //         onClick={() => handleStrokeWidth(3)}
-  //         className="flex items-center space-x-2"
-  //       >
-  //         <p className="jura text-xs">3px</p>
-  //         <div className="w-14 h-0.5 bg-black"></div>
-  //       </Button>
-  //       <Button
-  //         type="text"
-  //         onClick={() => handleStrokeWidth(5)}
-  //         className="flex items-center space-x-2"
-  //       >
-  //         <p className="jura text-xs">5px</p>
-  //         <div className="w-14 h-1 bg-black"></div>
-  //       </Button>
-  //       <Button
-  //         type="text"
-  //         onClick={() => handleStrokeWidth(8)}
-  //         className="flex items-center space-x-2"
-  //       >
-  //         <p className="jura text-xs">8px</p>
-  //         <div className="w-14 h-2 bg-black"></div>
-  //       </Button>
-  //     </div>
-  //   );
-  // }
   return (
     <>
       <Content
@@ -388,6 +361,20 @@ export default function DrawSketchCanvas({
                     }}
                     strokeWidth={strokeWidth}
                     strokeColor={colorPaint}
+                    onStroke={(line) => {
+                      if (line.paths.length > 1) {
+                        const testFilter = line.paths.filter(
+                          (_: any, index: number) => index % 2 === 0
+                        );
+                        const formatStroke: ICanvasPath = {
+                          drawMode: line.drawMode,
+                          paths: testFilter,
+                          strokeColor: line.strokeColor,
+                          strokeWidth: line.strokeWidth,
+                        };
+                        setFormatPath((prev) => [...prev, formatStroke]);
+                      }
+                    }}
                   />
                 </div>
               )}
@@ -396,48 +383,56 @@ export default function DrawSketchCanvas({
           {editable && (
             <div
               id="canvas_editor___tools"
-              className="flex justify-center items-center relative"
+              className="flex justify-between items-center relative"
             >
-              <div className="border border-[#D9D9D9] bg-[#FDFCFC] py-1.5 flex rounded-md space-x-2">
-                <Button
-                  type="text"
-                  className={`flex justify-center rounded-md ${
-                    selectTools == "none" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                  title="Cursor"
-                  onClick={() => handleCanvasEditor("none")}
-                >
-                  <img width={25} src={CanvasSelectIcon} />
-                </Button>
-                |
-                <Button
-                  type="text"
-                  title="Pen"
-                  className={`flex justify-center rounded-md ${
-                    selectTools == "pen" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                >
-                  <Popover
-                    content={renderSelectTissue}
-                    placement="topLeft"
-                    trigger={"click"}
-                    open={openSelectPaint}
-                    onOpenChange={handleOpenSelectPaint}
+              <div className="flex space-x-4">
+                <GoZoomIn size={20} />
+                <GoZoomOut size={20} />
+                <EyeInvisibleOutlined className="text-xl" />
+              </div>
+              <div className="h-12 border border-[#D9D9D9] bg-[#FDFCFC] flex rounded-md">
+                <div className="w-14 h-12 p-[5px]">
+                  <div
+                    className={`w-full h-full flex justify-center rounded-md ${
+                      selectTools == "none" ? "bg-[#F0ECEC]" : ""
+                    }`}
+                    title="Cursor"
+                    onClick={() => handleCanvasEditor("none")}
                   >
-                    <img width={25} src={CanvasPenIcon} alt="" />
-                  </Popover>
-                </Button>
-                |
-                <Button
-                  type="text"
-                  title="Eraser"
-                  className={`flex justify-center rounded-md ${
-                    selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                  onClick={() => handleCanvasEditor("eraser")}
-                >
-                  <img width={25} src={CanvasEraserIcon} alt="" />
-                </Button>
+                    <img width={22} src={CanvasSelectIcon} />
+                  </div>
+                </div>
+                <Divider type="vertical" className="m-0 h-full" />
+                <div className="w-14 h-12 p-1">
+                  <div
+                    title="Pen"
+                    className={`w-full h-full flex justify-center hover:bg-[#F0ECEC] rounded-md ${
+                      selectTools == "pen" ? "bg-[#F0ECEC]" : ""
+                    }`}
+                  >
+                    <Popover
+                      content={renderSelectTissue}
+                      placement="topLeft"
+                      trigger={"click"}
+                      open={openSelectPaint}
+                      onOpenChange={handleOpenSelectPaint}
+                    >
+                      <img width={24} src={CanvasPenIcon} alt="" />
+                    </Popover>
+                  </div>
+                </div>
+                <Divider type="vertical" className="m-0 h-full" />
+                <div className="w-14 h-12 p-1">
+                  <div
+                    title="Eraser"
+                    className={`w-full h-full flex justify-center rounded-md ${
+                      selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
+                    }`}
+                    onClick={() => handleCanvasEditor("eraser")}
+                  >
+                    <img width={25} src={CanvasEraserIcon} alt="" />
+                  </div>
+                </div>
                 {/* <Button
                   type="text"
                   className={`flex justify-center rounded-md ${
@@ -455,6 +450,7 @@ export default function DrawSketchCanvas({
                   </Popover>
                 </Button> */}
               </div>
+              <div></div>
             </div>
           )}
         </Content>
