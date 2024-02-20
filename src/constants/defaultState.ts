@@ -13,3 +13,10 @@ export enum ACTION_MANAGE {
   DONE = "DONE",
   DELETE = "DELETE",
 }
+
+export enum SEGMENT_STATE {
+  OVERVIEW = "Overview",
+  DELETE = "Delete",
+  COMPARE = "Comparative Imaging",
+  PROGRESS = "Wound Progression",
+}

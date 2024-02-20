@@ -62,6 +62,7 @@ export default function DrawSketchCanvas({
     height: 0,
   });
   const [formatPath, setFormatPath] = useState<ICanvasPath[]>([]);
+  const [invisiblePath, setInvisiblePath] = useState<boolean>(false);
   useEffect(() => {
     if (data) {
       if (canvasRef.current && data.img_tissue) {
@@ -167,6 +168,15 @@ export default function DrawSketchCanvas({
     }
   }
 
+  async function invisibleTissue() {
+    setInvisiblePath(!invisiblePath);
+    if (canvasRef.current && !invisiblePath) {
+      canvasRef.current.clearCanvas();
+    } else {
+      canvasRef.current?.loadPaths(original);
+    }
+  }
+
   const onCancel = () => {
     handleCanvasEditor("none");
     canvasRef.current?.clearCanvas();
@@ -178,18 +188,6 @@ export default function DrawSketchCanvas({
     if (editable) {
       const paths = await canvasRef.current?.exportPaths();
       const result = await convertToPercentage(formatPath);
-      console.log(
-        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:178 ~ paths:",
-        "color: #00bcd4;",
-        paths
-      );
-      console.log("=-=-asd0sakdoaskdasd");
-      console.log(
-        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:180 ~ formatPath:",
-        "color: #00bcd4;",
-        formatPath
-      );
-
       const body: IUpdateImage = {
         img_id: image?.img_id || "",
         body: {
@@ -388,7 +386,14 @@ export default function DrawSketchCanvas({
               <div className="flex space-x-4">
                 <GoZoomIn size={20} />
                 <GoZoomOut size={20} />
-                <EyeInvisibleOutlined className="text-xl" />
+                {invisiblePath ? (
+                  <EyeInvisibleOutlined
+                    className="text-xl"
+                    onClick={invisibleTissue}
+                  />
+                ) : (
+                  <EyeOutlined className="text-xl" onClick={invisibleTissue} />
+                )}
               </div>
               <div className="h-12 border border-[#D9D9D9] bg-[#FDFCFC] flex rounded-md">
                 <div className="w-14 h-12 p-[5px]">

@@ -10,6 +10,7 @@ import {
   Image,
   Input,
   Modal,
+  Select,
   Space,
   Spin,
   Tag,
@@ -28,10 +29,10 @@ import {
   INote,
   DefaultNoteForm,
 } from "@constants";
-import { httpAPI } from "@config";
-import { getNoteImageById } from "@api-caller/noteApi";
+import { filterOptions, filterSort, httpAPI } from "@config";
+import { getImageNoteById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../AuthProvider";
 
 interface INoteProps {
   id: string;
@@ -39,11 +40,7 @@ interface INoteProps {
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
 }
 const { Paragraph, Text } = Typography;
-export default function AddNoteWithoutEquip({
-  id,
-  equipment,
-  mutation,
-}: INoteProps) {
+export default function AddNote({ id, equipment, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
   const [equip, setEquip] = useState<IEquipment[]>([]);
@@ -71,7 +68,7 @@ export default function AddNoteWithoutEquip({
   }
 
   async function getNote() {
-    const data = await getNoteImageById(id);
+    const data = await getImageNoteById(id);
     setNotes(data);
   }
   const handleModal = () => {
@@ -125,9 +122,7 @@ export default function AddNoteWithoutEquip({
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary" className="indent-10">
-                  {item.note_desc}
-                </Paragraph>
+                <Paragraph id="text__primary">{item.note_desc}</Paragraph>
                 <Text id="text__primary">Equipment</Text>
                 <Divider className="bg-[#E9EBF5]" />
                 {item.note_equip.map((equip: string, index: number) => (
@@ -142,8 +137,8 @@ export default function AddNoteWithoutEquip({
                   {item.note_img.map((image, index) => (
                     <Image
                       key={index}
-                      width={120}
-                      height={120}
+                      width={80}
+                      height={80}
                       src={`${httpAPI}/${image}`}
                       className="rounded-md"
                     />
@@ -168,7 +163,7 @@ export default function AddNoteWithoutEquip({
         footer={[
           <div
             key={"footer"}
-            className="px-2 py-3 flex justify-between gap-4 text-center"
+            className="px-6 py-3 flex justify-between gap-4 text-center"
           >
             <Button
               disabled={confirmLoading}
@@ -221,6 +216,29 @@ export default function AddNoteWithoutEquip({
               />
             </Form.Item>
           </Space.Compact>
+          <Space.Compact className="space-y-2" direction="vertical" block>
+            <Typography id="text__primary" className="text-md">
+              Equipment :
+            </Typography>
+            <Select
+              mode="multiple"
+              placeholder="Select a equipment"
+              options={equip.map((item: IEquipment) => ({
+                value: item.equip_id,
+                label: item.equip_name,
+              }))}
+              className="w-1/2"
+              maxTagCount="responsive"
+              filterOption={filterOptions}
+              filterSort={filterSort}
+              // onSelect={(_, { value }) => {}}
+              onChange={(value) => {
+                setForm((prevForm) => {
+                  return { ...prevForm, note_equip: value };
+                });
+              }}
+            />
+          </Space.Compact>
           <Card
             title="Description"
             extra={"Hospital No. 642846"}
@@ -231,6 +249,8 @@ export default function AddNoteWithoutEquip({
           >
             <div className="flex justify-between pb-4">
               <TextArea
+                // value={value}
+                // onChange={(e) => setValue(e.target.value)}
                 maxLength={1024}
                 placeholder="Type your message . . ."
                 style={{ height: 100, color: "#9198AF" }}

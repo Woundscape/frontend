@@ -10,43 +10,38 @@ import {
   Image,
   Input,
   Modal,
-  Select,
   Space,
   Spin,
-  Tag,
   Typography,
   Upload,
 } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { UploadChangeParam } from "antd/es/upload";
 import TextArea from "antd/es/input/TextArea";
-import getAllEquipment from "@api-caller/equipApi";
 import AddImageIcon from "@assets/icons/add_image_icon.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import {
-  IEquipment,
   IFormattedErrorResponse,
   INote,
-  DefaultNoteForm,
+  DefaultCompareForm,
+  ICreateCompare,
 } from "@constants";
-import { filterOptions, filterSort, httpAPI } from "@config";
-import { getNoteImageById } from "@api-caller/noteApi";
+import { httpAPI } from "@config";
+import { getCompareNoteById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../AuthProvider";
 
 interface INoteProps {
   id: string;
-  equipment?: IEquipment[];
-  mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
+  compare: any;
+  mutation: UseMutationResult<boolean, IFormattedErrorResponse, ICreateCompare>;
 }
 const { Paragraph, Text } = Typography;
-export default function AddNote({ id, equipment, mutation }: INoteProps) {
+export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
-  const [equip, setEquip] = useState<IEquipment[]>([]);
-  const [form, setForm] = useState<INote>({
-    ...DefaultNoteForm,
-    img_id: id,
+  const [form, setForm] = useState<ICreateCompare>({
+    ...DefaultCompareForm,
     author_id: me?.user_id || "",
   });
   const [forms] = Form.useForm();
@@ -55,30 +50,35 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
 
   useEffect(() => {
     getNote();
-    getEquipment();
   }, []);
 
-  async function getEquipment() {
-    if (!equipment) {
-      const data = await getAllEquipment();
-      setEquip(data);
-    } else {
-      setEquip(equipment);
+  async function getNote() {
+    if (id) {
+      const data = await getCompareNoteById(id);
+      setNotes(data);
     }
   }
-
-  async function getNote() {
-    const data = await getNoteImageById(id);
-    setNotes(data);
-  }
   const handleModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      compare,
+    }));
+    forms.resetFields();
     setOpenModal(!openModal);
   };
   const onSubmit = async () => {
     const values = await forms.validateFields();
     if (values) {
       setConfirmLoading(true);
-      setForm({ ...DefaultNoteForm, img_id: id, author_id: me?.user_id || "" });
+      console.log(
+        "%c 🐬 ~ Log from file: AddCompareNote.tsx:94 ~ form:",
+        "color: #00bcd4;",
+        form
+      );
+      setForm({
+        ...DefaultCompareForm,
+        author_id: me?.user_id || "",
+      });
       mutation.mutate(form, {
         onSuccess: () => {
           forms.resetFields();
@@ -122,25 +122,15 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary">
+                <Paragraph id="text__primary" className="indent-10">
                   {item.note_desc}
                 </Paragraph>
-                <Text id="text__primary">Equipment</Text>
-                <Divider className="bg-[#E9EBF5]" />
-                {item.note_equip.map((equip: string, index: number) => (
-                  <Tag key={index} color={"geekblue"} className="jura">
-                    {
-                      equipment?.find((list) => list.equip_id == equip)
-                        ?.equip_name
-                    }
-                  </Tag>
-                ))}
                 <div className="flex gap-3">
                   {item.note_img.map((image, index) => (
                     <Image
                       key={index}
-                      width={80}
-                      height={80}
+                      width={120}
+                      height={120}
                       src={`${httpAPI}/${image}`}
                       className="rounded-md"
                     />
@@ -165,7 +155,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
         footer={[
           <div
             key={"footer"}
-            className="px-6 py-3 flex justify-between gap-4 text-center"
+            className="px-2 py-3 flex justify-between gap-4 text-center"
           >
             <Button
               disabled={confirmLoading}
@@ -218,29 +208,6 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               />
             </Form.Item>
           </Space.Compact>
-          <Space.Compact className="space-y-2" direction="vertical" block>
-            <Typography id="text__primary" className="text-md">
-              Equipment :
-            </Typography>
-            <Select
-              mode="multiple"
-              placeholder="Select a equipment"
-              options={equip.map((item: IEquipment) => ({
-                value: item.equip_id,
-                label: item.equip_name,
-              }))}
-              className="w-1/2"
-              maxTagCount="responsive"
-              filterOption={filterOptions}
-              filterSort={filterSort}
-              // onSelect={(_, { value }) => {}}
-              onChange={(value) => {
-                setForm((prevForm) => {
-                  return { ...prevForm, note_equip: value };
-                });
-              }}
-            />
-          </Space.Compact>
           <Card
             title="Description"
             extra={"Hospital No. 642846"}
@@ -251,8 +218,6 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
           >
             <div className="flex justify-between pb-4">
               <TextArea
-                // value={value}
-                // onChange={(e) => setValue(e.target.value)}
                 maxLength={1024}
                 placeholder="Type your message . . ."
                 style={{ height: 100, color: "#9198AF" }}

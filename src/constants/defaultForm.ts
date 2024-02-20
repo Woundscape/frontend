@@ -1,7 +1,9 @@
 import {
+  ICreateCompare,
   ICreateEquip,
   ICreateNotification,
   IEquipment,
+  INote,
   NotificationType,
   UserType,
 } from "./interface";
@@ -21,58 +23,6 @@ export const DefaultTotalDashboard: CardPatient[] = [
     value: "0",
   },
 ];
-
-export const DefaultNoteForm = {
-  note_title: "",
-  note_equip: [],
-  note_desc: "",
-  note_img: [],
-  img_id: "",
-};
-
-export const DefaultEquipForm: ICreateEquip = {
-  equip_name: "",
-  equip_type: "",
-  equip_subtype: "",
-};
-
-export const DefaultEquipment: IEquipment = {
-  equip_id: "",
-  equip_name: "",
-  equip_type: "",
-  equip_subtype: "",
-};
-
-export const DefaultPatientForm = {
-  user_firstname: "",
-  user_lastname: "",
-  user_email: "",
-  user_password: "",
-  user_tel: "",
-  line_uid: "",
-  user_type: UserType.Patient,
-  ref_code: "",
-};
-
-export const DefaultConsultForm: ICreateNotification = {
-  noti_type: NotificationType.CONSULT,
-  noti_title: "",
-  noti_desc: "",
-  noti_img: [],
-  approveStatus: false,
-  sender_id: "",
-  recipient_id: "",
-};
-
-export const DefaultDoctorForm = {
-  user_firstname: "",
-  user_lastname: "",
-  user_email: "",
-  user_password: "",
-  user_tel: "",
-  user_type: UserType.Doctor,
-  ref_code: "",
-};
 
 export const DefaultTissue = [
   {
@@ -122,7 +72,78 @@ export const DefaultTissue = [
   },
 ];
 
+export const DefaultNoteForm: INote = {
+  note_title: "",
+  note_equip: [],
+  note_desc: "",
+  note_img: [],
+  img_id: "",
+  author_id: "",
+};
+
+export const DefaultCompareForm: ICreateCompare = {
+  note_title: "",
+  note_desc: "",
+  note_img: [],
+  compare: {
+    case_id: "",
+    compare_info: DefaultTissue,
+    img_collect: [],
+  },
+  author_id: "",
+};
+
+export const DefaultEquipForm: ICreateEquip = {
+  equip_name: "",
+  equip_type: "",
+  equip_subtype: "",
+};
+
+export const DefaultEquipment: IEquipment = {
+  equip_id: "",
+  equip_name: "",
+  equip_type: "",
+  equip_subtype: "",
+};
+
+export const DefaultPatientForm = {
+  user_firstname: "",
+  user_lastname: "",
+  user_email: "",
+  user_password: "",
+  user_tel: "",
+  line_uid: "",
+  user_type: UserType.Patient,
+  ref_code: "",
+};
+
+export const DefaultConsultForm: ICreateNotification = {
+  noti_type: NotificationType.CONSULT,
+  noti_title: "",
+  noti_desc: "",
+  noti_img: [],
+  approveStatus: false,
+  sender_id: "",
+  recipient_id: "",
+};
+
+export const DefaultDoctorForm = {
+  user_firstname: "",
+  user_lastname: "",
+  user_email: "",
+  user_password: "",
+  user_tel: "",
+  user_type: UserType.Doctor,
+  ref_code: "",
+};
+
 export const DefaultChart = {
   labels: [],
   datasets: [],
+};
+
+export const DefaultCreateCompare = {
+  compare_info: DefaultTissue,
+  img_collect: [],
+  case_id: "",
 };

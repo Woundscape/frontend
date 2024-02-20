@@ -129,6 +129,29 @@ export interface INote {
   author_id: string;
 }
 
+interface Compare {
+  compare_id: string;
+  compare_notes: any[];
+  img_collect: IImage[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ICompare {
+  compare_info: TissueType[];
+  case_id: string;
+  img_collect: any;
+}
+
+export interface ICreateCompare {
+  note_title: string;
+  note_desc: string;
+  note_img: UploadFile<any>[];
+  created_at?: Date;
+  author_id: string;
+  compare: ICompare;
+}
+
 export interface IRefer {
   ref_id: string;
   ref_code: string;

@@ -65,6 +65,7 @@ export default function UploadModal({
       onCancel={() => setModal(false)}
       centered
       zIndex={100}
+      destroyOnClose
       footer={[
         <div
           key={"footer"}
@@ -92,7 +93,6 @@ export default function UploadModal({
           </Button>
         </div>,
       ]}
-      destroyOnClose
     >
       <Content
         id="upload__container_modal"

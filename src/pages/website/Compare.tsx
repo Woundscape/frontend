@@ -1,38 +1,41 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
+import { ConfigProvider, Divider } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import UserProfile from "@components/UserProfile";
 import ArrowUp from "@assets/icons/arrow_right_up.svg";
 import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import {
+  DefaultCreateCompare,
   DefaultTissue,
+  ICompare,
+  ICreateCompare,
   IEquipment,
   IFormattedErrorResponse,
   IImage,
-  INote,
   TissueType,
 } from "@constants";
-import { ConfigProvider, Divider } from "antd";
 import { dividerConfig } from "@config";
+import UserProfile from "@components/UserProfile";
 import CardImage from "@components/Compare/CardImage";
-import AddNoteWithoutEquip from "@components/AddNoteWithoutEquip";
-import { addNoteCompare, getCoupleImage } from "@api-caller";
+import AddCompareNote from "@components/Compare/AddCompareNote";
+import { addCompareNote, getCoupleImage } from "@api-caller";
 import getAllEquipment from "@api-caller/equipApi";
 
 export default function Compare() {
-  const addNoteMutation: UseMutationResult<
+  const addCompareNoteMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    INote
-  > = useMutation(addNoteCompare);
+    ICreateCompare
+  > = useMutation(addCompareNote);
   const location = useLocation();
-  const { imageList } = location.state || [];
+  const { imageList, case_id, compare_id } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [isLoadingResult, setIsLoadingResult] = useState<boolean>(false);
+  const [compare, setCompare] = useState<ICompare>(DefaultCreateCompare);
   useEffect(() => {
     getCoupleImage(imageList).then((data: IImage[]) => {
       getTissueResult(data);
@@ -64,8 +67,6 @@ export default function Compare() {
       formattedTissueArrays.push(formattedTissueArray);
     });
     if (check) {
-      console.log("pass");
-
       const updatedTissueData = DefaultTissue.map((defaultTissue) => {
         const tissueArray1 = formattedTissueArrays[0];
         const tissueArray2 = formattedTissueArrays[1];
@@ -91,6 +92,13 @@ export default function Compare() {
       });
 
       setTissueData(updatedTissueData);
+
+      setCompare((prev) => ({
+        ...prev,
+        case_id,
+        compare_info: updatedTissueData,
+        img_collect: imageList,
+      }));
       setIsLoadingResult(true);
     }
   }
@@ -99,6 +107,7 @@ export default function Compare() {
     const data = await getAllEquipment();
     setEquipment(data);
   }
+
   return (
     <>
       <div className="w-full h-screen relative">
@@ -131,7 +140,11 @@ export default function Compare() {
                     </ConfigProvider>
                   )}
                 </div>
-                <AddNoteWithoutEquip id={""} mutation={addNoteMutation} />
+                <AddCompareNote
+                  id={compare_id}
+                  compare={compare}
+                  mutation={addCompareNoteMutation}
+                />
               </div>
               <div id="result" className="flex flex-col w-[20rem] space-y-3">
                 <div className="flex flex-row items-center justify-between py-2 bg-[#F2F2F2] text-[#868686] rounded-lg">
