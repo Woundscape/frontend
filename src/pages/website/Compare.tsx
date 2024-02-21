@@ -47,60 +47,19 @@ export default function Compare() {
     getEquipment();
   }, []);
 
-  async function getTissueResult(data: any) {
-    let check = false;
-    const formattedTissueArrays: TissueType[][] = [];
-
-    data?.forEach((image: IImage) => {
-      const formattedTissueArray: TissueType[] = [];
-
-      if (image.img_tissue && image.img_tissue.result) {
-        check = true;
-        image.img_tissue.result.forEach((tissue: TissueType) => {
-          formattedTissueArray.push({
-            title: tissue.title,
-            value: tissue.value,
-            color: tissue.color,
-          });
-        });
+  async function getTissueResult(data: IImage[]) {
+    const result1 = data[0].img_tissue?.result ?? DefaultTissue;
+    const result2 = data[1].img_tissue?.result ?? DefaultTissue;
+    const updatedTissueData: TissueType[] = await result1.map(
+      (tissue: TissueType, index: number) => {
+        return {
+          ...tissue,
+          value: tissue.value - result2[index].value,
+        };
       }
-      formattedTissueArrays.push(formattedTissueArray);
-    });
-    if (check) {
-      const updatedTissueData = DefaultTissue.map((defaultTissue) => {
-        const tissueArray1 = formattedTissueArrays[0];
-        const tissueArray2 = formattedTissueArrays[1];
-        const tissue1 = tissueArray1.find(
-          (t) => t.title === defaultTissue.title
-        );
-        const tissue2 = tissueArray2.find(
-          (t) => t.title === defaultTissue.title
-        );
-
-        if (tissue1?.value && tissue2?.value) {
-          const increase = tissue2.value - tissue1.value;
-          return {
-            ...defaultTissue,
-            value: increase,
-          };
-        } else {
-          return {
-            ...defaultTissue,
-            value: tissue1?.value != 0 ? tissue1?.value : tissue2?.value,
-          };
-        }
-      });
-
-      setTissueData(updatedTissueData);
-
-      setCompare((prev) => ({
-        ...prev,
-        case_id,
-        compare_info: updatedTissueData,
-        img_collect: imageList,
-      }));
-      setIsLoadingResult(true);
-    }
+    );
+    setTissueData(updatedTissueData);
+    setIsLoadingResult(true);
   }
 
   async function getEquipment() {
@@ -175,13 +134,13 @@ export default function Compare() {
                           <div className="jura flex flex-row w-1/2 items-center justify-center space-x-3">
                             <img
                               className="w-3"
-                              src={item.value <= 0 ? ArrowUp : ArrowDown}
+                              src={item.value < 0 ? ArrowUp : item.value != 0 ? ArrowDown : ''}
                               alt=""
                             />
                             <p className="text-[#4C577C]">
                               {item.value < 0
                                 ? Math.abs(item.value)
-                                : item.value}{" "}
+                                : item.value}
                               %
                             </p>
                           </div>

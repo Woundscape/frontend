@@ -10,7 +10,7 @@ export interface IFormattedErrorResponse {
 
 export interface TissueType {
   title: string;
-  value?: number;
+  value: number;
   color: string;
 }
 
@@ -91,7 +91,7 @@ export interface IMe {
 
 export interface IImage {
   img_id: string;
-  img_tissue?: any;
+  img_tissue: ITissue;
   img_equip?: any;
   img_equipPath?: string | null;
   img_path: string;
@@ -102,6 +102,11 @@ export interface IImage {
   case_id: string;
   compareCompare_id?: any;
   progressionProg_id?: any;
+}
+
+export interface ITissue {
+  paths: any;
+  result: TissueType[];
 }
 
 export interface IEquipment {

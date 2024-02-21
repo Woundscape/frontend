@@ -18,7 +18,6 @@ import {
   IImage,
   TissueType,
 } from "@constants";
-import { TbZoomIn, TbZoomOut } from "react-icons/tb";
 import { formatImage, formatDate } from "@utils";
 import { IUpdateImage, updateImage } from "@api-caller/imageApi";
 import { GoZoomIn, GoZoomOut } from "react-icons/go";
@@ -81,7 +80,7 @@ export default function DrawSketchCanvas({
       const img = new Image();
       const handleImageLoad = () => {
         setResolution({ width: img.width, height: img.height });
-        getImage();
+        // getImage();
       };
       img.onload = handleImageLoad;
       img.src = imageUrl;
@@ -109,7 +108,7 @@ export default function DrawSketchCanvas({
   //NOTE -  have for wut ?
   async function getImage() {
     if (canvasRef.current && data.img_tissue) {
-      canvasRef.current.loadPaths(data.img_tissue);
+      canvasRef.current.loadPaths(data.img_tissue.paths);
       setOriginal(data.img_tissue.paths);
     }
     setImage(data);

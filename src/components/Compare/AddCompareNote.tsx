@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   Collapse,
-  Divider,
   Form,
   Image,
   Input,
@@ -36,7 +35,7 @@ interface INoteProps {
   compare: any;
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, ICreateCompare>;
 }
-const { Paragraph, Text } = Typography;
+const { Paragraph } = Typography;
 export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
@@ -122,7 +121,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary" className="indent-10">
+                <Paragraph id="text__primary">
                   {item.note_desc}
                 </Paragraph>
                 <div className="flex gap-3">
