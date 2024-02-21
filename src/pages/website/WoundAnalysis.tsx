@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvasRef } from "react-sketch-canvas";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
@@ -18,13 +18,14 @@ import {
   TissueType,
   DefaultChart,
   DefaultTissue,
+  IImage,
 } from "@constants";
 import UserProfile from "@components/UserProfile";
-import AddNote from "@components/AddNote";
+import AddNote from "@components/WoundAnalysis/AddNote";
 import { useAuth } from "@components/AuthProvider";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
-import { addNoteImage } from "@api-caller/noteApi";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
+import { addImageNote } from "@api-caller/noteApi";
 import { getImageById } from "@api-caller/imageApi";
 import getAllEquipment from "@api-caller/equipApi";
 
@@ -35,10 +36,11 @@ export default function WoundAnalysis() {
     boolean,
     IFormattedErrorResponse,
     INote
-  > = useMutation(addNoteImage);
+  > = useMutation(addImageNote);
   const { me } = useAuth();
   const { img_id } = useParams();
-  const [image, setImage] = useState<any>();
+  const router = useNavigate();
+  const [image, setImage] = useState<IImage>();
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [opacityVal, setOpacityVal] = useState(100);
@@ -110,7 +112,7 @@ export default function WoundAnalysis() {
       let newData: any;
       if (hideTissue.includes(strokeColor)) {
         let tempTissue = hideTissue.filter((color) => color !== strokeColor);
-        newData = await image.img_tissue.paths.filter(
+        newData = await image?.img_tissue.paths.filter(
           (value: any) => !tempTissue.includes(value.strokeColor)
         );
         setHideTissue(tempTissue);
@@ -132,16 +134,13 @@ export default function WoundAnalysis() {
               <div className="w-full min-h-full overflow-y-auto flex flex-col justify-between space-y-4">
                 <div id="button-wrapper" className="flex justify-between">
                   <Button
-                    type="text"
                     icon={<LeftOutlined style={{ color: "#61708C" }} />}
                     className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]"
+                    onClick={() => router(`/patient/${image?.case_id}`)}
                   >
                     back
                   </Button>
-                  <Button
-                    type="text"
-                    className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]"
-                  >
+                  <Button className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]">
                     HN. 6643793
                   </Button>
                 </div>
@@ -215,7 +214,6 @@ export default function WoundAnalysis() {
                               ) : (
                                 <EyeOutlined style={{ fontSize: 18 }} />
                               )}
-                              {/* <LockOutlined style={{ fontSize: 18 }} /> */}
                             </div>
                           </div>
                         ))}

@@ -1,11 +1,10 @@
-import { getNoteImageById } from "@api-caller/noteApi";
-import { IEquipment, IImage, INote } from "@constants";
-import { formatDate, formatImage } from "@utils";
-import { Tag, Divider, Image } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { httpAPI } from "@config";
+import { Tag, Divider, Image } from "antd";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Space } from "react-zoomable-ui";
+import { formatDate, formatImage } from "@utils";
+import { IEquipment, IImage, INote } from "@constants";
+import { getImageNoteById } from "@api-caller/noteApi";
 
 interface CardImageProps {
   image: IImage;
@@ -14,9 +13,7 @@ interface CardImageProps {
 
 export default function CardImage({ image, equipment }: CardImageProps) {
   const [note, setNote] = useState<INote[]>();
-  const [canvasRef, setCanvasRef] = useState(
-    useRef<ReactSketchCanvasRef | null>(null)
-  );
+  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
   const [resolution, setResolution] = useState({
     width: 0,
     height: 0,
@@ -49,7 +46,7 @@ export default function CardImage({ image, equipment }: CardImageProps) {
     getNote();
   }, []);
   async function getNote() {
-    const data = await getNoteImageById(image.img_id);
+    const data = await getImageNoteById(image.img_id);
     setNote(data);
   }
   return (
@@ -61,7 +58,7 @@ export default function CardImage({ image, equipment }: CardImageProps) {
       >
         <div
           id="canvas_editor___sketch"
-          className={`relative grow min-h-0 min-w-0 max-w-[25rem] border-2 border-red-200`}
+          className={`relative grow min-h-0 min-w-0 max-w-[25rem] border-2`}
         >
           {resolution.width > 0 && resolution.height > 0 && image && (
             <Space
@@ -135,7 +132,7 @@ export default function CardImage({ image, equipment }: CardImageProps) {
                   key={index}
                   width={80}
                   height={80}
-                  src={`${httpAPI}/${image}`}
+                  src={`${formatImage(image)}`}
                   className="rounded-md"
                 />
               ))}

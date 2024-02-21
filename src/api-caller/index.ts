@@ -3,6 +3,7 @@ export * from "./caseApi";
 export * from "./doctorApi";
 export * from "./equipApi";
 export * from "./imageApi";
+export * from "./compareApi";
 export * from "./lineApi";
 export * from "./noteApi";
 export * from "./notificationApi";

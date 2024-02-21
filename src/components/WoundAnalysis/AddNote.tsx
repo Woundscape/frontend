@@ -30,9 +30,9 @@ import {
   DefaultNoteForm,
 } from "@constants";
 import { filterOptions, filterSort, httpAPI } from "@config";
-import { getNoteImageById } from "@api-caller/noteApi";
+import { getImageNoteById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../AuthProvider";
 
 interface INoteProps {
   id: string;
@@ -68,7 +68,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
   }
 
   async function getNote() {
-    const data = await getNoteImageById(id);
+    const data = await getImageNoteById(id);
     setNotes(data);
   }
   const handleModal = () => {
@@ -102,7 +102,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
           <p className="text-lg text-[#4C577C]">ADD NOTE</p>
         </div>
       </Button>
-      <Space direction="vertical" className="pt-3" style={{ width: "100%" }}>
+      <Space direction="vertical" className="w-full pt-3">
         {notes?.map((item, index) => (
           <Collapse key={index}>
             <Collapse.Panel
@@ -122,9 +122,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary">
-                  {item.note_desc}
-                </Paragraph>
+                <Paragraph id="text__primary">{item.note_desc}</Paragraph>
                 <Text id="text__primary">Equipment</Text>
                 <Divider className="bg-[#E9EBF5]" />
                 {item.note_equip.map((equip: string, index: number) => (

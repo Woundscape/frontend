@@ -12,18 +12,6 @@ export interface IUpdateEquipment {
   equip_id: string[];
 }
 
-export async function updateImage({
-  img_id,
-  body,
-}: IUpdateImage): Promise<boolean> {
-  try {
-    const { data } = await getInstanceLocal().put(`/image/${img_id}`, body);
-    return data;
-  } catch (error) {
-    throw formattedError(error);
-  }
-}
-
 export async function getImageById(img_id: string): Promise<IImage> {
   try {
     const { data } = await getInstanceLocal().get(`/image/${img_id}`);
@@ -60,6 +48,31 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
     const { data } = await getInstanceLocal().get(
       `/image/getAllByImageId/${img_id}`
     );
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getProgressImage(imgList: string[]): Promise<IImage[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/image/progress`, {
+      data: {
+        imgList,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function updateImage({
+  img_id,
+  body,
+}: IUpdateImage): Promise<boolean> {
+  try {
+    const { data } = await getInstanceLocal().put(`/image/${img_id}`, body);
     return data;
   } catch (error) {
     throw formattedError(error);

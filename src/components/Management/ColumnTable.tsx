@@ -2,7 +2,7 @@ import Done from "@assets/icons/done.svg";
 import Cancel from "@assets/icons/cancel.svg";
 import EditIcon from "@assets/icons/edit_user_icon.svg";
 import DeleteIcon from "@assets/icons/delete_user_icon.svg";
-import { ACTION_MANAGE, IDoctor } from "@constants";
+import { ACTION_MANAGE, DoctorType, IDoctor } from "@constants";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
 import { formatDate } from "@utils";
@@ -141,31 +141,35 @@ export const getColumnManageUser = ({
       };
       return (
         <Space id="action_management__table">
-          {record.doctor_verified ? (
-            record.isRowEditable ? (
-              isRowEditButton()
-            ) : (
-              isNotRowEditButton()
-            )
-          ) : (
-            <>
-              <Button
-                className="button_add"
-                onClick={() =>
-                  onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
-                }
-              >
-                Approve
-              </Button>
-              <Button
-                className="button_reject"
-                onClick={() =>
-                  onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
-                }
-              >
-                Reject
-              </Button>
-            </>
+          {record.doctor_type != DoctorType.Reject && (
+            <Space id="action_management__table">
+              {record.doctor_verified ? (
+                record.isRowEditable ? (
+                  isRowEditButton()
+                ) : (
+                  isNotRowEditButton()
+                )
+              ) : (
+                <>
+                  <Button
+                    className="button_add"
+                    onClick={() =>
+                      onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
+                    }
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    className="button_reject"
+                    onClick={() =>
+                      onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
+                    }
+                  >
+                    Reject
+                  </Button>
+                </>
+              )}
+            </Space>
           )}
         </Space>
       );

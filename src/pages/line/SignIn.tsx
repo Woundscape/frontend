@@ -41,9 +41,9 @@ export default function SignIn() {
         console.log(`error ${err}`);
       });
   }, []);
-  function handleSubmit() {
+  async function handleSubmit() {
     if (user) {
-      lineLogin({
+      await lineLogin({
         userId: user.userId,
         displayName: user.displayName,
         type: UserType.Patient,
@@ -59,7 +59,7 @@ export default function SignIn() {
       liff.login();
     }
   }
-  function loginLiff() {
+  async function loginLiff() {
     if (liff.isLoggedIn()) {
       handleSubmit();
     } else {

@@ -91,29 +91,27 @@ export default function Management() {
           return prevData;
         });
       } else if (action == ACTION_MANAGE.DONE) {
-        updateTypeMutation.mutate(
-          {
-            isDoctor: record.isDoctor ?? false,
-            isExpert: record.isExpert ?? false,
-            doctor_id: record.doctor_id,
+        const body: IUpdateDoctorType = {
+          isDoctor: record.isDoctor ?? false,
+          isExpert: record.isExpert ?? false,
+          doctor_id: record.doctor_id,
+        };
+        updateTypeMutation.mutate(body, {
+          onSuccess: () => {
+            setDoctors((prevData) => {
+              const doctorIndex = prevData.findIndex(
+                (doctor) => doctor.doctor_id === record.doctor_id
+              );
+              if (doctorIndex !== -1) {
+                const updatedData = [...prevData];
+                updatedData[doctorIndex].isRowEditable =
+                  !updatedData[doctorIndex].isRowEditable;
+                return updatedData;
+              }
+              return prevData;
+            });
           },
-          {
-            onSuccess: () => {
-              setDoctors((prevData) => {
-                const doctorIndex = prevData.findIndex(
-                  (doctor) => doctor.doctor_id === record.doctor_id
-                );
-                if (doctorIndex !== -1) {
-                  const updatedData = [...prevData];
-                  updatedData[doctorIndex].isRowEditable =
-                    !updatedData[doctorIndex].isRowEditable;
-                  return updatedData;
-                }
-                return prevData;
-              });
-            },
-          }
-        );
+        });
       }
     },
 
@@ -142,7 +140,7 @@ export default function Management() {
       }
     },
   });
-  const onSubmit = () => {
+  const onSubmit = async () => {
     try {
       setConfirmLoading(true);
       if (approveState.action == ACTION_MANAGE.APPROVE) {
@@ -152,6 +150,18 @@ export default function Management() {
             setConfirmLoading(false);
             displayNotification(NotifyType.SUCCESS);
             getDoctor();
+          },
+        });
+      } else if (approveState.action == ACTION_MANAGE.REJECT) {
+        const body: IUpdateDoctorType = {
+          isReject: true,
+          doctor_id: approveState.doctor_id,
+        };
+        updateTypeMutation.mutate(body, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setConfirmLoading(false);
+            displayNotification(NotifyType.SUCCESS);
           },
         });
       }
@@ -189,6 +199,11 @@ export default function Management() {
                       pagination={{
                         defaultPageSize: 7,
                         showSizeChanger: false,
+                      }}
+                      rowClassName={(record) => {
+                        const isDisabled =
+                          record.doctor_type == DoctorType.Reject;
+                        return isDisabled ? "disabled-row" : "";
                       }}
                     />
                     <ConfirmModal

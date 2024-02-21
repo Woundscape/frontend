@@ -13,8 +13,14 @@ import {
   IImage,
   IPatient,
   NotifyType,
+  SEGMENT_STATE,
 } from "@constants";
-import { optionSegmented, formatDate, displayNotification } from "@utils";
+import {
+  optionSegmented,
+  formatDate,
+  displayNotification,
+  formatImage,
+} from "@utils";
 import UserProfile from "@components/UserProfile";
 import DeleteModal from "@components/DeleteModal";
 import DefaultInput from "@components/Patient/DefaultInput";
@@ -24,6 +30,7 @@ import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
 import { useAuth } from "@components/AuthProvider";
 import CardPatientDetail from "@components/Patient/CardPatientDetail";
 import { dividerConfig } from "@config";
+import { getCompareHistory } from "@api-caller";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -36,11 +43,12 @@ export default function PatientDetail() {
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
   const [stageSegmented, setStageSegmented] = useState({
-    stage: "Overview",
+    stage: SEGMENT_STATE.OVERVIEW,
     limit: false,
   });
   const [checkedList, setCheckList] = useState<string[]>([]);
   const [cases, setCases] = useState<IPatient>();
+  const [history, setHistory] = useState<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   async function formatDateImages(images: IImage[]) {
@@ -60,11 +68,19 @@ export default function PatientDetail() {
   useEffect(() => {
     getCase();
     getImage();
+    getHistory();
   }, []);
 
+  async function getHistory() {
+    if (case_id) {
+      const data = await getCompareHistory(case_id);
+      console.log(data);
+      setHistory(data);
+    }
+  }
   async function getImage() {
     if (case_id) {
-      const images: IImage[] = await getAllImageByCaseId(case_id as string);
+      const images: IImage[] = await getAllImageByCaseId(case_id);
       const format = await formatDateImages(images);
       setImages(format);
     }
@@ -75,7 +91,7 @@ export default function PatientDetail() {
   }
 
   const handleImage = (image_id: string) => {
-    if (stageSegmented.stage == "Overview") {
+    if (stageSegmented.stage == SEGMENT_STATE.OVERVIEW) {
       router(`/wound/${image_id}`);
     } else {
       checkedOnChange(image_id);
@@ -96,7 +112,7 @@ export default function PatientDetail() {
       const isRead = image.img_read;
       return (
         <div key={index}>
-          {!isRead && stageSegmented.stage == "Overview" ? (
+          {!isRead && stageSegmented.stage == SEGMENT_STATE.OVERVIEW ? (
             <Badge count={"new"} color="#F27961" offset={[-15, 25]}>
               <CardPatientDetail
                 key={index}
@@ -121,17 +137,17 @@ export default function PatientDetail() {
   }
   const onSubmit = async () => {
     if (
-      stageSegmented.stage == "Delete" &&
+      stageSegmented.stage == SEGMENT_STATE.DELETE &&
       !isModalOpen &&
       checkedList.length > 0
     ) {
       setIsModalOpen(true);
     } else {
       switch (stageSegmented.stage) {
-        case "Overview":
-          setStageSegmented({ stage: "Delete", limit: false });
+        case SEGMENT_STATE.OVERVIEW:
+          setStageSegmented({ stage: SEGMENT_STATE.DELETE, limit: false });
           break;
-        case "Delete":
+        case SEGMENT_STATE.DELETE:
           if (checkedList.length > 0) {
             setSubmitLoading(true);
             deleteMutation.mutate(checkedList, {
@@ -142,17 +158,36 @@ export default function PatientDetail() {
               },
             });
           }
-          setStageSegmented({ stage: "Overview", limit: false });
+          setStageSegmented({ stage: SEGMENT_STATE.OVERVIEW, limit: false });
           break;
-        case "Comparative Imaging":
+        case SEGMENT_STATE.COMPARE:
           if (checkedList.length == 2) {
-            router("/compare", { state: { imageList: checkedList } });
+            const detectParams = await history.filter((item: any) => {
+              const imgCollect = item.img_collect.map((img: any) => img.img_id);
+              return (
+                imgCollect.includes(checkedList[0]) &&
+                imgCollect.includes(checkedList[1])
+              );
+            });
+            if (detectParams.length > 0) {
+              router(`/compare`, {
+                state: {
+                  case_id,
+                  imageList: checkedList,
+                  compare_id: detectParams[0].compare_id,
+                },
+              });
+            } else {
+              router(`/compare`, {
+                state: { imageList: checkedList, case_id },
+              });
+            }
           } else {
             displayNotification(NotifyType.WARNING);
           }
           break;
-        case "Wound Progression":
-          router("/progress", { state: { imageList: checkedList } });
+        case SEGMENT_STATE.PROGRESS:
+          router("/progress", { state: { imageList: checkedList, case_id } });
           break;
         default:
           console.log(checkedList);
@@ -185,7 +220,7 @@ export default function PatientDetail() {
                 onChange={(stage: any) => {
                   setStageSegmented({
                     stage: stage,
-                    limit: stage == "Comparative Imaging",
+                    limit: stage == SEGMENT_STATE.COMPARE,
                   });
                   setCheckList([]);
                   let test = document.getElementById("timeline-container");
@@ -203,7 +238,7 @@ export default function PatientDetail() {
                     onRender={getImage}
                     images
                   />
-                  {stageSegmented.stage == "Overview" && cases && (
+                  {stageSegmented.stage == SEGMENT_STATE.OVERVIEW && cases && (
                     <AdditionalData data={cases} />
                   )}
                   {/* Body */}
@@ -235,74 +270,84 @@ export default function PatientDetail() {
                     </div>
                   </div>
                 </div>
-                {stageSegmented.stage != "Overview" &&
-                  stageSegmented.stage != "Delete" && (
-                    <Content id="history" className="flex flex-row">
-                      <ConfigProvider theme={dividerConfig}>
+                {stageSegmented.stage != SEGMENT_STATE.OVERVIEW &&
+                  stageSegmented.stage != SEGMENT_STATE.DELETE && (
+                    <ConfigProvider theme={dividerConfig}>
+                      <Content id="history" className="flex flex-row">
                         <Divider
                           type="vertical"
                           className="pr-2 min-h-full border-[#E9EBF5]"
                         />
-                      </ConfigProvider>
-                      <Content id="head-history" className="pt-6">
-                        <div className="h-14 w-72 bg-[#EEEEEE] rounded-xl">
-                          <p className="jura text-[#555554] text-lg p-3">
-                            History
-                          </p>
-                        </div>
-                        <div className="flex flex-col border-2 rounded-xl p-2 jura mt-4">
-                          <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
-                            <p className="text-[#4C577C]">
-                              {formatDate(cases?.created_at)}
-                            </p>
-                            <p className="text-[#626060]">HN. {cases?.hn_id}</p>
-                          </div>
-                          <div className="flex pt-3">
-                            <img
-                              className="w-16 rounded-lg"
-                              src={WoundHist}
-                              alt=""
-                            />
-                            <p className="text-[#4C577C] p-3.5">
-                              Jul 14, 2023 18:44
+                        <Content
+                          id="head-history"
+                          className="pt-6 overflow-y-auto"
+                        >
+                          <div className="h-14 w-72 bg-[#EEEEEE] rounded-xl">
+                            <p className="jura text-[#555554] text-lg p-3">
+                              History
                             </p>
                           </div>
-                          <div className="flex pt-3">
-                            <img
-                              className="w-16 rounded-lg"
-                              src={WoundHist}
-                              alt=""
-                            />
-                            <p className="text-[#4C577C] p-3.5">
-                              Jul 14, 2023 18:44
-                            </p>
+                          <div className="">
+                            {history?.map((item: any, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex flex-col border-2 rounded-xl p-2 jura mt-4"
+                                >
+                                  <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
+                                    <p className="text-[#4C577C]">
+                                      {formatDate(item?.created_at)}
+                                    </p>
+                                    <p className="text-[#626060]">
+                                      HN. {cases?.hn_id}
+                                    </p>
+                                  </div>
+                                  <div className="flex pt-3">
+                                    <img
+                                      className="w-14 h-14 object-cover rounded-lg"
+                                      src={formatImage(
+                                        item.img_collect[0]?.img_path
+                                      )}
+                                    />
+                                    <p className="text-[#4C577C] p-3.5">
+                                      {formatDate(
+                                        item.img_collect[0]?.created_at
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="flex pt-3">
+                                    <img
+                                      className="w-14 h-14 object-cover rounded-lg"
+                                      src={formatImage(
+                                        item.img_collect[1]?.img_path
+                                      )}
+                                    />
+                                    <p className="text-[#4C577C] p-3.5">
+                                      {formatDate(
+                                        item.img_collect[1]?.created_at
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div
+                                    className="flex flex-row justify-between h-8 border-2 rounded-full mt-3 hover:bg-[#E1E7FF]"
+                                    onClick={() => router(`/compare/${item}`)}
+                                  >
+                                    <p className="jura text-[#9198AF] p-1 pl-3">
+                                      View result
+                                    </p>
+                                    <img
+                                      className="pr-1"
+                                      src={ViewResultHist}
+                                      alt=""
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                          <div className="flex flex-row space-x-1.5 mt-1">
-                            <div className="w-24 bg-[#F4DEE7] rounded mt-2">
-                              <p className="text-center text-[#4C577C]">
-                                Diabetes
-                              </p>
-                            </div>
-                            <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                              <p className="text-center text-[#4C577C]">
-                                Pressure
-                              </p>
-                            </div>
-                            <div className="w-20 bg-[#F4DEE7] rounded mt-2">
-                              <p className="text-center text-[#4C577C]">
-                                Asthma
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex flex-row justify-between h-8 border-2 rounded-full mt-3">
-                            <p className="jura text-[#9198AF] p-1 pl-3">
-                              View result
-                            </p>
-                            <img className="pr-1" src={ViewResultHist} alt="" />
-                          </div>
-                        </div>
+                        </Content>
                       </Content>
-                    </Content>
+                    </ConfigProvider>
                   )}
               </div>
             </Content>
@@ -314,11 +359,11 @@ export default function PatientDetail() {
                 <Typography id="text__primary">
                   Select {checkedList.length} Images
                 </Typography>
-                {stageSegmented.stage == "Delete" && (
+                {stageSegmented.stage == SEGMENT_STATE.DELETE && (
                   <Button
                     onClick={() => {
                       setStageSegmented({
-                        stage: "Overview",
+                        stage: SEGMENT_STATE.OVERVIEW,
                         limit: false,
                       });
                       setCheckList([]);
@@ -331,19 +376,22 @@ export default function PatientDetail() {
                 <Button
                   onClick={onSubmit}
                   className={`w-40 py-0.5 z-10 jura text-[#424241] rounded-md border border-[#9198AF] 
-                  ${stageSegmented.stage == "Delete" && "bg-[#F7AD9E]"}
                   ${
-                    stageSegmented.stage == "Comparative Imaging" &&
+                    stageSegmented.stage == SEGMENT_STATE.DELETE &&
+                    "bg-[#F7AD9E]"
+                  }
+                  ${
+                    stageSegmented.stage == SEGMENT_STATE.COMPARE &&
                     "bg-[#90A4D8]"
                   } ${
-                    stageSegmented.stage == "Wound Progression" &&
+                    stageSegmented.stage == SEGMENT_STATE.PROGRESS &&
                     "bg-[#D8C290]"
                   }`}
                 >
-                  {stageSegmented.stage === "Overview"
+                  {stageSegmented.stage === SEGMENT_STATE.OVERVIEW
                     ? "Select"
-                    : stageSegmented.stage === "Delete"
-                    ? "Delete"
+                    : stageSegmented.stage === SEGMENT_STATE.DELETE
+                    ? SEGMENT_STATE.DELETE
                     : "Confirm"}
                 </Button>
                 <DeleteModal

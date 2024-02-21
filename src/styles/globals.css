@@ -64,6 +64,11 @@ div {
   user-select: none;
 }
 
+tr.disabled-row,
+tr.disabled-row:hover {
+  background-color: #f1f1f1 !important;
+}
+
 #text__primary {
   font-family: jura;
   color: var(--text-primary);
@@ -481,10 +486,7 @@ input::-webkit-inner-spin-button {
   max-height: 100px;
 }
 
-#upload__wrapper
-  > span
-  > div.ant-upload-list.ant-upload-list-picture
-  > div {
+#upload__wrapper > span > div.ant-upload-list.ant-upload-list-picture > div {
   margin-right: 1rem;
 }
 

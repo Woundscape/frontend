@@ -5,51 +5,42 @@ import {
   Button,
   Card,
   Collapse,
-  Divider,
   Form,
   Image,
   Input,
   Modal,
   Space,
   Spin,
-  Tag,
   Typography,
   Upload,
 } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { UploadChangeParam } from "antd/es/upload";
 import TextArea from "antd/es/input/TextArea";
-import getAllEquipment from "@api-caller/equipApi";
 import AddImageIcon from "@assets/icons/add_image_icon.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import {
-  IEquipment,
   IFormattedErrorResponse,
   INote,
-  DefaultNoteForm,
+  DefaultCompareForm,
+  ICreateCompare,
 } from "@constants";
 import { httpAPI } from "@config";
-import { getNoteImageById } from "@api-caller/noteApi";
+import { getCompareNoteById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../AuthProvider";
 
 interface INoteProps {
   id: string;
-  equipment?: IEquipment[];
-  mutation: UseMutationResult<boolean, IFormattedErrorResponse, INote>;
+  compare: any;
+  mutation: UseMutationResult<boolean, IFormattedErrorResponse, ICreateCompare>;
 }
-const { Paragraph, Text } = Typography;
-export default function AddNoteWithoutEquip({
-  id,
-  equipment,
-  mutation,
-}: INoteProps) {
+const { Paragraph } = Typography;
+export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
-  const [equip, setEquip] = useState<IEquipment[]>([]);
-  const [form, setForm] = useState<INote>({
-    ...DefaultNoteForm,
-    img_id: id,
+  const [form, setForm] = useState<ICreateCompare>({
+    ...DefaultCompareForm,
     author_id: me?.user_id || "",
   });
   const [forms] = Form.useForm();
@@ -58,30 +49,35 @@ export default function AddNoteWithoutEquip({
 
   useEffect(() => {
     getNote();
-    getEquipment();
   }, []);
 
-  async function getEquipment() {
-    if (!equipment) {
-      const data = await getAllEquipment();
-      setEquip(data);
-    } else {
-      setEquip(equipment);
+  async function getNote() {
+    if (id) {
+      const data = await getCompareNoteById(id);
+      setNotes(data);
     }
   }
-
-  async function getNote() {
-    const data = await getNoteImageById(id);
-    setNotes(data);
-  }
   const handleModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      compare,
+    }));
+    forms.resetFields();
     setOpenModal(!openModal);
   };
   const onSubmit = async () => {
     const values = await forms.validateFields();
     if (values) {
       setConfirmLoading(true);
-      setForm({ ...DefaultNoteForm, img_id: id, author_id: me?.user_id || "" });
+      console.log(
+        "%c 🐬 ~ Log from file: AddCompareNote.tsx:94 ~ form:",
+        "color: #00bcd4;",
+        form
+      );
+      setForm({
+        ...DefaultCompareForm,
+        author_id: me?.user_id || "",
+      });
       mutation.mutate(form, {
         onSuccess: () => {
           forms.resetFields();
@@ -125,19 +121,9 @@ export default function AddNoteWithoutEquip({
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary" className="indent-10">
+                <Paragraph id="text__primary">
                   {item.note_desc}
                 </Paragraph>
-                <Text id="text__primary">Equipment</Text>
-                <Divider className="bg-[#E9EBF5]" />
-                {item.note_equip.map((equip: string, index: number) => (
-                  <Tag key={index} color={"geekblue"} className="jura">
-                    {
-                      equipment?.find((list) => list.equip_id == equip)
-                        ?.equip_name
-                    }
-                  </Tag>
-                ))}
                 <div className="flex gap-3">
                   {item.note_img.map((image, index) => (
                     <Image

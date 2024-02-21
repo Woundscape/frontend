@@ -10,7 +10,7 @@ export interface IFormattedErrorResponse {
 
 export interface TissueType {
   title: string;
-  value?: number;
+  value: number;
   color: string;
 }
 
@@ -37,6 +37,7 @@ export enum DoctorType {
   Doctor = "Doctor",
   Expert = "Expert",
   Admin = "Admin",
+  Reject = "Reject",
 }
 
 export interface IUser {
@@ -90,7 +91,7 @@ export interface IMe {
 
 export interface IImage {
   img_id: string;
-  img_tissue?: any;
+  img_tissue: ITissue;
   img_equip?: any;
   img_equipPath?: string | null;
   img_path: string;
@@ -101,6 +102,11 @@ export interface IImage {
   case_id: string;
   compareCompare_id?: any;
   progressionProg_id?: any;
+}
+
+export interface ITissue {
+  paths: any;
+  result: TissueType[];
 }
 
 export interface IEquipment {
@@ -128,6 +134,29 @@ export interface INote {
   author_id: string;
 }
 
+interface Compare {
+  compare_id: string;
+  compare_notes: any[];
+  img_collect: IImage[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ICompare {
+  compare_info: TissueType[];
+  case_id: string;
+  img_collect: any;
+}
+
+export interface ICreateCompare {
+  note_title: string;
+  note_desc: string;
+  note_img: UploadFile<any>[];
+  created_at?: Date;
+  author_id: string;
+  compare: ICompare;
+}
+
 export interface IRefer {
   ref_id: string;
   ref_code: string;
@@ -144,8 +173,8 @@ export interface INotification {
   noti_desc: string;
   noti_img?: any;
   approveStatus: boolean;
-  sender_id: string;
-  recipient_id: string;
+  sender: any;
+  recipient: any;
   created_at: Date;
 }
 
@@ -163,6 +192,13 @@ export interface ICreateNotification {
   approveStatus: boolean;
   sender_id: string | undefined;
   recipient_id: string;
+}
+
+export interface IFieldDoctorName {
+  user_id: string;
+  user_firstname: string | null;
+  user_lastname: string | null;
+  doctor_id: string;
 }
 
 export enum IStage {

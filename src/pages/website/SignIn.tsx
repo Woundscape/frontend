@@ -33,18 +33,20 @@ function Signin() {
 
   const onSubmit = async () => {
     const values = await forms.validateFields();
-    loginMutation.mutate(formInputs, {
-      onSuccess: (data) => {
-        sessionStorage.setItem("token", JSON.stringify(data));
-        router("/dashboard");
-      },
-      onError: (e) => {
-        if (e.message) {
-          setLoginFailed(e.message);
-          displayNotification(NotifyType.ERROR);
-        }
-      },
-    });
+    if (values) {
+      loginMutation.mutate(formInputs, {
+        onSuccess: (data) => {
+          sessionStorage.setItem("token", JSON.stringify(data));
+          router("/dashboard");
+        },
+        onError: (e) => {
+          if (e.message) {
+            setLoginFailed(e.message);
+            displayNotification(NotifyType.ERROR);
+          }
+        },
+      });
+    }
   };
   return (
     <div className="wound-background w-full bg-white h-screen">
