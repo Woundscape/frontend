@@ -12,6 +12,7 @@ import {
   Typography,
   Upload,
 } from "antd";
+import { BsChatDots } from "react-icons/bs";
 import { UploadChangeParam } from "antd/es/upload";
 import TextArea from "antd/es/input/TextArea";
 import AddImageIcon from "@assets/icons/add_image_icon.svg";
@@ -73,7 +74,7 @@ export default function Consult({}: IConsultProps) {
 
   return (
     <>
-      <Button id="btn-consult" onClick={setModal} className="button_consult">
+      <Button id="btn-consult" onClick={setModal} className="button_consult" icon={<BsChatDots size={16}/>}>
         Consult
       </Button>
       <Modal

@@ -1,12 +1,10 @@
 import { List } from "antd";
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import Dashboard_LOGO from "@assets/logo/dashboard-logo.svg";
-import Patient_LOGO from "@assets/logo/patient_logo.svg";
-import Equipment_LOGO from "@assets/logo/equipment_logo.svg";
-import Allocation_LOGO from "@assets/logo/allocation_logo.svg";
-import UserManage_LOGO from "@assets/logo/user_manage_logo.svg";
-import Account_LOGO from "@assets/logo/account_logo.svg";
+import { LuLayoutDashboard, LuScissors } from "react-icons/lu";
+import { MdOutlineSick, MdOutlineAccountCircle } from "react-icons/md";
+import { TbReportMedical } from "react-icons/tb";
+import { RiUserSettingsLine } from "react-icons/ri";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import ImageMenu from "./ImageMenu";
 import { DoctorType } from "@constants";
@@ -15,7 +13,7 @@ import { useAuth } from "./AuthProvider";
 interface IMenu {
   title: string;
   pathname: string;
-  icon: string;
+  icon: any;
   required: string;
 }
 
@@ -23,19 +21,19 @@ const defaultMenuRoutes: IMenu[] = [
   {
     title: "Dashboard",
     pathname: "/dashboard",
-    icon: Dashboard_LOGO,
+    icon: <LuLayoutDashboard color="#505152" size={22} />,
     required: DoctorType.Doctor,
   },
   {
     title: "Patient",
     pathname: "/patient",
-    icon: Patient_LOGO,
+    icon: <MdOutlineSick color="#505152" size={26}/>,
     required: DoctorType.Doctor,
   },
   {
     title: "Equipment",
     pathname: "/equipment",
-    icon: Equipment_LOGO,
+    icon: <LuScissors color="#505152" size={22}/>,
     required: DoctorType.Doctor,
   },
   // {
@@ -46,19 +44,19 @@ const defaultMenuRoutes: IMenu[] = [
   {
     title: "Allocation",
     pathname: "/allocation",
-    icon: Allocation_LOGO,
+    icon: <TbReportMedical color="#505152" size={24}/>,
     required: DoctorType.Expert,
   },
   {
     title: "Users Management",
     pathname: "/management",
-    icon: UserManage_LOGO,
+    icon: <RiUserSettingsLine color="#505152" size={22}/>,
     required: DoctorType.Expert,
   },
   {
     title: "Account",
     pathname: "/account",
-    icon: Account_LOGO,
+    icon: <MdOutlineAccountCircle color="#505152" size={24}/>,
     required: DoctorType.Doctor,
   },
 ];
@@ -74,21 +72,21 @@ export default function Menu() {
         me?.doctor_type == DoctorType.Admin ||
         item.required == me?.doctor_type
       )
-        return (
-          <List.Item key={index}>
-            <NavLink
-              to={item.pathname}
-              className={`flex py-3 px-4 rounded-lg ${
-                pathName.startsWith(item.pathname)
-                  ? "bg-[#D2D7EB]"
-                  : "hover:bg-[#EEEEEE]"
-              }`}
-            >
-              <img src={item.icon} width={20} alt="" />
-              <span className="ml-3 text-sm jura">{item.title}</span>
-            </NavLink>
-          </List.Item>
-        );
+      return (
+        <List.Item key={index}>
+          <NavLink
+            to={item.pathname}
+            className={`flex py-3 px-4 rounded-lg ${
+              pathName.startsWith(item.pathname)
+                ? "bg-[#D2D7EB]"
+                : "hover:bg-[#EEEEEE]"
+            }`}
+          >
+            {item.icon}
+            <span className="ml-3 text-sm jura">{item.title}</span>
+          </NavLink>
+        </List.Item>
+      );
     });
   }
   return (

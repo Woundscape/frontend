@@ -7,7 +7,6 @@ import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
 import ViewResultHist from "@assets/view_result_hist.svg";
-import WoundHist from "@assets/wound/img_10.jpg";
 import {
   IFormattedErrorResponse,
   IImage,
