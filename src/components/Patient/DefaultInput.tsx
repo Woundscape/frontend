@@ -2,15 +2,15 @@ import { useState } from "react";
 import {
   AppstoreOutlined,
   BarsOutlined,
-  UserAddOutlined,
 } from "@ant-design/icons";
+import { FaUserPlus } from "react-icons/fa";
 import { Button, DatePicker, Input, Segmented, Select } from "antd";
 import { SegmentedValue } from "antd/es/segmented";
 import { IFormattedErrorResponse } from "@constants";
 import { UseMutationResult, useMutation } from "react-query";
 import { uploadImage } from "@api-caller";
 import SearchIcon from "@assets/icon-search-upload.svg";
-import AddImageIcon from "@assets/icons/add_image_icon2.svg";
+import { LuImagePlus } from "react-icons/lu";
 import SortBy from "@assets/icons/sortBy.svg";
 import UploadModal from "./UploadModal";
 import Consult from "./Consult";
@@ -90,7 +90,7 @@ export default function DefaultInput({
           <Button
             onClick={addPatient}
             className="button_add"
-            icon={<UserAddOutlined />}
+            icon={<FaUserPlus size={16}/>}
           >
             Add Patient
           </Button>
@@ -100,7 +100,7 @@ export default function DefaultInput({
             <Button
               onClick={() => setIsModalOpen(true)}
               className="button_add"
-              icon={<img src={AddImageIcon} />}
+              icon={<LuImagePlus size={17} />}
             >
               Add Image
             </Button>

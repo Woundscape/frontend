@@ -197,7 +197,7 @@ function Signup() {
           </Button>
           <div className="flex space-x-2">
             <p className="text-[#A7A6A5] ">Already have an account?</p>
-            <a href="/signin" className="text-[#A3802D] underline">
+            <a href="/signin" className="text-[#A3802D] underline hover:text-[#A3802D]">
               SIGN IN
             </a>
           </div>

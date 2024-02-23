@@ -1,10 +1,9 @@
 import { Tooltip } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import NotiAll from "@assets/icons/all_noti.svg"
-import PatientNote from "@assets/icons/patient_note_noti.svg"
-import Suggest from "@assets/icons/sugggest_noti.svg"
-import ImageNoti from "@assets/icons/image_noti.svg"
-
+import { LuImagePlus } from "react-icons/lu";
+import { IoMailUnreadOutline } from "react-icons/io5";
+import { BiUserPin } from "react-icons/bi";
+import { TbCirclesRelation } from "react-icons/tb";
 export const optionSegmented: any = [
   {
     label: "Overview",
@@ -35,23 +34,23 @@ export const optionSegmented: any = [
 ];
 export const optionNotification: any = [
   {
-    label: (<div className="flex gap-2">
-      <img src={NotiAll} alt="" />
+    label: (<div className="flex gap-2 items-center">
+      <TbCirclesRelation size={20} color="#949cb6"/>
       <p className="text-[#4C577C]">All</p>
     </div>),
     value: "All",
   },
   {
-    label: (<div className="flex gap-2">
-      <img src={ImageNoti} alt="" />
+    label: (<div className="flex gap-2 items-center">
+      <LuImagePlus size={20} color="#949cb6" />
       <p className="text-[#4C577C]">Image</p>
     </div>),
     value: "Image",
   },
   {
     label: (
-      <div id="text__primary" className="flex space-x-2">
-        <img src={PatientNote} alt="" />
+      <div id="text__primary" className="flex gap-2 items-center">
+        <BiUserPin size={22} color="#949cb6"/>
         <p>Patient note</p>
         
       </div>
@@ -60,8 +59,8 @@ export const optionNotification: any = [
   },
   {
     label: (
-      <div id="text__primary" className="flex space-x-2">
-        <img src={Suggest} alt="" />
+      <div id="text__primary" className="flex gap-2 items-center">
+        <IoMailUnreadOutline size={22} color="#949cb6"/>
         <p>Suggestion</p>
         
       </div>
