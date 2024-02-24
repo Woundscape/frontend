@@ -46,7 +46,7 @@ export default function DrawSketchCanvas({
   > = useMutation(updateImage);
   const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
-  const [colorPaint, setColorPaint] = useState("black");
+  const [colorPaint, setColorPaint] = useState<string>();
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
   const [canvasRef, setCanvasRef] = useState(
@@ -105,14 +105,6 @@ export default function DrawSketchCanvas({
       });
     }
   }, [image?.img_read]);
-  //NOTE -  have for wut ?
-  async function getImage() {
-    if (canvasRef.current && data.img_tissue) {
-      canvasRef.current.loadPaths(data.img_tissue.paths);
-      setOriginal(data.img_tissue.paths);
-    }
-    setImage(data);
-  }
 
   const handleCanvasExportImage = async () => {
     const a = await canvasRef.current?.exportImage("png");

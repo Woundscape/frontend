@@ -3,7 +3,6 @@ import ImgProfile from "@assets/profile_img.svg";
 import AddFriend from "@assets/AddFriendQRCODE.png";
 import { Divider, Input, Typography } from "antd";
 import { useAuth } from "@components/AuthProvider";
-import Avatar from "react-avatar";
 export default function Account() {
   const { me } = useAuth();
   const fullName = me?.firstname + " " + me?.lastname;

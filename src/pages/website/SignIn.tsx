@@ -8,7 +8,7 @@ import logo_wound from "@assets/logo/logo-wound.svg";
 import { UseMutationResult, useMutation } from "react-query";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { displayNotification } from "@utils";
-import { IFormattedErrorResponse, NotifyType } from "@constants";
+import { IFormattedErrorResponse, NotifyType, PLATFORM } from "@constants";
 import { IFormInputsLogin, Credentials, login } from "@api-caller/authenApi";
 function Signin() {
   const router = useNavigate();
@@ -22,6 +22,7 @@ function Signin() {
   const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
     user_email: "",
     user_password: "",
+    platform: PLATFORM.WEB_APP,
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

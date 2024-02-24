@@ -1,3 +1,4 @@
+export * from "./platforms";
 export * from "./field";
 export * from "./interface";
 export * from "./defaultForm";

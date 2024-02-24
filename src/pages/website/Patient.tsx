@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserProfile from "@components/UserProfile";
 import {
   Badge,
   Button,
@@ -16,22 +15,22 @@ import { ColumnsType } from "antd/es/table";
 import { Content } from "antd/es/layout/layout";
 import { SegmentedValue } from "antd/es/segmented";
 import {
+  IRefer,
+  IPatient,
   AddPatientState,
   IFormattedErrorResponse,
-  IPatient,
-  IRefer,
 } from "@constants";
 import { useAuth } from "@components/AuthProvider";
-import DefaultInput from "@components/Patient/DefaultInput";
+import UserProfile from "@components/UserProfile";
 import CardPatient from "@components/Patient/CardPatient";
+import DefaultInput from "@components/Patient/DefaultInput";
 import { getColumnsPatient } from "@components/Patient/ColumnTable";
-import { getCaseByDoctorId } from "@api-caller/caseApi";
+import { getCaseByDoctorId, createReferral } from "@api-caller";
 import { UseMutationResult, useMutation } from "react-query";
-import { createReferral } from "@api-caller/referApi";
 
 const { Paragraph } = Typography;
 export default function Patient() {
-  const createReferrlMutation: UseMutationResult<
+  const createReferralMutation: UseMutationResult<
     IRefer,
     IFormattedErrorResponse,
     any
@@ -73,7 +72,7 @@ export default function Patient() {
   const onChangeState = () => {
     if (stateModal == AddPatientState.CONFIRM_HN) {
       setSubmitLoading(true);
-      createReferrlMutation.mutate(me, {
+      createReferralMutation.mutate(me, {
         onSuccess: (response) => {
           setSubmitLoading(false);
           setStateModal((currentState) => {

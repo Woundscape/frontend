@@ -1,7 +1,11 @@
 import { ThemeConfig } from "antd";
 import { BaseOptionType } from "antd/es/select";
 
-export const httpAPI: string = "http://localhost:3000";
+export const configENV = (key: string) => {
+  return import.meta.env[key];
+};
+
+export const httpAPI: string = import.meta.env.WS_SERVER_ENDPOINT_URL;
 export enum lineLiffID {
   UPLOAD_IMAGE = "2001180435-mZ7YAEj4",
   SIGNIN = "2001180435-eBkJB6ZQ",

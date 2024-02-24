@@ -1,10 +1,11 @@
-import { IMe, IUser } from "@constants";
+import { IMe, IUser, PLATFORM } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
 
 export interface IFormInputsLogin {
   user_email: string;
   user_password: string;
+  platform: PLATFORM;
 }
 
 export interface Credentials {
@@ -22,6 +23,7 @@ export async function login(request: IFormInputsLogin): Promise<Credentials> {
     throw formattedError(error);
   }
 }
+
 export async function webRegister(request: IUser): Promise<boolean> {
   try {
     const { data } = await getInstanceLocal().post("/user/register", request);

@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
+import { UseMutationResult, useMutation } from "react-query";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_wound from "@assets/logo/logo-wound.svg";
 import footer_watermark from "@assets/footer_watermark.svg";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import {
-  DefaultPatientForm,
-  UserField,
   IUser,
+  UserField,
+  DefaultPatientForm,
   IFormattedErrorResponse,
+  NotifyType,
 } from "@constants";
-import { UseMutationResult, useMutation } from "react-query";
-import { lineRegister } from "@api-caller/authenApi";
 import liff from "@line/liff";
 import { lineLiffID } from "@config";
-import { LineCredential } from "@api-caller/lineApi";
+import { lineRegister } from "@api-caller";
+import { displayNotification } from "@utils";
 
 export default function SignUp() {
   const registerMutation: UseMutationResult<
@@ -32,41 +33,47 @@ export default function SignUp() {
     }));
   };
 
-  // useEffect(() => {
-  //   liff
-  //     .init({
-  //       liffId: lineLiffID.SIGNUP,
-  //     })
-  //     .then(() => {
-  //       if (liff.isLoggedIn()) {
-  //         liff.getProfile().then((profile) => {
-  //           // setForm((prevValues) => ({
-  //           //   ...prevValues,
-  //           //   line_uid: profile.userId,
-  //           // }));
-  //         });
-  //       } else {
-  //         liff.login();
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(`error ${err}`);
-  //     });
-  // }, []);
+  useEffect(() => {
+    liff
+      .init({
+        liffId: lineLiffID.SIGNUP,
+      })
+      .then(() => {
+        if (liff.isLoggedIn()) {
+          liff.getProfile().then((profile) => {
+            console.log(profile);
+
+            setForm((prevValues) => ({
+              ...prevValues,
+              line_uid: profile.userId,
+            }));
+          });
+        } else {
+          liff.login();
+        }
+      })
+      .catch((err) => {
+        console.log(`error ${err}`);
+      });
+  }, []);
 
   const onSubmit = async () => {
     try {
       const values = await forms.validateFields();
       if (values) {
         registerMutation.mutate(form, {
-          onSuccess: (response) => {
-            console.log(response);
-            
-            forms.resetFields()
+          onSuccess: () => {
+            liff.closeWindow();
+          },
+          onError: () => {
+            displayNotification(NotifyType.ERROR);
           },
         });
       }
-    } catch (error) {}
+      // forms.resetFields();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const validateConfirmPassword = ({ getFieldValue }: any) => ({
