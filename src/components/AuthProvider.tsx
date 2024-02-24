@@ -26,7 +26,10 @@ export const AuthProvider = ({ children }: any) => {
     try {
       if (token) {
         const response: IMe = await getMe(token.accessToken);
-        if (response.doctor_type == DoctorType.General) {
+        if (
+          response.doctor_type == DoctorType.General ||
+          response.doctor_type == DoctorType.Reject
+        ) {
           router("noApprove");
         }
         setIsAuthenticated(true);

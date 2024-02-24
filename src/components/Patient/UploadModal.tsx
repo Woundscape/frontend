@@ -8,6 +8,7 @@ import { IFormattedErrorResponse } from "@constants";
 import SearchUploadIcon from "@assets/icons/add_search_upload_patient_icon.svg";
 import AddUploadIcon from "@assets/icons/add_upload_patient_icon.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
+import { httpAPI } from "@config";
 
 interface IModelProps {
   isOpen: boolean;
@@ -102,7 +103,7 @@ export default function UploadModal({
         <Upload.Dragger
           multiple
           listType="picture"
-          action={"http://localhost:5173/"}
+          action={httpAPI}
           accept="image/png, image/jpeg"
           fileList={files}
           beforeUpload={(_) => {

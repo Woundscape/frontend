@@ -24,11 +24,7 @@ export async function getLineMe(
 
 export async function lineLogin(credentials: LineCredential): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().post(`/line/signin`, {
-      userId: credentials.userId,
-      displayName: credentials.displayName,
-      type: credentials.type,
-    });
+    const { data } = await getInstanceLocal().post(`/line/login`, credentials);
     return data;
   } catch (error) {
     throw formattedError(error);
