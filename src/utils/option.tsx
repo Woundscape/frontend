@@ -38,14 +38,14 @@ export const optionNotification: any = [
       <TbCirclesRelation size={20} color="#949cb6"/>
       <p className="text-[#4C577C]">All</p>
     </div>),
-    value: "All",
+    value: null,
   },
   {
     label: (<div className="flex gap-2 items-center">
       <LuImagePlus size={20} color="#949cb6" />
       <p className="text-[#4C577C]">Image</p>
     </div>),
-    value: "Image",
+    value: "image",
   },
   {
     label: (
@@ -55,7 +55,7 @@ export const optionNotification: any = [
         
       </div>
     ),
-    value: "Patient note",
+    value: "note",
   },
   {
     label: (
@@ -65,6 +65,6 @@ export const optionNotification: any = [
         
       </div>
     ),
-    value: "Suggestion",
+    value: "consult",
   },
 ];
