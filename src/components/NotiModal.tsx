@@ -26,36 +26,97 @@ export default function NotiModal({
 }: NotificationModalProps) {
   const data = [
     {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
+      noti_id: "6643793",
+      noti_type: "consult",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
     },
     {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
+      noti_id: "6643999",
+      noti_type: "consult",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
     },
     {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
+      noti_id: "6643793",
+      noti_type: "note",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
     },
     {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
+      noti_id: "6643793",
+      noti_type: "upload",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
     },
     {
-      id: "Consult #6643793",
-      message: "Dr.Prasert has sent you a message",
-      time: "1 hour ago",
-      status: "unread",
+      noti_id: "6643793",
+      noti_type: "accept",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
+    },
+    {
+      noti_id: "6643793",
+      noti_type: "cancel",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
+    },
+    {
+      noti_id: "6643793",
+      noti_type: "image",
+      noti_title: "string",
+      noti_desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates cumque nostrum odit deleniti doloremque",
+      noti_img: "any",
+      approveStatus: true,
+      sender: "any",
+      recipient: "any",
+      created_at: "Feb 14, 2023 18:42",
     },
   ];
+  const [filterType, setFilterType] = useState(null);
+  const handleFilter = (type:any) => {
+    setFilterType(type)
+  };
+  const filteredData = filterType
+    ? data.filter((item) => item.noti_type === filterType)
+    : data;
   const [viewMore, setViewMore] = useState(false);
   const onMouseClick = () => {
     setViewMore(!viewMore);
@@ -80,13 +141,13 @@ export default function NotiModal({
                 <Segmented
                   className="jura select-none"
                   options={optionNotification}
-                  onChange={(stage: any) => {}}
+                  onChange={(stage: any) => handleFilter(stage)}
                 />
               </div>
             </div>
             <div className="flex flex-col h-24 overflow-y-auto grow">
               <List
-                dataSource={data}
+                dataSource={filteredData}
                 renderItem={(item, index) => (
                   <List.Item key={index}>
                     <List.Item.Meta
@@ -96,11 +157,13 @@ export default function NotiModal({
                       className="p-4 jura hover:bg-[#f2f1f1]"
                       title={
                         <p>
-                          {item.message}{" "}
-                          <span className="text-[#61708C]">{item.id}</span>
+                          {item.noti_desc}{" "}
+                          <span className="text-[#61708C]">
+                            {item.noti_type} #{item.noti_id}
+                          </span>
                         </p>
                       }
-                      description={item.time}
+                      description={item.created_at}
                     />
                   </List.Item>
                 )}
