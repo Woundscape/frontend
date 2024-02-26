@@ -12,21 +12,25 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { Button, Collapse, DatePicker, Tabs } from "antd";
+import { Button, Collapse, Tabs, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Export from "@assets/export.svg";
-import Eye from "@assets/eye_input.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
-import WoundImg from "@assets/wound/img_6.jpg";
-import AddNote from "@components/WoundAnalysis/AddNote";
 import UserProfile from "@components/UserProfile";
-import { IFormattedErrorResponse, INote } from "@constants";
-import { addImageNote } from "@api-caller/noteApi";
-
-const { RangePicker } = DatePicker;
+import {
+  DefaultDataSet,
+  DefaultTissue,
+  IFormattedErrorResponse,
+  IImage,
+  INote,
+} from "@constants";
+import { getProgressImage, addImageNote, addProgressNote } from "@api-caller";
+import { formatDate, formatImage } from "@utils";
+import AddProgressNote from "@components/Progress/AddProgressNote";
 
 ChartJS.register(
   CategoryScale,
@@ -47,83 +51,113 @@ const options = {
     },
   },
 };
-export default function progress() {
+
+interface IChart {
+  labels: string[];
+  datasets: IDataSet[];
+}
+interface IDataSet {
+  label: string;
+  data: any[];
+  borderColor: string;
+}
+
+export default function Progress() {
   const addNoteMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     INote
-  > = useMutation(addImageNote);
-  const [openEye, setOpenEye] = useState([
-    {
-      label: "Wound",
-      data: [10, 20, 15, 40, 22],
-      borderColor: "lightgreen",
-    },
-    {
-      label: "Periwound",
-      data: [10, 10, 20],
-      borderColor: "pink",
-    },
-    {
-      label: "Periwound",
-      data: [20, 30, 10, 30],
-      borderColor: "lightblue",
-    },
-  ]);
-  const [data, setData] = useState({
-    labels: ["Jan 2023", "Feb", "Mar", "Apr", "May"],
-    datasets: [...openEye],
-  });
-
-  const listTissue = [
-    {
-      title: "eschar",
-      color: "#EEEEEE",
-    },
-    {
-      title: "slough",
-      color: "#CFEDD9",
-    },
-    {
-      title: "epithelization",
-      color: "#E0FCC5",
-    },
-    {
-      title: "callus",
-      color: "#FFFDC5",
-    },
-    {
-      title: "periwound",
-      color: "#FFE8BF",
-    },
-    {
-      title: "wound",
-      color: "#FFE1E1",
-    },
-    {
-      title: "granulation",
-      color: "#E6D1ED",
-    },
-    {
-      title: "deep structure",
-      color: "#D3DDFF",
-    },
-    {
-      title: "marceration",
-      color: "#D4F3F3",
-    },
-  ];
-  const { img_id } = useParams();
+  > = useMutation(addProgressNote);
   const location = useLocation();
-  const [openModal, setOpenModal] = useState(false);
   const router = useNavigate();
+  const { progress_id } = useParams();
   const { imageList } = location.state || [];
-  console.log(imageList);
+  const [images, setImages] = useState<IImage[]>();
+  const [openModal, setOpenModal] = useState(false);
+  const [hideTissue, setHideTissue] = useState<string[]>([]);
+  const [original, setOriginal] = useState<IChart>(DefaultDataSet);
+  const [data, setData] = useState<IChart>(DefaultDataSet);
   useEffect(() => {
-    if (imageList == undefined) {
+    if (imageList) {
+      getProgressImage(imageList).then((response) => {
+        setImages(response);
+        calculateData(response);
+      });
+    } else {
       router("/patient");
     }
   }, []);
+
+  const hideHandle = async (title: string) => {
+    if (hideTissue.includes(title)) {
+      setHideTissue((prev) => prev.filter((tissue) => tissue !== title));
+      let tempTissue = await hideTissue.filter((color) => color !== title);
+      let newData = await original.datasets.filter(
+        (dataset) => !tempTissue.includes(dataset.label)
+      );
+      setData((prev) => ({ ...prev, datasets: newData }));
+    } else {
+      setData((prev) => {
+        return {
+          ...prev,
+          datasets: prev.datasets.filter((dataset) => dataset.label !== title),
+        };
+      });
+      setHideTissue((prev) => [...prev, title]);
+    }
+  };
+
+  const calculateData = async (image: IImage[]) => {
+    try {
+      const labels = image.map((item) => formatDate(item.created_at));
+      const collect = image.map((item) => {
+        return item.img_tissue.result.map((item) => {
+          return {
+            label: item.title,
+            data: [item.value],
+            borderColor: item.color,
+          };
+        });
+      });
+
+      const datasets: IDataSet[] = collect.reduce(
+        (accumulator, currentArray) => {
+          currentArray.forEach((currentItem) => {
+            const existingItem = accumulator.find(
+              (accItem) => accItem.label === currentItem.label
+            );
+
+            if (existingItem) {
+              existingItem.data.push(currentItem.data[0]);
+            } else {
+              accumulator.push(currentItem);
+            }
+          });
+          return accumulator;
+        },
+        []
+      );
+      const body: IChart = {
+        labels,
+        datasets,
+      };
+      setOriginal(body);
+      setData(body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onHide = (title: string, color: string) => {
+    if (hideTissue.includes(color)) {
+      let tissue = hideTissue.filter((e) => e !== color);
+      setHideTissue(tissue);
+    } else {
+      setHideTissue([...hideTissue, color]);
+    }
+    hideHandle(title);
+  };
+
   const handleModal = () => {
     setOpenModal(!openModal);
   };
@@ -152,7 +186,10 @@ export default function progress() {
                   </div>
                   <Line data={data} options={options} className="p-6" />
                 </div>
-                <AddNote id={img_id as string} mutation={addNoteMutation} />
+                <AddProgressNote
+                  id={progress_id as string}
+                  mutation={addNoteMutation}
+                />
                 <Collapse
                   expandIconPosition={"right"}
                   items={[
@@ -192,7 +229,6 @@ export default function progress() {
             </div>
             <div className="w-[23rem] tabs-container__navigation border-l-2 border-[#E8EAF4]">
               <Tabs type="card" id="tabs-container_antd" className="h-full p-6">
-                {/* Summary Tissue Tab */}
                 <TabPane
                   tab={
                     <div className="text-[#424241] text-center select-none jura">
@@ -203,7 +239,7 @@ export default function progress() {
                 >
                   <Content className="h-full overflow-y-auto">
                     <div className="space-y-3">
-                      {listTissue.map((item, index) => {
+                      {DefaultTissue.map((item, index) => {
                         return (
                           <div
                             key={index}
@@ -214,16 +250,19 @@ export default function progress() {
                                 className={`w-5 h-5 rounded-full`}
                                 style={{ backgroundColor: item.color + "" }}
                               ></div>
-                              <p>{item.title}</p>
+                              <Typography className="jura">
+                                {item.title}
+                              </Typography>
                             </div>
-                            <img
-                              src={Eye}
-                              alt=""
-                              onClick={() => {
-                                setOpenEye([]);
-                                console.log(1);
-                              }}
-                            />
+                            <div onClick={() => onHide(item.title, item.color)}>
+                              {hideTissue.includes(item.color) ? (
+                                <EyeInvisibleOutlined
+                                  style={{ fontSize: 18 }}
+                                />
+                              ) : (
+                                <EyeOutlined style={{ fontSize: 18 }} />
+                              )}
+                            </div>
                           </div>
                         );
                       })}
@@ -231,7 +270,6 @@ export default function progress() {
                   </Content>
                 </TabPane>
                 <TabPane
-                  className=""
                   tab={
                     <div className="text-[#424241] text-center select-none jura">
                       Image
@@ -240,22 +278,22 @@ export default function progress() {
                   key="2"
                 >
                   <Content className="h-full overflow-y-auto">
-                    <div
-                      className="flex flex-col mt-3 space-y-2 justify-center items-center w-full h-40 rounded-lg"
-                      style={{
-                        backgroundSize: "cover",
-                        backgroundPosition: "center center",
-                      }}
-                    >
-                      <img
-                        src={WoundImg}
-                        className="w-60 h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
-                        alt=""
-                      />
-                      <p className="jura text-sm text-[#9198AF]">
-                        Feb 14, 2023 18:42
-                      </p>
-                    </div>
+                    {images?.map((image, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col mb-10 space-y-2 justify-center items-center w-full h-40 rounded-lg"
+                        >
+                          <img
+                            src={formatImage(image.img_path)}
+                            className="w-60 h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
+                          />
+                          <p className="jura text-sm text-[#9198AF]">
+                            {formatDate(image.created_at)}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </Content>
                 </TabPane>
               </Tabs>

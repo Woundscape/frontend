@@ -20,8 +20,7 @@ import { dividerConfig } from "@config";
 import UserProfile from "@components/UserProfile";
 import CardImage from "@components/Compare/CardImage";
 import AddCompareNote from "@components/Compare/AddCompareNote";
-import { addCompareNote, getCoupleImage } from "@api-caller";
-import getAllEquipment from "@api-caller/equipApi";
+import { addCompareNote, getCoupleImage, getAllEquipment } from "@api-caller";
 
 export default function Compare() {
   const addCompareNoteMutation: UseMutationResult<
@@ -134,7 +133,13 @@ export default function Compare() {
                           <div className="jura flex flex-row w-1/2 items-center justify-center space-x-3">
                             <img
                               className="w-3"
-                              src={item.value < 0 ? ArrowUp : item.value != 0 ? ArrowDown : ''}
+                              src={
+                                item.value < 0
+                                  ? ArrowUp
+                                  : item.value != 0
+                                  ? ArrowDown
+                                  : ""
+                              }
                               alt=""
                             />
                             <p className="text-[#4C577C]">

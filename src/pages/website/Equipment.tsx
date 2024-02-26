@@ -12,7 +12,8 @@ import {
 } from "@constants";
 import UserProfile from "@components/UserProfile";
 import DefaultInput from "@components/Equipment/DefaultInput";
-import getAllEquipment, {
+import{
+  getAllEquipment,
   deleteEquipment,
   getTypeEquipment,
   updateEquipment,

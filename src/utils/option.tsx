@@ -4,6 +4,7 @@ import { LuImagePlus } from "react-icons/lu";
 import { IoMailUnreadOutline } from "react-icons/io5";
 import { BiUserPin } from "react-icons/bi";
 import { TbCirclesRelation } from "react-icons/tb";
+
 export const optionSegmented: any = [
   {
     label: "Overview",
@@ -13,7 +14,10 @@ export const optionSegmented: any = [
     label: (
       <div id="text__primary" className="flex space-x-2">
         <p>Comparative Imaging</p>
-        <Tooltip placement="bottom" title="Comparing photos of wounds to observe differences in tissue.">
+        <Tooltip
+          placement="bottom"
+          title="Comparing photos of wounds to observe differences in tissue."
+        >
           <InfoCircleOutlined />
         </Tooltip>
       </div>
@@ -24,7 +28,10 @@ export const optionSegmented: any = [
     label: (
       <div id="text__primary" className="flex space-x-2">
         <p>Wound Progression</p>
-        <Tooltip placement="bottom" title="Progress of the wound to observe recovery.">
+        <Tooltip
+          placement="bottom"
+          title="Progress of the wound to observe recovery."
+        >
           <InfoCircleOutlined />
         </Tooltip>
       </div>
@@ -32,6 +39,7 @@ export const optionSegmented: any = [
     value: "Wound Progression",
   },
 ];
+
 export const optionNotification: any = [
   {
     label: (<div className="flex gap-2 items-center">
@@ -50,9 +58,8 @@ export const optionNotification: any = [
   {
     label: (
       <div id="text__primary" className="flex gap-2 items-center">
-        <BiUserPin size={22} color="#949cb6"/>
+        <BiUserPin size={22} color="#949cb6" />
         <p>Patient note</p>
-        
       </div>
     ),
     value: "note",
@@ -60,9 +67,8 @@ export const optionNotification: any = [
   {
     label: (
       <div id="text__primary" className="flex gap-2 items-center">
-        <IoMailUnreadOutline size={22} color="#949cb6"/>
+        <IoMailUnreadOutline size={22} color="#949cb6" />
         <p>Suggestion</p>
-        
       </div>
     ),
     value: "consult",

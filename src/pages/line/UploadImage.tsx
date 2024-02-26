@@ -2,15 +2,22 @@ import liff from "@line/liff";
 import { Spin, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { LineCredential, getLineMe, lineUpload } from "@api-caller/lineApi";
 import { lineLiffID } from "@config";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import Arrow_Start from "@assets/arrow-start.svg";
 import SearchUploadIcon from "@assets/icon-search-upload.svg";
 import AddUploadIcon from "@assets/icon-add-upload-file.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
+import { UseMutationResult, useMutation } from "react-query";
+import { IFormattedErrorResponse } from "@constants";
+import { LineCredential, getLineMe, lineUpload } from "@api-caller/lineApi";
 
 export default function UploadImage() {
+  const uploadMutation: UseMutationResult<
+    any,
+    IFormattedErrorResponse,
+    FormData
+  > = useMutation(lineUpload);
   const [user, setUser] = useState<LineCredential>();
   const [wound, setWound] = useState<UploadFile<any>[]>([]);
   const [equip, setEquip] = useState<UploadFile<any>[]>([]);
@@ -48,8 +55,12 @@ export default function UploadImage() {
           form.append("equip", fileBlob);
         });
         form.append("hn_id", user?.hn_id ?? "");
-        const data = await lineUpload(form);
-        liff.closeWindow();
+        form.append("line_uid", user?.userId ?? "");
+        uploadMutation.mutate(form, {
+          onSuccess: () => {
+            liff.closeWindow();
+          },
+        });
       } catch (error) {
         console.error("Error during file upload:", error);
       }

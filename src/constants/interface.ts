@@ -166,16 +166,9 @@ export interface IRefer {
   updated_at: Date;
 }
 
-export interface INotification {
-  noti_id: string;
-  noti_type: string;
-  noti_title: string;
-  noti_desc: string;
-  noti_img?: any;
-  approveStatus: boolean;
-  sender: any;
-  recipient: any;
-  created_at: Date;
+export interface ICreateRefer {
+  hn_id: string;
+  me: IMe;
 }
 
 export interface ICreateEquip {
@@ -206,14 +199,6 @@ export enum IStage {
   UNSTABLE = "Unstable",
   STABLE = "Stable",
   IMPROVE = "Improved",
-}
-
-export enum NotificationType {
-  CONSULT = "consult",
-  UPLOAD = "upload",
-  NOTE = "note",
-  ACCEPT = "accept",
-  CANCEL = "cancel",
 }
 
 export const selectStage: DefaultOptionType[] = [

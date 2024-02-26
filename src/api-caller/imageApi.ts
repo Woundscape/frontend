@@ -56,10 +56,10 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
 
 export async function getProgressImage(imgList: string[]): Promise<IImage[]> {
   try {
-    const { data } = await getInstanceLocal().get(`/image/progress`, {
-      data: {
-        imgList,
-      },
+    console.log(imgList);
+
+    const { data } = await getInstanceLocal().post(`/image/progress`, {
+      images: imgList,
     });
     return data;
   } catch (error) {

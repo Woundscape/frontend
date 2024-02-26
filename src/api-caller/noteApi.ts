@@ -84,3 +84,34 @@ export async function addCompareNote({
     throw formattedError(error);
   }
 }
+
+export async function addProgressNote({
+  note_title,
+  note_desc,
+  note_img,
+  author_id,
+  compare,
+}: ICreateCompare): Promise<boolean> {
+  try {
+    const formData = new FormData();
+    formData.append("note_title", note_title);
+    formData.append("note_desc", note_desc);
+    note_img.forEach((file, _) => {
+      let fileBlob = file.originFileObj ?? new Blob();
+      formData.append("file", fileBlob);
+    });
+    formData.append("case_id", compare.case_id);
+    formData.append("compare_info", JSON.stringify(compare.compare_info));
+    formData.append("img_collect", JSON.stringify(compare.img_collect));
+    formData.append("author_id", author_id);
+
+    const { data } = await getInstanceLocal().post("/note/compare", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}

@@ -41,8 +41,6 @@ export default function SignUp() {
       .then(() => {
         if (liff.isLoggedIn()) {
           liff.getProfile().then((profile) => {
-            console.log(profile);
-
             setForm((prevValues) => ({
               ...prevValues,
               line_uid: profile.userId,

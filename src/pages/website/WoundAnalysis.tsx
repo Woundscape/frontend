@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { ReactSketchCanvasRef } from "react-sketch-canvas";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
-import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { List, Tabs, Button, Typography, InputNumber } from "antd";
 import {
   EyeInvisibleOutlined,
@@ -22,12 +22,9 @@ import {
 } from "@constants";
 import UserProfile from "@components/UserProfile";
 import AddNote from "@components/WoundAnalysis/AddNote";
-import { useAuth } from "@components/AuthProvider";
 import DrawSketchCanvas from "@components/WoundAnalysis/DrawSketchCanvas";
 import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
-import { addImageNote } from "@api-caller/noteApi";
-import { getImageById } from "@api-caller/imageApi";
-import getAllEquipment from "@api-caller/equipApi";
+import { getAllEquipment, getImageById, addImageNote } from "@api-caller";
 
 const { TabPane } = Tabs;
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -37,7 +34,6 @@ export default function WoundAnalysis() {
     IFormattedErrorResponse,
     INote
   > = useMutation(addImageNote);
-  const { me } = useAuth();
   const { img_id } = useParams();
   const router = useNavigate();
   const [image, setImage] = useState<IImage>();
@@ -125,6 +121,10 @@ export default function WoundAnalysis() {
       canvasRef.current.loadPaths(newData);
     }
   }
+
+  const settingTissue = async (data: TissueType[]) => {
+    setTissueData(data);
+  };
   return (
     <>
       <div className="w-full h-screen relative">
@@ -145,7 +145,7 @@ export default function WoundAnalysis() {
                   </Button>
                 </div>
                 {image && (
-                  <DrawSketchCanvas data={image} setRef={handleCanvasRef} />
+                  <DrawSketchCanvas data={image} setRef={handleCanvasRef} renderTissue={settingTissue} />
                 )}
               </div>
               {equipment.length && (
@@ -164,7 +164,6 @@ export default function WoundAnalysis() {
               <UserProfile />
               <div className="tabs-container__navigation h-full overflow-y-auto">
                 <Tabs type="card" id="tabs-container_antd" className="h-full">
-                  {/* Summary Tissue Tab */}
                   <TabPane
                     tab={
                       <div className="text-[#424241] text-center select-none jura">

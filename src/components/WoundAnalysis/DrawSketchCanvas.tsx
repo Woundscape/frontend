@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Button, Divider, Popover, Typography } from "antd";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { GoZoomIn, GoZoomOut } from "react-icons/go";
 import { Content } from "antd/es/layout/layout";
 // import LoadPath from "@libs/images_2.json";
 import DefaultButton from "@components/WoundAnalysis/DefaultButton";
@@ -18,10 +20,8 @@ import {
   IImage,
   TissueType,
 } from "@constants";
+import { IUpdateImage, updateImage } from "@api-caller";
 import { formatImage, formatDate } from "@utils";
-import { IUpdateImage, updateImage } from "@api-caller/imageApi";
-import { GoZoomIn, GoZoomOut } from "react-icons/go";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 interface ICanvasPath {
   drawMode: boolean;
@@ -33,11 +33,13 @@ interface ICanvasPath {
 interface DrawSketchCanvasProps {
   data: IImage;
   setRef: (ref: any) => void;
+  renderTissue: (data: TissueType[]) => void;
 }
 
 export default function DrawSketchCanvas({
   data,
   setRef,
+  renderTissue,
 }: DrawSketchCanvasProps) {
   const updateMutation: UseMutationResult<
     boolean,
@@ -98,11 +100,7 @@ export default function DrawSketchCanvas({
           img_read: true,
         },
       };
-      updateMutation.mutate(body, {
-        onSuccess: () => {
-          console.log("read laew");
-        },
-      });
+      updateMutation.mutate(body);
     }
   }, [image?.img_read]);
 
@@ -190,7 +188,7 @@ export default function DrawSketchCanvas({
       };
       updateMutation.mutate(body, {
         onSuccess: () => {
-          console.log("eiei");
+          renderTissue(result);
         },
       });
       handleCanvasEditor("none");

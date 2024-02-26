@@ -4,10 +4,10 @@ import {
   ICreateNotification,
   IEquipment,
   INote,
-  NotificationType,
   UserType,
 } from "./interface";
 import { CardPatient } from "@api-caller";
+import { NotificationType } from "./notification";
 
 export const DefaultTotalDashboard: CardPatient[] = [
   {
@@ -23,6 +23,57 @@ export const DefaultTotalDashboard: CardPatient[] = [
     value: "0",
   },
 ];
+
+export const DefaultDataSet = {
+  labels: [],
+  datasets: [
+    {
+      label: "eschar",
+      data: [],
+      borderColor: "#EEEEEE",
+    },
+    {
+      label: "slough",
+      data: [],
+      borderColor: "#CFEDD9",
+    },
+    {
+      label: "epithelization",
+      data: [],
+      borderColor: "#E0FCC5",
+    },
+    {
+      label: "callus",
+      data: [],
+      borderColor: "#FFFDC5",
+    },
+    {
+      label: "periwound",
+      data: [],
+      borderColor: "#FFE8BF",
+    },
+    {
+      label: "wound",
+      data: [],
+      borderColor: "#FFE1E1",
+    },
+    {
+      label: "granulation",
+      data: [],
+      borderColor: "#E6D1ED",
+    },
+    {
+      label: "deep structure",
+      data: [],
+      borderColor: "#D3DDFF",
+    },
+    {
+      label: "marceration",
+      data: [],
+      borderColor: "#D4F3F3",
+    },
+  ],
+};
 
 export const DefaultTissue = [
   {

@@ -2,7 +2,7 @@ import { getInstanceLocal } from "@api/apiClient";
 import { ICreateEquip, IEquipType, IEquipment } from "@constants";
 import { formattedError } from "@utils";
 
-export default async function getAllEquipment(): Promise<IEquipment[]> {
+export async function getAllEquipment(): Promise<IEquipment[]> {
   try {
     const { data } = await getInstanceLocal().get("/equipment");
     return data;

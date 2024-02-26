@@ -19,6 +19,7 @@ import {
   IPatient,
   AddPatientState,
   IFormattedErrorResponse,
+  ICreateRefer,
 } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import UserProfile from "@components/UserProfile";
@@ -33,7 +34,7 @@ export default function Patient() {
   const createReferralMutation: UseMutationResult<
     IRefer,
     IFormattedErrorResponse,
-    any
+    ICreateRefer
   > = useMutation(createReferral);
   const router = useNavigate();
   const { me } = useAuth();
@@ -72,17 +73,23 @@ export default function Patient() {
   const onChangeState = () => {
     if (stateModal == AddPatientState.CONFIRM_HN) {
       setSubmitLoading(true);
-      createReferralMutation.mutate(me, {
-        onSuccess: (response) => {
-          setSubmitLoading(false);
-          setStateModal((currentState) => {
-            const currentStateNumber = parseInt(currentState.split("_")[1]);
-            const nextState = `STATE_${currentStateNumber + 1}`;
-            return nextState;
-          });
-          setReferCode(response.ref_code);
-        },
-      });
+      if (me) {
+        const body: ICreateRefer = {
+          hn_id: hnNumber,
+          me: me,
+        };
+        createReferralMutation.mutate(body, {
+          onSuccess: (response) => {
+            setSubmitLoading(false);
+            setStateModal((currentState) => {
+              const currentStateNumber = parseInt(currentState.split("_")[1]);
+              const nextState = `STATE_${currentStateNumber + 1}`;
+              return nextState;
+            });
+            setReferCode(response.ref_code);
+          },
+        });
+      }
     } else {
       setStateModal((currentState) => {
         const currentStateNumber = parseInt(currentState.split("_")[1]);
