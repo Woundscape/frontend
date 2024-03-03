@@ -2,14 +2,13 @@ import Avatar from "react-avatar";
 import { Dropdown, Typography } from "antd";
 import type { MenuProps } from "antd";
 import DownOutlinedIcon from "@assets/down-outlined-icon.svg";
-import NotificationIcon from "@assets/noti-icon.svg";
+import { IoNotifications } from "react-icons/io5";
 import { useState } from "react";
 import NotiModal from "@components/NotiModal";
-import LogoutIcon from "@assets/icons/logout.svg";
-import EditProfileIcon from "@assets/icons/editProfile.svg";
 import { useAuth } from "@components/AuthProvider";
 import { Content } from "antd/es/layout/layout";
-
+import { IoLogOutOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 export default function UserProfile() {
   const { me, logout } = useAuth();
   const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "");
@@ -21,8 +20,8 @@ export default function UserProfile() {
     {
       key: "1",
       label: (
-        <div className="flex gap-1">
-          <img src={EditProfileIcon} width={20} height={20} alt="" />
+        <div className="flex gap-1 items-center">
+          <IoSettingsOutline size={17} color="#424241"/>
           <p className="jura text-[#424241] hover:text-[#424241]">
             Edit Profile
           </p>
@@ -32,8 +31,8 @@ export default function UserProfile() {
     {
       key: "2",
       label: (
-        <div onClick={logout} className="flex gap-1">
-          <img src={LogoutIcon} width={20} height={20} alt="" />
+        <div onClick={logout} className="flex gap-1 items-center">
+          <IoLogOutOutline size={18} color="#424241"/>
           <p className="jura text-[#424241] hover:text-[#424241]">Logout</p>
         </div>
       ),
@@ -42,12 +41,7 @@ export default function UserProfile() {
   return (
     <div id="user-profile" className="px-4 select-none">
       <Content className="flex justify-end items-center space-x-3">
-        <img
-          onClick={handleModal}
-          src={NotificationIcon}
-          width={45}
-          height={45}
-        />
+        <IoNotifications size={28} color="#E5C17E" onClick={handleModal}/>
         <NotiModal isOpen={openModal} setModal={handleModal} />
         <Avatar name={fullName} size="40" round="20px" />
         <div className="jura">
