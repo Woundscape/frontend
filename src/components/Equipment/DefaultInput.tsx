@@ -13,6 +13,7 @@ import {
 import { addEquipment } from "@api-caller";
 import { displayNotification } from "@utils";
 import EquipmentModal from "./EquipmentModal";
+import { MdMedicationLiquid } from "react-icons/md";
 
 interface IDefaultEquipProps {
   placeholder?: string;
@@ -107,7 +108,7 @@ export default function DefaultInput({
         <Button
           className="button_add"
           onClick={handleModal}
-          icon={<UserAddOutlined />}
+          icon={<MdMedicationLiquid size={19} />}
         >
           Add Equipment
         </Button>

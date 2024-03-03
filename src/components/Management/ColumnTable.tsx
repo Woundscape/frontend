@@ -1,12 +1,12 @@
-import Done from "@assets/icons/done.svg";
-import Cancel from "@assets/icons/cancel.svg";
-import EditIcon from "@assets/icons/edit_user_icon.svg";
-import DeleteIcon from "@assets/icons/delete_user_icon.svg";
+import { MdDownloadDone, MdOutlineCancel } from "react-icons/md";
+import { BiEditAlt } from "react-icons/bi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 import { ACTION_MANAGE, DoctorType, IDoctor } from "@constants";
 import { ColumnsType } from "antd/es/table";
 import { Button, Checkbox, Space, Typography } from "antd";
 import { formatDate } from "@utils";
-
+import { IoMdCheckboxOutline } from "react-icons/io";
+import { LiaUserLockSolid } from "react-icons/lia";
 interface ColumnsManageUserProps {
   onAprrove: (action: string, doctor_id: string) => void;
   onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => void;
@@ -99,7 +99,7 @@ export const getColumnManageUser = ({
               className="jura flex text-[#4C577C]"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.DONE, index, record)}
             >
-              <img src={Done} width={20} alt="" />
+              <MdDownloadDone size={19} color="#949cb6"/>
               Done
             </Button>
             <Button
@@ -109,7 +109,7 @@ export const getColumnManageUser = ({
                 onToggleRowEdit(ACTION_MANAGE.CANCEL, index, record)
               }
             >
-              <img src={Cancel} width={20} alt="" />
+              <MdOutlineCancel size={19} color="#949cb6"/>
               Cancel
             </Button>
           </>
@@ -120,20 +120,20 @@ export const getColumnManageUser = ({
           <>
             <Button
               type="text"
-              className="jura gap-2 w-[4rem] text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-2 text-[#4C577C] flex justify-center items-center"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.EDIT, index, record)}
             >
-              <img src={EditIcon} width={17} />
+              <BiEditAlt size={19} color="#949cb6"/>
               Edit
             </Button>
             <Button
               type="text"
-              className="jura gap-1 w-[6rem] text-[#4C577C] flex justify-cente items-center"
+              className="jura gap-1 text-[#4C577C] flex justify-center items-center"
               onClick={() =>
                 onToggleRowEdit(ACTION_MANAGE.DELETE, index, record)
               }
             >
-              <img src={DeleteIcon} width={18} />
+              <RiDeleteBin5Line size={19} color="#949cb6"/>
               Delete
             </Button>
           </>
@@ -157,6 +157,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                     }
                   >
+                    <IoMdCheckboxOutline size={19} color="#949cb6"/>
                     Approve
                   </Button>
                   <Button
@@ -165,6 +166,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                     }
                   >
+                    <LiaUserLockSolid size={19} color="#949cb6"/>
                     Reject
                   </Button>
                 </>
