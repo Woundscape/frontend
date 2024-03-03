@@ -72,7 +72,32 @@ export default function History() {
                       <div className="w-full text-[#C1C0BE] prompt flex flex-wrap">
                         <div id="img-wound" className="w-full space-y-1">
                           <p>รูปภาพแผล</p>
-                          <div className="flex flex-wrap space-x-1">
+                          <div className="flex flex-wrap gap-2">
+                            <img
+                              src={MockWound}
+                              className="rounded-md"
+                              alt=""
+                            />
+                            <img
+                              src={MockWound}
+                              className="rounded-md"
+                              alt=""
+                            />
+                            <img
+                              src={MockWound}
+                              className="rounded-md"
+                              alt=""
+                            />
+                            <img
+                              src={MockWound}
+                              className="rounded-md"
+                              alt=""
+                            />
+                            <img
+                              src={MockWound}
+                              className="rounded-md"
+                              alt=""
+                            />
                             <img
                               src={MockWound}
                               className="rounded-md"
@@ -119,9 +144,9 @@ export default function History() {
             </div>
           </div>
         </div>
-          <div className="signup_line_footer_watermark relative w-full bottom-0 overflow-hidden">
-            <img className="w-full" src={footer_watermark} alt="" />
-          </div>
+        <div className="signup_line_footer_watermark relative w-full bottom-0 overflow-hidden">
+          <img className="w-full" src={footer_watermark} alt="" />
+        </div>
       </div>
     </>
   );

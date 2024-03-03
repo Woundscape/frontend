@@ -5,12 +5,12 @@ import { UseMutationResult, useMutation } from "react-query";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from "chart.js";
 import { List, Tabs, Button, Typography, InputNumber } from "antd";
-import {
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  LeftOutlined,
-} from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
+import {
+  AiOutlineLeft,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 import {
   IEquipment,
   IFormattedErrorResponse,
@@ -19,6 +19,7 @@ import {
   DefaultChart,
   DefaultTissue,
   IImage,
+  ICanvasPath,
 } from "@constants";
 import UserProfile from "@components/UserProfile";
 import AddNote from "@components/WoundAnalysis/AddNote";
@@ -27,6 +28,13 @@ import EquipmentTab from "@components/WoundAnalysis/EquipmentTab";
 import { getAllEquipment, getImageById, addImageNote } from "@api-caller";
 
 const { TabPane } = Tabs;
+const optionPieChart = {
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+};
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function WoundAnalysis() {
   const addNoteMutation: UseMutationResult<
@@ -40,6 +48,7 @@ export default function WoundAnalysis() {
   const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [opacityVal, setOpacityVal] = useState(100);
+  const [editable, setEditable] = useState(false);
   const [canvasRef, setCanvasRef] = useState(
     useRef<ReactSketchCanvasRef | null>(null)
   );
@@ -97,6 +106,24 @@ export default function WoundAnalysis() {
     setCanvasRef(ref);
   }
 
+  function handleEditable(value: boolean) {
+    setEditable(value);
+  }
+
+  const settingTissue = async (data: TissueType[]) => {
+    setTissueData(data);
+  };
+
+  const handleHidden = async (color: string) => {
+    if (hideTissue.includes(color)) {
+      let tissue = hideTissue.filter((e) => e !== color);
+      setHideTissue(tissue);
+    } else {
+      setHideTissue([...hideTissue, color]);
+    }
+    renderTissueData(color);
+  };
+
   function updateImage(name: string, value: any) {
     if (image) {
       setImage((prevImage: any) => ({ ...prevImage, [name]: value }));
@@ -122,9 +149,21 @@ export default function WoundAnalysis() {
     }
   }
 
-  const settingTissue = async (data: TissueType[]) => {
-    setTissueData(data);
-  };
+  async function renderDeleteTissue(
+    strokeColor: string
+  ): Promise<ICanvasPath[]> {
+    if (canvasRef.current && image?.img_tissue.paths) {
+      let tempPaths = await canvasRef.current.exportPaths();
+      let tempTissue = tempPaths.filter(
+        (value: ICanvasPath) => value.strokeColor == strokeColor
+      );
+      canvasRef.current.clearCanvas();
+      canvasRef.current.loadPaths(tempTissue);
+      return tempTissue;
+    }
+    return [];
+  }
+
   return (
     <>
       <div className="w-full h-screen relative">
@@ -134,7 +173,7 @@ export default function WoundAnalysis() {
               <div className="w-full min-h-full overflow-y-auto flex flex-col justify-between space-y-4">
                 <div id="button-wrapper" className="flex justify-between">
                   <Button
-                    icon={<LeftOutlined style={{ color: "#61708C" }} />}
+                    icon={<AiOutlineLeft color="#61708C" />}
                     className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]"
                     onClick={() => router(`/patient/${image?.case_id}`)}
                   >
@@ -145,7 +184,14 @@ export default function WoundAnalysis() {
                   </Button>
                 </div>
                 {image && (
-                  <DrawSketchCanvas data={image} setRef={handleCanvasRef} renderTissue={settingTissue} />
+                  <DrawSketchCanvas
+                    data={image}
+                    editable={editable}
+                    setEditable={handleEditable}
+                    setRef={handleCanvasRef}
+                    settingTissue={settingTissue}
+                    renderDeleteTissue={renderDeleteTissue}
+                  />
                 )}
               </div>
               {equipment.length && (
@@ -170,7 +216,7 @@ export default function WoundAnalysis() {
                         Tissue
                       </div>
                     }
-                    key="1"
+                    key="Tissue"
                   >
                     <Content className="h-full overflow-y-auto">
                       <div className="h-full space-y-3">
@@ -193,25 +239,21 @@ export default function WoundAnalysis() {
                             <div
                               title="Hidden"
                               id="tools_tissue"
-                              onClick={() => {
-                                if (hideTissue.includes(item.color)) {
-                                  let tissue = hideTissue.filter(
-                                    (e) => e !== item.color
-                                  );
-                                  setHideTissue(tissue);
-                                } else {
-                                  setHideTissue([...hideTissue, item.color]);
-                                }
-                                renderTissueData(item.color);
-                              }}
-                              className="space-x-2 flex justify-center items-center cursor-pointer"
+                              onClick={
+                                editable
+                                  ? undefined
+                                  : () => handleHidden(item.color)
+                              }
+                              className={`space-x-2 flex justify-center items-center ${
+                                editable
+                                  ? "cursor-not-allowed"
+                                  : "cursor-pointer"
+                              }`}
                             >
                               {hideTissue.includes(item.color) ? (
-                                <EyeInvisibleOutlined
-                                  style={{ fontSize: 18 }}
-                                />
+                                <AiOutlineEyeInvisible size={20} />
                               ) : (
-                                <EyeOutlined style={{ fontSize: 18 }} />
+                                <AiOutlineEye size={20} />
                               )}
                             </div>
                           </div>
@@ -244,16 +286,7 @@ export default function WoundAnalysis() {
                           </div>
                         </List>
                         {pieChart && (
-                          <Pie
-                            data={pieChart}
-                            options={{
-                              plugins: {
-                                legend: {
-                                  display: false,
-                                },
-                              },
-                            }}
-                          />
+                          <Pie data={pieChart} options={optionPieChart} />
                         )}
                       </div>
                     </Content>
@@ -265,7 +298,7 @@ export default function WoundAnalysis() {
                         Equipment
                       </div>
                     }
-                    key="2"
+                    key="Equipment"
                   >
                     {image && equipment && (
                       <EquipmentTab

@@ -27,13 +27,13 @@ const defaultMenuRoutes: IMenu[] = [
   {
     title: "Patient",
     pathname: "/patient",
-    icon: <MdOutlineSick color="#505152" size={26}/>,
+    icon: <MdOutlineSick color="#505152" size={26} />,
     required: DoctorType.Doctor,
   },
   {
     title: "Equipment",
     pathname: "/equipment",
-    icon: <LuScissors color="#505152" size={22}/>,
+    icon: <LuScissors color="#505152" size={22} />,
     required: DoctorType.Doctor,
   },
   // {
@@ -44,19 +44,19 @@ const defaultMenuRoutes: IMenu[] = [
   {
     title: "Allocation",
     pathname: "/allocation",
-    icon: <TbReportMedical color="#505152" size={24}/>,
+    icon: <TbReportMedical color="#505152" size={24} />,
     required: DoctorType.Expert,
   },
   {
     title: "Users Management",
     pathname: "/management",
-    icon: <RiUserSettingsLine color="#505152" size={22}/>,
+    icon: <RiUserSettingsLine color="#505152" size={22} />,
     required: DoctorType.Expert,
   },
   {
     title: "Account",
     pathname: "/account",
-    icon: <MdOutlineAccountCircle color="#505152" size={24}/>,
+    icon: <MdOutlineAccountCircle color="#505152" size={24} />,
     required: DoctorType.Doctor,
   },
 ];
@@ -72,21 +72,21 @@ export default function Menu() {
         me?.doctor_type == DoctorType.Admin ||
         item.required == me?.doctor_type
       )
-      return (
-        <List.Item key={index}>
-          <NavLink
-            to={item.pathname}
-            className={`flex py-3 px-4 rounded-lg ${
-              pathName.startsWith(item.pathname)
-                ? "bg-[#D2D7EB]"
-                : "hover:bg-[#EEEEEE]"
-            }`}
-          >
-            {item.icon}
-            <span className="ml-3 text-sm jura">{item.title}</span>
-          </NavLink>
-        </List.Item>
-      );
+        return (
+          <List.Item key={index}>
+            <NavLink
+              to={item.pathname}
+              className={`flex items-center py-3 px-4 rounded-lg ${
+                pathName.startsWith(item.pathname)
+                  ? "bg-[#D2D7EB]"
+                  : "hover:bg-[#EEEEEE]"
+              }`}
+            >
+              {item.icon}
+              <span className="ml-3 text-sm jura">{item.title}</span>
+            </NavLink>
+          </List.Item>
+        );
     });
   }
   return (

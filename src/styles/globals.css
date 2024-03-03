@@ -88,6 +88,10 @@ tr.disabled-row:hover {
   width: 1px;
 }
 
+.saturate-25 {
+  filter: saturate(25%);
+}
+
 .ant-upload-drag {
   border-radius: 20px !important;
   background: white !important;
@@ -552,7 +556,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .canvas__cursor___paint {
-  cursor: url("../assets/icons/canvas_cursor_paint.svg") -20 40, auto;
+  cursor: url("../assets/cursor/canvas_cursor_paint.svg") -20 40, auto;
+}
+
+.canvas__cursor___delete {
+  cursor: url("../assets/cursor/canvas_cursor_eraser.svg") -20 40, auto;
 }
 
 /* Upload Modal */

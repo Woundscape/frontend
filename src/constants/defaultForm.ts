@@ -6,10 +6,10 @@ import {
   INote,
   UserType,
 } from "./interface";
-import { CardPatient } from "@api-caller";
+import { DashboardCard } from "@api-caller";
 import { NotificationType } from "./notification";
 
-export const DefaultTotalDashboard: CardPatient[] = [
+export const DefaultTotalDashboard: DashboardCard[] = [
   {
     title: "Total",
     value: "0",

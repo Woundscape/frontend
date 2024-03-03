@@ -40,7 +40,7 @@ export default function DefaultInput({
     string,
     IFormattedErrorResponse,
     FormData
-  > = useMutation(uploadImage);
+  > = useMutation(uploadImage);  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const setLoading = (value: boolean) => {

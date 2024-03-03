@@ -39,10 +39,7 @@ const { Paragraph } = Typography;
 export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
-  const [form, setForm] = useState<ICreateCompare>({
-    ...DefaultCompareForm,
-    author_id: me?.user_id || "",
-  });
+  const [form, setForm] = useState<ICreateCompare>(DefaultCompareForm);
   const [forms] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -51,17 +48,22 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
     getNote();
   }, []);
 
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      compare,
+      author_id: me?.user_id || "",
+    }));
+  }, [compare]);
+  
   async function getNote() {
     if (id) {
       const data = await getCompareNoteById(id);
       setNotes(data);
     }
   }
+
   const handleModal = () => {
-    setForm((prev) => ({
-      ...prev,
-      compare,
-    }));
     forms.resetFields();
     setOpenModal(!openModal);
   };
@@ -69,15 +71,6 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
     const values = await forms.validateFields();
     if (values) {
       setConfirmLoading(true);
-      console.log(
-        "%c 🐬 ~ Log from file: AddCompareNote.tsx:94 ~ form:",
-        "color: #00bcd4;",
-        form
-      );
-      setForm({
-        ...DefaultCompareForm,
-        author_id: me?.user_id || "",
-      });
       mutation.mutate(form, {
         onSuccess: () => {
           forms.resetFields();
@@ -121,9 +114,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
               }
             >
               <Content className="space-y-3">
-                <Paragraph id="text__primary">
-                  {item.note_desc}
-                </Paragraph>
+                <Paragraph id="text__primary">{item.note_desc}</Paragraph>
                 <div className="flex gap-3">
                   {item.note_img.map((image, index) => (
                     <Image
