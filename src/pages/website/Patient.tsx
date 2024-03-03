@@ -23,7 +23,7 @@ import {
 } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import UserProfile from "@components/UserProfile";
-import CardPatient from "@components/Patient/CardPatient";
+import PatientCard from "@components/Patient/PatientCard";
 import DefaultInput from "@components/Patient/DefaultInput";
 import { getColumnsPatient } from "@components/Patient/ColumnTable";
 import { getCaseByDoctorId, createReferral } from "@api-caller";
@@ -292,11 +292,11 @@ export default function Patient() {
                                   color="#F27961"
                                   offset={[-15, 10]}
                                 >
-                                  <CardPatient patient={patient} />
+                                  <PatientCard patient={patient} />
                                 </Badge>
                               )}
                               {!hasUnreadImages && (
-                                <CardPatient patient={patient} />
+                                <PatientCard patient={patient} />
                               )}
                             </div>
                           );

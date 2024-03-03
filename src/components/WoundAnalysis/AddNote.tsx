@@ -139,7 +139,7 @@ export default function AddNote({ id, equipment, mutation }: INoteProps) {
                       width={80}
                       height={80}
                       src={`${httpAPI}/${image}`}
-                      className="rounded-md"
+                      className="rounded-md object-cover"
                     />
                   ))}
                 </div>

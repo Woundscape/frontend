@@ -10,12 +10,12 @@ import DynamicTime from "@components/DynamicTime";
 import ListNotification from "@features/ListNotification";
 import UserProfile from "@components/UserProfile";
 import { useAuth } from "@components/AuthProvider";
-import { CardPatient, getDashboard } from "@api-caller/doctorApi";
+import { DashboardCard, getDashboard } from "@api-caller/doctorApi";
 import { getNotification } from "@api-caller";
 
 export default function Dashboard() {
   const { me } = useAuth();
-  const [card, setCard] = useState<CardPatient[]>(DefaultTotalDashboard);
+  const [card, setCard] = useState<DashboardCard[]>(DefaultTotalDashboard);
   const [notification, setNotification] = useState<INotification[]>([]);
   const [isConnect, setIsConnect] = useState(false);
   useEffect(() => {

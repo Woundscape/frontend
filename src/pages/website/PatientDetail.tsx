@@ -6,30 +6,28 @@ import { Segmented, Button, List, Divider, ConfigProvider, Badge } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import Typography from "antd/es/typography/Typography";
-import ViewResultHist from "@assets/view_result_hist.svg";
 import {
-  IFormattedErrorResponse,
   IImage,
   IPatient,
   NotifyType,
   SEGMENT_STATE,
+  IFormattedErrorResponse,
 } from "@constants";
 import {
-  optionSegmented,
-  formatDate,
-  displayNotification,
-  formatImage,
-} from "@utils";
+  getCaseByCaseId,
+  getCompareHistory,
+  getAllImageByCaseId,
+  deleteImage,
+} from "@api-caller";
+import { dividerConfig } from "@config";
+import { optionSegmented, displayNotification } from "@utils";
 import UserProfile from "@components/UserProfile";
 import DeleteModal from "@components/DeleteModal";
+import { useAuth } from "@components/AuthProvider";
+import HistoryCard from "@components/Patient/HistoryCard";
 import DefaultInput from "@components/Patient/DefaultInput";
 import AdditionalData from "@components/Patient/AdditionalData";
-import { getCaseByCaseId } from "@api-caller/caseApi";
-import { deleteImage, getAllImageByCaseId } from "@api-caller/imageApi";
-import { useAuth } from "@components/AuthProvider";
 import CardPatientDetail from "@components/Patient/CardPatientDetail";
-import { dividerConfig } from "@config";
-import { getCompareHistory } from "@api-caller";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -73,7 +71,6 @@ export default function PatientDetail() {
   async function getHistory() {
     if (case_id) {
       const data = await getCompareHistory(case_id);
-      console.log(data);
       setHistory(data);
     }
   }
@@ -162,7 +159,7 @@ export default function PatientDetail() {
         case SEGMENT_STATE.COMPARE:
           if (checkedList.length == 2) {
             const detectParams = await history.filter((item: any) => {
-              const imgCollect = item.img_collect.map((img: any) => img.img_id);
+              const imgCollect = item.images.map((img: any) => img.img_id);
               return (
                 imgCollect.includes(checkedList[0]) &&
                 imgCollect.includes(checkedList[1])
@@ -286,63 +283,17 @@ export default function PatientDetail() {
                               History
                             </p>
                           </div>
-                          <div className="">
-                            {history?.map((item: any, index: number) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="flex flex-col border-2 rounded-xl p-2 jura mt-4"
-                                >
-                                  <div className="flex justify-between bg-[#F2F2F2] p-2 rounded-lg">
-                                    <p className="text-[#4C577C]">
-                                      {formatDate(item?.created_at)}
-                                    </p>
-                                    <p className="text-[#626060]">
-                                      HN. {cases?.hn_id}
-                                    </p>
-                                  </div>
-                                  <div className="flex pt-3">
-                                    <img
-                                      className="w-14 h-14 object-cover rounded-lg"
-                                      src={formatImage(
-                                        item.img_collect[0]?.img_path
-                                      )}
-                                    />
-                                    <p className="text-[#4C577C] p-3.5">
-                                      {formatDate(
-                                        item.img_collect[0]?.created_at
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div className="flex pt-3">
-                                    <img
-                                      className="w-14 h-14 object-cover rounded-lg"
-                                      src={formatImage(
-                                        item.img_collect[1]?.img_path
-                                      )}
-                                    />
-                                    <p className="text-[#4C577C] p-3.5">
-                                      {formatDate(
-                                        item.img_collect[1]?.created_at
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div
-                                    className="flex flex-row justify-between h-8 border-2 rounded-full mt-3 hover:bg-[#E1E7FF]"
-                                    onClick={() => router(`/compare/${item}`)}
-                                  >
-                                    <p className="jura text-[#9198AF] p-1 pl-3">
-                                      View result
-                                    </p>
-                                    <img
-                                      className="pr-1"
-                                      src={ViewResultHist}
-                                      alt=""
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
+                          <div>
+                            {cases &&
+                              history?.map((item: any, index: number) => {
+                                return (
+                                  <HistoryCard
+                                    key={index}
+                                    data={item}
+                                    hn_id={cases.hn_id}
+                                  />
+                                );
+                              })}
                           </div>
                         </Content>
                       </Content>
