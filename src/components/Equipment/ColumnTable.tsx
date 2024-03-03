@@ -4,15 +4,20 @@ import { Dropdown, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { formatDate } from "@utils";
 import { IEquipType, IEquipment } from "@constants";
-
+import { BiEditAlt } from "react-icons/bi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 const items = [
   {
     key: "Edit",
-    label: <div id="text__primary">Edit</div>,
+    label: <div className="flex gap-2" id="text__primary">
+      <BiEditAlt size={19} color="#949cb6"/>
+      Edit</div>,
   },
   {
     key: "Delete",
-    label: <div id="text__primary">Delete</div>,
+    label: <div className="flex gap-2" id="text__primary">
+      <RiDeleteBin5Line size={19} color="#949cb6"/>
+      Delete</div>,
   },
 ];
 
