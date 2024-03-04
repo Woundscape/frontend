@@ -17,6 +17,7 @@ import { listConfig } from "@config";
 import { getNotification } from "@api-caller";
 import { INotification, NotificationType } from "@constants";
 import { useAuth } from "./AuthProvider";
+import { formatImage } from "@utils";
 const Panel = Collapse.Panel;
 interface NotificationModalProps {
   isOpen: boolean;
@@ -171,12 +172,18 @@ export default function NotiModal({
                                   odio necessitatibus id porro eaque ipsum.
                                 </p>
                                 <div className="flex gap-2 flex-wrap">
-                                  <Image width={100} src={ImgMock} />
-                                  <Image width={100} src={ImgMock} />
-                                  <Image width={100} src={ImgMock} />
-                                  <Image width={100} src={ImgMock} />
-                                  <Image width={100} src={ImgMock} />
-                                  <Image width={100} src={ImgMock} />
+                                  {item.noti_img?.length > 0 &&
+                                    item.noti_img.map(
+                                      (image: string, index: number) => {
+                                        return (
+                                          <Image
+                                            key={index}
+                                            width={100}
+                                            src={formatImage(image)}
+                                          />
+                                        );
+                                      }
+                                    )}
                                 </div>
                               </div>
                             </div>
