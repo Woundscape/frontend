@@ -42,17 +42,21 @@ export const optionSegmented: any = [
 
 export const optionNotification: any = [
   {
-    label: (<div className="flex gap-2 items-center">
-      <TbCirclesRelation size={20} color="#949cb6"/>
-      <p className="text-[#4C577C]">All</p>
-    </div>),
-    value: null,
+    label: (
+      <div className="flex gap-2 items-center">
+        <TbCirclesRelation size={20} color="#949cb6" />
+        <p className="text-[#4C577C]">All</p>
+      </div>
+    ),
+    value: "all",
   },
   {
-    label: (<div className="flex gap-2 items-center">
-      <LuImagePlus size={20} color="#949cb6" />
-      <p className="text-[#4C577C]">Image</p>
-    </div>),
+    label: (
+      <div className="flex gap-2 items-center">
+        <LuImagePlus size={20} color="#949cb6" />
+        <p className="text-[#4C577C]">Image</p>
+      </div>
+    ),
     value: "image",
   },
   {

@@ -9,7 +9,7 @@ export interface IUpdateDoctorType {
   doctor_id: string;
 }
 
-export interface CardPatient {
+export interface DashboardCard {
   title: string;
   value: string;
 }
@@ -56,7 +56,7 @@ export async function verifiedDoctor(doctor_id: string): Promise<boolean> {
   }
 }
 
-export async function getDashboard(doctor_id: string): Promise<CardPatient[]> {
+export async function getDashboard(doctor_id: string): Promise<DashboardCard[]> {
   try {
     const { data } = await getInstanceLocal().get(
       `/doctor/dashboard/${doctor_id}`

@@ -3,10 +3,10 @@ import { httpAPI } from "@config";
 import { useNavigate } from "react-router-dom";
 import { ClockCircleOutlined } from "@ant-design/icons";
 
-interface CardPatientProps {
+interface PatientCardProps {
   patient: IPatient;
 }
-export default function CardPatient({ patient }: CardPatientProps) {
+export default function PatientCard({ patient }: PatientCardProps) {
   const router = useNavigate();
   let image = patient.imagePreview[0]?.img_path
     ? patient.imagePreview[0].img_path

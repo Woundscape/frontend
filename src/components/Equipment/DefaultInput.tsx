@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, ConfigProvider, Form, Input, Select } from "antd";
-import { UserAddOutlined } from "@ant-design/icons";
 import { UseMutationResult, useMutation } from "react-query";
 import SortBy from "@assets/icons/sortBy.svg";
 import SearchIcon from "@assets/icon-search-upload.svg";

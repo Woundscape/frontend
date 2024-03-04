@@ -1,5 +1,6 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { List, Typography } from "antd";
 import { httpAPI } from "@config";
 import { IImage } from "@constants";
@@ -29,15 +30,8 @@ export default function ImageMenu() {
   return (
     <>
       {images?.map((image, index) => {
-        let imgPath = image.img_path.replace(/\\/g, "/");
         let dateObject = new Date(image.created_at);
-        let formattedDate = new Intl.DateTimeFormat("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(dateObject);
+        let formattedDate = moment(dateObject).format("MMM DD, YYYY HH:mm");
         return (
           <List.Item
             key={index}
@@ -47,8 +41,10 @@ export default function ImageMenu() {
             <div className="w-full h-40 rounded-lg">
               <a href={`/wound/${image.img_id}`}>
                 <img
-                  src={`${httpAPI}/${imgPath}`}
-                  className="w-full h-full object-cover border-4 hover:border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer"
+                  src={`${httpAPI}/${image.img_path}`}
+                  className={`w-full h-full object-cover border-4 hover:border-[#CFC6B0] transition-all duration-150 rounded-lg cursor-pointer ${
+                    img_id != image.img_id ? "saturate-25" : "border-[#CFC6B0]"
+                  }`}
                 />
               </a>
             </div>

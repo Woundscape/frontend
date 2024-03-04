@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { ConfigProvider, Divider } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
@@ -18,27 +18,30 @@ import {
 } from "@constants";
 import { dividerConfig } from "@config";
 import UserProfile from "@components/UserProfile";
-import CardImage from "@components/Compare/CardImage";
+import CompareCard from "@components/Compare/CompareCard";
 import AddCompareNote from "@components/Compare/AddCompareNote";
-import { addCompareNote, getCoupleImage, getAllEquipment } from "@api-caller";
+import {
+  addCompareNote,
+  getAllEquipment,
+  getCompareById,
+} from "@api-caller";
 
-export default function Compare() {
+export default function CompareWithParam() {
   const addCompareNoteMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
     ICreateCompare
   > = useMutation(addCompareNote);
-  const location = useLocation();
-  const { imageList, case_id, compare_id } = location.state || [];
+  const { compare_id } = useParams();
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [isLoadingResult, setIsLoadingResult] = useState<boolean>(false);
   const [compare, setCompare] = useState<ICompare>(DefaultCreateCompare);
   useEffect(() => {
-    getCoupleImage(imageList).then((data: IImage[]) => {
-      getTissueResult(data);
-      setImage(data);
+    getCompareById(compare_id as string).then((response) => {
+      // getTissueResult(data);
+      // setImage(data);
     });
   }, []);
 
@@ -58,6 +61,13 @@ export default function Compare() {
       }
     );
     setTissueData(updatedTissueData);
+    setCompare((prev) => ({
+      ...prev,
+      case_id,
+      compare_info: updatedTissueData,
+      img_collect: imageList,
+    }));
+
     setIsLoadingResult(true);
   }
 
@@ -91,15 +101,15 @@ export default function Compare() {
                   {images && equipment && (
                     <ConfigProvider theme={dividerConfig}>
                       <div className="grow flex flex-row">
-                        <CardImage image={images[0]} equipment={equipment} />
+                        <CompareCard image={images[0]} equipment={equipment} />
                         <Divider type="vertical" className="min-h-full" />
-                        <CardImage image={images[1]} equipment={equipment} />
+                        <CompareCard image={images[1]} equipment={equipment} />
                       </div>
                     </ConfigProvider>
                   )}
                 </div>
                 <AddCompareNote
-                  id={compare_id}
+                  id={compare_id as string}
                   compare={compare}
                   mutation={addCompareNoteMutation}
                 />

@@ -15,31 +15,42 @@ import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
 import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
 import {
+  DefaultResolution,
   DefaultTissue,
+  ICanvasPath,
   IFormattedErrorResponse,
   IImage,
   TissueType,
+  CANVAS_POINTER,
+  CANVAS_TOOLS,
+  DefaultDeleteProps,
 } from "@constants";
 import { IUpdateImage, updateImage } from "@api-caller";
 import { formatImage, formatDate } from "@utils";
 
-interface ICanvasPath {
-  drawMode: boolean;
-  paths: any;
-  strokeColor: string;
+interface IDeleteProps {
+  color: string;
   strokeWidth: number;
+  remainPaths: ICanvasPath[];
+  deletePaths: ICanvasPath[];
 }
 
 interface DrawSketchCanvasProps {
   data: IImage;
+  editable: boolean;
+  setEditable: (value: boolean) => void;
   setRef: (ref: any) => void;
-  renderTissue: (data: TissueType[]) => void;
+  settingTissue: (data: TissueType[]) => void;
+  renderDeleteTissue: (strokeColor: string) => Promise<ICanvasPath[]>;
 }
 
 export default function DrawSketchCanvas({
   data,
+  editable,
+  setEditable,
   setRef,
-  renderTissue,
+  settingTissue,
+  renderDeleteTissue,
 }: DrawSketchCanvasProps) {
   const updateMutation: UseMutationResult<
     boolean,
@@ -48,22 +59,19 @@ export default function DrawSketchCanvas({
   > = useMutation(updateImage);
   const [tissueData] = useState<TissueType[]>(DefaultTissue);
   const [image, setImage] = useState<IImage>();
+  const [original, setOriginal] = useState<any>([]);
+  const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
+  const [selectTools, setSelectTools] = useState(CANVAS_TOOLS.NONE);
+  const [pointer, setPointer] = useState(CANVAS_POINTER.NONE);
+  const [resolution, setResolution] = useState(DefaultResolution);
+  const [formatPath, setFormatPath] = useState<ICanvasPath[]>([]);
+  const [invisibleEye, setInvisibleEye] = useState<boolean>(false);
   const [colorPaint, setColorPaint] = useState<string>();
+  const [deleteProps, setDeleteProps] =
+    useState<IDeleteProps>(DefaultDeleteProps);
   const [strokeWidth, setStrokeWidth] = useState<number>(4);
   const [openSelectPaint, setOpenSelectPaint] = useState(false);
-  const [canvasRef, setCanvasRef] = useState(
-    useRef<ReactSketchCanvasRef | null>(null)
-  );
-  const [editable, setEditable] = useState(false);
-  const [selectTools, setSelectTools] = useState("none");
-  const [pointer, setPointer] = useState("none");
-  const [original, setOriginal] = useState<any>([]);
-  const [resolution, setResolution] = useState({
-    width: 0,
-    height: 0,
-  });
-  const [formatPath, setFormatPath] = useState<ICanvasPath[]>([]);
-  const [invisiblePath, setInvisiblePath] = useState<boolean>(false);
+  const [openSelectDelete, setOpenSelectDelete] = useState(false);
   useEffect(() => {
     if (data) {
       if (canvasRef.current && data.img_tissue) {
@@ -104,31 +112,42 @@ export default function DrawSketchCanvas({
     }
   }, [image?.img_read]);
 
-  const handleCanvasExportImage = async () => {
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.clearCanvas();
+      canvasRef.current.loadPaths(original);
+    }
+  }, [pointer]);
+
+  async function handleCanvasExportImage() {
     const a = await canvasRef.current?.exportImage("png");
     console.log(a);
-  };
+  }
 
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
   }
 
+  function handleOpenSelectDelete(newOpen: boolean) {
+    setOpenSelectDelete(newOpen);
+  }
+
   function handleColorPaint(value: string) {
-    setPointer("mouse");
-    setSelectTools("pen");
+    setPointer(CANVAS_POINTER.MOUSE);
+    setSelectTools(CANVAS_TOOLS.PEN);
     setColorPaint(value);
     setOpenSelectPaint(false);
   }
 
   function handleNone() {
-    setSelectTools("none");
-    setPointer("none");
+    setSelectTools(CANVAS_TOOLS.NONE);
+    setPointer(CANVAS_POINTER.NONE);
     canvasRef.current?.eraseMode(false);
   }
 
   function handleEraser() {
-    setPointer("mouse");
-    setSelectTools("eraser");
+    setPointer(CANVAS_POINTER.MOUSE);
+    setSelectTools(CANVAS_TOOLS.ERASER);
     canvasRef.current?.eraseMode(true);
   }
 
@@ -147,27 +166,35 @@ export default function DrawSketchCanvas({
     redo: handleRedo,
   };
 
-  function handleCanvasEditor(value: string) {
-    const toolHandler = toolHandlers[value];
-    if (toolHandler) {
-      toolHandler();
+  async function handleCanvasEditor(value: string) {
+    if (deleteProps.deletePaths.length > 0) {
+      await eraserTissue();
+    }
+    setDeleteProps(DefaultDeleteProps);
+    if (openSelectDelete) {
+      await onDelete(formatPath, value);
     } else {
-      handleColorPaint(value);
-      canvasRef.current?.eraseMode(false);
+      const toolHandler = toolHandlers[value];
+      if (toolHandler) {
+        toolHandler();
+      } else {
+        handleColorPaint(value);
+        canvasRef.current?.eraseMode(false);
+      }
     }
   }
 
-  async function invisibleTissue() {
-    setInvisiblePath(!invisiblePath);
-    if (canvasRef.current && !invisiblePath) {
+  const onInvisible = async () => {
+    setInvisibleEye(!invisibleEye);
+    if (canvasRef.current && !invisibleEye) {
       canvasRef.current.clearCanvas();
     } else {
       canvasRef.current?.loadPaths(original);
     }
-  }
+  };
 
   const onCancel = () => {
-    handleCanvasEditor("none");
+    handleCanvasEditor(CANVAS_TOOLS.NONE);
     canvasRef.current?.clearCanvas();
     canvasRef.current?.loadPaths(original);
     setEditable(!editable);
@@ -175,6 +202,9 @@ export default function DrawSketchCanvas({
 
   const onSubmit = async () => {
     if (editable) {
+      if (invisibleEye) {
+        setInvisibleEye(false);
+      }
       const paths = await canvasRef.current?.exportPaths();
       const result = await convertToPercentage(formatPath);
       const body: IUpdateImage = {
@@ -188,14 +218,94 @@ export default function DrawSketchCanvas({
       };
       updateMutation.mutate(body, {
         onSuccess: () => {
-          renderTissue(result);
+          settingTissue(result);
         },
       });
-      handleCanvasEditor("none");
+      handleCanvasEditor(CANVAS_TOOLS.NONE);
       setOriginal(paths);
     }
     setEditable(!editable);
   };
+
+  const onDelete = async (paths: any, color: string) => {
+    try {
+      if (selectTools == CANVAS_TOOLS.ERASER) {
+        canvasRef.current?.clearCanvas();
+        await canvasRef.current?.loadPaths(original);
+      }
+      handleEraser();
+      setOpenSelectDelete(false);
+      const remainPaths = await renderDeleteTissue(color);
+      setDeleteProps((prev) => ({ ...prev, color, remainPaths }));
+      canvasRef.current?.eraseMode(true);
+    } catch (error) {
+      console.log("error ondelete");
+    }
+  };
+
+  async function eraserTissue() {
+    try {
+      console.log("before", deleteProps);
+      const newRemain = await test();
+      console.log("after new", newRemain);
+      canvasRef.current?.clearCanvas()
+      canvasRef.current?.loadPaths(newRemain);
+      
+    } catch (error) {
+      console.log("error eraserTissue");
+    }
+  }
+
+  async function test() {
+    let newRemain: ICanvasPath[] = [];
+    for (let i = 0; i < deleteProps.remainPaths.length; i++) {
+      let newPath: any = [];
+      for (let j = 0; j < deleteProps.remainPaths[i].paths.length; j++) {
+        let status = false;
+        let positionPaths = deleteProps.remainPaths[i].paths[j];
+        for (let k = 0; k < deleteProps.deletePaths.length; k++) {
+          let strokeDelete = deleteProps.deletePaths[k].strokeWidth;
+          for (let l = 0; l < deleteProps.deletePaths[k].paths.length; l++) {
+            let deletePosition = deleteProps.deletePaths[k].paths[l];
+            let morethanX = positionPaths.x >= deletePosition.x - strokeDelete;
+            let lessthanX = positionPaths.x <= deletePosition.x + strokeDelete;
+            let morethanY = positionPaths.y >= deletePosition.y - strokeDelete;
+            let lessthanY = positionPaths.y <= deletePosition.y + strokeDelete;
+            if (morethanX && lessthanX && morethanY && lessthanY) {
+              console.log("yed mae");
+              status = true;
+              break;
+            }
+          }
+          if (status) {
+            break;
+          }
+        }
+        if (status) {
+          if (newPath && newPath.length > 0) {
+            let mock = {
+              strokeWidth: deleteProps.remainPaths[i].strokeWidth,
+              strokeColor: deleteProps.remainPaths[i].strokeColor,
+              drawMode: deleteProps.remainPaths[i].drawMode,
+              paths: newPath,
+            };
+            newRemain.push(mock);
+            newPath = [];
+          }
+        } else {
+          newPath.push(positionPaths);
+        }
+      }
+      let mock1 = {
+        strokeWidth: deleteProps.remainPaths[i].strokeWidth,
+        strokeColor: deleteProps.remainPaths[i].strokeColor,
+        drawMode: deleteProps.remainPaths[i].drawMode,
+        paths: newPath,
+      };
+      newRemain.push(mock1);
+    }
+    return newRemain;
+  }
 
   async function convertToPercentage(data: any) {
     const colorCounts = await data
@@ -258,6 +368,44 @@ export default function DrawSketchCanvas({
       </div>
     );
   }
+
+  function renderSelectDelete() {
+    return (
+      <div id="popover__select__tissue">
+        {tissueData.map((item, index) => (
+          <Button
+            type="text"
+            key={index}
+            onClick={() => handleCanvasEditor(item.color)}
+            className={`w-full pb-.5 space-x-2 flex items-center ${
+              deleteProps.color == item.color ? "bg-gray-200" : ""
+            }`}
+          >
+            <div
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ backgroundColor: item.color + "" }}
+            ></div>
+            <p className="jura text-[#424241]">{item.title}</p>
+          </Button>
+        ))}
+        <div className="canvas__slider___range">
+          <input
+            title={deleteProps.strokeWidth + "px"}
+            type="range"
+            min={0}
+            max={30}
+            value={deleteProps.strokeWidth}
+            onChange={(e) => {
+              setDeleteProps((prev) => ({
+                ...prev,
+                strokeWidth: parseInt(e.target.value),
+              }));
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <Content
@@ -291,7 +439,10 @@ export default function DrawSketchCanvas({
               </Button>
             </div>
           )}
-          <Typography className="border border-[#B4B4B4] flex justify-center items-center p-4 rounded-2xl jura text-[#908F8F]">
+          <Typography
+            onClick={eraserTissue}
+            className="border border-[#B4B4B4] flex items-center p-4 rounded-2xl jura text-[#908F8F]"
+          >
             {formatDate(image?.created_at)}
           </Typography>
           <div className="flex space-x-4">
@@ -326,7 +477,11 @@ export default function DrawSketchCanvas({
             <div
               id="canvas_editor___sketch"
               className={`relative grow min-h-0 min-w-0 max-w-[30rem] ${
-                selectTools == "pen" ? "canvas__cursor___paint" : ""
+                selectTools == CANVAS_TOOLS.PEN
+                  ? "canvas__cursor___paint"
+                  : selectTools == CANVAS_TOOLS.ERASER
+                  ? "canvas__cursor___delete"
+                  : ""
               }`}
             >
               {resolution.width > 0 && resolution.height > 0 && image && (
@@ -346,20 +501,28 @@ export default function DrawSketchCanvas({
                       border: "0.0625rem solid #9c9c9c",
                       borderRadius: "0.25rem",
                     }}
+                    eraserWidth={deleteProps.strokeWidth}
                     strokeWidth={strokeWidth}
                     strokeColor={colorPaint}
                     onStroke={(line) => {
+                      const compressionFilter = line.paths.filter(
+                        (_: any, index: number) => index % 2 === 0
+                      );
+                      const formatStroke: ICanvasPath = {
+                        drawMode: line.drawMode,
+                        paths: compressionFilter,
+                        strokeColor: line.strokeColor,
+                        strokeWidth: line.strokeWidth,
+                      };
                       if (line.paths.length > 1) {
-                        const testFilter = line.paths.filter(
-                          (_: any, index: number) => index % 2 === 0
-                        );
-                        const formatStroke: ICanvasPath = {
-                          drawMode: line.drawMode,
-                          paths: testFilter,
-                          strokeColor: line.strokeColor,
-                          strokeWidth: line.strokeWidth,
-                        };
-                        setFormatPath((prev) => [...prev, formatStroke]);
+                        if (selectTools == CANVAS_TOOLS.ERASER) {
+                          setDeleteProps((prev) => ({
+                            ...prev,
+                            deletePaths: [...prev.deletePaths, line],
+                          }));
+                        } else {
+                          setFormatPath((prev) => [...prev, formatStroke]);
+                        }
                       }
                     }}
                   />
@@ -367,31 +530,20 @@ export default function DrawSketchCanvas({
               )}
             </div>
           </div>
-          {editable && (
-            <div
-              id="canvas_editor___tools"
-              className="flex justify-between items-center relative"
-            >
-              <div className="flex space-x-4">
-                <GoZoomIn size={20} />
-                <GoZoomOut size={20} />
-                {invisiblePath ? (
-                  <EyeInvisibleOutlined
-                    className="text-xl"
-                    onClick={invisibleTissue}
-                  />
-                ) : (
-                  <EyeOutlined className="text-xl" onClick={invisibleTissue} />
-                )}
-              </div>
-              <div className="h-12 border border-[#D9D9D9] bg-[#FDFCFC] flex rounded-md">
-                <div className="w-14 h-12 p-[5px]">
+
+          <div
+            id="canvas_editor___tools"
+            className="h-12 flex justify-center items-center relative"
+          >
+            {editable ? (
+              <div className="h-full border border-[#D9D9D9] bg-[#FDFCFC] flex rounded-md">
+                <div className="w-14 h-full p-[5px]">
                   <div
-                    className={`w-full h-full flex justify-center rounded-md ${
-                      selectTools == "none" ? "bg-[#F0ECEC]" : ""
-                    }`}
                     title="Cursor"
-                    onClick={() => handleCanvasEditor("none")}
+                    onClick={() => handleCanvasEditor(CANVAS_TOOLS.NONE)}
+                    className={`w-full h-full flex justify-center rounded-md ${
+                      selectTools == CANVAS_TOOLS.NONE ? "bg-[#F0ECEC]" : ""
+                    }`}
                   >
                     <img width={22} src={CanvasSelectIcon} />
                   </div>
@@ -422,31 +574,35 @@ export default function DrawSketchCanvas({
                     className={`w-full h-full flex justify-center rounded-md ${
                       selectTools == "eraser" ? "bg-[#F0ECEC]" : ""
                     }`}
-                    onClick={() => handleCanvasEditor("eraser")}
+                    // onClick={() => handleCanvasEditor("eraser")}
                   >
-                    <img width={25} src={CanvasEraserIcon} alt="" />
+                    <Popover
+                      content={renderSelectDelete}
+                      placement="topLeft"
+                      trigger={"click"}
+                      open={openSelectDelete}
+                      onOpenChange={handleOpenSelectDelete}
+                    >
+                      <img width={25} src={CanvasEraserIcon} alt="" />
+                    </Popover>
                   </div>
                 </div>
-                {/* <Button
-                  type="text"
-                  className={`flex justify-center rounded-md ${
-                    selectTools == "size" ? "bg-[#F0ECEC]" : ""
-                  }`}
-                >
-                  <Popover
-                    content={renderSelectSize}
-                    placement="rightTop"
-                    trigger={"click"}
-                    open={openSelectSize}
-                    onOpenChange={handleOpenSelectSize}
-                  >
-                    <img src={CanvasSizeIcon} alt="" />
-                  </Popover>
-                </Button> */}
               </div>
-              <div></div>
-            </div>
-          )}
+            ) : (
+              <div className="h-full flex p-[5px] space-x-4">
+                <GoZoomIn size={20} />
+                <GoZoomOut size={20} />
+                {invisibleEye ? (
+                  <EyeInvisibleOutlined
+                    className="text-xl"
+                    onClick={onInvisible}
+                  />
+                ) : (
+                  <EyeOutlined className="text-xl" onClick={onInvisible} />
+                )}
+              </div>
+            )}
+          </div>
         </Content>
       </Content>
     </>

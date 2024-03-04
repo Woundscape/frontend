@@ -3,5 +3,7 @@ export * from "./field";
 export * from "./interface";
 export * from "./defaultForm";
 export * from "./defaultState";
+export * from "./defaultValue";
+export * from "./canvas";
 export * from "./notify";
 export * from "./notification";

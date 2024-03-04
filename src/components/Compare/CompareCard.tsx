@@ -3,22 +3,18 @@ import { Tag, Divider, Image } from "antd";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import { Space } from "react-zoomable-ui";
 import { formatDate, formatImage } from "@utils";
-import { IEquipment, IImage, INote } from "@constants";
+import { DefaultResolution, IEquipment, IImage, INote } from "@constants";
 import { getImageNoteById } from "@api-caller/noteApi";
 
-interface CardImageProps {
+interface CompareCardProps {
   image: IImage;
   equipment: IEquipment[];
 }
 
-export default function CardImage({ image, equipment }: CardImageProps) {
+export default function CompareCard({ image, equipment }: CompareCardProps) {
   const [note, setNote] = useState<INote[]>();
   const [canvasRef] = useState(useRef<ReactSketchCanvasRef | null>(null));
-  const [resolution, setResolution] = useState({
-    width: 0,
-    height: 0,
-  });
-
+  const [resolution, setResolution] = useState(DefaultResolution);
   useEffect(() => {
     if (image) {
       if (canvasRef.current && image.img_tissue) {

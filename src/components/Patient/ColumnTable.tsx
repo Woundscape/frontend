@@ -1,27 +1,27 @@
 // columnsConfig.ts
-import { Typography, Tag, Dropdown, MenuProps } from "antd";
+import { Typography, Tag, Dropdown } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { formatDate } from "@utils";
 import MoreIcon from "@assets/icons/more_icon.svg";
-import EditIcon from "@assets/icons/edit_user_icon.svg";
-import DelIcon from "@assets/icons/delete_user_icon.svg";
+import { BiEditAlt } from "react-icons/bi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
-const items: MenuProps["items"] = [
+const items = [
   {
-    key: "1",
+    key: "Edit",
     label: (
-      <div className="flex gap-1">
-        <img src={EditIcon} width={15} height={15} alt="" />
-        <p className="jura text-[#4C577C]">Edit</p>
+      <div className="flex gap-2" id="text__primary">
+        <BiEditAlt size={19} color="#949cb6" />
+        Edit
       </div>
     ),
   },
   {
-    key: "2",
+    key: "Delete",
     label: (
-      <div className="flex gap-1">
-        <img src={DelIcon} width={15} height={15} alt="" />
-        <p className="jura text-[#4C577C]">Delete</p>
+      <div className="flex gap-2" id="text__primary">
+        <RiDeleteBin5Line size={19} color="#949cb6" />
+        Delete
       </div>
     ),
   },
