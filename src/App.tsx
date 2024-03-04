@@ -7,7 +7,8 @@ import Dashboard from "@pages/website/Dashboard";
 import Patient from "@pages/website/Patient";
 import WoundAnalysis from "@pages/website/WoundAnalysis";
 import Equipment from "@pages/website/Equipment";
-import Compare from "@pages/website/Compare";
+import Compare from "@pages/website/Compare/Compare";
+import CompareWithParams from "@pages/website/Compare/CompareWithParam";
 import Allocation from "@pages/website/Allocation";
 import PatientDetail from "@pages/website/PatientDetail";
 import ResetPassword from "@pages/website/ResetPassword";
@@ -76,6 +77,7 @@ function AuthRoutes() {
         <Route path="equipment" element={<Equipment />} />
         <Route path="wound/:img_id" element={<WoundAnalysis />} />
         <Route path="compare" element={<Compare />} />
+        {/* <Route path="compare/:compare_id" element={<CompareWithParams />} /> */}
         <Route path="progress" element={<Progress />} />
         <Route path="allocation" element={<Allocation />} />
         <Route path="account" element={<Account />} />

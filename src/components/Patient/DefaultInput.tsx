@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  AppstoreOutlined,
-  BarsOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
 import { FaUserPlus } from "react-icons/fa";
 import { Button, DatePicker, Input, Segmented, Select } from "antd";
 import { SegmentedValue } from "antd/es/segmented";
@@ -40,7 +37,7 @@ export default function DefaultInput({
     string,
     IFormattedErrorResponse,
     FormData
-  > = useMutation(uploadImage);  
+  > = useMutation(uploadImage);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const setLoading = (value: boolean) => {
@@ -60,7 +57,13 @@ export default function DefaultInput({
           prefix={<img className="pr-1" src={SearchIcon} />}
           onChange={onFilter}
         />
-        <RangePicker size="middle" />
+        <RangePicker
+          size="middle"
+          format={"YYYY-MM-DD"}
+          onChange={(_, dateStrings: [string, string]) => {
+            console.log(dateStrings);
+          }}
+        />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <img className="w-5" src={SortBy} alt="" />
           <p className="text-[#BFBFBF]">Sort by :</p>
@@ -90,7 +93,7 @@ export default function DefaultInput({
           <Button
             onClick={addPatient}
             className="button_add"
-            icon={<FaUserPlus size={16}/>}
+            icon={<FaUserPlus size={16} />}
           >
             Add Patient
           </Button>
