@@ -28,22 +28,12 @@ export const LoadingProvider: React.FC<{ children: ReactNode }> = ({
       {isLoading ? (
         <>
           <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(255, 255, 255, 0.8)",
-              zIndex: 9999,
-            }}
+            id="loading-screen"
+            className={`fixed inset-0 z-[100] flex items-center justify-center bg-white/40 transition-all`}
           >
-            <Spin size="large" />
+            <Spin size="large" className="absolute" />
+            {children}
           </div>
-          {children}
         </>
       ) : (
         children

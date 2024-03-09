@@ -22,62 +22,64 @@ import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import {
   IFormattedErrorResponse,
   INote,
-  DefaultCompareForm,
-  ICreateCompare,
+  ICreateProgress,
+  DefaultProgressForm,
 } from "@constants";
-import { httpAPI } from "@config";
-import { getCompareNoteById } from "@api-caller/noteApi";
-import { formatDate } from "@utils/formatDate";
 import { useAuth } from "../AuthProvider";
+import { httpAPI } from "@config";
+import { getProgressNoteById } from "@api-caller";
+import { formatDate } from "@utils";
 
 interface INoteProps {
   id: string;
-  compare: any;
-  mutation: UseMutationResult<boolean, IFormattedErrorResponse, ICreateCompare>;
+  progress: any;
+  mutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    ICreateProgress
+  >;
 }
 const { Paragraph } = Typography;
-export default function AddProgressNote({ id, compare, mutation }: INoteProps) {
+export default function AddProgressNote({
+  id,
+  progress,
+  mutation,
+}: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
-  const [form, setForm] = useState<ICreateCompare>({
-    ...DefaultCompareForm,
-    author_id: me?.user_id || "",
-  });
+  const [form, setForm] = useState<ICreateProgress>(DefaultProgressForm);
   const [forms] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   useEffect(() => {
     getNote();
-  }, []);
+  }, [mutation.mutate]);
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      progress,
+      author_id: me?.user_id || "",
+    }));
+  }, [progress]);
 
   async function getNote() {
     if (id) {
-      const data = await getCompareNoteById(id);
+      const data = await getProgressNoteById(id);
       setNotes(data);
     }
   }
   const handleModal = () => {
-    setForm((prev) => ({
-      ...prev,
-      compare,
-    }));
     forms.resetFields();
     setOpenModal(!openModal);
   };
+
   const onSubmit = async () => {
     const values = await forms.validateFields();
     if (values) {
       setConfirmLoading(true);
-      console.log(
-        "%c 🐬 ~ Log from file: AddCompareNote.tsx:94 ~ form:",
-        "color: #00bcd4;",
-        form
-      );
-      setForm({
-        ...DefaultCompareForm,
-        author_id: me?.user_id || "",
-      });
+      console.log('%c 🐬 ~ Log from file: AddProgressNote.tsx:82 ~ form:', 'color: #00bcd4;', form);
       mutation.mutate(form, {
         onSuccess: () => {
           forms.resetFields();

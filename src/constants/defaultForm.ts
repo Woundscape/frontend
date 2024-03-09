@@ -2,12 +2,14 @@ import {
   ICreateCompare,
   ICreateEquip,
   ICreateNotification,
+  ICreateProgress,
   IEquipment,
   INote,
   UserType,
 } from "./interface";
 import { DashboardCard } from "@api-caller";
 import { NotificationType } from "./notification";
+import { ImageQueryParams } from "./query";
 
 export const DefaultTotalDashboard: DashboardCard[] = [
   {
@@ -123,6 +125,16 @@ export const DefaultTissue = [
   },
 ];
 
+export const DefaultImageQueryParams: ImageQueryParams = {
+  offset: 0,
+  limit: 20,
+  case_id: "",
+  image_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
 export const DefaultNoteForm: INote = {
   note_title: "",
   note_equip: [],
@@ -139,6 +151,18 @@ export const DefaultCompareForm: ICreateCompare = {
   compare: {
     case_id: "",
     compare_info: DefaultTissue,
+    img_collect: [],
+  },
+  author_id: "",
+};
+
+export const DefaultProgressForm: ICreateProgress = {
+  note_title: "",
+  note_desc: "",
+  note_img: [],
+  progress: {
+    case_id: "",
+    prog_info: DefaultTissue,
     img_collect: [],
   },
   author_id: "",
@@ -195,6 +219,12 @@ export const DefaultChart = {
 
 export const DefaultCreateCompare = {
   compare_info: DefaultTissue,
+  img_collect: [],
+  case_id: "",
+};
+
+export const DefaultCreateProgress = {
+  prog_info: DefaultDataSet,
   img_collect: [],
   case_id: "",
 };

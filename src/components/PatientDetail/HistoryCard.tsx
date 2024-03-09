@@ -36,7 +36,7 @@ export default function HistoryCard({ data, hn_id }: HistoryCardProps) {
         </div>
         <div
           className="flex flex-row justify-between h-8 border-2 rounded-full mt-3 hover:bg-[#E1E7FF]"
-          onClick={() => router(`/compare/${data}`)}
+          onClick={() => router(`/compare/${data.compare_id}`)}
         >
           <p className="jura text-[#9198AF] p-1 pl-3">View result</p>
           <img className="pr-1" src={ViewResultHist} alt="" />

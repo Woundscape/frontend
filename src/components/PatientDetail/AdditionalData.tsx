@@ -10,7 +10,7 @@ import {
   selectStatus,
 } from "@constants";
 import { tagInputStyle, tagPlusStyle } from "@config";
-import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller";
+import { IUpdateCase, getCaseById, updateCase } from "@api-caller";
 
 interface IAdditionalDataProps {
   data: IPatient;
@@ -52,7 +52,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
   }, [editInputValue]);
 
   async function getCase() {
-    const _case: IPatient = await getCaseByCaseId(data.case_id as string);
+    const _case: IPatient = await getCaseById(data.case_id as string);
     setCases(_case);
     setTags(_case.disease);
   }

@@ -1,4 +1,4 @@
-import { IImage } from "@constants";
+import { IImage, ImageQueryParams } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "@api/apiClient";
 
@@ -56,10 +56,21 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
 
 export async function getProgressImage(imgList: string[]): Promise<IImage[]> {
   try {
-    console.log(imgList);
-
     const { data } = await getInstanceLocal().post(`/image/progress`, {
       images: imgList,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function searchImageQueryParams(
+  params: ImageQueryParams
+): Promise<IImage[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/image/search/query`, {
+      params,
     });
     return data;
   } catch (error) {

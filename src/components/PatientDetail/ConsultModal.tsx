@@ -110,7 +110,7 @@ export default function Consult({}: IConsultProps) {
               className="w-36 jura text-[#4C577C] bg-[#D2D4EB] border-[#8088A7]"
               style={{ borderWidth: "1.5px" }}
             >
-              Save
+              Send
             </Button>
           </div>,
         ]}

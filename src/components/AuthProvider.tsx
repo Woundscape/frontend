@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
 import { DoctorType, IMe } from "@constants";
 import { Credentials, getMe } from "@api-caller/authenApi";
@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }: any) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [me, setMe] = useState<IMe>();
   useEffect(() => {
+    // if(me?.doctor_type == DoctorType.Doctor)
     checkAccessToken();
   }, [children]);
   const checkAccessToken = async () => {

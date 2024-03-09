@@ -16,19 +16,25 @@ import { Button, Collapse, Tabs, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LeftOutlined,
+} from "@ant-design/icons";
 import Export from "@assets/export.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import UserProfile from "@components/UserProfile";
 import {
+  DefaultCreateProgress,
   DefaultDataSet,
   DefaultTissue,
+  ICreateProgress,
   IFormattedErrorResponse,
   IImage,
-  INote,
+  IPreProgress,
 } from "@constants";
-import { getProgressImage, addImageNote, addProgressNote } from "@api-caller";
+import { getProgressImage, addProgressNote } from "@api-caller";
 import { formatDate, formatImage } from "@utils";
 import AddProgressNote from "@components/Progress/AddProgressNote";
 
@@ -66,17 +72,18 @@ export default function Progress() {
   const addNoteMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    INote
+    ICreateProgress
   > = useMutation(addProgressNote);
   const location = useLocation();
   const router = useNavigate();
   const { progress_id } = useParams();
-  const { imageList } = location.state || [];
+  const { imageList, case_id } = location.state || [];
   const [images, setImages] = useState<IImage[]>();
   const [openModal, setOpenModal] = useState(false);
   const [hideTissue, setHideTissue] = useState<string[]>([]);
   const [original, setOriginal] = useState<IChart>(DefaultDataSet);
   const [data, setData] = useState<IChart>(DefaultDataSet);
+  const [progress, setProgress] = useState<IPreProgress>(DefaultCreateProgress);
   useEffect(() => {
     if (imageList) {
       getProgressImage(imageList).then((response) => {
@@ -143,6 +150,12 @@ export default function Progress() {
       };
       setOriginal(body);
       setData(body);
+      setProgress((prev) => ({
+        ...prev,
+        case_id,
+        prog_info: body,
+        img_collect: imageList,
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -158,15 +171,13 @@ export default function Progress() {
     hideHandle(title);
   };
 
-  const handleModal = () => {
-    setOpenModal(!openModal);
-  };
   return (
     <>
       <div className="w-full h-screen relative">
         <div className="w-full h-full flex flex-col pt-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
             <div className="flex items-center space-x-4">
+              <LeftOutlined onClick={() => router(`/patient/${case_id}`)} />
               <p className="jura text-xl text-[#424241]">Progress</p>
             </div>
             <div className="w-[30rem]">
@@ -188,6 +199,7 @@ export default function Progress() {
                 </div>
                 <AddProgressNote
                   id={progress_id as string}
+                  progress={progress}
                   mutation={addNoteMutation}
                 />
                 <Collapse
@@ -282,7 +294,7 @@ export default function Progress() {
                       return (
                         <div
                           key={index}
-                          className="flex flex-col mb-10 space-y-2 justify-center items-center w-full h-40 rounded-lg"
+                          className="w-full h-40 flex flex-col mb-10 space-y-2 justify-center items-center rounded-lg"
                         >
                           <img
                             src={formatImage(image.img_path)}

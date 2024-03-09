@@ -6,4 +6,5 @@ export * from "./defaultState";
 export * from "./defaultValue";
 export * from "./canvas";
 export * from "./notify";
+export * from './query'
 export * from "./notification";

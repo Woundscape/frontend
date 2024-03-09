@@ -8,6 +8,7 @@ export const configENV = (key: string) => {
 export const httpAPI: string = import.meta.env.WS_SERVER_ENDPOINT_URL;
 export enum lineLiffID {
   UPLOAD_IMAGE = "2001180435-mZ7YAEj4",
+  HISTORY = "2001180435-oqJGZzeA",
   SIGNIN = "2001180435-eBkJB6ZQ",
   SIGNUP = "2001180435-Rxmw5e1B",
 }
@@ -72,6 +73,10 @@ export const themeConfig: ThemeConfig = {
     Result: {
       extraMargin: 0,
       paddingLG: 0,
+    },
+    Timeline: {
+      margin: 20,
+      tailColor: "#E8EAF4",
     },
   },
 };

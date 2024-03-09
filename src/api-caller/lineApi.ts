@@ -13,8 +13,23 @@ export async function getLineMe(
   credentials: LineCredential
 ): Promise<LineCredential> {
   try {
-    const { data } = await getInstanceLocal().post(`/line/me`, {
-      userId: credentials.userId,
+    const { data } = await getInstanceLocal().get(`/line/me`, {
+      params: {
+        line_uid: credentials.userId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getImageByUID(line_uid: string) {
+  try {
+    const { data } = await getInstanceLocal().get(`/line/history`, {
+      params: {
+        line_uid,
+      },
     });
     return data;
   } catch (error) {

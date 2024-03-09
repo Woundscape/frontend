@@ -34,14 +34,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="signin" element={<SignIn />} />
         <Route path="/line/*" element={<LineRoutes />} />
         <Route path="reset" element={<ResetPassword />} />
         <Route path="confirm" element={<ConfirmReset />} />
         <Route path="newPassword" element={<NewPass />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="noApprove" element={<NoApprove />} />
+
         <Route path="/*" element={<AuthRoutes />} />
       </Routes>
     </BrowserRouter>
@@ -77,7 +78,7 @@ function AuthRoutes() {
         <Route path="equipment" element={<Equipment />} />
         <Route path="wound/:img_id" element={<WoundAnalysis />} />
         <Route path="compare" element={<Compare />} />
-        {/* <Route path="compare/:compare_id" element={<CompareWithParams />} /> */}
+        <Route path="compare/:compare_id" element={<CompareWithParams />} />
         <Route path="progress" element={<Progress />} />
         <Route path="allocation" element={<Allocation />} />
         <Route path="account" element={<Account />} />

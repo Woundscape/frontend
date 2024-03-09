@@ -11,6 +11,7 @@ import {
   NotifyType,
 } from "@constants";
 import {
+  deleteDoctor,
   getAllDoctor,
   IUpdateDoctorType,
   updateDoctorType,
@@ -20,6 +21,8 @@ import UserProfile from "@components/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
 import { displayNotification } from "@utils";
+import { useAuth } from "@components/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function Management() {
   const updateTypeMutation: UseMutationResult<
@@ -32,6 +35,13 @@ export default function Management() {
     IFormattedErrorResponse,
     string
   > = useMutation(verifiedDoctor);
+  const deleteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    string
+  > = useMutation(deleteDoctor);
+  const { me } = useAuth();
+  const router = useNavigate();
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [titleModal, setTitleModal] = useState<string>("");
@@ -44,7 +54,20 @@ export default function Management() {
   });
   useEffect(() => {
     getDoctor();
-  }, []);
+  }, [
+    updateTypeMutation.isSuccess,
+    verifyMutation.isSuccess,
+    deleteMutation.isSuccess,
+  ]);
+
+  useEffect(() => {
+    if (
+      me?.doctor_type != DoctorType.Expert &&
+      me?.doctor_type != DoctorType.Admin
+    ) {
+      router(-1);
+    }
+  }, [me]);
   async function getDoctor() {
     getAllDoctor(false).then((doctors: IDoctor[]) => {
       const doctorWithRowEditable = doctors.map((doctor: IDoctor) => {
@@ -112,6 +135,14 @@ export default function Management() {
             });
           },
         });
+      } else if (action == ACTION_MANAGE.DELETE) {
+        setApproveState({
+          action: ACTION_MANAGE.DELETE,
+          doctor_id: record.doctor_id,
+        });
+        setTitleModal("Delete User");
+        setDescription("Delete: Kid kom hai noew");
+        setIsModalOpen(true);
       }
     },
 
@@ -149,7 +180,6 @@ export default function Management() {
             setIsModalOpen(false);
             setConfirmLoading(false);
             displayNotification(NotifyType.SUCCESS);
-            getDoctor();
           },
         });
       } else if (approveState.action == ACTION_MANAGE.REJECT) {
@@ -164,8 +194,18 @@ export default function Management() {
             displayNotification(NotifyType.SUCCESS);
           },
         });
+      } else if (approveState.action == ACTION_MANAGE.DELETE) {
+        deleteMutation.mutate(approveState.doctor_id, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setConfirmLoading(false);
+            displayNotification(NotifyType.SUCCESS);
+          },
+        });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const onCancel = () => {
     setIsModalOpen(!isModalOpen);

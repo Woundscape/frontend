@@ -56,7 +56,22 @@ export async function verifiedDoctor(doctor_id: string): Promise<boolean> {
   }
 }
 
-export async function getDashboard(doctor_id: string): Promise<DashboardCard[]> {
+export async function deleteDoctor(doctor_id: string): Promise<boolean> {
+  try {
+    const { data } = await getInstanceLocal().delete(`/doctor`, {
+      params: {
+        doctor_id,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getDashboard(
+  doctor_id: string
+): Promise<DashboardCard[]> {
   try {
     const { data } = await getInstanceLocal().get(
       `/doctor/dashboard/${doctor_id}`

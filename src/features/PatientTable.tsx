@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MenuProps, Tag, Typography } from "antd";
+import { Tag, Typography } from "antd";
 import { formatDate } from "../utils/formatDate";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { useAuth } from "@components/AuthProvider";
@@ -55,7 +55,7 @@ export default function DashboardTable() {
                     className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
                   >
                     <td className="w-1/6">{item.hn_id}</td>
-                    <td className="w-1/6">{item.admit_no}</td>
+                    <td className="w-1/6">{item.admit_no.toString().padStart(3, "0")}</td>
                     <td className="w-1/6">{item.status}</td>
                     <td className="w-1/6 flex justify-center items-center">
                       {item.disease && item.disease?.length > 0 ? (

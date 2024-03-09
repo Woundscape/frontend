@@ -66,7 +66,6 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
     }
     setSelectValue(data.doctor_assign);
   }, [data]);
-  console.log(data.doctor_assign);
 
   return (
     <>

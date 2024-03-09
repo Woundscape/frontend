@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { ConfigProvider, Divider } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
@@ -9,21 +9,22 @@ import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import {
   DefaultCreateCompare,
   DefaultTissue,
-  ICompare,
-  ICreateCompare,
+  IPreCompare,
   IEquipment,
   IFormattedErrorResponse,
   IImage,
   TissueType,
+  ICreateCompare,
 } from "@constants";
 import { dividerConfig } from "@config";
 import UserProfile from "@components/UserProfile";
 import CompareCard from "@components/Compare/CompareCard";
 import AddCompareNote from "@components/Compare/AddCompareNote";
 import {
-  addCompareNote,
+  addCompareNoteWithId,
   getAllEquipment,
   getCompareById,
+  getCoupleImage,
 } from "@api-caller";
 
 export default function CompareWithParam() {
@@ -31,17 +32,26 @@ export default function CompareWithParam() {
     boolean,
     IFormattedErrorResponse,
     ICreateCompare
-  > = useMutation(addCompareNote);
+  > = useMutation(addCompareNoteWithId);
   const { compare_id } = useParams();
-  const [images, setImage] = useState<IImage[]>();
+  const router = useNavigate();
+  const [images, setImages] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [isLoadingResult, setIsLoadingResult] = useState<boolean>(false);
-  const [compare, setCompare] = useState<ICompare>(DefaultCreateCompare);
+  const [compare, setCompare] = useState<IPreCompare>(DefaultCreateCompare);
   useEffect(() => {
     getCompareById(compare_id as string).then((response) => {
-      // getTissueResult(data);
-      // setImage(data);
+      getCoupleImage(response.compare_img).then((dataImg) => {
+        getTissueResult(dataImg);
+        setImages(dataImg);
+        setCompare((prev) => ({
+          ...prev,
+          case_id: response.case_id,
+          img_collect: response.compare_img,
+          compare_id,
+        }));
+      });
     });
   }, []);
 
@@ -63,11 +73,8 @@ export default function CompareWithParam() {
     setTissueData(updatedTissueData);
     setCompare((prev) => ({
       ...prev,
-      case_id,
       compare_info: updatedTissueData,
-      img_collect: imageList,
     }));
-
     setIsLoadingResult(true);
   }
 
@@ -82,7 +89,7 @@ export default function CompareWithParam() {
         <div className="h-full flex flex-col relative py-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5] ">
             <div className="flex items-center space-x-4">
-              <LeftOutlined />
+              <LeftOutlined onClick={() => router(`/patient/${compare.case_id}`)} />
               <p className="jura text-xl">HN. 6643793</p>
             </div>
             <div className="w-[30rem]">

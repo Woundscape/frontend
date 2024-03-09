@@ -33,7 +33,7 @@ import { useAuth } from "../AuthProvider";
 interface INoteProps {
   id: string;
   compare: any;
-  mutation: UseMutationResult<boolean, IFormattedErrorResponse, ICreateCompare>;
+  mutation: UseMutationResult<boolean, IFormattedErrorResponse, any>;
 }
 const { Paragraph } = Typography;
 export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
@@ -46,7 +46,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
 
   useEffect(() => {
     getNote();
-  }, []);
+  }, [mutation.mutate]);
 
   useEffect(() => {
     setForm((prev) => ({
@@ -55,7 +55,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
       author_id: me?.user_id || "",
     }));
   }, [compare]);
-  
+
   async function getNote() {
     if (id) {
       const data = await getCompareNoteById(id);

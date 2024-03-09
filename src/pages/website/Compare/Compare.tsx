@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
 import { ConfigProvider, Divider } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
@@ -9,7 +9,7 @@ import ArrowDown from "@assets/icons/arrow_left_down.svg";
 import {
   DefaultCreateCompare,
   DefaultTissue,
-  ICompare,
+  IPreCompare,
   ICreateCompare,
   IEquipment,
   IFormattedErrorResponse,
@@ -29,12 +29,13 @@ export default function Compare() {
     ICreateCompare
   > = useMutation(addCompareNote);
   const location = useLocation();
-  const { imageList, case_id, compare_id } = location.state || [];
+  const router = useNavigate();
+  const { imageList, case_id } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
   const [isLoadingResult, setIsLoadingResult] = useState<boolean>(false);
-  const [compare, setCompare] = useState<ICompare>(DefaultCreateCompare);
+  const [compare, setCompare] = useState<IPreCompare>(DefaultCreateCompare);
   useEffect(() => {
     getCoupleImage(imageList).then((data: IImage[]) => {
       getTissueResult(data);
@@ -79,7 +80,7 @@ export default function Compare() {
         <div className="h-full flex flex-col relative py-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5] ">
             <div className="flex items-center space-x-4">
-              <LeftOutlined />
+              <LeftOutlined onClick={() => router(`/patient/${case_id}`)} />
               <p className="jura text-xl">HN. 6643793</p>
             </div>
             <div className="w-[30rem]">
@@ -106,7 +107,7 @@ export default function Compare() {
                   )}
                 </div>
                 <AddCompareNote
-                  id={compare_id}
+                  id={""}
                   compare={compare}
                   mutation={addCompareNoteMutation}
                 />

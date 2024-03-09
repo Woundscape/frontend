@@ -1,20 +1,20 @@
-import { IImage } from "@constants";
+import { IImage, SEGMENT_STATE } from "@constants";
 import { formatImage } from "@utils";
 import { Checkbox } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 
-interface CardPatientDetailProps {
+interface PatientDetailCardProps {
   image: IImage;
   checkedList: string[];
   stageSegmented: any;
   onImage: (image_id: string) => void;
 }
-export default function CardPatientDetail({
+export default function PatientDetailCard({
   image,
   checkedList,
   stageSegmented,
   onImage,
-}: CardPatientDetailProps) {
+}: PatientDetailCardProps) {
   if (!image.img_status) return null;
   return (
     <div
@@ -27,16 +27,16 @@ export default function CardPatientDetail({
           backgroundImage: `url("${formatImage(image.img_path)}")`,
         }}
       ></div>
-      {stageSegmented.stage != "Overview" && (
+      {stageSegmented.stage != SEGMENT_STATE.OVERVIEW && (
         <Checkbox
           className="top-3 right-5 absolute"
-          key={`checkbox__image__${1}`}
+          key={`checkbox__image__${image.img_id}`}
           value={image.img_id}
           checked={checkedList.includes(image.img_id)}
         />
       )}
       <div className="flex justify-between w-full p-2 bg-[#F2F2F2] rounded-xl">
-        <p id="text__primary">{`No. 0000001`}</p>
+        <p id="text__primary" className="truncate">{`No. ${image.img_id}`}</p>
         <p className="jura text-[#626060]">
           <ClockCircleOutlined style={{ color: "#626060", paddingRight: 2 }} />
           {new Date(image.created_at).toLocaleTimeString()}

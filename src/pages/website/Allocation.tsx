@@ -11,7 +11,14 @@ import {
   getAllDoctor,
   updateDoctor,
 } from "@api-caller";
-import { ICase, IDoctor, IFormattedErrorResponse } from "@constants";
+import {
+  DoctorType,
+  ICase,
+  IDoctor,
+  IFormattedErrorResponse,
+} from "@constants";
+import { useAuth } from "@components/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function Allocation() {
   const updateMutation: UseMutationResult<
@@ -19,6 +26,17 @@ export default function Allocation() {
     IFormattedErrorResponse,
     IUpdateCase
   > = useMutation(updateDoctor);
+  const { me } = useAuth();
+  const router = useNavigate();
+  useEffect(() => {
+    if (
+      me?.doctor_type != DoctorType.Expert &&
+      me?.doctor_type != DoctorType.Admin
+    ) {
+      router(-1);
+    }
+  }, [me]);
+
   useEffect(() => {
     getAllCase().then((data) => {
       // const sortedData = data.sort(

@@ -6,8 +6,10 @@ import {
   Empty,
   Form,
   Input,
+  List,
   Modal,
   Space,
+  Spin,
   Table,
   Typography,
 } from "antd";
@@ -24,7 +26,7 @@ import {
 import { useAuth } from "@components/AuthProvider";
 import UserProfile from "@components/UserProfile";
 import PatientCard from "@components/Patient/PatientCard";
-import DefaultInput from "@components/Patient/DefaultInput";
+import PatientActionBar from "@components/Patient/PatientActionBar";
 import { getColumnsPatient } from "@components/Patient/ColumnTable";
 import { getCaseByDoctorId, createReferral } from "@api-caller";
 import { UseMutationResult, useMutation } from "react-query";
@@ -58,11 +60,13 @@ export default function Patient() {
   }, []);
 
   const filterPatient = (e: any) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredpatient = data.filter((item) =>
-      item.hn_id.toLowerCase().includes(searchTerm)
-    );
-    setPatients(filteredpatient);
+    console.log(e);
+
+    // const searchTerm = e.target.value.toLowerCase();
+    // const filteredpatient = data.filter((item) =>
+    //   item.hn_id.toLowerCase().includes(searchTerm)
+    // );
+    // setPatients(filteredpatient);
   };
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
@@ -262,10 +266,10 @@ export default function Patient() {
               </div>
             </header>
             <Content className="px-6 pt-6 grow">
-              <div className="flex flex-row">
-                <div className="w-full flex flex-col">
+              <div className="w-full h-full flex flex-row">
+                <div className="w-full h-full flex flex-col">
                   {/* Input Filter */}
-                  <DefaultInput
+                  <PatientActionBar
                     placeholder="Search by hospital number"
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
@@ -276,7 +280,7 @@ export default function Patient() {
                   {/* Body */}
                   <Content
                     id="content__patient"
-                    className="pt-7 flex flex-wrap gap-3"
+                    className="pt-7 flex flex-wrap grow gap-3"
                   >
                     {view === "Image" ? (
                       patients && patients.length > 0 ? (
