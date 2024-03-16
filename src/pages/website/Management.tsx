@@ -98,7 +98,6 @@ export default function Management() {
     });
   }
   const columns: ColumnsType<IDoctor> = getColumnManageUser({
-    // For Approve new Register
     onAprrove: (action: string, doctor_id: string) => {
       setApproveState({ action, doctor_id });
       setIsModalOpen(true);

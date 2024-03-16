@@ -99,7 +99,7 @@ export const getColumnManageUser = ({
               className="jura flex text-[#4C577C]"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.DONE, index, record)}
             >
-              <MdDownloadDone size={19} color="#949cb6"/>
+              <MdDownloadDone size={19} color="#949cb6" />
               Done
             </Button>
             <Button
@@ -109,7 +109,7 @@ export const getColumnManageUser = ({
                 onToggleRowEdit(ACTION_MANAGE.CANCEL, index, record)
               }
             >
-              <MdOutlineCancel size={19} color="#949cb6"/>
+              <MdOutlineCancel size={19} color="#949cb6" />
               Cancel
             </Button>
           </>
@@ -123,7 +123,7 @@ export const getColumnManageUser = ({
               className="jura gap-2 text-[#4C577C] flex justify-center items-center"
               onClick={() => onToggleRowEdit(ACTION_MANAGE.EDIT, index, record)}
             >
-              <BiEditAlt size={19} color="#949cb6"/>
+              <BiEditAlt size={19} color="#949cb6" />
               Edit
             </Button>
             <Button
@@ -133,7 +133,7 @@ export const getColumnManageUser = ({
                 onToggleRowEdit(ACTION_MANAGE.DELETE, index, record)
               }
             >
-              <RiDeleteBin5Line size={19} color="#949cb6"/>
+              <RiDeleteBin5Line size={19} color="#949cb6" />
               Delete
             </Button>
           </>
@@ -157,7 +157,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                     }
                   >
-                    <IoMdCheckboxOutline size={19} color="#949cb6"/>
+                    <IoMdCheckboxOutline size={19} color="#949cb6" />
                     Approve
                   </Button>
                   <Button
@@ -166,7 +166,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                     }
                   >
-                    <LiaUserLockSolid size={19} color="#949cb6"/>
+                    <LiaUserLockSolid size={19} color="#949cb6" />
                     Reject
                   </Button>
                 </>

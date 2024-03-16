@@ -42,42 +42,42 @@ export const DefaultDataSet = {
     {
       label: "slough",
       data: [],
-      borderColor: "#CFEDD9",
+      borderColor: "#AAF0C2",
     },
     {
       label: "epithelization",
       data: [],
-      borderColor: "#E0FCC5",
+      borderColor: "#CFFF9E",
     },
     {
       label: "callus",
       data: [],
-      borderColor: "#FFFDC5",
+      borderColor: "#FFFB9C",
     },
     {
       label: "periwound",
       data: [],
-      borderColor: "#FFE8BF",
+      borderColor: "#FFDFA2",
     },
     {
       label: "wound",
       data: [],
-      borderColor: "#FFE1E1",
+      borderColor: "#FFB8B8",
     },
     {
       label: "granulation",
       data: [],
-      borderColor: "#E6D1ED",
+      borderColor: "#ECB9FF",
     },
     {
       label: "deep structure",
       data: [],
-      borderColor: "#D3DDFF",
+      borderColor: "#A1B6FF",
     },
     {
       label: "marceration",
       data: [],
-      borderColor: "#D4F3F3",
+      borderColor: "#ABF4F4",
     },
   ],
 };
@@ -91,42 +91,42 @@ export const DefaultTissue = [
   {
     title: "slough",
     value: 0,
-    color: "#CFEDD9",
+    color: "#AAF0C2",
   },
   {
     title: "epithelization",
     value: 0,
-    color: "#E0FCC5",
+    color: "#CFFF9E",
   },
   {
     title: "callus",
     value: 0,
-    color: "#FFFDC5",
+    color: "#FFFB9C",
   },
   {
     title: "periwound",
     value: 0,
-    color: "#FFE8BF",
+    color: "#FFDFA2",
   },
   {
     title: "wound",
     value: 0,
-    color: "#FFE1E1",
+    color: "#FFB8B8",
   },
   {
     title: "granulation",
     value: 0,
-    color: "#E6D1ED",
+    color: "#ECB9FF",
   },
   {
     title: "deep structure",
     value: 0,
-    color: "#D3DDFF",
+    color: "#A1B6FF",
   },
   {
     title: "marceration",
     value: 0,
-    color: "#D4F3F3",
+    color: "#ABF4F4",
   },
 ];
 
