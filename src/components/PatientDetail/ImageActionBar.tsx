@@ -8,16 +8,20 @@ import { LuImagePlus } from "react-icons/lu";
 import SortBy from "@assets/icons/sortBy.svg";
 import UploadModal from "./UploadModal";
 import Consult from "./ConsultModal";
+import { optionImageSortBy } from "@utils";
+import { filterOptions } from "@config";
 
 const { RangePicker } = DatePicker;
 
 interface IImageActionBarProps {
+  case_id: string;
   placeholder?: string;
   onFilter: (value: any, field: SearchField) => void;
   onRender: () => void;
 }
 
 export default function ImageActionBar({
+  case_id,
   placeholder,
   onFilter,
   onRender,
@@ -39,6 +43,7 @@ export default function ImageActionBar({
     <>
       <div id="react__patient__input" className="flex space-x-2">
         <Input
+          allowClear
           className="w-1/4"
           size="middle"
           type="text"
@@ -59,16 +64,15 @@ export default function ImageActionBar({
           <Select
             id="select__sortBy"
             className="w-24 outline-none border-[white] text-[#868686]"
-            defaultValue="All"
+            defaultValue="None"
             bordered={false}
             placeholder="Sort by"
-            options={[
-              { value: "All", label: "All" },
-              { value: "Unread", label: "Unread" },
-            ]}
+            options={optionImageSortBy}
+            filterOption={filterOptions}
+            onChange={(value) => onFilter(value, SearchField.ORDER_BY)}
           />
         </div>
-        <Consult />
+        <Consult case_id={case_id} />
         <Button
           onClick={() => setIsModalOpen(true)}
           className="button_add"

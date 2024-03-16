@@ -20,3 +20,10 @@ export enum SEGMENT_STATE {
   COMPARE = "Comparative Imaging",
   PROGRESS = "Wound Progression",
 }
+
+export enum IStage {
+  SPECIAL = "Special",
+  UNSTABLE = "Unstable",
+  STABLE = "Stable",
+  IMPROVE = "Improved",
+}

@@ -9,7 +9,12 @@ import {
 } from "./interface";
 import { DashboardCard } from "@api-caller";
 import { NotificationType } from "./notification";
-import { ImageQueryParams } from "./query";
+import {
+  AllocationQueryParams,
+  CaseQueryParams,
+  DoctorQueryParams,
+  ImageQueryParams,
+} from "./query";
 
 export const DefaultTotalDashboard: DashboardCard[] = [
   {
@@ -135,6 +140,35 @@ export const DefaultImageQueryParams: ImageQueryParams = {
   order_by: "asc",
 };
 
+export const DefaultUserQueryParams: AllocationQueryParams = {
+  offset: 0,
+  limit: 20,
+  hn_id: "",
+  doctor_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
+export const DefaultCaseQueryParams: CaseQueryParams = {
+  offset: 0,
+  limit: 20,
+  hn_id: "",
+  doctor_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
+export const DefaultDoctorQueryParams: DoctorQueryParams = {
+  offset: 0,
+  limit: 20,
+  doctor_name: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
 export const DefaultNoteForm: INote = {
   note_title: "",
   note_equip: [],
@@ -197,6 +231,7 @@ export const DefaultConsultForm: ICreateNotification = {
   noti_title: "",
   noti_desc: "",
   noti_img: [],
+  case_id: "",
   approveStatus: false,
   sender_id: "",
   recipient_id: "",

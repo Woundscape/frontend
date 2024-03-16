@@ -1,6 +1,11 @@
-import { ICase } from "@constants";
+import { AllocationQueryParams, CaseQueryParams, ICase } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
+
+export interface IUpdateCase {
+  case_id: string;
+  body: any;
+}
 
 export const getAllCase = async (): Promise<ICase[]> => {
   try {
@@ -39,16 +44,41 @@ export const getCaseByDoctorId = async ({
 
 export async function getHistoryByCaseId(case_id: string): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().get(`/case/history/${case_id}`);
+    const { data } = await getInstanceLocal().get(`/case/history`, {
+      params: {
+        case_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);
   }
 }
 
-export interface IUpdateCase {
-  case_id: string;
-  body: any;
+export async function searchAllocationQueryParams(
+  params: AllocationQueryParams
+): Promise<ICase[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/case/user/search/query`, {
+      params,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function searchCaseQueryParams(
+  params: CaseQueryParams
+): Promise<any[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/case/search/query`, {
+      params,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
 }
 
 export const updateCase = async ({

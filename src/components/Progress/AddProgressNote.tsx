@@ -62,6 +62,7 @@ export default function AddProgressNote({
       progress,
       author_id: me?.user_id || "",
     }));
+    console.log('%c 🐬 ~ Log from file: AddProgressNote.tsx:65 ~ progress:', 'color: #00bcd4;', progress);
   }, [progress]);
 
   async function getNote() {

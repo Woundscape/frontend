@@ -25,6 +25,6 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
   },
   [NotifyType.ERROR]: {
     TITLE: "Error Header",
-    CONTENT: "error content",
+    CONTENT: "Something went wrong",
   },
 };

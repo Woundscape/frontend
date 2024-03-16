@@ -89,7 +89,9 @@ export default function CompareWithParam() {
         <div className="h-full flex flex-col relative py-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5] ">
             <div className="flex items-center space-x-4">
-              <LeftOutlined onClick={() => router(`/patient/${compare.case_id}`)} />
+              <LeftOutlined
+                onClick={() => router(`/patient/${compare.case_id}`)}
+              />
               <p className="jura text-xl">HN. 6643793</p>
             </div>
             <div className="w-[30rem]">
@@ -98,8 +100,8 @@ export default function CompareWithParam() {
           </header>
           <Content className="px-6 pt-6 jura grow flex">
             <div className="grow flex flex-row space-x-5">
-              <div className="grow flex flex-col overflow-y-auto space-y-5">
-                <div className="grow flex border-2 flex-col rounded">
+              <div className="grow flex flex-col overflow-y-auto">
+                <div className="grow flex border-2 flex-col rounded mb-5">
                   <div className="border-b-2 p-3">
                     <p className="jura text-[#4C577C] text-lg text-center">
                       Comparative Imaging

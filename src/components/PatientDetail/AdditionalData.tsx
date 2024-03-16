@@ -151,6 +151,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
             if (editInputIndex === index) {
               return (
                 <Input
+                  allowClear
                   ref={editInputRef}
                   key={tag}
                   size="small"
@@ -190,6 +191,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
           })}
           {inputVisible ? (
             <Input
+              allowClear
               ref={inputRef}
               type="text"
               size="small"

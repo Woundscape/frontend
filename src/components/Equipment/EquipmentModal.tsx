@@ -133,6 +133,7 @@ export default function EquipmentModal({
                 Title :
               </Typography>
               <Input
+                allowClear
                 name="equip_name"
                 placeholder="Input Equipment Title"
                 onChange={onChange}
@@ -164,6 +165,7 @@ export default function EquipmentModal({
                     <Divider style={{ margin: "8px 0" }} />
                     <div className="flex" style={{ padding: "0 8px 4px" }}>
                       <Input
+                        allowClear
                         placeholder="Please enter new equipment type"
                         ref={inputRef}
                         value={name}

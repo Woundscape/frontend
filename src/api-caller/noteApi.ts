@@ -1,9 +1,4 @@
-import {
-  IAddCompareNote,
-  ICreateCompare,
-  ICreateProgress,
-  INote,
-} from "@constants";
+import { ICreateCompare, ICreateProgress, INote } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "@api/apiClient";
 

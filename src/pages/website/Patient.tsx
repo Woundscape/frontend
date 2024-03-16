@@ -9,7 +9,6 @@ import {
   List,
   Modal,
   Space,
-  Spin,
   Table,
   Typography,
 } from "antd";
@@ -22,13 +21,20 @@ import {
   AddPatientState,
   IFormattedErrorResponse,
   ICreateRefer,
+  SearchField,
+  CaseQueryParams,
+  DefaultCaseQueryParams,
 } from "@constants";
 import { useAuth } from "@components/AuthProvider";
 import UserProfile from "@components/UserProfile";
 import PatientCard from "@components/Patient/PatientCard";
 import PatientActionBar from "@components/Patient/PatientActionBar";
 import { getColumnsPatient } from "@components/Patient/ColumnTable";
-import { getCaseByDoctorId, createReferral } from "@api-caller";
+import {
+  getCaseByDoctorId,
+  createReferral,
+  searchCaseQueryParams,
+} from "@api-caller";
 import { UseMutationResult, useMutation } from "react-query";
 
 const { Paragraph } = Typography;
@@ -38,36 +44,62 @@ export default function Patient() {
     IFormattedErrorResponse,
     ICreateRefer
   > = useMutation(createReferral);
+  const searchQueryMutation: UseMutationResult<
+    any[],
+    IFormattedErrorResponse,
+    CaseQueryParams
+  > = useMutation(searchCaseQueryParams);
   const router = useNavigate();
   const { me } = useAuth();
-  const [data, setData] = useState<IPatient[]>([]);
-  const [patients, setPatients] = useState<IPatient[]>([]);
   const [view, setView] = useState("Image");
-  const [loading, setLoading] = useState(true);
+  const [patients, setPatients] = useState<IPatient[]>([]);
   const [stateModal, setStateModal] = useState<string>("");
   const [hnNumber, setHnNumber] = useState<string>("");
   const [submitLoading, setSubmitLoading] = useState(false);
   const [referCode, setReferCode] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [caseQuery, setCaseQuery] = useState<CaseQueryParams>(
+    DefaultCaseQueryParams
+  );
   const columns: ColumnsType<any> = getColumnsPatient();
   useEffect(() => {
-    getCaseByDoctorId({ doctor_id: me?.doctor_id as string }).then(
-      (response) => {
-        setData(response);
-        setPatients(response);
-        setLoading(false);
-      }
-    );
+    setCaseQuery((prev) => ({ ...prev, doctor_id: me?.doctor_id as string }));
   }, []);
 
-  const filterPatient = (e: any) => {
-    console.log(e);
+  useEffect(() => {
+    if (caseQuery.doctor_id) {
+      searchQueryMutation.mutate(caseQuery, {
+        onSuccess(response) {
+          setPatients(response);
+          setIsLoading(false);
+        },
+      });
+    } else {
+      getPatient();
+    }
+  }, [caseQuery]);
 
-    // const searchTerm = e.target.value.toLowerCase();
-    // const filteredpatient = data.filter((item) =>
-    //   item.hn_id.toLowerCase().includes(searchTerm)
-    // );
-    // setPatients(filteredpatient);
+  const filterPatient = (value: any, field: SearchField) => {
+    setIsLoading(true);
+    if (field == SearchField.DATE) {
+      setCaseQuery((prev) => ({
+        ...prev,
+        start_at: value[0],
+        end_at: value[1],
+      }));
+    } else {
+      setCaseQuery((prev) => ({ ...prev, [field]: value }));
+    }
   };
+
+  async function getPatient() {
+    if (me) {
+      const patients = await getCaseByDoctorId({ doctor_id: me.doctor_id });
+      setPatients(patients);
+      setIsLoading(false);
+    }
+  }
+
   const onChangeView = (e: SegmentedValue) => {
     setView(e.toString());
   };
@@ -274,48 +306,50 @@ export default function Patient() {
                     onFilter={filterPatient}
                     onChangeView={onChangeView}
                     addPatient={addPatient}
-                    onRender={() => {}}
                     segmented
                   />
                   {/* Body */}
-                  <Content
+                  <List
                     id="content__patient"
-                    className="pt-7 flex flex-wrap grow gap-3"
+                    loading={isLoading}
+                    className="w-full pt-7 min-h-0 overflow-y-auto flex-wrap"
                   >
                     {view === "Image" ? (
-                      patients && patients.length > 0 ? (
-                        patients.map((patient: IPatient, index: number) => {
-                          const hasUnreadImages = patient.imagePreview.some(
-                            (image: any) => !image.img_read
-                          );
-                          return (
-                            <div key={index}>
-                              {hasUnreadImages && (
-                                <Badge
-                                  count={"new"}
-                                  color="#F27961"
-                                  offset={[-15, 10]}
-                                >
+                      patients &&
+                      patients.length > 0 && (
+                        <Space size={[18, 16]} wrap>
+                          {patients.map((patient: IPatient, index: number) => {
+                            const hasUnreadImages = patient.imagePreview.some(
+                              (image: any) => !image.img_read
+                            );
+                            return (
+                              <div
+                                key={index}
+                                className="w-full h-full flex flex-wrap"
+                              >
+                                {hasUnreadImages && (
+                                  <Badge
+                                    count={"new"}
+                                    color="#F27961"
+                                    offset={[-15, 10]}
+                                  >
+                                    <PatientCard patient={patient} />
+                                  </Badge>
+                                )}
+                                {!hasUnreadImages && (
                                   <PatientCard patient={patient} />
-                                </Badge>
-                              )}
-                              {!hasUnreadImages && (
-                                <PatientCard patient={patient} />
-                              )}
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <Content>
-                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                        </Content>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </Space>
                       )
                     ) : (
                       <Table
                         id="table__primary"
                         dataSource={patients}
                         columns={columns}
-                        loading={loading}
+                        loading={isLoading}
                         tableLayout="fixed"
                         rowKey={(record) => `row__patient__${record.case_id}`}
                         onRow={(record: IPatient, _) => ({
@@ -332,7 +366,7 @@ export default function Patient() {
                         }}
                       />
                     )}
-                  </Content>
+                  </List>
                 </div>
               </div>
             </Content>

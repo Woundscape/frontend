@@ -37,7 +37,7 @@ export async function getImageByUID(line_uid: string) {
   }
 }
 
-export async function lineLogin(credentials: LineCredential): Promise<any> {
+export async function lineLiffLogin(credentials: LineCredential): Promise<any> {
   try {
     const { data } = await getInstanceLocal().post(`/line/login`, credentials);
     return data;

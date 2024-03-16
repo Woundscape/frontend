@@ -36,6 +36,7 @@ interface INoteProps {
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, any>;
 }
 const { Paragraph } = Typography;
+
 export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
@@ -94,7 +95,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
           <p className="text-lg text-[#4C577C]">ADD NOTE</p>
         </div>
       </Button>
-      <Space direction="vertical" className="pt-3" style={{ width: "100%" }}>
+      <Space direction="vertical" className="w-full pt-3">
         {notes?.map((item, index) => (
           <Collapse key={index}>
             <Collapse.Panel

@@ -8,7 +8,7 @@ import arrow_start from "@assets/arrow-start.svg";
 import line_icon from "@assets/icons/line_icon.svg";
 import {
   LineCredential,
-  lineLogin,
+  lineLiffLogin,
   IFormInputsLogin,
   login,
 } from "@api-caller";
@@ -22,6 +22,7 @@ import {
 import { lineLiffID } from "@config";
 import { UseMutationResult, useMutation } from "react-query";
 import { displayNotification } from "@utils";
+import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 export default function SignIn() {
   const loginMutation: UseMutationResult<
@@ -30,6 +31,7 @@ export default function SignIn() {
     IFormInputsLogin
   > = useMutation(login);
   const [user, setUser] = useState<LineCredential>();
+  const [loginFailed, setLoginFailed] = useState<string>();
   const [form, setForm] = useState<IFormInputsLogin>({
     user_email: "",
     user_password: "",
@@ -61,7 +63,7 @@ export default function SignIn() {
   }, []);
   async function handleSubmit() {
     if (user) {
-      await lineLogin({
+      await lineLiffLogin({
         userId: user.userId,
         displayName: user.displayName,
         type: UserType.Patient,
@@ -79,6 +81,7 @@ export default function SignIn() {
   }
   async function loginLiff() {
     if (liff.isLoggedIn()) {
+      setIsLoading(true);
       handleSubmit();
     } else {
       liff.login();
@@ -88,19 +91,30 @@ export default function SignIn() {
   const onSubmit = async () => {
     const values = await forms.validateFields();
     if (values) {
+      setIsLoading(true);
       loginMutation.mutate(form, {
         onSuccess: () => {
           liff.closeWindow();
         },
         onError: (e) => {
-          displayNotification(NotifyType.ERROR)
+          setIsLoading(false);
+          if (e.message) {
+            setLoginFailed(e.message);
+            displayNotification(NotifyType.ERROR);
+          }
         },
       });
     }
   };
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative select-none">
+      <LoadingOverlayWrapper
+        active={isLoading}
+        spinner
+        text="Loading ..."
+        className="w-full h-full absolute"
+      />
       <div className="container h-full mx-auto flex items-center relative">
         <div className="w-full flex flex-col items-center justify-center p-10">
           <div className="w-full space-y-2 flex flex-col items-center">
@@ -125,6 +139,7 @@ export default function SignIn() {
             <Form form={forms} className="w-full">
               <Form.Item
                 hasFeedback
+                validateStatus={loginFailed ? "error" : undefined}
                 name={UserField.EMAIL}
                 className="w-full"
                 rules={[
@@ -145,6 +160,7 @@ export default function SignIn() {
               </Form.Item>
               <Form.Item
                 name={UserField.PASSWORD}
+                validateStatus={loginFailed ? "error" : undefined}
                 className="w-full"
                 rules={[
                   { required: true, message: "Enter your password" },

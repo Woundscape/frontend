@@ -36,6 +36,7 @@ export const themeConfig: ThemeConfig = {
     },
     Select: {
       fontFamily: "jura",
+      // colorText: "#B4B4B4",
     },
     Modal: {
       titleColor: "#4C577C",

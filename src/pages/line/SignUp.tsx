@@ -16,6 +16,7 @@ import liff from "@line/liff";
 import { lineLiffID } from "@config";
 import { lineRegister } from "@api-caller";
 import { displayNotification } from "@utils";
+import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 export default function SignUp() {
   const registerMutation: UseMutationResult<
@@ -25,6 +26,7 @@ export default function SignUp() {
   > = useMutation(lineRegister);
   const [form, setForm] = useState<IUser>(DefaultPatientForm);
   const [forms] = Form.useForm();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prevValues) => ({
@@ -59,11 +61,13 @@ export default function SignUp() {
     try {
       const values = await forms.validateFields();
       if (values) {
+        setIsLoading(true);
         registerMutation.mutate(form, {
           onSuccess: () => {
             liff.closeWindow();
           },
           onError: () => {
+            setIsLoading(false);
             displayNotification(NotifyType.ERROR);
           },
         });
@@ -84,6 +88,12 @@ export default function SignUp() {
   });
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-white prompt relative">
+      <LoadingOverlayWrapper
+        active={isLoading}
+        spinner
+        text="Loading ..."
+        className="w-full h-full absolute"
+      />
       <div className="container mx-auto h-full flex items-center relative">
         <div className="w-full flex flex-col items-center justify-center p-10">
           <div className="w-full space-y-2 flex flex-col">

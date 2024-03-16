@@ -29,8 +29,10 @@ import { filterOptions, filterSort } from "@config";
 import { getAllDoctor, sendNotification } from "@api-caller";
 import { useAuth } from "@components/AuthProvider";
 
-interface IConsultProps {}
-export default function Consult({}: IConsultProps) {
+interface IConsultProps {
+  case_id: string;
+}
+export default function Consult({ case_id }: IConsultProps) {
   const notificationMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -40,6 +42,7 @@ export default function Consult({}: IConsultProps) {
   const [doctors, setDoctors] = useState<IDoctor[]>();
   const [form, setForm] = useState<ICreateNotification>({
     ...DefaultConsultForm,
+    case_id,
     sender_id: me?.user_id,
   });
   const [forms] = Form.useForm();
@@ -74,7 +77,12 @@ export default function Consult({}: IConsultProps) {
 
   return (
     <>
-      <Button id="btn-consult" onClick={setModal} className="button_consult" icon={<BsChatDots size={16}/>}>
+      <Button
+        id="btn-consult"
+        onClick={setModal}
+        className="button_consult"
+        icon={<BsChatDots size={16} />}
+      >
         Consult
       </Button>
       <Modal
@@ -157,10 +165,12 @@ export default function Consult({}: IConsultProps) {
                 placeholder="Select Doctor"
                 className="w-1/2"
                 maxTagCount="responsive"
-                options={doctors?.map((item: IDoctor) => ({
-                  value: item.user_id,
-                  label: item.doctor_firstname + " " + item.doctor_lastname,
-                }))}
+                options={doctors
+                  ?.filter((item: IDoctor) => me?.user_id !== item.user_id)
+                  .map((item: IDoctor) => ({
+                    value: item.user_id,
+                    label: item.doctor_firstname + " " + item.doctor_lastname,
+                  }))}
                 filterOption={filterOptions}
                 filterSort={filterSort}
                 onChange={(value) => {

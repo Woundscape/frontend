@@ -1,5 +1,4 @@
 import { UploadFile } from "antd";
-import { DefaultOptionType } from "antd/es/select";
 
 export interface IFormattedErrorResponse {
   message?: string;
@@ -207,6 +206,7 @@ export interface ICreateNotification {
   noti_title: string;
   noti_desc: string;
   noti_img?: any;
+  case_id?: string;
   approveStatus: boolean;
   sender_id: string | undefined;
   recipient_id: string;
@@ -219,39 +219,12 @@ export interface IFieldDoctorName {
   doctor_id: string;
 }
 
-export enum IStage {
-  SPECIAL = "Special",
-  UNSTABLE = "Unstable",
-  STABLE = "Stable",
-  IMPROVE = "Improved",
+export interface IChart {
+  labels: string[];
+  datasets: IDataSet[];
 }
-
-export const selectStage: DefaultOptionType[] = [
-  {
-    value: IStage.SPECIAL,
-    label: IStage.SPECIAL,
-  },
-  {
-    value: IStage.UNSTABLE,
-    label: IStage.UNSTABLE,
-  },
-  {
-    value: IStage.STABLE,
-    label: IStage.STABLE,
-  },
-  {
-    value: IStage.IMPROVE,
-    label: IStage.IMPROVE,
-  },
-];
-
-export const selectStatus: DefaultOptionType[] = [
-  {
-    value: "In Progress",
-    label: "In Progress",
-  },
-  {
-    value: "Done",
-    label: "Done",
-  },
-];
+export interface IDataSet {
+  label: string;
+  data: any[];
+  borderColor: string;
+}

@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import {
-  Avatar,
   ConfigProvider,
   List,
   Modal,
@@ -9,15 +9,12 @@ import {
   Button,
 } from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
-import { optionNotification } from "@utils/option";
-import DoctorMock from "@assets/icons/doctor_mock.svg";
-import ImgMock from "@assets/wound/img_5.jpg";
-import { useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 import { listConfig } from "@config";
 import { getNotification } from "@api-caller";
+import { formatDate, formatImage, optionNotification } from "@utils";
 import { INotification, NotificationType } from "@constants";
-import { useAuth } from "./AuthProvider";
-import { formatImage } from "@utils";
+import Avatar from "react-avatar";
 const Panel = Collapse.Panel;
 interface NotificationModalProps {
   isOpen: boolean;
@@ -39,10 +36,10 @@ export default function NotiModal({
 
   useEffect(() => {
     if (data && data.length > 0) {
-      //NOTE - if noti_type == 'all' show them all
-      let filterData = filterType
-        ? data.filter((item) => item.noti_type === filterType)
-        : data;
+      let filterData =
+        filterType != "all"
+          ? data.filter((item) => item.noti_type === filterType)
+          : data;
       setFormatData(filterData);
     }
   }, [filterType]);
@@ -51,6 +48,7 @@ export default function NotiModal({
     if (me) {
       getNotification(me).then((response: INotification[]) => {
         setData(response);
+        setFormatData(response);
       });
     }
   }, [isOpen]);
@@ -88,13 +86,15 @@ export default function NotiModal({
               <List
                 dataSource={formatData}
                 renderItem={(item, index) => {
+                  const senderName =
+                    item.sender.user_firstname +
+                    " " +
+                    item.sender.user_lastname;
                   if (item.noti_type != NotificationType.CONSULT) {
                     return (
                       <List.Item key={index}>
                         <List.Item.Meta
-                          avatar={
-                            <Avatar src={UnreadIcon} className="rounded-none" />
-                          }
+                          avatar={<img src={UnreadIcon} width={32} alt="" />}
                           className="p-4 jura hover:bg-[#f2f1f1]"
                           title={
                             <p>
@@ -104,7 +104,7 @@ export default function NotiModal({
                               </span>
                             </p>
                           }
-                          description={item.created_at}
+                          description={formatDate(item.created_at)}
                         />
                       </List.Item>
                     );
@@ -118,22 +118,15 @@ export default function NotiModal({
                               className="flex px-4 jura hover:bg-[#f2f1f1]"
                               onClick={onMouseClick}
                             >
-                              <div className="flex h-16 w-[7rem]">
+                              <div className="flex h-16">
                                 <img src={UnreadIcon} width={32} alt="" />
                               </div>
                               <div className="flex p-4 space-x-1">
                                 <div className="flex flex-col">
-                                  <div className="flex flex-wrap">
-                                    <p>
-                                      litia cupiditate? Possimus voluptatem modi
-                                      doloremque ad ratione error perferendis
-                                      incidunt, numquam mollitia ipsam neque
-                                      autem atque molestias blanditiis tenetur.
-                                      has sent you a Patient for Lorem ipsum
-                                      dolor sit amet.
-                                    </p>
-                                  </div>
-                                  <p className="text-[#908F8F]">1 hour ago</p>
+                                  {item.noti_title}
+                                  <p className="text-[#908F8F]">
+                                    {formatDate(item.created_at)}
+                                  </p>
                                   <div className="flex gap-2">
                                     <p className="text-[#61708C] hover:underline ">
                                       {viewMore ? "Less More" : "View More"}
@@ -148,28 +141,32 @@ export default function NotiModal({
                         >
                           <div className="border rounded">
                             <div className="jura border-b-2 flex justify-between items-center pr-5">
-                              <div className=" flex p-3 gap-3">
-                                <img src={DoctorMock} className="w-8" alt="" />
-                                <div className="jura flex flex-col">
-                                  <p className="text-[#424241]">Dr.Prasert</p>
+                              <div className="w-1/2 flex p-3 gap-3">
+                                <Avatar
+                                  name={senderName}
+                                  size="40"
+                                  round="20px"
+                                />
+                                <div className="w-full jura flex flex-col">
+                                  <p className="w-full text-[#424241] truncate">
+                                    {senderName}
+                                  </p>
                                   <p className="text-xs text-[#B4B4B4]">
                                     Doctor
                                   </p>
                                 </div>
                               </div>
-                              <p className="text-[#61708C]">Consult #6643793</p>
+                              <p className="w-1/2 text-[#61708C] truncate">
+                                Consult #{item.noti_id}
+                              </p>
                             </div>
                             <div className="flex p-3 w-full">
                               <div className="flex flex-col space-y-3">
                                 <div className="text-lg jura text-[#61708C] underline ">
-                                  Title na kub
+                                  {item.noti_title}
                                 </div>
                                 <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">
-                                  Lorem ipsum dolor sit amet consectetur
-                                  adipisicing elit. Facilis iusto hic magni
-                                  autem esse est placeat temporibus earum. Dolor
-                                  architecto adipisci ipsam laboriosam officiis
-                                  odio necessitatibus id porro eaque ipsum.
+                                  {item.noti_desc}
                                 </p>
                                 <div className="flex gap-2 flex-wrap">
                                   {item.noti_img?.length > 0 &&
@@ -179,7 +176,9 @@ export default function NotiModal({
                                           <Image
                                             key={index}
                                             width={100}
+                                            height={100}
                                             src={formatImage(image)}
+                                            className="object-cover rounded"
                                           />
                                         );
                                       }

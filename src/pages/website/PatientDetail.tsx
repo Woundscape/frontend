@@ -105,8 +105,12 @@ export default function PatientDetail() {
   }
   async function getCase() {
     setImageQuery((prev) => ({ ...prev, case_id: case_id as string }));
-    const _case: IPatient = await getCaseById(case_id as string);
-    setCases(_case);
+    try {
+      const _case: IPatient = await getCaseById(case_id as string);
+      setCases(_case);
+    } catch (error) {
+      router(-1);
+    }
   }
 
   const handleImage = (image_id: string) => {
@@ -125,7 +129,7 @@ export default function PatientDetail() {
     }
   };
 
-  const filterPatient = (value: any, field: SearchField) => {
+  const filterImage = (value: any, field: SearchField) => {
     setIsLoading(true);
     if (field == SearchField.DATE) {
       setImageQuery((prev) => ({
@@ -174,6 +178,17 @@ export default function PatientDetail() {
     ) {
       setIsModalOpen(true);
     } else {
+      const detectParams = await history[stageSegmented.stage]?.filter(
+        (item: any) => {
+          const imgCollect = item.images.map((img: any) => img.img_id);
+          if (imgCollect.length !== checkedList.length) {
+            return false;
+          }
+          return checkedList.every((checkedItem) =>
+            imgCollect.includes(checkedItem)
+          );
+        }
+      );
       switch (stageSegmented.stage) {
         case SEGMENT_STATE.OVERVIEW:
           setStageSegmented({ stage: SEGMENT_STATE.DELETE, limit: false });
@@ -193,15 +208,6 @@ export default function PatientDetail() {
           break;
         case SEGMENT_STATE.COMPARE:
           if (checkedList.length == 2) {
-            const detectParams = await history[stageSegmented.stage].filter(
-              (item: any) => {
-                const imgCollect = item.images.map((img: any) => img.img_id);
-                return (
-                  imgCollect.includes(checkedList[0]) &&
-                  imgCollect.includes(checkedList[1])
-                );
-              }
-            );
             if (detectParams.length > 0) {
               router(`/compare/${detectParams[0].compare_id}`);
             } else {
@@ -214,7 +220,11 @@ export default function PatientDetail() {
           }
           break;
         case SEGMENT_STATE.PROGRESS:
-          router("/progress", { state: { imageList: checkedList, case_id } });
+          if (detectParams.length > 0) {
+            router(`/progress/${detectParams[0].prog_id}`);
+          } else {
+            router("/progress", { state: { imageList: checkedList, case_id } });
+          }
           break;
         default:
           console.log(checkedList);
@@ -260,8 +270,9 @@ export default function PatientDetail() {
                 {/* Input Filter */}
                 <div className="w-full h-full flex flex-col space-y-2 pt-6">
                   <ImageActionBar
+                    case_id={case_id as string}
                     placeholder="Search by hospital number"
-                    onFilter={filterPatient}
+                    onFilter={filterImage}
                     onRender={getImage}
                   />
                   {stageSegmented.stage == SEGMENT_STATE.OVERVIEW && cases && (
@@ -322,6 +333,7 @@ export default function PatientDetail() {
                                     <HistoryCard
                                       key={index}
                                       data={item}
+                                      stage={stageSegmented.stage}
                                       hn_id={cases.hn_id}
                                     />
                                   );

@@ -4,9 +4,11 @@ import { formatDate } from "../utils/formatDate";
 import { getCaseByDoctorId } from "@api-caller/caseApi";
 import { useAuth } from "@components/AuthProvider";
 import { IPatient } from "@constants";
+import { useNavigate } from "react-router-dom";
 
 export default function DashboardTable() {
   const { me } = useAuth();
+  const router = useNavigate();
   const [cases, setCases] = useState<IPatient[]>();
   useEffect(() => {
     async function getCase() {
@@ -17,6 +19,10 @@ export default function DashboardTable() {
     }
     getCase();
   }, []);
+
+  const onRowClick = (params: string) => {
+    router(`/patient/${params}`);
+  };
   return (
     <>
       <div
@@ -52,10 +58,13 @@ export default function DashboardTable() {
                 return (
                   <tr
                     key={index}
+                    onClick={() => onRowClick(item.case_id)}
                     className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
                   >
                     <td className="w-1/6">{item.hn_id}</td>
-                    <td className="w-1/6">{item.admit_no.toString().padStart(3, "0")}</td>
+                    <td className="w-1/6">
+                      {item.admit_no.toString().padStart(3, "0")}
+                    </td>
                     <td className="w-1/6">{item.status}</td>
                     <td className="w-1/6 flex justify-center items-center">
                       {item.disease && item.disease?.length > 0 ? (

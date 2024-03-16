@@ -1,29 +1,36 @@
 import { useState } from "react";
-import { Button, ConfigProvider, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { UseMutationResult, useMutation } from "react-query";
 import SortBy from "@assets/icons/sortBy.svg";
 import SearchIcon from "@assets/icon-search-upload.svg";
 import {
   DefaultEquipForm,
   ICreateEquip,
+  IEquipType,
   IFormattedErrorResponse,
   NotifyType,
 } from "@constants";
 import { addEquipment } from "@api-caller";
-import { displayNotification } from "@utils";
+import {
+  displayNotification,
+  formatOptionType,
+  optionImageSortBy,
+} from "@utils";
 import EquipmentModal from "./EquipmentModal";
 import { MdMedicationLiquid } from "react-icons/md";
 
-interface IDefaultEquipProps {
+interface IEquipActionBarProps {
+  type: IEquipType[];
   placeholder?: string;
   onFilter: (e: any) => void;
   onRender: () => void;
 }
-export default function DefaultInput({
+export default function EquipActionBar({
+  type,
   placeholder,
   onFilter,
   onRender,
-}: IDefaultEquipProps) {
+}: IEquipActionBarProps) {
   const addMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -62,7 +69,10 @@ export default function DefaultInput({
             setConfirmLoading(false);
             displayNotification(NotifyType.SUCCESS);
           },
-          onError: () => {},
+          onError: () => {
+            setConfirmLoading(false);
+            displayNotification(NotifyType.ERROR);
+          },
         });
       }
     } catch (error) {
@@ -72,8 +82,9 @@ export default function DefaultInput({
   };
   return (
     <>
-      <div id="react__patient__input" className="flex space-x-2">
+      <div id="react__equipment__input" className="flex space-x-2">
         <Input
+          allowClear
           className="w-1/4"
           size="middle"
           type="text"
@@ -82,27 +93,25 @@ export default function DefaultInput({
           onChange={onFilter}
         />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
+          <p className="text-[#BFBFBF]">Type :</p>
+          <Select
+            id="select__type"
+            className="w-24 outline-none border-[white] text-[#868686] text-center"
+            defaultValue="All"
+            bordered={false}
+            options={formatOptionType(type)}
+          />
+        </div>
+        <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <img className="w-5" src={SortBy} alt="" />
           <p className="text-[#BFBFBF]">Sort by :</p>
-          <ConfigProvider
-            theme={{
-              components: {
-                Select: { colorBorder: "" },
-              },
-            }}
-          >
-            <Select
-              id="select__sortBy"
-              className="outline-none border-[white] text-[#868686] text-center"
-              defaultValue="All"
-              bordered={false}
-              options={[
-                { value: "All", label: "All" },
-                { value: "Name", label: "Name" },
-                { value: "Last Updated", label: "Last Updated" },
-              ]}
-            />
-          </ConfigProvider>
+          <Select
+            id="select__sortBy"
+            className="w-24 outline-none border-[white] text-[#868686] text-center"
+            defaultValue="All"
+            bordered={false}
+            options={optionImageSortBy}
+          />
         </div>
         <Button
           className="button_add"
