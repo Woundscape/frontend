@@ -16,19 +16,31 @@ import { Button, Collapse, Tabs, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import TabPane from "antd/es/tabs/TabPane";
 import TextArea from "antd/es/input/TextArea";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LeftOutlined,
+} from "@ant-design/icons";
 import Export from "@assets/export.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import UserProfile from "@components/UserProfile";
 import {
+  DefaultCreateProgress,
   DefaultDataSet,
   DefaultTissue,
+  IChart,
+  ICreateProgress,
+  IDataSet,
   IFormattedErrorResponse,
   IImage,
-  INote,
+  IPreProgress,
 } from "@constants";
-import { getProgressImage, addImageNote, addProgressNote } from "@api-caller";
+import {
+  addProgressNote,
+  getProgressById,
+  getProgressImage,
+} from "@api-caller";
 import { formatDate, formatImage } from "@utils";
 import AddProgressNote from "@components/Progress/AddProgressNote";
 
@@ -52,36 +64,33 @@ const options = {
   },
 };
 
-interface IChart {
-  labels: string[];
-  datasets: IDataSet[];
-}
-interface IDataSet {
-  label: string;
-  data: any[];
-  borderColor: string;
-}
-
-export default function Progress() {
+export default function ProgressWithParams() {
   const addNoteMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
-    INote
+    ICreateProgress
   > = useMutation(addProgressNote);
   const location = useLocation();
   const router = useNavigate();
-  const { progress_id } = useParams();
-  const { imageList } = location.state || [];
+  const { prog_id } = useParams();
   const [images, setImages] = useState<IImage[]>();
   const [openModal, setOpenModal] = useState(false);
   const [hideTissue, setHideTissue] = useState<string[]>([]);
   const [original, setOriginal] = useState<IChart>(DefaultDataSet);
   const [data, setData] = useState<IChart>(DefaultDataSet);
+  const [progress, setProgress] = useState<IPreProgress>(DefaultCreateProgress);
   useEffect(() => {
-    if (imageList) {
-      getProgressImage(imageList).then((response) => {
-        setImages(response);
-        calculateData(response);
+    if (prog_id) {
+      getProgressById(prog_id).then((data) => {
+        setProgress((prev) => ({
+          ...prev,
+          img_collect: data.prog_img,
+          case_id: data.case_id,
+        }));
+        getProgressImage(data.prog_img).then((response) => {
+          setImages(response);
+          calculateData(response);
+        });
       });
     } else {
       router("/patient");
@@ -143,6 +152,10 @@ export default function Progress() {
       };
       setOriginal(body);
       setData(body);
+      setProgress((prev) => ({
+        ...prev,
+        prog_info: body,
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -158,15 +171,15 @@ export default function Progress() {
     hideHandle(title);
   };
 
-  const handleModal = () => {
-    setOpenModal(!openModal);
-  };
   return (
     <>
       <div className="w-full h-screen relative">
         <div className="w-full h-full flex flex-col pt-8 bg-white">
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5]">
             <div className="flex items-center space-x-4">
+              <LeftOutlined
+                onClick={() => router(`/patient/${progress.case_id}`)}
+              />
               <p className="jura text-xl text-[#424241]">Progress</p>
             </div>
             <div className="w-[30rem]">
@@ -176,7 +189,7 @@ export default function Progress() {
           <Content className="w-full flex justify-between pb-6">
             <div className="grow flex overflow-y-auto">
               <div className="w-full space-y-3 p-6">
-                <div className="w-full h-full border rounded">
+                <div className="w-full border rounded">
                   <div className="bg-[#EEEEEE] p-4 flex justify-between jura">
                     <p className="text-[#626060] text-lg">Wound Progression</p>
                     <div className="flex items-center px-4 space-x-2 bg-[#D8C290] border-[#424241] border rounded text-[#424241]">
@@ -187,7 +200,8 @@ export default function Progress() {
                   <Line data={data} options={options} className="p-6" />
                 </div>
                 <AddProgressNote
-                  id={progress_id as string}
+                  id={prog_id as string}
+                  progress={progress}
                   mutation={addNoteMutation}
                 />
                 <Collapse
@@ -282,7 +296,7 @@ export default function Progress() {
                       return (
                         <div
                           key={index}
-                          className="flex flex-col mb-10 space-y-2 justify-center items-center w-full h-40 rounded-lg"
+                          className="w-full h-40 flex flex-col mb-10 space-y-2 justify-center items-center rounded-lg"
                         >
                           <img
                             src={formatImage(image.img_path)}

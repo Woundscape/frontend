@@ -11,8 +11,8 @@ import {
   NotifyType,
 } from "@constants";
 import UserProfile from "@components/UserProfile";
-import DefaultInput from "@components/Equipment/DefaultInput";
-import{
+import EquipActionBar from "@components/Equipment/EquipActionBar";
+import {
   getAllEquipment,
   deleteEquipment,
   getTypeEquipment,
@@ -142,59 +142,55 @@ export default function Equipment() {
               </div>
             </header>
             <Content className="px-6 pt-6 flex grow">
-              <div className="flex">
-                <div className="w-full h-full flex flex-col">
-                  {/* Input Filter */}
-                  <DefaultInput
-                    placeholder="Search by Equipment Name"
-                    onFilter={filterEquipmentId}
+              <div className="w-full h-full flex flex-col space-y-2">
+                {/* Input Filter */}
+                <EquipActionBar
+                  type={type}
+                  placeholder="Search by Equipment Name"
+                  onFilter={filterEquipmentId}
+                  onRender={getEquipment}
+                />
+                {/* Body */}
+                <Content id="content_equipment" className="w-full h-full grow">
+                  <Table
+                    id="table__primary"
+                    aria-label={"pointer"}
+                    dataSource={equipment}
+                    columns={columns}
+                    loading={loading}
+                    tableLayout="fixed"
+                    rowKey={(record) => `row__patient__${record.equip_id}`}
+                    onRow={(record: IEquipment, _) => ({
+                      onClick: (event: any) => {
+                        console.log(event);
+                      },
+                    })}
+                    pagination={{
+                      defaultPageSize: 7,
+                      showSizeChanger: false,
+                    }}
+                  />
+                  <EquipmentModal
+                    data={form}
+                    forms={forms}
+                    isOpen={isUpdateOpen}
+                    confirmLoading={confirmLoading}
+                    setLoading={setConfirmLoading}
+                    setModal={handleModal}
+                    onSubmit={onUpdate}
+                    onChange={onChange}
+                    onSelect={onSelect}
                     onRender={getEquipment}
                   />
-                  {/* Body */}
-                  <Content
-                    id="content__patient"
-                    className="pt-7 w-full h-full grow"
-                  >
-                    <Table
-                      id="table__primary"
-                      aria-label={"pointer"}
-                      dataSource={equipment}
-                      columns={columns}
-                      loading={loading}
-                      tableLayout="fixed"
-                      rowKey={(record) => `row__patient__${record.equip_id}`}
-                      onRow={(record: IEquipment, _) => ({
-                        onClick: (event: any) => {
-                          console.log(event);
-                        },
-                      })}
-                      pagination={{
-                        defaultPageSize: 7,
-                        showSizeChanger: false,
-                      }}
-                    />
-                    <EquipmentModal
-                      data={form}
-                      forms={forms}
-                      isOpen={isUpdateOpen}
-                      confirmLoading={confirmLoading}
-                      setLoading={setConfirmLoading}
-                      setModal={handleModal}
-                      onSubmit={onUpdate}
-                      onChange={onChange}
-                      onSelect={onSelect}
-                      onRender={getEquipment}
-                    />
-                    <DeleteModal
-                      title="Are you sure ?"
-                      description="Are you sure that you want to delete these images"
-                      isOpen={isDeleteOpen}
-                      confirmLoading={submitDelete}
-                      onCancel={() => setIsDeleteOpen(false)}
-                      onSubmit={onDelete}
-                    />
-                  </Content>
-                </div>
+                  <DeleteModal
+                    title="Are you sure ?"
+                    description="Are you sure that you want to delete these images"
+                    isOpen={isDeleteOpen}
+                    confirmLoading={submitDelete}
+                    onCancel={() => setIsDeleteOpen(false)}
+                    onSubmit={onDelete}
+                  />
+                </Content>
               </div>
             </Content>
           </div>

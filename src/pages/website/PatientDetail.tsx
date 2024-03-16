@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseMutationResult, useMutation } from "react-query";
@@ -12,22 +12,27 @@ import {
   NotifyType,
   SEGMENT_STATE,
   IFormattedErrorResponse,
+  DefaultStageSegmented,
+  ImageQueryParams,
+  DefaultImageQueryParams,
+  SearchField,
 } from "@constants";
 import {
-  getCaseByCaseId,
-  getCompareHistory,
+  getCaseById,
+  getHistoryByCaseId,
   getAllImageByCaseId,
   deleteImage,
+  searchImageQueryParams,
 } from "@api-caller";
 import { dividerConfig } from "@config";
 import { optionSegmented, displayNotification } from "@utils";
 import UserProfile from "@components/UserProfile";
 import DeleteModal from "@components/DeleteModal";
 import { useAuth } from "@components/AuthProvider";
-import HistoryCard from "@components/Patient/HistoryCard";
-import DefaultInput from "@components/Patient/DefaultInput";
-import AdditionalData from "@components/Patient/AdditionalData";
-import CardPatientDetail from "@components/Patient/CardPatientDetail";
+import HistoryCard from "@components/PatientDetail/HistoryCard";
+import ImageActionBar from "@components/PatientDetail/ImageActionBar";
+import AdditionalData from "@components/PatientDetail/AdditionalData";
+import PatientDetailCard from "@components/PatientDetail/PatientDetailCard";
 
 export default function PatientDetail() {
   const deleteMutation: UseMutationResult<
@@ -35,14 +40,20 @@ export default function PatientDetail() {
     IFormattedErrorResponse,
     string[]
   > = useMutation(deleteImage);
+  const searchQueryMutation: UseMutationResult<
+    IImage[],
+    IFormattedErrorResponse,
+    ImageQueryParams
+  > = useMutation(searchImageQueryParams);
   const { me } = useAuth();
   const { case_id } = useParams();
   const router = useNavigate();
   const [images, setImages] = useState<any>([]);
-  const [stageSegmented, setStageSegmented] = useState({
-    stage: SEGMENT_STATE.OVERVIEW,
-    limit: false,
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [imageQuery, setImageQuery] = useState<ImageQueryParams>(
+    DefaultImageQueryParams
+  );
+  const [stageSegmented, setStageSegmented] = useState(DefaultStageSegmented);
   const [checkedList, setCheckList] = useState<string[]>([]);
   const [cases, setCases] = useState<IPatient>();
   const [history, setHistory] = useState<any>();
@@ -52,38 +63,54 @@ export default function PatientDetail() {
     const sortImage: Record<string, IImage[]> = {};
     images.forEach((image: IImage) => {
       if (image.img_status) {
-        const createdAtDate = moment(image.created_at).format("DD MMM YYYY");
+        const createdAtDate = dayjs(image.created_at).format("DD MMM YYYY");
         if (!sortImage[createdAtDate]) {
           sortImage[createdAtDate] = [];
         }
         sortImage[createdAtDate].push({ ...image });
       }
     });
-    return sortImage;
+    setIsLoading(false);
+    setImages(sortImage);
   }
 
   useEffect(() => {
     getCase();
-    getImage();
     getHistory();
   }, []);
 
+  useEffect(() => {
+    if (imageQuery.case_id) {
+      searchQueryMutation.mutate(imageQuery, {
+        onSuccess(response) {
+          formatDateImages(response);
+        },
+      });
+    } else {
+      getImage();
+    }
+  }, [imageQuery]);
+
   async function getHistory() {
     if (case_id) {
-      const data = await getCompareHistory(case_id);
+      const data = await getHistoryByCaseId(case_id);
       setHistory(data);
     }
   }
   async function getImage() {
     if (case_id) {
       const images: IImage[] = await getAllImageByCaseId(case_id);
-      const format = await formatDateImages(images);
-      setImages(format);
+      await formatDateImages(images);
     }
   }
   async function getCase() {
-    const _case: IPatient = await getCaseByCaseId(case_id as string);
-    setCases(_case);
+    setImageQuery((prev) => ({ ...prev, case_id: case_id as string }));
+    try {
+      const _case: IPatient = await getCaseById(case_id as string);
+      setCases(_case);
+    } catch (error) {
+      router(-1);
+    }
   }
 
   const handleImage = (image_id: string) => {
@@ -102,15 +129,27 @@ export default function PatientDetail() {
     }
   };
 
-  const filterPatient = (e: any) => {};
+  const filterImage = (value: any, field: SearchField) => {
+    setIsLoading(true);
+    if (field == SearchField.DATE) {
+      setImageQuery((prev) => ({
+        ...prev,
+        start_at: value[0],
+        end_at: value[1],
+      }));
+    } else {
+      setImageQuery((prev) => ({ ...prev, [field]: value }));
+    }
+  };
   function renderImage(date: string) {
     return images[date].map((image: IImage, index: number) => {
       const isRead = image.img_read;
+      // const imgId = (index + 1).toString().padStart(6, "0");
       return (
         <div key={index}>
           {!isRead && stageSegmented.stage == SEGMENT_STATE.OVERVIEW ? (
             <Badge count={"new"} color="#F27961" offset={[-15, 25]}>
-              <CardPatientDetail
+              <PatientDetailCard
                 key={index}
                 image={image}
                 checkedList={checkedList}
@@ -119,7 +158,7 @@ export default function PatientDetail() {
               />
             </Badge>
           ) : (
-            <CardPatientDetail
+            <PatientDetailCard
               key={index}
               image={image}
               checkedList={checkedList}
@@ -139,6 +178,17 @@ export default function PatientDetail() {
     ) {
       setIsModalOpen(true);
     } else {
+      const detectParams = await history[stageSegmented.stage]?.filter(
+        (item: any) => {
+          const imgCollect = item.images.map((img: any) => img.img_id);
+          if (imgCollect.length !== checkedList.length) {
+            return false;
+          }
+          return checkedList.every((checkedItem) =>
+            imgCollect.includes(checkedItem)
+          );
+        }
+      );
       switch (stageSegmented.stage) {
         case SEGMENT_STATE.OVERVIEW:
           setStageSegmented({ stage: SEGMENT_STATE.DELETE, limit: false });
@@ -158,21 +208,8 @@ export default function PatientDetail() {
           break;
         case SEGMENT_STATE.COMPARE:
           if (checkedList.length == 2) {
-            const detectParams = await history.filter((item: any) => {
-              const imgCollect = item.images.map((img: any) => img.img_id);
-              return (
-                imgCollect.includes(checkedList[0]) &&
-                imgCollect.includes(checkedList[1])
-              );
-            });
             if (detectParams.length > 0) {
-              router(`/compare`, {
-                state: {
-                  case_id,
-                  imageList: checkedList,
-                  compare_id: detectParams[0].compare_id,
-                },
-              });
+              router(`/compare/${detectParams[0].compare_id}`);
             } else {
               router(`/compare`, {
                 state: { imageList: checkedList, case_id },
@@ -183,7 +220,11 @@ export default function PatientDetail() {
           }
           break;
         case SEGMENT_STATE.PROGRESS:
-          router("/progress", { state: { imageList: checkedList, case_id } });
+          if (detectParams.length > 0) {
+            router(`/progress/${detectParams[0].prog_id}`);
+          } else {
+            router("/progress", { state: { imageList: checkedList, case_id } });
+          }
           break;
         default:
           console.log(checkedList);
@@ -228,22 +269,22 @@ export default function PatientDetail() {
               <div className="flex h-full space-x-6">
                 {/* Input Filter */}
                 <div className="w-full h-full flex flex-col space-y-2 pt-6">
-                  <DefaultInput
+                  <ImageActionBar
+                    case_id={case_id as string}
                     placeholder="Search by hospital number"
-                    onFilter={filterPatient}
+                    onFilter={filterImage}
                     onRender={getImage}
-                    images
                   />
                   {stageSegmented.stage == SEGMENT_STATE.OVERVIEW && cases && (
                     <AdditionalData data={cases} />
                   )}
-                  {/* Body */}
                   <div
                     id="timeline-container"
                     className="h-full overflow-y-auto pt-4"
                   >
                     <div className="inner-container">
                       <List
+                        loading={isLoading}
                         className="timeline pl-20 pt-2"
                         dataSource={Object.keys(images)}
                         renderItem={(item, index) => {
@@ -285,15 +326,19 @@ export default function PatientDetail() {
                           </div>
                           <div>
                             {cases &&
-                              history?.map((item: any, index: number) => {
-                                return (
-                                  <HistoryCard
-                                    key={index}
-                                    data={item}
-                                    hn_id={cases.hn_id}
-                                  />
-                                );
-                              })}
+                              history &&
+                              history[stageSegmented.stage]?.map(
+                                (item: any, index: number) => {
+                                  return (
+                                    <HistoryCard
+                                      key={index}
+                                      data={item}
+                                      stage={stageSegmented.stage}
+                                      hn_id={cases.hn_id}
+                                    />
+                                  );
+                                }
+                              )}
                           </div>
                         </Content>
                       </Content>

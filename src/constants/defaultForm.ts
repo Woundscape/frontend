@@ -2,12 +2,19 @@ import {
   ICreateCompare,
   ICreateEquip,
   ICreateNotification,
+  ICreateProgress,
   IEquipment,
   INote,
   UserType,
 } from "./interface";
 import { DashboardCard } from "@api-caller";
 import { NotificationType } from "./notification";
+import {
+  AllocationQueryParams,
+  CaseQueryParams,
+  DoctorQueryParams,
+  ImageQueryParams,
+} from "./query";
 
 export const DefaultTotalDashboard: DashboardCard[] = [
   {
@@ -35,42 +42,42 @@ export const DefaultDataSet = {
     {
       label: "slough",
       data: [],
-      borderColor: "#CFEDD9",
+      borderColor: "#AAF0C2",
     },
     {
       label: "epithelization",
       data: [],
-      borderColor: "#E0FCC5",
+      borderColor: "#CFFF9E",
     },
     {
       label: "callus",
       data: [],
-      borderColor: "#FFFDC5",
+      borderColor: "#FFFB9C",
     },
     {
       label: "periwound",
       data: [],
-      borderColor: "#FFE8BF",
+      borderColor: "#FFDFA2",
     },
     {
       label: "wound",
       data: [],
-      borderColor: "#FFE1E1",
+      borderColor: "#FFB8B8",
     },
     {
       label: "granulation",
       data: [],
-      borderColor: "#E6D1ED",
+      borderColor: "#ECB9FF",
     },
     {
       label: "deep structure",
       data: [],
-      borderColor: "#D3DDFF",
+      borderColor: "#A1B6FF",
     },
     {
       label: "marceration",
       data: [],
-      borderColor: "#D4F3F3",
+      borderColor: "#ABF4F4",
     },
   ],
 };
@@ -84,44 +91,83 @@ export const DefaultTissue = [
   {
     title: "slough",
     value: 0,
-    color: "#CFEDD9",
+    color: "#AAF0C2",
   },
   {
     title: "epithelization",
     value: 0,
-    color: "#E0FCC5",
+    color: "#CFFF9E",
   },
   {
     title: "callus",
     value: 0,
-    color: "#FFFDC5",
+    color: "#FFFB9C",
   },
   {
     title: "periwound",
     value: 0,
-    color: "#FFE8BF",
+    color: "#FFDFA2",
   },
   {
     title: "wound",
     value: 0,
-    color: "#FFE1E1",
+    color: "#FFB8B8",
   },
   {
     title: "granulation",
     value: 0,
-    color: "#E6D1ED",
+    color: "#ECB9FF",
   },
   {
     title: "deep structure",
     value: 0,
-    color: "#D3DDFF",
+    color: "#A1B6FF",
   },
   {
     title: "marceration",
     value: 0,
-    color: "#D4F3F3",
+    color: "#ABF4F4",
   },
 ];
+
+export const DefaultImageQueryParams: ImageQueryParams = {
+  offset: 0,
+  limit: 20,
+  case_id: "",
+  image_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
+export const DefaultUserQueryParams: AllocationQueryParams = {
+  offset: 0,
+  limit: 20,
+  hn_id: "",
+  doctor_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
+export const DefaultCaseQueryParams: CaseQueryParams = {
+  offset: 0,
+  limit: 20,
+  hn_id: "",
+  doctor_id: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
+
+export const DefaultDoctorQueryParams: DoctorQueryParams = {
+  offset: 0,
+  limit: 20,
+  doctor_name: "",
+  start_at: undefined,
+  end_at: undefined,
+  order_by: "asc",
+};
 
 export const DefaultNoteForm: INote = {
   note_title: "",
@@ -139,6 +185,18 @@ export const DefaultCompareForm: ICreateCompare = {
   compare: {
     case_id: "",
     compare_info: DefaultTissue,
+    img_collect: [],
+  },
+  author_id: "",
+};
+
+export const DefaultProgressForm: ICreateProgress = {
+  note_title: "",
+  note_desc: "",
+  note_img: [],
+  progress: {
+    case_id: "",
+    prog_info: DefaultTissue,
     img_collect: [],
   },
   author_id: "",
@@ -173,6 +231,7 @@ export const DefaultConsultForm: ICreateNotification = {
   noti_title: "",
   noti_desc: "",
   noti_img: [],
+  case_id: "",
   approveStatus: false,
   sender_id: "",
   recipient_id: "",
@@ -195,6 +254,12 @@ export const DefaultChart = {
 
 export const DefaultCreateCompare = {
   compare_info: DefaultTissue,
+  img_collect: [],
+  case_id: "",
+};
+
+export const DefaultCreateProgress = {
+  prog_info: DefaultDataSet,
   img_collect: [],
   case_id: "",
 };

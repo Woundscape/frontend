@@ -1,5 +1,4 @@
 import { UploadFile } from "antd";
-import { DefaultOptionType } from "antd/es/select";
 
 export interface IFormattedErrorResponse {
   message?: string;
@@ -134,7 +133,7 @@ export interface INote {
   author_id: string;
 }
 
-interface Compare {
+export interface ICompare {
   compare_id: string;
   compare_notes: any[];
   img_collect: IImage[];
@@ -142,10 +141,11 @@ interface Compare {
   updated_at: string;
 }
 
-export interface ICompare {
+export interface IPreCompare {
   compare_info: TissueType[];
   case_id: string;
-  img_collect: any;
+  img_collect: string[];
+  compare_id?: string;
 }
 
 export interface ICreateCompare {
@@ -154,7 +154,31 @@ export interface ICreateCompare {
   note_img: UploadFile<any>[];
   created_at?: Date;
   author_id: string;
-  compare: ICompare;
+  compare: IPreCompare;
+}
+
+export interface IAddCompareNote {
+  note_title: string;
+  note_desc: string;
+  note_img: UploadFile<any>[];
+  author_id: string;
+  compare_id: string;
+}
+
+export interface IPreProgress {
+  prog_info: any;
+  case_id: string;
+  img_collect: string[];
+  prog_id?: string;
+}
+
+export interface ICreateProgress {
+  note_title: string;
+  note_desc: string;
+  note_img: UploadFile<any>[];
+  created_at?: Date;
+  author_id: string;
+  progress: IPreProgress;
 }
 
 export interface IRefer {
@@ -182,6 +206,7 @@ export interface ICreateNotification {
   noti_title: string;
   noti_desc: string;
   noti_img?: any;
+  case_id?: string;
   approveStatus: boolean;
   sender_id: string | undefined;
   recipient_id: string;
@@ -194,39 +219,12 @@ export interface IFieldDoctorName {
   doctor_id: string;
 }
 
-export enum IStage {
-  SPECIAL = "Special",
-  UNSTABLE = "Unstable",
-  STABLE = "Stable",
-  IMPROVE = "Improved",
+export interface IChart {
+  labels: string[];
+  datasets: IDataSet[];
 }
-
-export const selectStage: DefaultOptionType[] = [
-  {
-    value: IStage.SPECIAL,
-    label: IStage.SPECIAL,
-  },
-  {
-    value: IStage.UNSTABLE,
-    label: IStage.UNSTABLE,
-  },
-  {
-    value: IStage.STABLE,
-    label: IStage.STABLE,
-  },
-  {
-    value: IStage.IMPROVE,
-    label: IStage.IMPROVE,
-  },
-];
-
-export const selectStatus: DefaultOptionType[] = [
-  {
-    value: "In Progress",
-    label: "In Progress",
-  },
-  {
-    value: "Done",
-    label: "Done",
-  },
-];
+export interface IDataSet {
+  label: string;
+  data: any[];
+  borderColor: string;
+}

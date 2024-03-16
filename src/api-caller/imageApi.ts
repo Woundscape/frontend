@@ -1,4 +1,4 @@
-import { IImage } from "@constants";
+import { IImage, ImageQueryParams } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "@api/apiClient";
 
@@ -14,7 +14,11 @@ export interface IUpdateEquipment {
 
 export async function getImageById(img_id: string): Promise<IImage> {
   try {
-    const { data } = await getInstanceLocal().get(`/image/${img_id}`);
+    const { data } = await getInstanceLocal().get(`/image`, {
+      params: {
+        img_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);
@@ -23,9 +27,11 @@ export async function getImageById(img_id: string): Promise<IImage> {
 
 export async function getCoupleImage(imageList: string[]): Promise<IImage[]> {
   try {
-    const { data } = await getInstanceLocal().get(
-      `/image/couple/${imageList[0]}/${imageList[1]}`
-    );
+    const { data } = await getInstanceLocal().get(`/image/couple`, {
+      params: {
+        imgList: imageList,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);
@@ -56,10 +62,21 @@ export async function getAllImageById(img_id: string): Promise<IImage[]> {
 
 export async function getProgressImage(imgList: string[]): Promise<IImage[]> {
   try {
-    console.log(imgList);
-
     const { data } = await getInstanceLocal().post(`/image/progress`, {
       images: imgList,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function searchImageQueryParams(
+  params: ImageQueryParams
+): Promise<IImage[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/image/search/query`, {
+      params,
     });
     return data;
   } catch (error) {

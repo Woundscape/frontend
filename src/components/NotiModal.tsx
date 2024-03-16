@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import {
-  Avatar,
   ConfigProvider,
   List,
   Modal,
@@ -9,15 +9,12 @@ import {
   Button,
 } from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
-import { optionNotification } from "@utils/option";
-import DoctorMock from "@assets/icons/doctor_mock.svg";
-import ImgMock from "@assets/wound/img_5.jpg";
-import { useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 import { listConfig } from "@config";
 import { getNotification } from "@api-caller";
+import { formatDate, formatImage, optionNotification } from "@utils";
 import { INotification, NotificationType } from "@constants";
-import { useAuth } from "./AuthProvider";
-import { formatImage } from "@utils";
+import Avatar from "react-avatar";
 const Panel = Collapse.Panel;
 interface NotificationModalProps {
   isOpen: boolean;
@@ -39,8 +36,10 @@ export default function NotiModal({
 
   useEffect(() => {
     if (data && data.length > 0) {
-      // Check if filterType is 'all'
-      let filterData = filterType === 'all' ? data : data.filter((item) => item.noti_type === filterType);
+      let filterData =
+        filterType != "all"
+          ? data.filter((item) => item.noti_type === filterType)
+          : data;
       setFormatData(filterData);
     }
   }, [filterType, data]);
@@ -49,6 +48,7 @@ export default function NotiModal({
     if (me) {
       getNotification(me).then((response: INotification[]) => {
         setData(response);
+        setFormatData(response);
       });
     }
   }, [isOpen]);
@@ -86,13 +86,15 @@ export default function NotiModal({
               <List
                 dataSource={formatData}
                 renderItem={(item, index) => {
+                  const senderName =
+                    item.sender.user_firstname +
+                    " " +
+                    item.sender.user_lastname;
                   if (item.noti_type != NotificationType.CONSULT) {
                     return (
                       <List.Item key={index}>
                         <List.Item.Meta
-                          avatar={
-                            <Avatar src={UnreadIcon} className="rounded-none" />
-                          }
+                          avatar={<img src={UnreadIcon} width={32} alt="" />}
                           className="p-4 jura hover:bg-[#f2f1f1]"
                           title={
                             <p>
@@ -102,7 +104,7 @@ export default function NotiModal({
                               </span>
                             </p>
                           }
-                          description={item.created_at}
+                          description={formatDate(item.created_at)}
                         />
                       </List.Item>
                     );
@@ -116,18 +118,15 @@ export default function NotiModal({
                               className="flex px-4 py-2 jura hover:bg-[#f2f1f1]"
                               onClick={onMouseClick}
                             >
-                              <div className="flex items-start">
+                              <div className="flex h-16">
                                 <img src={UnreadIcon} width={32} alt="" />
                               </div>
                               <div className="flex px-4 space-x-1">
                                 <div className="flex flex-col">
-                                  <p>
-                                    hui hui has sent you a message 
-                                    <p className="text-[#61708C]">
-                                    {item.noti_type} #{item.noti_id}
-                                    </p>
+                                  {item.noti_title}
+                                  <p className="text-[#908F8F]">
+                                    {formatDate(item.created_at)}
                                   </p>
-                                  <p className="text-[#908F8F]">1 hour ago</p>
                                   <div className="flex gap-2">
                                     <p className="text-[#61708C] hover:underline ">
                                       {viewMore ? "Less More" : "View More"}
@@ -142,19 +141,23 @@ export default function NotiModal({
                         >
                           <div className="border rounded">
                             <div className="jura border-b-2 flex justify-between items-center pr-5">
-                              <div className=" flex p-3 gap-3">
-                                <img src={DoctorMock} className="w-8" alt="" />
-                                <div className="jura flex flex-col">
-                                  <p className="text-[#424241]">
-                                    {item.sender[0]}
+                              <div className="w-1/2 flex p-3 gap-3">
+                                <Avatar
+                                  name={senderName}
+                                  size="40"
+                                  round="20px"
+                                />
+                                <div className="w-full jura flex flex-col">
+                                  <p className="w-full text-[#424241] truncate">
+                                    {senderName}
                                   </p>
                                   <p className="text-xs text-[#B4B4B4]">
                                     Doctor
                                   </p>
                                 </div>
                               </div>
-                              <p className="text-[#61708C]">
-                                Consult # {item.noti_id}
+                              <p className="w-1/2 text-[#61708C] truncate">
+                                Consult #{item.noti_id}
                               </p>
                             </div>
                             <div className="flex p-3 w-full">
@@ -173,7 +176,9 @@ export default function NotiModal({
                                           <Image
                                             key={index}
                                             width={100}
+                                            height={100}
                                             src={formatImage(image)}
+                                            className="object-cover rounded"
                                           />
                                         );
                                       }

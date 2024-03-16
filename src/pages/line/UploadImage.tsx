@@ -1,5 +1,5 @@
 import liff from "@line/liff";
-import { Spin, Upload } from "antd";
+import { Button, Spin, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { lineLiffID } from "@config";
@@ -10,7 +10,8 @@ import AddUploadIcon from "@assets/icon-add-upload-file.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import { UseMutationResult, useMutation } from "react-query";
 import { IFormattedErrorResponse } from "@constants";
-import { LineCredential, getLineMe, lineUpload } from "@api-caller/lineApi";
+import { LineCredential, getLineMe, lineUpload } from "@api-caller";
+import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 export default function UploadImage() {
   const uploadMutation: UseMutationResult<
@@ -21,6 +22,7 @@ export default function UploadImage() {
   const [user, setUser] = useState<LineCredential>();
   const [wound, setWound] = useState<UploadFile<any>[]>([]);
   const [equip, setEquip] = useState<UploadFile<any>[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     liff
       .init({
@@ -44,6 +46,7 @@ export default function UploadImage() {
 
   async function onSubmit() {
     if (wound.length > 0) {
+      setIsLoading(true);
       try {
         const form = new FormData();
         wound.forEach((file, _) => {
@@ -60,6 +63,9 @@ export default function UploadImage() {
           onSuccess: () => {
             liff.closeWindow();
           },
+          onError: () => {
+            setIsLoading(false);
+          },
         });
       } catch (error) {
         console.error("Error during file upload:", error);
@@ -68,6 +74,12 @@ export default function UploadImage() {
   }
   return (
     <div className="w-full h-screen bg-white">
+      <LoadingOverlayWrapper
+        active={isLoading}
+        spinner
+        text="Loading ..."
+        className="w-full h-full absolute"
+      />
       <div
         id="line__upload_container"
         className="w-full flex flex-col justify-center items-center space-y-4 p-10"
@@ -149,13 +161,13 @@ export default function UploadImage() {
         <h1 className="prompt font-brown select-none text-sm">
           กรุณาอัปโหลดรูปอุปกรณ์ที่ใช้ทำแผล{" "}
         </h1>
-        <button
-          className="w-80 flex px-4 py-1.5 justify-between items-center btn-homepage cursor-pointer text-center"
+        <Button
+          className="w-80 h-10 flex px-4 py-1.5 justify-between items-center btn-homepage cursor-pointer text-center"
           onClick={onSubmit}
         >
           <div className="text-lg jura font-bold">Upload</div>
           <img className="w-14" src={Arrow_Start} alt="" />
-        </button>
+        </Button>
       </div>
     </div>
   );

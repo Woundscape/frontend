@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UseMutationResult, useMutation } from "react-query";
-import { Image, Select, Typography } from "antd";
+import { Image, List, Select, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { formatDate, formatImage } from "@utils";
 import { filterOptions, filterSort } from "@config";
@@ -26,8 +26,10 @@ export default function EquipmentTab({
   > = useMutation(updateImageEquipment);
   const [select, setSelect] = useState<string>();
   const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const handleEquip = async () => {
     if (isEditable) {
+      setIsLoading(true);
       const updatedEquipId = select
         ? [...(image.img_equip ?? []), select]
         : [...(image.img_equip ?? [])];
@@ -45,45 +47,53 @@ export default function EquipmentTab({
     setIsEditable(!isEditable);
   };
 
+  useEffect(() => {
+    setIsLoading(false);
+  }, [image]);
+
   return (
     <div className="w-full h-full overflow-y-auto">
       <Content className="space-y-3 grow">
-        {image.img_equip?.map((item: any, index: number) => (
-          <div
-            key={index}
-            className="w-full px-4 py-1.5 flex items-center rounded-xl space-x-2"
-            style={{
-              borderRadius: "0.8125rem",
-              border: "1.5px solid #E3E1E1",
-            }}
-          >
-            <Typography className="text-3xl text-[#E7E5E5] jura">
-              {index + 1}
-            </Typography>
-            <div
-              // aria-label={isEditable ? "cancel_icon_editable" : ""}
-              className="w-full flex justify-between items-center rounded-md py-1.5 px-3"
-            >
-              <p className="jura text-md text-[#61708C]">
-                {equipment?.find((list) => list.equip_id == item)?.equip_name}
-              </p>
-              {isEditable && (
-                <GoX
-                  color="#b4b4b4"
-                  size={24}
-                  onClick={() => {
-                    updateImage(
-                      "img_equip",
-                      image.img_equip.filter(
-                        (equip_id: string) => equip_id != item
-                      )
-                    );
-                  }}
-                />
-              )}
-            </div>
+        <List loading={isLoading}>
+          <div className="space-y-3">
+            {image.img_equip?.map((item: any, index: number) => (
+              <div
+                key={index}
+                className="w-full px-4 py-1.5 flex items-center rounded-xl space-x-2"
+                style={{
+                  borderRadius: "0.8125rem",
+                  border: "1.5px solid #E3E1E1",
+                }}
+              >
+                <Typography className="text-3xl text-[#E7E5E5] jura">
+                  {index + 1}
+                </Typography>
+                <div className="w-full flex justify-between items-center rounded-md py-1.5 px-3">
+                  <p className="jura text-md text-[#61708C]">
+                    {
+                      equipment?.find((list) => list.equip_id == item)
+                        ?.equip_name
+                    }
+                  </p>
+                  {isEditable && (
+                    <GoX
+                      color="#b4b4b4"
+                      size={24}
+                      onClick={() => {
+                        updateImage(
+                          "img_equip",
+                          image.img_equip.filter(
+                            (equip_id: string) => equip_id != item
+                          )
+                        );
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </List>
         {!isEditable ? (
           <div className="flex justify-end">
             <button

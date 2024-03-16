@@ -46,7 +46,7 @@ export default function CompareCard({ image, equipment }: CompareCardProps) {
     setNote(data);
   }
   return (
-    <div className="relative space-y-2 w-full p-5">
+    <div className="w-full relative space-y-2 p-5">
       <p className="text-[#949CB6]">{formatDate(image.created_at)}</p>
       <div
         id="canvas_editor___container"
@@ -99,16 +99,20 @@ export default function CompareCard({ image, equipment }: CompareCardProps) {
           )}
         </div>
       </div>
-      <div className="border-b-2">
-        <p className="text-[#4c577c] text-base mt-3 mb-2">Equipment</p>
-      </div>
-      <div className="flex flex-wrap text-[#4C577C] gap-1">
-        {image?.img_equip?.map((equip: string, index: number) => (
-          <Tag key={index} color={"geekblue"} className="jura">
-            {equipment?.find((list) => list.equip_id == equip)?.equip_name}
-          </Tag>
-        ))}
-      </div>
+      {image.img_equip?.length > 0 && (
+        <>
+          <div className="border-b-2">
+            <p className="text-[#4c577c] text-base mt-3 mb-2">Equipment</p>
+          </div>
+          <div className="flex flex-wrap text-[#4C577C] gap-1">
+            {image?.img_equip?.map((equip: string, index: number) => (
+              <Tag key={index} color={"geekblue"} className="jura">
+                {equipment?.find((list) => list.equip_id == equip)?.equip_name}
+              </Tag>
+            ))}
+          </div>
+        </>
+      )}
       {note &&
         note?.map((item, index) => (
           <div key={index} className="text-[#9198AF] space-y-2">

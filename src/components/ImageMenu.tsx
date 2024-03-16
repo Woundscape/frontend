@@ -1,10 +1,10 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { List, Typography } from "antd";
 import { httpAPI } from "@config";
 import { IImage } from "@constants";
-import { getAllImageById } from "@api-caller/imageApi";
+import { getAllImageById } from "@api-caller";
 
 export default function ImageMenu() {
   const { img_id } = useParams();
@@ -31,7 +31,7 @@ export default function ImageMenu() {
     <>
       {images?.map((image, index) => {
         let dateObject = new Date(image.created_at);
-        let formattedDate = moment(dateObject).format("MMM DD, YYYY HH:mm");
+        let formattedDate = dayjs(dateObject).format("MMM DD, YYYY HH:mm");
         return (
           <List.Item
             key={index}

@@ -1,4 +1,4 @@
-import { IDoctor, IFieldDoctorName } from "@constants";
+import { DoctorQueryParams, IDoctor, IFieldDoctorName } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "../api/apiClient";
 
@@ -56,7 +56,22 @@ export async function verifiedDoctor(doctor_id: string): Promise<boolean> {
   }
 }
 
-export async function getDashboard(doctor_id: string): Promise<DashboardCard[]> {
+export async function deleteDoctor(doctor_id: string): Promise<boolean> {
+  try {
+    const { data } = await getInstanceLocal().delete(`/doctor`, {
+      params: {
+        doctor_id,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function getDashboard(
+  doctor_id: string
+): Promise<DashboardCard[]> {
   try {
     const { data } = await getInstanceLocal().get(
       `/doctor/dashboard/${doctor_id}`
@@ -70,6 +85,19 @@ export async function getDashboard(doctor_id: string): Promise<DashboardCard[]> 
 export async function getFieldDoctorName(): Promise<IFieldDoctorName[]> {
   try {
     const { data } = await getInstanceLocal().get(`/doctor/getFieldDoctorName`);
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function searchDoctorQueryParams(
+  params: any
+): Promise<IDoctor[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/doctor/search/query`, {
+      params,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

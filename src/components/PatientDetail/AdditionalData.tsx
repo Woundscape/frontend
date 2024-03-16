@@ -11,7 +11,7 @@ import {
   selectStatus,
 } from "@constants";
 import { tagInputStyle, tagPlusStyle } from "@config";
-import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller";
+import { IUpdateCase, getCaseById, updateCase } from "@api-caller";
 import { displayNotification } from "@utils";
 
 interface IAdditionalDataProps {
@@ -54,7 +54,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
   }, [editInputValue]);
 
   async function getCase() {
-    const _case: IPatient = await getCaseByCaseId(data.case_id as string);
+    const _case: IPatient = await getCaseById(data.case_id as string);
     setCases(_case);
     setTags(_case.disease);
   }
@@ -154,6 +154,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
             if (editInputIndex === index) {
               return (
                 <Input
+                  allowClear
                   ref={editInputRef}
                   key={tag}
                   size="small"
@@ -193,6 +194,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
           })}
           {inputVisible ? (
             <Input
+              allowClear
               ref={inputRef}
               type="text"
               size="small"

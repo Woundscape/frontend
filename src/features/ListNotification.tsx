@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { List, Avatar, Divider, ConfigProvider } from "antd";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
 import NotiModal from "@components/NotiModal";
-import { IFieldDoctorName, INotification, NotificationType } from "@constants";
+import { INotification, NotificationType } from "@constants";
 import { Content } from "antd/es/layout/layout";
 import { formatDate } from "@utils";
 import { listConfig } from "@config";
@@ -54,8 +54,9 @@ export default function ListNotification({ data }: IListNotificationProps) {
                       title={
                         <div className="space-x-2">
                           <span>
-                            {item.noti_type == NotificationType.CONSULT &&
-                              `${senderName} has sent you a message`}
+                            {item.noti_type == NotificationType.CONSULT
+                              ? `${senderName} has sent you a message`
+                              : item.noti_title}
                           </span>
                           <span className="text-[#61708C]">
                             Consult #{item.noti_id}

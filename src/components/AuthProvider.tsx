@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "./Loading";
 import { DoctorType, IMe } from "@constants";
-import { Credentials, getMe } from "@api-caller/authenApi";
+import { Credentials, getMe } from "@api-caller";
 
 const AuthContext = createContext({
   me: undefined as IMe | undefined,

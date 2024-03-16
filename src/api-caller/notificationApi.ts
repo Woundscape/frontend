@@ -4,9 +4,11 @@ import { formattedError } from "@utils";
 
 export async function getNotification(me: IMe): Promise<INotification[]> {
   try {
-    const { data } = await getInstanceLocal().get(
-      `/notification/${me.user_id}`
-    );
+    const { data } = await getInstanceLocal().get(`/notification`, {
+      params: {
+        user_id: me.user_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

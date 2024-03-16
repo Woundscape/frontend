@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 
 export function formatDate(inputDate: Date | undefined) {
   const currentDate: any = new Date();
@@ -15,7 +15,7 @@ export function formatDate(inputDate: Date | undefined) {
   const minutesDifference = Math.floor(
     (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
   );
-  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  // const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
   // Check the difference and return the appropriate string
   if (timeDifference < 60 * 60 * 1000) {
@@ -26,7 +26,7 @@ export function formatDate(inputDate: Date | undefined) {
   } else if (timeDifference < 24 * 60 * 60 * 1000) {
     return `${hoursDifference} hours ago`;
   } else {
-    const date = moment(targetDate).format("MMM DD, YYYY HH:mm");
+    const date = dayjs(targetDate).format("MMM DD, YYYY HH:mm");
     return date;
   }
 }

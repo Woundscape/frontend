@@ -15,7 +15,7 @@ import ResetPassword from "@pages/website/ResetPassword";
 import ConfirmReset from "@pages/website/ConfirmReset";
 import ContactUs from "@pages/website/Contact";
 import NewPass from "@pages/website/NewPassword";
-import Progress from "@pages/website/Progress";
+import Progress from "@pages/website/Progress/Progress";
 import NoApprove from "@pages/website/NoApprove";
 
 import UploadImage from "@pages/line/UploadImage";
@@ -28,14 +28,15 @@ import { AuthProvider } from "@components/AuthProvider";
 import Account from "@pages/website/Account";
 import Management from "@pages/website/Management";
 import Manual from "@pages/line/Manual";
+import ProgressWithParams from "@pages/website/Progress/ProgressWithParam";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="signin" element={<SignIn />} />
         <Route path="/line/*" element={<LineRoutes />} />
         <Route path="reset" element={<ResetPassword />} />
         <Route path="confirm" element={<ConfirmReset />} />
@@ -77,8 +78,9 @@ function AuthRoutes() {
         <Route path="equipment" element={<Equipment />} />
         <Route path="wound/:img_id" element={<WoundAnalysis />} />
         <Route path="compare" element={<Compare />} />
-        {/* <Route path="compare/:compare_id" element={<CompareWithParams />} /> */}
+        <Route path="compare/:compare_id" element={<CompareWithParams />} />
         <Route path="progress" element={<Progress />} />
+        <Route path="progress/:prog_id" element={<ProgressWithParams />} />
         <Route path="allocation" element={<Allocation />} />
         <Route path="account" element={<Account />} />
         <Route path="management" element={<Management />} />

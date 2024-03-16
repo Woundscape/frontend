@@ -9,10 +9,15 @@ import {
   IFormattedErrorResponse,
   ACTION_MANAGE,
   NotifyType,
+  SearchField,
+  DoctorQueryParams,
+  DefaultDoctorQueryParams,
 } from "@constants";
 import {
+  deleteDoctor,
   getAllDoctor,
   IUpdateDoctorType,
+  searchDoctorQueryParams,
   updateDoctorType,
   verifiedDoctor,
 } from "@api-caller";
@@ -20,8 +25,16 @@ import UserProfile from "@components/UserProfile";
 import ConfirmModal from "@components/ConfirmModal";
 import { getColumnManageUser } from "@components/Management/ColumnTable";
 import { displayNotification } from "@utils";
+import { useAuth } from "@components/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import DoctorActionBar from "@components/Management/DoctorActionBar";
 
 export default function Management() {
+  const searchQueryMutation: UseMutationResult<
+    IDoctor[],
+    IFormattedErrorResponse,
+    DoctorQueryParams
+  > = useMutation(searchDoctorQueryParams);
   const updateTypeMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -32,8 +45,18 @@ export default function Management() {
     IFormattedErrorResponse,
     string
   > = useMutation(verifiedDoctor);
+  const deleteMutation: UseMutationResult<
+    boolean,
+    IFormattedErrorResponse,
+    string
+  > = useMutation(deleteDoctor);
+  const { me } = useAuth();
+  const router = useNavigate();
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [doctorQuery, setDoctorQuery] = useState<DoctorQueryParams>(
+    DefaultDoctorQueryParams
+  );
+  const [isLoading, setIsLoading] = useState(true);
   const [titleModal, setTitleModal] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,27 +67,37 @@ export default function Management() {
   });
   useEffect(() => {
     getDoctor();
-  }, []);
+  }, [
+    updateTypeMutation.isSuccess,
+    verifyMutation.isSuccess,
+    deleteMutation.isSuccess,
+  ]);
+
+  useEffect(() => {
+    if (
+      me?.doctor_type != DoctorType.Expert &&
+      me?.doctor_type != DoctorType.Admin
+    ) {
+      router(-1);
+    }
+  }, [me]);
+
+  useEffect(() => {
+    searchQueryMutation.mutate(doctorQuery, {
+      onSuccess(response) {
+        setDoctors(response);
+        setIsLoading(false);
+      },
+    });
+  }, [doctorQuery]);
+  
   async function getDoctor() {
     getAllDoctor(false).then((doctors: IDoctor[]) => {
-      const doctorWithRowEditable = doctors.map((doctor: IDoctor) => {
-        const type = doctor.doctor_type;
-        const roleAdmin = type == DoctorType.Admin;
-        const roleDoctor = type == DoctorType.Doctor;
-        const roleExpert = type == DoctorType.Expert;
-        return {
-          ...doctor,
-          isRowEditable: false,
-          isDoctor: roleAdmin || roleDoctor,
-          isExpert: roleAdmin || roleExpert,
-        };
-      });
-      setDoctors(doctorWithRowEditable);
-      setLoading(false);
+      setDoctors(doctors);
+      setIsLoading(false);
     });
   }
   const columns: ColumnsType<IDoctor> = getColumnManageUser({
-    // For Approve new Register
     onAprrove: (action: string, doctor_id: string) => {
       setApproveState({ action, doctor_id });
       setIsModalOpen(true);
@@ -78,6 +111,9 @@ export default function Management() {
     },
     onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => {
       if (action == ACTION_MANAGE.EDIT || action == ACTION_MANAGE.CANCEL) {
+        if (action == ACTION_MANAGE.CANCEL) {
+          getDoctor();
+        }
         setDoctors((prevData) => {
           const doctorIndex = prevData.findIndex(
             (doctor) => doctor.doctor_id === record.doctor_id
@@ -112,6 +148,14 @@ export default function Management() {
             });
           },
         });
+      } else if (action == ACTION_MANAGE.DELETE) {
+        setApproveState({
+          action: ACTION_MANAGE.DELETE,
+          doctor_id: record.doctor_id,
+        });
+        setTitleModal("Delete User");
+        setDescription("Delete: Kid kom hai noew");
+        setIsModalOpen(true);
       }
     },
 
@@ -140,6 +184,20 @@ export default function Management() {
       }
     },
   });
+
+  const filterDoctor = (value: any, field: SearchField) => {
+    setIsLoading(true);
+    if (field == SearchField.DATE) {
+      setDoctorQuery((prev) => ({
+        ...prev,
+        start_at: value[0],
+        end_at: value[1],
+      }));
+    } else {
+      setDoctorQuery((prev) => ({ ...prev, [field]: value }));
+    }
+  };
+
   const onSubmit = async () => {
     try {
       setConfirmLoading(true);
@@ -149,7 +207,6 @@ export default function Management() {
             setIsModalOpen(false);
             setConfirmLoading(false);
             displayNotification(NotifyType.SUCCESS);
-            getDoctor();
           },
         });
       } else if (approveState.action == ACTION_MANAGE.REJECT) {
@@ -164,8 +221,18 @@ export default function Management() {
             displayNotification(NotifyType.SUCCESS);
           },
         });
+      } else if (approveState.action == ACTION_MANAGE.DELETE) {
+        deleteMutation.mutate(approveState.doctor_id, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setConfirmLoading(false);
+            displayNotification(NotifyType.SUCCESS);
+          },
+        });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const onCancel = () => {
     setIsModalOpen(!isModalOpen);
@@ -183,17 +250,21 @@ export default function Management() {
                 <UserProfile />
               </div>
             </header>
-            <Content className="px-6 pt-6">
-              <div className="w-full h-full flex">
-                <div className="w-full flex flex-col">
+            <Content className="px-6 pt-6 flex grow">
+              <div className="w-full h-full flex flex-col">
+                <div className="w-full flex flex-col space-y-2">
                   {/* Input Filter */}
+                  <DoctorActionBar
+                    placeholder="Search by name"
+                    onFilter={filterDoctor}
+                  />
                   {/* Body */}
                   <Content className="w-full h-full grow">
                     <Table
                       id="table__primary"
                       dataSource={doctors}
                       columns={columns}
-                      loading={loading}
+                      loading={isLoading}
                       tableLayout="fixed"
                       rowKey={(record) => `table__row__${record.doctor_id}`}
                       pagination={{

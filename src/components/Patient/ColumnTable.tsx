@@ -111,19 +111,19 @@ export const getColumnsPatient = (): ColumnsType<any> => [
       </Typography>
     ),
   },
-  {
-    title: "Action",
-    key: "operation",
-    fixed: "right",
-    width: 100,
-    render: () => (
-      <div id="action_table" onClick={(e) => e.stopPropagation()}>
-        <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
-          <div className="mr-6 py-4 flex justify-center">
-            <img src={MoreIcon} width={20} alt="" />
-          </div>
-        </Dropdown>
-      </div>
-    ),
-  },
+  // {
+  //   title: "Action",
+  //   key: "operation",
+  //   fixed: "right",
+  //   width: 100,
+  //   render: () => (
+  //     <div id="action_table" onClick={(e) => e.stopPropagation()}>
+  //       <Dropdown menu={{ items }} trigger={["click"]} className="h-full">
+  //         <div className="mr-6 py-4 flex justify-center">
+  //           <img src={MoreIcon} width={20} alt="" />
+  //         </div>
+  //       </Dropdown>
+  //     </div>
+  //   ),
+  // },
 ];

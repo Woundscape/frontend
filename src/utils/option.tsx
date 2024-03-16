@@ -4,6 +4,34 @@ import { LuImagePlus } from "react-icons/lu";
 import { IoMailUnreadOutline } from "react-icons/io5";
 import { BiUserPin } from "react-icons/bi";
 import { TbCirclesRelation } from "react-icons/tb";
+import { IEquipType, NotificationType } from "@constants";
+
+interface IOption {
+  value: string;
+  label: string;
+}
+
+export const formatOptionType = (data: IEquipType[]) => {
+  const options: IOption[] = data.map((item) => ({
+    value: item.type_id,
+    label: item.type_name,
+  }));
+  return options;
+};
+
+export const optionImageSortBy: IOption[] = [
+  { value: "None", label: "None" },
+  { value: "Unread", label: "Unread" },
+  { value: "Read", label: "Read" },
+  { value: "Oldest", label: "Oldest" },
+  { value: "Newest", label: "Newest" },
+];
+
+export const optionPatientSortBy: IOption[] = [
+  { value: "None", label: "None" },
+  { value: "Oldest", label: "Oldest" },
+  { value: "Newest", label: "Newest" },
+];
 
 export const optionSegmented: any = [
   {
@@ -57,7 +85,7 @@ export const optionNotification: any = [
         <p className="text-[#4C577C]">Image</p>
       </div>
     ),
-    value: "image",
+    value: NotificationType.UPLOAD,
   },
   {
     label: (
@@ -66,7 +94,7 @@ export const optionNotification: any = [
         <p>Patient note</p>
       </div>
     ),
-    value: "note",
+    value: NotificationType.NOTE,
   },
   {
     label: (
@@ -75,6 +103,6 @@ export const optionNotification: any = [
         <p>Suggestion</p>
       </div>
     ),
-    value: "consult",
+    value: NotificationType.CONSULT,
   },
 ];
