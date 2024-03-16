@@ -39,13 +39,11 @@ export default function NotiModal({
 
   useEffect(() => {
     if (data && data.length > 0) {
-      //NOTE - if noti_type == 'all' show them all
-      let filterData = filterType
-        ? data.filter((item) => item.noti_type === filterType)
-        : data;
+      // Check if filterType is 'all'
+      let filterData = filterType === 'all' ? data : data.filter((item) => item.noti_type === filterType);
       setFormatData(filterData);
     }
-  }, [filterType]);
+  }, [filterType, data]);
 
   useEffect(() => {
     if (me) {
@@ -115,24 +113,20 @@ export default function NotiModal({
                           showArrow={false}
                           header={
                             <div
-                              className="flex px-4 jura hover:bg-[#f2f1f1]"
+                              className="flex px-4 py-2 jura hover:bg-[#f2f1f1]"
                               onClick={onMouseClick}
                             >
-                              <div className="flex h-16 w-[7rem]">
+                              <div className="flex items-start">
                                 <img src={UnreadIcon} width={32} alt="" />
                               </div>
-                              <div className="flex p-4 space-x-1">
+                              <div className="flex px-4 space-x-1">
                                 <div className="flex flex-col">
-                                  <div className="flex flex-wrap">
-                                    <p>
-                                      litia cupiditate? Possimus voluptatem modi
-                                      doloremque ad ratione error perferendis
-                                      incidunt, numquam mollitia ipsam neque
-                                      autem atque molestias blanditiis tenetur.
-                                      has sent you a Patient for Lorem ipsum
-                                      dolor sit amet.
+                                  <p>
+                                    hui hui has sent you a message 
+                                    <p className="text-[#61708C]">
+                                    {item.noti_type} #{item.noti_id}
                                     </p>
-                                  </div>
+                                  </p>
                                   <p className="text-[#908F8F]">1 hour ago</p>
                                   <div className="flex gap-2">
                                     <p className="text-[#61708C] hover:underline ">
@@ -151,25 +145,25 @@ export default function NotiModal({
                               <div className=" flex p-3 gap-3">
                                 <img src={DoctorMock} className="w-8" alt="" />
                                 <div className="jura flex flex-col">
-                                  <p className="text-[#424241]">Dr.Prasert</p>
+                                  <p className="text-[#424241]">
+                                    {item.sender[0]}
+                                  </p>
                                   <p className="text-xs text-[#B4B4B4]">
                                     Doctor
                                   </p>
                                 </div>
                               </div>
-                              <p className="text-[#61708C]">Consult #6643793</p>
+                              <p className="text-[#61708C]">
+                                Consult # {item.noti_id}
+                              </p>
                             </div>
                             <div className="flex p-3 w-full">
                               <div className="flex flex-col space-y-3">
                                 <div className="text-lg jura text-[#61708C] underline ">
-                                  Title na kub
+                                  {item.noti_title}
                                 </div>
                                 <p className="jura text-[#9198AF] bg-gray-100 p-2 rounded text-[.8rem]">
-                                  Lorem ipsum dolor sit amet consectetur
-                                  adipisicing elit. Facilis iusto hic magni
-                                  autem esse est placeat temporibus earum. Dolor
-                                  architecto adipisci ipsam laboriosam officiis
-                                  odio necessitatibus id porro eaque ipsum.
+                                  {item.noti_desc}
                                 </p>
                                 <div className="flex gap-2 flex-wrap">
                                   {item.noti_img?.length > 0 &&

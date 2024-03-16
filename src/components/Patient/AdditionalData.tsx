@@ -6,11 +6,13 @@ import { PlusOutlined } from "@ant-design/icons";
 import {
   IFormattedErrorResponse,
   IPatient,
+  NotifyType,
   selectStage,
   selectStatus,
 } from "@constants";
 import { tagInputStyle, tagPlusStyle } from "@config";
 import { IUpdateCase, getCaseByCaseId, updateCase } from "@api-caller";
+import { displayNotification } from "@utils";
 
 interface IAdditionalDataProps {
   data: IPatient;
@@ -109,6 +111,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
         getCase();
         setIsModalOpen(false);
         setSubmitLoading(false);
+        displayNotification(NotifyType.SUCCESS)
       },
     });
   };

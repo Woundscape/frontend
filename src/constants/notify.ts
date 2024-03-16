@@ -1,5 +1,5 @@
 export enum NotifyType {
-  SUCCESS = "success",
+  SUCCESS, SUCCESS_UPLOAD = "success",
   INFO = "info",
   WARNING = "warning",
   ERROR = "error",
@@ -14,6 +14,10 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
   [NotifyType.SUCCESS]: {
     TITLE: "Header",
     CONTENT: "test",
+  },
+  [NotifyType.SUCCESS_UPLOAD]: {
+    TITLE: "Success",
+    CONTENT: "uploaded successfully",
   },
   [NotifyType.INFO]: {
     TITLE: "Info Header",
