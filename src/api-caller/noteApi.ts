@@ -2,9 +2,13 @@ import { ICreateCompare, ICreateProgress, INote } from "@constants";
 import { formattedError } from "@utils";
 import { getInstanceLocal } from "@api/apiClient";
 
-export async function getImageNoteById(image_id: string): Promise<any> {
+export async function getImageNoteById(img_id: string): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().get(`/note/image/${image_id}`);
+    const { data } = await getInstanceLocal().get(`/note/image`, {
+      params: {
+        img_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);
@@ -13,9 +17,11 @@ export async function getImageNoteById(image_id: string): Promise<any> {
 
 export async function getCompareNoteById(compare_id: string): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().get(
-      `/note/compare/${compare_id}`
-    );
+    const { data } = await getInstanceLocal().get(`/note/compare`, {
+      params: {
+        compare_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);
@@ -24,7 +30,11 @@ export async function getCompareNoteById(compare_id: string): Promise<any> {
 
 export async function getProgressNoteById(prog_id: string): Promise<any> {
   try {
-    const { data } = await getInstanceLocal().get(`/note/progress/${prog_id}`);
+    const { data } = await getInstanceLocal().get(`/note/progress`, {
+      params: {
+        prog_id,
+      },
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

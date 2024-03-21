@@ -180,7 +180,7 @@ export default function WoundAnalysis() {
                     back
                   </Button>
                   <Button className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]">
-                    HN. 6643793
+                    HN. {image?.case.hn_id}
                   </Button>
                 </div>
                 {image && (

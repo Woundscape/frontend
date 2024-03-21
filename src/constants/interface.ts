@@ -101,6 +101,7 @@ export interface IImage {
   case_id: string;
   compareCompare_id?: any;
   progressionProg_id?: any;
+  case: ICase
 }
 
 export interface ITissue {
@@ -206,6 +207,7 @@ export interface ICreateNotification {
   noti_title: string;
   noti_desc: string;
   noti_img?: any;
+  hn_id?: string;
   case_id?: string;
   approveStatus: boolean;
   sender_id: string | undefined;

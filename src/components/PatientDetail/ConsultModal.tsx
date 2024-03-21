@@ -30,9 +30,10 @@ import { getAllDoctor, sendNotification } from "@api-caller";
 import { useAuth } from "@components/AuthProvider";
 
 interface IConsultProps {
+  hn_id: string;
   case_id: string;
 }
-export default function Consult({ case_id }: IConsultProps) {
+export default function Consult({ hn_id, case_id }: IConsultProps) {
   const notificationMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -42,6 +43,7 @@ export default function Consult({ case_id }: IConsultProps) {
   const [doctors, setDoctors] = useState<IDoctor[]>();
   const [form, setForm] = useState<ICreateNotification>({
     ...DefaultConsultForm,
+    hn_id,
     case_id,
     sender_id: me?.user_id,
   });
@@ -65,13 +67,14 @@ export default function Consult({ case_id }: IConsultProps) {
         onSuccess: () => {
           forms.resetFields();
           setIsModalOpen(false);
+          setConfirmLoading(false);
+          setForm({ ...DefaultConsultForm, sender_id: me?.user_id });
         },
         onError: () => {
+          setConfirmLoading(false);
           displayNotification(NotifyType.ERROR);
         },
       });
-      setConfirmLoading(false);
-      setForm({ ...DefaultConsultForm, sender_id: me?.user_id });
     }
   };
 

@@ -115,7 +115,7 @@ export default function PatientDetail() {
 
   const handleImage = (image_id: string) => {
     if (stageSegmented.stage == SEGMENT_STATE.OVERVIEW) {
-      router(`/wound/${image_id}`);
+      router(`/wound/${image_id}`, { state: { hn_id: cases?.hn_id } });
     } else {
       checkedOnChange(image_id);
     }
@@ -269,12 +269,14 @@ export default function PatientDetail() {
               <div className="flex h-full space-x-6">
                 {/* Input Filter */}
                 <div className="w-full h-full flex flex-col space-y-2 pt-6">
-                  <ImageActionBar
-                    case_id={case_id as string}
-                    placeholder="Search by hospital number"
-                    onFilter={filterImage}
-                    onRender={getImage}
-                  />
+                  {cases && (
+                    <ImageActionBar
+                      cases={cases}
+                      placeholder="Search by hospital number"
+                      onFilter={filterImage}
+                      onRender={getImage}
+                    />
+                  )}
                   {stageSegmented.stage == SEGMENT_STATE.OVERVIEW && cases && (
                     <AdditionalData data={cases} />
                   )}

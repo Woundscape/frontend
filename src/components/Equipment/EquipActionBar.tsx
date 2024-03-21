@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { UseMutationResult, useMutation } from "react-query";
 import SortBy from "@assets/icons/sortBy.svg";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import {
   DefaultEquipForm,
   ICreateEquip,
@@ -18,6 +17,7 @@ import {
 } from "@utils";
 import EquipmentModal from "./EquipmentModal";
 import { MdMedicationLiquid } from "react-icons/md";
+import { IoSearchSharp } from "react-icons/io5";
 
 interface IEquipActionBarProps {
   type: IEquipType[];
@@ -89,7 +89,7 @@ export default function EquipActionBar({
           size="middle"
           type="text"
           placeholder={placeholder}
-          prefix={<img className="pr-1" src={SearchIcon} />}
+          prefix={<IoSearchSharp color={"#BFBFBF"} />}
           onChange={onFilter}
         />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">

@@ -8,10 +8,14 @@ import { formatDate } from "@utils";
 import { listConfig } from "@config";
 
 interface IListNotificationProps {
+  isLoading: boolean;
   data: INotification[];
 }
 
-export default function ListNotification({ data }: IListNotificationProps) {
+export default function ListNotification({
+  isLoading,
+  data,
+}: IListNotificationProps) {
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);
@@ -40,6 +44,7 @@ export default function ListNotification({ data }: IListNotificationProps) {
         <ConfigProvider theme={listConfig}>
           <div className="flex flex-col h-24 overflow-y-auto grow">
             <List
+              loading={isLoading}
               dataSource={data}
               renderItem={(item, index) => {
                 const senderName =

@@ -166,7 +166,7 @@ export default function Equipment() {
                       },
                     })}
                     pagination={{
-                      defaultPageSize: 7,
+                      defaultPageSize: 10,
                       showSizeChanger: false,
                     }}
                   />

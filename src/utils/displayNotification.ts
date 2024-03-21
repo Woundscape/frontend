@@ -1,14 +1,15 @@
-import { NotificationMessage, NotifyType } from "@constants";
+import { ENUM_TYPE, NotificationMessage, NotifyType } from "@constants";
 import { notification } from "antd";
 
 export function displayNotification(type: NotifyType) {
   const notificationDetails = NotificationMessage[type];
 
-  const { TITLE, CONTENT } = notificationDetails as {
+  const { TYPE, TITLE, CONTENT } = notificationDetails as {
+    TYPE: ENUM_TYPE;
     TITLE: string;
     CONTENT: string;
   };
-  notification[type]({
+  notification[TYPE]({
     message: TITLE,
     description: CONTENT,
   });

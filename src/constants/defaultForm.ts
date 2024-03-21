@@ -231,6 +231,7 @@ export const DefaultConsultForm: ICreateNotification = {
   noti_title: "",
   noti_desc: "",
   noti_img: [],
+  hn_id: "",
   case_id: "",
   approveStatus: false,
   sender_id: "",

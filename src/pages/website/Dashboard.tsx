@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [card, setCard] = useState<DashboardCard[]>(DefaultTotalDashboard);
   const [notification, setNotification] = useState<INotification[]>([]);
   const [isConnect, setIsConnect] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function getCard() {
       if (me) {
@@ -39,6 +40,7 @@ export default function Dashboard() {
     if (me) {
       getNotification(me).then((response: INotification[]) => {
         setNotification(response);
+        setIsLoading(false);
         console.log(
           "%c 🐬 ~ Log from file: Dashboard.tsx:40 ~ response:",
           "color: #00bcd4;",
@@ -152,7 +154,7 @@ export default function Dashboard() {
             <div className="relative w-full h-full flex">
               <div className="flex flex-col w-full h-full space-y-3">
                 <UserProfile />
-                <ListNotification data={notification} />
+                <ListNotification isLoading={isLoading} data={notification} />
                 <DynamicTime />
                 <div id="calendar">
                   <Calendar
