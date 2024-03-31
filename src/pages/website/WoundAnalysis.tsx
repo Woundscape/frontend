@@ -264,7 +264,7 @@ export default function WoundAnalysis() {
                           </div>
                         ))}
                         <List>
-                          <div className="flex justify-between">
+                          {/* <div className="flex justify-between">
                             <Typography className="jura">Opacity</Typography>
                             <InputNumber
                               min={0}
@@ -285,7 +285,7 @@ export default function WoundAnalysis() {
                                 handleOpacity(e.target.value);
                               }}
                             />
-                          </div>
+                          </div> */}
                           <div className="py-2.5 flex justify-center items-center rounded-lg jura text=[#424241] bg-[#EEE]">
                             Result
                           </div>

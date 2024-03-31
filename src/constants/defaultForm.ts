@@ -36,12 +36,12 @@ export const DefaultDataSet = {
   labels: [],
   datasets: [
     {
-      label: "eschar",
+      label: "callus",
       data: [],
       borderColor: "#EEEEEE",
     },
     {
-      label: "slough",
+      label: "deep structure",
       data: [],
       borderColor: "#AAF0C2",
     },
@@ -51,32 +51,32 @@ export const DefaultDataSet = {
       borderColor: "#CFFF9E",
     },
     {
-      label: "callus",
+      label: "eschar",
       data: [],
       borderColor: "#FFFB9C",
     },
     {
-      label: "periwound",
+      label: "granulation",
       data: [],
       borderColor: "#FFDFA2",
     },
     {
-      label: "wound",
+      label: "marceration",
       data: [],
       borderColor: "#FFB8B8",
     },
     {
-      label: "granulation",
+      label: "periwound",
       data: [],
       borderColor: "#ECB9FF",
     },
     {
-      label: "deep structure",
+      label: "slough",
       data: [],
       borderColor: "#A1B6FF",
     },
     {
-      label: "marceration",
+      label: "wound",
       data: [],
       borderColor: "#ABF4F4",
     },
@@ -85,12 +85,12 @@ export const DefaultDataSet = {
 
 export const DefaultTissue = [
   {
-    title: "eschar",
+    title: "callus",
     value: 0,
     color: "#EEEEEE",
   },
   {
-    title: "slough",
+    title: "deep structure",
     value: 0,
     color: "#AAF0C2",
   },
@@ -100,32 +100,32 @@ export const DefaultTissue = [
     color: "#CFFF9E",
   },
   {
-    title: "callus",
+    title: "eschar",
     value: 0,
     color: "#FFFB9C",
   },
   {
-    title: "periwound",
+    title: "granulation",
     value: 0,
     color: "#FFDFA2",
   },
   {
-    title: "wound",
+    title: "marceration",
     value: 0,
     color: "#FFB8B8",
   },
   {
-    title: "granulation",
+    title: "periwound",
     value: 0,
     color: "#ECB9FF",
   },
   {
-    title: "deep structure",
+    title: "slough",
     value: 0,
     color: "#A1B6FF",
   },
   {
-    title: "marceration",
+    title: "wound",
     value: 0,
     color: "#ABF4F4",
   },

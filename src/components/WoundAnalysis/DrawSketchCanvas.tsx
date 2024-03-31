@@ -13,7 +13,7 @@ import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
 // import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
-import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+// import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
 import {
   DefaultResolution,
   DefaultTissue,
@@ -122,10 +122,10 @@ export default function DrawSketchCanvas({
     }
   }, [pointer]);
 
-  async function handleCanvasExportImage() {
-    const a = await canvasRef.current?.exportImage("png");
-    console.log(a);
-  }
+  // async function handleCanvasExportImage() {
+  //   const a = await canvasRef.current?.exportImage("png");
+  //   console.log(a);
+  // }
 
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
@@ -170,8 +170,13 @@ export default function DrawSketchCanvas({
   };
 
   async function handleCanvasEditor(value: string) {
+    console.log(
+      "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:173 ~ deleteProps:",
+      "color: #00bcd4;",
+      deleteProps
+    );
     if (deleteProps.deletePaths.length > 0 && canvasRef.current) {
-      console.log('deleteProps');
+      console.log("deleteProps");
       await eraserTissue();
       const delTemp: ICanvasPath[] = await canvasRef.current?.exportPaths();
       const renderWithoutDeleteColor = await formatPath.filter(
@@ -189,7 +194,6 @@ export default function DrawSketchCanvas({
 
       await onDelete(value);
     } else {
-      canvasRef.current?.loadPaths(formatPath);
       const toolHandler = toolHandlers[value];
       if (toolHandler) {
         toolHandler();
@@ -251,6 +255,11 @@ export default function DrawSketchCanvas({
       }
       console.log("ondelete wtf");
       handleEraser();
+      console.log(
+        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:254 ~ formatPath:",
+        "color: #00bcd4;",
+        formatPath
+      );
       const remainPaths = await renderDeleteTissue(formatPath, color);
       setOpenSelectDelete(false);
       setDeleteProps((prev) => ({ ...prev, color, remainPaths }));
@@ -599,8 +608,8 @@ export default function DrawSketchCanvas({
               </div>
             ) : (
               <div className="h-full flex p-[5px] space-x-4">
-                <GoZoomIn size={20} />
-                <GoZoomOut size={20} />
+                {/* <GoZoomIn size={20} />
+                <GoZoomOut size={20} /> */}
                 {invisibleEye ? (
                   <EyeInvisibleOutlined
                     className="text-xl"
