@@ -1,9 +1,16 @@
 export enum NotifyType {
   SUCCESS = "success",
-  SUCCESS_UPLOAD = "upload",
+  UPLOAD = "upload",
+  ADD_EQUIP = "add_equipment",
+  DEL_EQUIP = "del_equipment",
+  EDIT_IMAGE = "edit_image",
+  CHANGE_DOCTOR = "change_doctor",
+  CONSULT = "consult",
   INFO = "info",
   WARNING = "warning",
-  ERROR = "error",
+  NOTFOUND = "notfound",
+  USED_EMAIL = "emailortel",
+  SIGNUP = "signup",
 }
 
 export enum ENUM_TYPE {
@@ -25,10 +32,40 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
     TITLE: "Header",
     CONTENT: "test",
   },
-  [NotifyType.SUCCESS_UPLOAD]: {
+  [NotifyType.UPLOAD]: {
     TYPE: ENUM_TYPE.SUCCESS,
-    TITLE: "sds",
-    CONTENT: "testdsadaskd;asjdas",
+    TITLE: "Add Image",
+    CONTENT: "Image has been successfully uploaded",
+  },
+  [NotifyType.SIGNUP]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Signup",
+    CONTENT: "Your account has been successfully created.",
+  },
+  [NotifyType.ADD_EQUIP]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Add Equipment",
+    CONTENT: "Equipment has been successfully added.",
+  },
+  [NotifyType.DEL_EQUIP]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Delete Equipment",
+    CONTENT: "Equipment has been successfully deleted.",
+  },
+  [NotifyType.EDIT_IMAGE]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Edit Image",
+    CONTENT: "Image has been successfully edited.",
+  },
+  [NotifyType.CONSULT]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Consult",
+    CONTENT: "This message has been sent to doctor successfully.",
+  },
+  [NotifyType.CHANGE_DOCTOR]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Change Doctor",
+    CONTENT: "",
   },
   [NotifyType.INFO]: {
     TYPE: ENUM_TYPE.INFO,
@@ -40,9 +77,14 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
     TITLE: "Warning Header",
     CONTENT: "warning content",
   },
-  [NotifyType.ERROR]: {
+  [NotifyType.NOTFOUND]: {
     TYPE: ENUM_TYPE.ERROR,
-    TITLE: "Error Header",
-    CONTENT: "Something went wrong",
+    TITLE: "User Not Found",
+    CONTENT: "Email doesn't existing",
+  },
+  [NotifyType.USED_EMAIL]: {
+    TYPE: ENUM_TYPE.ERROR,
+    TITLE: "Error",
+    CONTENT: "Email or Tel already used",
   },
 };

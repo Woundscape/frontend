@@ -90,7 +90,7 @@ export default function Management() {
       },
     });
   }, [doctorQuery]);
-  
+
   async function getDoctor() {
     getAllDoctor(false).then((doctors: IDoctor[]) => {
       setDoctors(doctors);
@@ -154,7 +154,9 @@ export default function Management() {
           doctor_id: record.doctor_id,
         });
         setTitleModal("Delete User");
-        setDescription("Delete: Kid kom hai noew");
+        setDescription(
+          "Are you sure that you want to delete this user account?"
+        );
         setIsModalOpen(true);
       }
     },

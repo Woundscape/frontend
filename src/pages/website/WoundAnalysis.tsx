@@ -150,12 +150,17 @@ export default function WoundAnalysis() {
   }
 
   async function renderDeleteTissue(
+    formatPath: ICanvasPath[],
     strokeColor: string
   ): Promise<ICanvasPath[]> {
-    if (canvasRef.current && image?.img_tissue.paths) {
-      let tempPaths = await canvasRef.current.exportPaths();
-      let tempTissue = tempPaths.filter(
+    if (canvasRef.current) {
+      let tempTissue = await formatPath.filter(
         (value: ICanvasPath) => value.strokeColor == strokeColor
+      );
+      console.log(
+        "%c 🐬 ~ Log from file: WoundAnalysis.tsx:163 ~ tempTissue:",
+        "color: #00bcd4;",
+        tempTissue
       );
       canvasRef.current.clearCanvas();
       canvasRef.current.loadPaths(tempTissue);
@@ -194,7 +199,7 @@ export default function WoundAnalysis() {
                   />
                 )}
               </div>
-              {equipment.length && (
+              {equipment.length > 0 && (
                 <div className="w-full pb-10">
                   <AddNote
                     id={img_id as string}

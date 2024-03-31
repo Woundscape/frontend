@@ -59,7 +59,9 @@ export default function DashboardTable() {
                   <tr
                     key={index}
                     onClick={() => onRowClick(item.case_id)}
-                    className="flex w-full py-3 bg-white border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE]"
+                    className={`flex w-full py-3 border-b-2 border-[#E9EBF5] select-none hover:bg-[#EEEEEE] ${
+                      item.status == "Done" ? "bg-[#EEEEEE]" : "bg-white"
+                    }`}
                   >
                     <td className="w-1/6">{item.hn_id}</td>
                     <td className="w-1/6">
@@ -69,12 +71,7 @@ export default function DashboardTable() {
                     <td className="w-1/6 flex justify-center items-center">
                       {item.disease && item.disease?.length > 0 ? (
                         <>
-                          <Tag
-                            color={
-                              item.disease[0].length > 5 ? "geekblue" : "green"
-                            }
-                            className="jura"
-                          >
+                          <Tag color={"pink"} className="jura">
                             {item.disease[0]}
                           </Tag>
                           {item.disease.length > 1 && (

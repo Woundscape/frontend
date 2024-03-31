@@ -9,6 +9,9 @@ import {
   IFormattedErrorResponse,
   DefaultEquipment,
   NotifyType,
+  SearchField,
+  EquipmentQueryParams,
+  DefaultEquipQueryParams,
 } from "@constants";
 import UserProfile from "@components/UserProfile";
 import EquipActionBar from "@components/Equipment/EquipActionBar";
@@ -17,13 +20,19 @@ import {
   deleteEquipment,
   getTypeEquipment,
   updateEquipment,
-} from "@api-caller/equipApi";
+  searchEquipQueryParams,
+} from "@api-caller";
 import DeleteModal from "@components/DeleteModal";
 import EquipmentModal from "@components/Equipment/EquipmentModal";
 import { getColumnEquipment } from "@components/Equipment/ColumnTable";
 import { displayNotification } from "@utils";
 
 export default function Equipment() {
+  const searchQueryMutation: UseMutationResult<
+    IEquipment[],
+    IFormattedErrorResponse,
+    EquipmentQueryParams
+  > = useMutation(searchEquipQueryParams);
   const updateMutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -36,9 +45,11 @@ export default function Equipment() {
   > = useMutation(deleteEquipment);
   const [form, setForm] = useState<IEquipment>(DefaultEquipment);
   const [forms] = Form.useForm<IEquipment>();
-  const [data, setData] = useState<IEquipment[]>([]);
-  const [equipment, setEquipment] = useState<IEquipment[]>([]);
   const [type, setType] = useState<IEquipType[]>([]);
+  const [equipment, setEquipment] = useState<IEquipment[]>([]);
+  const [equipQuery, setEquipQuery] = useState<EquipmentQueryParams>(
+    DefaultEquipQueryParams
+  );
   const [loading, setLoading] = useState(true);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [submitDelete, setSubmitDelete] = useState(false);
@@ -52,10 +63,19 @@ export default function Equipment() {
   useEffect(() => {
     getEquipment();
   }, []);
+
+  useEffect(() => {
+    searchQueryMutation.mutate(equipQuery, {
+      onSuccess(response) {
+        setLoading(false);
+        setEquipment(response);
+      },
+    });
+  }, [equipQuery]);
+
   async function getEquipment() {
     getAllEquipment().then((response) => {
       getType();
-      setData(response);
       setEquipment(response);
     });
   }
@@ -76,12 +96,9 @@ export default function Equipment() {
     handleActionClick,
     type,
   });
-  const filterEquipmentId = (e: any) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredpatient = data.filter((item) =>
-      item.equip_name.toLowerCase().includes(searchTerm)
-    );
-    setEquipment(filteredpatient);
+  const onFilterEquipment = (value: any, field: SearchField) => {
+    setLoading(true);
+    setEquipQuery((prev) => ({ ...prev, [field]: value }));
   };
   const onUpdate = async () => {
     try {
@@ -147,7 +164,7 @@ export default function Equipment() {
                 <EquipActionBar
                   type={type}
                   placeholder="Search by Equipment Name"
-                  onFilter={filterEquipmentId}
+                  onFilter={onFilterEquipment}
                   onRender={getEquipment}
                 />
                 {/* Body */}

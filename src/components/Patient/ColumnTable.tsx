@@ -1,8 +1,7 @@
 // columnsConfig.ts
-import { Typography, Tag, Dropdown } from "antd";
+import { Typography, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { formatDate } from "@utils";
-import MoreIcon from "@assets/icons/more_icon.svg";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
@@ -75,18 +74,17 @@ export const getColumnsPatient = (): ColumnsType<any> => [
     key: "disease",
     render: (_, { disease }) => (
       <div className="flex items-center">
-        {disease && disease.length > 0 && (
+        {disease && disease.length > 0 ? (
           <>
-            <Tag
-              color={disease[0].length > 5 ? "geekblue" : "green"}
-              className="jura"
-            >
+            <Tag color={"pink"} className="jura">
               {disease[0]}
             </Tag>
             {disease.length > 1 && (
               <Typography id="text__disease">+{disease.length - 1}</Typography>
             )}
           </>
+        ) : (
+          <p>-</p>
         )}
       </div>
     ),

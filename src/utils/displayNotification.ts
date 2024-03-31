@@ -14,3 +14,11 @@ export function displayNotification(type: NotifyType) {
     description: CONTENT,
   });
 }
+
+export function capitalizeFirstLetter(value: string) {
+  try {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  } catch (error) {
+    return value;
+  }
+}

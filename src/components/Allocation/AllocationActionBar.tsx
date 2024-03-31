@@ -26,7 +26,7 @@ export default function AllocationActionBar({
           type="text"
           placeholder={placeholder}
           prefix={<IoSearchSharp color={"#BFBFBF"} />}
-          onChange={(e) => onFilter(e.target.value, SearchField.EQUIP_NAME)}
+          onChange={(e) => onFilter(e.target.value, SearchField.HN_ID)}
         />
         <RangePicker
           size="middle"

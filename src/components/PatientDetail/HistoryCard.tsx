@@ -13,9 +13,11 @@ export default function HistoryCard({ data, stage, hn_id }: HistoryCardProps) {
   const router = useNavigate();
   const onClick = () => {
     if (stage == SEGMENT_STATE.COMPARE) {
-      router(`/compare/${data.compare_id}`);
+      router(`/compare/${data.compare_id}`, { state: { hn_id } });
     } else if (stage == SEGMENT_STATE.PROGRESS) {
-      router(`/progress/${data.prog_id}`);
+      router(`/progress/${data.prog_id}`, {
+        state: { hn_id },
+      });
     }
   };
   return (

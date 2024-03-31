@@ -49,7 +49,7 @@ export default function PatientActionBar({
           <Select
             id="select__sortBy"
             className="w-24 outline-none border-[white] text-[#868686]"
-            defaultValue="All"
+            defaultValue="Newest"
             bordered={false}
             placeholder="Sort by"
             options={optionPatientSortBy}

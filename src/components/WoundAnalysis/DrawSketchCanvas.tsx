@@ -41,7 +41,10 @@ interface DrawSketchCanvasProps {
   setEditable: (value: boolean) => void;
   setRef: (ref: any) => void;
   settingTissue: (data: TissueType[]) => void;
-  renderDeleteTissue: (strokeColor: string) => Promise<ICanvasPath[]>;
+  renderDeleteTissue: (
+    formatPath: ICanvasPath[],
+    strokeColor: string
+  ) => Promise<ICanvasPath[]>;
 }
 
 export default function DrawSketchCanvas({
@@ -167,13 +170,26 @@ export default function DrawSketchCanvas({
   };
 
   async function handleCanvasEditor(value: string) {
-    if (deleteProps.deletePaths.length > 0) {
+    if (deleteProps.deletePaths.length > 0 && canvasRef.current) {
+      console.log('deleteProps');
       await eraserTissue();
+      const delTemp: ICanvasPath[] = await canvasRef.current?.exportPaths();
+      const renderWithoutDeleteColor = await formatPath.filter(
+        (item) => item.strokeColor != deleteProps.color
+      );
+      canvasRef.current?.loadPaths(renderWithoutDeleteColor);
+      setFormatPath([...renderWithoutDeleteColor, ...delTemp]);
     }
-    setDeleteProps(DefaultDeleteProps);
+    setDeleteProps((prev) => ({
+      ...DefaultDeleteProps,
+      strokeWidth: prev.strokeWidth,
+    }));
     if (openSelectDelete) {
-      await onDelete(formatPath, value);
+      console.log("condition openselectdelete");
+
+      await onDelete(value);
     } else {
+      canvasRef.current?.loadPaths(formatPath);
       const toolHandler = toolHandlers[value];
       if (toolHandler) {
         toolHandler();
@@ -227,17 +243,17 @@ export default function DrawSketchCanvas({
     setEditable(!editable);
   };
 
-  const onDelete = async (paths: any, color: string) => {
+  const onDelete = async (color: string) => {
     try {
       if (selectTools == CANVAS_TOOLS.ERASER) {
         canvasRef.current?.clearCanvas();
         await canvasRef.current?.loadPaths(original);
       }
+      console.log("ondelete wtf");
       handleEraser();
+      const remainPaths = await renderDeleteTissue(formatPath, color);
       setOpenSelectDelete(false);
-      const remainPaths = await renderDeleteTissue(color);
       setDeleteProps((prev) => ({ ...prev, color, remainPaths }));
-      canvasRef.current?.eraseMode(true);
     } catch (error) {
       console.log("error ondelete");
     }
@@ -245,12 +261,9 @@ export default function DrawSketchCanvas({
 
   async function eraserTissue() {
     try {
-      console.log("before", deleteProps);
       const newRemain = await test();
-      console.log("after new", newRemain);
-      canvasRef.current?.clearCanvas()
+      canvasRef.current?.clearCanvas();
       canvasRef.current?.loadPaths(newRemain);
-      
     } catch (error) {
       console.log("error eraserTissue");
     }
@@ -447,11 +460,7 @@ export default function DrawSketchCanvas({
           </Typography>
           <div className="flex space-x-4">
             {!editable ? (
-              <img
-                src={CanvasExportIcon}
-                onClick={handleCanvasExportImage}
-                alt=""
-              />
+              <></>
             ) : (
               <DefaultButton
                 title="Cancel"

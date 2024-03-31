@@ -68,11 +68,12 @@ export default function Consult({ hn_id, case_id }: IConsultProps) {
           forms.resetFields();
           setIsModalOpen(false);
           setConfirmLoading(false);
+          displayNotification(NotifyType.CONSULT);
           setForm({ ...DefaultConsultForm, sender_id: me?.user_id });
         },
         onError: () => {
           setConfirmLoading(false);
-          displayNotification(NotifyType.ERROR);
+          displayNotification(NotifyType.NOTFOUND);
         },
       });
     }

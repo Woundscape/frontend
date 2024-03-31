@@ -13,6 +13,7 @@ import {
   AllocationQueryParams,
   CaseQueryParams,
   DoctorQueryParams,
+  EquipmentQueryParams,
   ImageQueryParams,
 } from "./query";
 
@@ -169,6 +170,14 @@ export const DefaultDoctorQueryParams: DoctorQueryParams = {
   order_by: "asc",
 };
 
+export const DefaultEquipQueryParams: EquipmentQueryParams = {
+  offset: 0,
+  limit: 20,
+  equip_name: "",
+  type_id: "",
+  order_by: "asc",
+};
+
 export const DefaultNoteForm: INote = {
   note_title: "",
   note_equip: [],
@@ -198,6 +207,7 @@ export const DefaultProgressForm: ICreateProgress = {
     case_id: "",
     prog_info: DefaultTissue,
     img_collect: [],
+    hn_id: "",
   },
   author_id: "",
 };
@@ -263,4 +273,5 @@ export const DefaultCreateProgress = {
   prog_info: DefaultDataSet,
   img_collect: [],
   case_id: "",
+  hn_id: "",
 };

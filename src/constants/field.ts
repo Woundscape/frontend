@@ -22,3 +22,10 @@ export enum SearchField {
   END_DATE = "end_at",
   ORDER_BY = "order_by",
 }
+
+export enum ModalText {
+  STATUS = "Are you sure that you want to change status",
+  PROGRESSION_STAGE = "Are you sure that you want to change progression stage",
+  ADD_TAG = "Are you sure that you want to add this tag",
+  DEL_TAG = "Are you sure that you want to delete this tag",
+}

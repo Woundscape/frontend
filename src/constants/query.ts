@@ -41,7 +41,7 @@ export interface DoctorQueryParams {
 export interface EquipmentQueryParams {
   offset: number;
   limit: number;
-  equio_id: string;
+  equip_name: string;
   type_id: string;
-  order_by: string | undefined;
+  order_by: string;
 }

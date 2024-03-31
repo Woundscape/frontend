@@ -83,7 +83,7 @@ export default function ImageActionBar({
         <UploadModal
           title="Add Image"
           description={
-            "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
+            "Drag and drop images or browse files on your computer"
           }
           isOpen={isModalOpen}
           confirmLoading={confirmLoading}

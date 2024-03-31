@@ -4,7 +4,7 @@ import { ConfigProvider, Select } from "antd";
 import ConfirmModal from "@components/ConfirmModal";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { UseMutationResult } from "react-query";
-import { IUpdateCase } from "@api-caller/caseApi";
+import { IUpdateCase } from "@api-caller";
 import { filterOptions, filterSort } from "@config";
 import {
   ICase,

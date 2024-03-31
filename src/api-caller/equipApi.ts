@@ -1,10 +1,28 @@
 import { getInstanceLocal } from "@api/apiClient";
-import { ICreateEquip, IEquipType, IEquipment } from "@constants";
+import {
+  EquipmentQueryParams,
+  ICreateEquip,
+  IEquipType,
+  IEquipment,
+} from "@constants";
 import { formattedError } from "@utils";
 
 export async function getAllEquipment(): Promise<IEquipment[]> {
   try {
     const { data } = await getInstanceLocal().get("/equipment");
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function searchEquipQueryParams(
+  params: EquipmentQueryParams
+): Promise<IEquipment[]> {
+  try {
+    const { data } = await getInstanceLocal().get(`/equipment/search/query`, {
+      params,
+    });
     return data;
   } catch (error) {
     throw formattedError(error);

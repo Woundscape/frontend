@@ -5,16 +5,19 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 
 interface PatientCardProps {
   patient: IPatient;
+  disabled?: boolean;
 }
-export default function PatientCard({ patient }: PatientCardProps) {
+export default function PatientCard({ patient, disabled }: PatientCardProps) {
   const router = useNavigate();
   let image = patient.imagePreview[0]?.img_path
     ? patient.imagePreview[0].img_path
     : null;
   return (
     <div
-      onClick={() => router(`/patient/${patient.case_id}`)}
-      className="p-1.5 w-64 border-2 rounded-2xl space-y-1.5 cursor-pointer"
+      onClick={() => !disabled && router(`/patient/${patient.case_id}`)}
+      className={`p-1.5 w-64 border-2 rounded-2xl space-y-1.5 ${
+        disabled ? "cursor-not-allowed" : "cursor-pointer"
+      }`}
     >
       <div
         className="patient_img w-[15rem] h-40 flex items-end py-1 justify-center"

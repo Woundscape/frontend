@@ -4,7 +4,7 @@ import UnreadIcon from "@assets/unread-noti-icon.svg";
 import NotiModal from "@components/NotiModal";
 import { INotification, NotificationType } from "@constants";
 import { Content } from "antd/es/layout/layout";
-import { formatDate } from "@utils";
+import { capitalizeFirstLetter, formatDate } from "@utils";
 import { listConfig } from "@config";
 
 interface IListNotificationProps {
@@ -64,7 +64,8 @@ export default function ListNotification({
                               : item.noti_title}
                           </span>
                           <span className="text-[#61708C]">
-                            Consult #{item.noti_id}
+                            {capitalizeFirstLetter(item.noti_type)} #
+                            {item.hn_id}
                           </span>
                         </div>
                       }

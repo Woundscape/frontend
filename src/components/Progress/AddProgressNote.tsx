@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { UseMutationResult } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -24,6 +25,7 @@ import {
   INote,
   ICreateProgress,
   DefaultProgressForm,
+  IPreProgress,
 } from "@constants";
 import { useAuth } from "../AuthProvider";
 import { httpAPI } from "@config";
@@ -32,7 +34,7 @@ import { formatDate } from "@utils";
 
 interface INoteProps {
   id: string;
-  progress: any;
+  progress: IPreProgress;
   mutation: UseMutationResult<
     boolean,
     IFormattedErrorResponse,
@@ -45,6 +47,7 @@ export default function AddProgressNote({
   progress,
   mutation,
 }: INoteProps) {
+  const router = useNavigate();
   const { me } = useAuth();
   const [notes, setNotes] = useState<INote[]>();
   const [form, setForm] = useState<ICreateProgress>(DefaultProgressForm);
@@ -62,7 +65,6 @@ export default function AddProgressNote({
       progress,
       author_id: me?.user_id || "",
     }));
-    console.log('%c 🐬 ~ Log from file: AddProgressNote.tsx:65 ~ progress:', 'color: #00bcd4;', progress);
   }, [progress]);
 
   async function getNote() {
@@ -80,9 +82,13 @@ export default function AddProgressNote({
     const values = await forms.validateFields();
     if (values) {
       setConfirmLoading(true);
-      console.log('%c 🐬 ~ Log from file: AddProgressNote.tsx:82 ~ form:', 'color: #00bcd4;', form);
       mutation.mutate(form, {
-        onSuccess: () => {
+        onSuccess: (response: any) => {
+          if (!form.progress.prog_id) {
+            router(`/progress/${response.prog_id}`, {
+              state: { hn_id: progress.hn_id },
+            });
+          }
           forms.resetFields();
           setOpenModal(false);
           setConfirmLoading(false);
@@ -104,7 +110,7 @@ export default function AddProgressNote({
           <p className="text-lg text-[#4C577C]">ADD NOTE</p>
         </div>
       </Button>
-      <Space direction="vertical" className="pt-3" style={{ width: "100%" }}>
+      <Space direction="vertical" style={{ width: "100%" }}>
         {notes?.map((item, index) => (
           <Collapse key={index}>
             <Collapse.Panel

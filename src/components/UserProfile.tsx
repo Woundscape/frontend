@@ -11,7 +11,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 export default function UserProfile() {
   const { me, logout } = useAuth();
-  const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "");
+  const fullName = me?.firstname + " " + (me?.lastname?.[0] ?? "")+".";
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => {
     setOpenModal(!openModal);

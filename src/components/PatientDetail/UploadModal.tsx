@@ -4,11 +4,12 @@ import { UseMutationResult } from "react-query";
 import { Button, Modal, Spin, Upload } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { IFormattedErrorResponse } from "@constants";
-import SearchUploadIcon from "@assets/icons/add_search_upload_patient_icon.svg";
+import { httpAPI } from "@config";
+import { displayNotification } from "@utils";
+import { IFormattedErrorResponse, NotifyType } from "@constants";
 import AddUploadIcon from "@assets/icons/add_upload_patient_icon.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
-import { httpAPI } from "@config";
+import SearchUploadIcon from "@assets/icons/add_search_upload_patient_icon.svg";
 
 interface IModelProps {
   isOpen: boolean;
@@ -49,6 +50,7 @@ export default function UploadModal({
             setModal(false);
             setLoading(false);
             setFiles([]);
+            displayNotification(NotifyType.UPLOAD);
           },
         });
       } else {

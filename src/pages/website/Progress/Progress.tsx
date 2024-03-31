@@ -21,7 +21,6 @@ import {
   EyeOutlined,
   LeftOutlined,
 } from "@ant-design/icons";
-import Export from "@assets/export.svg";
 import Patient from "@assets/patient_profile.svg";
 import Send from "@assets/send.svg";
 import UserProfile from "@components/UserProfile";
@@ -36,7 +35,12 @@ import {
   IImage,
   IPreProgress,
 } from "@constants";
-import { getProgressImage, addProgressNote } from "@api-caller";
+import {
+  getProgressImage,
+  addProgressNote,
+  sendMessage,
+  IMessage,
+} from "@api-caller";
 import { formatDate, formatImage } from "@utils";
 import AddProgressNote from "@components/Progress/AddProgressNote";
 
@@ -63,19 +67,25 @@ const options = {
 
 export default function Progress() {
   const addNoteMutation: UseMutationResult<
-    boolean,
+    any,
     IFormattedErrorResponse,
     ICreateProgress
   > = useMutation(addProgressNote);
+  const sendMessageMutation: UseMutationResult<
+    any,
+    IFormattedErrorResponse,
+    IMessage
+  > = useMutation(sendMessage);
   const location = useLocation();
   const router = useNavigate();
   const { progress_id } = useParams();
-  const { imageList, case_id } = location.state || [];
+  const { imageList, case_id, hn_id } = location.state || [];
   const [images, setImages] = useState<IImage[]>();
   const [hideTissue, setHideTissue] = useState<string[]>([]);
   const [original, setOriginal] = useState<IChart>(DefaultDataSet);
   const [data, setData] = useState<IChart>(DefaultDataSet);
   const [progress, setProgress] = useState<IPreProgress>(DefaultCreateProgress);
+  const [message, setMessage] = useState<string>();
   useEffect(() => {
     if (imageList) {
       getProgressImage(imageList).then((response) => {
@@ -163,6 +173,22 @@ export default function Progress() {
     hideHandle(title);
   };
 
+  const onMessage = () => {
+    if (hn_id && message) {
+      const body: IMessage = { hn_id, message };
+      sendMessageMutation.mutate(body, {
+        onSuccess: (response) => {
+          setMessage("");
+          console.log(
+            "%c 🐬 ~ Log from file: Progress.tsx:174 ~ response:",
+            "color: #00bcd4;",
+            response
+          );
+        },
+      });
+    }
+  };
+
   return (
     <>
       <div className="w-full h-screen relative">
@@ -176,16 +202,12 @@ export default function Progress() {
               <UserProfile />
             </div>
           </header>
-          <Content className="w-full flex justify-between pb-6">
+          <Content className="w-full flex justify-between -6">
             <div className="grow flex overflow-y-auto">
               <div className="w-full space-y-3 p-6">
                 <div className="w-full border rounded">
                   <div className="bg-[#EEEEEE] p-4 flex justify-between jura">
                     <p className="text-[#626060] text-lg">Wound Progression</p>
-                    <div className="flex items-center px-4 space-x-2 bg-[#D8C290] border-[#424241] border rounded text-[#424241]">
-                      <img src={Export} className="w-5" alt="" />
-                      <p className="jura">Export</p>
-                    </div>
                   </div>
                   <Line data={data} options={options} className="p-6" />
                 </div>
@@ -204,7 +226,7 @@ export default function Progress() {
                           <img src={Patient} className="w-9" alt="" />
                           <div className="jura flex-col">
                             <p className="text-[#4C577C] text-base">
-                              HN. 6643793
+                              HN. {hn_id}
                             </p>
                             <p className="text-[#B4B4B4]">patient</p>
                           </div>
@@ -213,13 +235,18 @@ export default function Progress() {
                       children: (
                         <div className="relative space-y-3">
                           <TextArea
+                            value={message}
                             autoSize={{ minRows: 3, maxRows: 3 }}
                             className="block w-full resize-none px-0 text-base text-gray-800 bg-white border-0"
                             placeholder="Type your message . . ."
                             required
-                          ></TextArea>
+                            onChange={(e) => setMessage(e.target.value)}
+                          />
                           <div className="h-7">
-                            <Button className="absolute w-28 right-0 jura flex justify-center items-center space-x-2 border-[#9198AF] border-2 rounded text-[#4C577C]">
+                            <Button
+                              onClick={onMessage}
+                              className="absolute w-28 right-0 jura flex justify-center items-center space-x-2 border-[#9198AF] border-2 rounded text-[#4C577C]"
+                            >
                               <p>Send</p>
                               <img src={Send} className="w-4" alt="" />
                             </Button>

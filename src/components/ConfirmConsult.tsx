@@ -42,7 +42,7 @@ export default function ConfirmConsult({
               </div>
               <div className="flex p-4 space-x-1">
                 <div className="flex flex-col">
-                  {data.noti_title}
+                  <span>{`${name} has sent you a message`}</span>
                   <p className="text-[#908F8F]">
                     {formatDate(data.created_at)}
                   </p>

@@ -4,7 +4,11 @@ import { UseMutationResult, useMutation } from "react-query";
 import { useAuth } from "./AuthProvider";
 import ConfirmConsult from "./ConfirmConsult";
 import UnreadIcon from "@assets/unread-noti-icon.svg";
-import { IFormattedErrorResponse, INotification } from "@constants";
+import {
+  IFormattedErrorResponse,
+  INotification,
+  NotificationType,
+} from "@constants";
 import { listConfig } from "@config";
 import { formatDate, optionNotification } from "@utils";
 import {
@@ -135,11 +139,15 @@ export default function NotiModal({
                     return (
                       <List.Item key={index}>
                         <List.Item.Meta
-                          avatar={<img src={UnreadIcon} width={32} alt="" />}
+                          avatar={<img src={UnreadIcon} width={32} />}
                           className="p-4 jura hover:bg-[#f2f1f1]"
                           title={
-                            <p>
-                              {item.noti_desc}{" "}
+                            <p className="space-x-2">
+                              <span>
+                                {item.noti_type == NotificationType.CONSULT
+                                  ? `${senderName} has sent you a message`
+                                  : item.noti_title}
+                              </span>
                               <span className="text-[#61708C]">
                                 {item.noti_type} #{item.hn_id}
                               </span>
@@ -155,7 +163,7 @@ export default function NotiModal({
                         name={senderName}
                         data={item}
                         onAccept={onAccept}
-                        onDecline={onAccept}
+                        onDecline={onDecline}
                       />
                     );
                   }

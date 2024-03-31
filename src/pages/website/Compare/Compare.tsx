@@ -30,7 +30,7 @@ export default function Compare() {
   > = useMutation(addCompareNote);
   const location = useLocation();
   const router = useNavigate();
-  const { imageList, case_id } = location.state || [];
+  const { imageList, case_id, hn_id } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
@@ -81,7 +81,7 @@ export default function Compare() {
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5] ">
             <div className="flex items-center space-x-4">
               <LeftOutlined onClick={() => router(`/patient/${case_id}`)} />
-              <p className="jura text-xl">HN. 6643793</p>
+              <p className="jura text-xl">HN. {hn_id}</p>
             </div>
             <div className="w-[30rem]">
               <UserProfile />

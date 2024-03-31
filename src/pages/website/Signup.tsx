@@ -30,7 +30,7 @@ function Signup() {
       if (values) {
         registerMutation.mutate(form, {
           onSuccess: () => {
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.SIGNUP);
             setForm(DefaultDoctorForm);
             forms.resetFields();
             setRegistrationFailed("");
@@ -38,7 +38,7 @@ function Signup() {
           onError: (e) => {
             if (e.message) {
               setRegistrationFailed(e.message);
-              displayNotification(NotifyType.ERROR);
+              displayNotification(NotifyType.USED_EMAIL);
             }
           },
         });
@@ -197,7 +197,10 @@ function Signup() {
           </Button>
           <div className="flex space-x-2">
             <p className="text-[#A7A6A5] ">Already have an account?</p>
-            <a href="/signin" className="text-[#A3802D] underline hover:text-[#A3802D]">
+            <a
+              href="/signin"
+              className="text-[#A3802D] underline hover:text-[#A3802D]"
+            >
               SIGN IN
             </a>
           </div>
