@@ -147,6 +147,7 @@ export interface IPreCompare {
   case_id: string;
   img_collect: string[];
   compare_id?: string;
+  hn_id: string;
 }
 
 export interface ICreateCompare {

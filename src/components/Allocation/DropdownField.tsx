@@ -55,7 +55,7 @@ export const DropdownField: React.FC<DropdownFieldProps> = ({
           setIsModalOpen(false);
           setOpen(false);
           setSubmitLoading(false);
-          displayNotification(NotifyType.SUCCESS);
+          displayNotification(NotifyType.CHANGE_DOCTOR);
         },
       }
     );

@@ -48,7 +48,7 @@ export default function DeleteModal({
             className="w-1/2 jura text-[#4C577C] bg-[#F7AD9E] border-[#8088A7]"
             style={{ borderWidth: "1.5px" }}
           >
-            Confirm
+            Delete
           </Button>
         </div>
       </Content>

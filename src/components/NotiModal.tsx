@@ -56,14 +56,19 @@ export default function NotiModal({
   }, [filterType]);
 
   useEffect(() => {
+    getNotificationByMe();
+  }, [isOpen]);
+
+  async function getNotificationByMe() {
     if (me) {
+      setIsLoading(true);
       getNotification(me).then((response: INotification[]) => {
         setData(response);
         setFormatData(response);
         setIsLoading(false);
       });
     }
-  }, [isOpen]);
+  }
 
   const onAccept = async (data: INotification) => {
     try {
@@ -75,6 +80,7 @@ export default function NotiModal({
       };
       acceptMutation.mutate(body, {
         onSuccess: (response) => {
+          getNotificationByMe();
           //TODO - notify when success
         },
         onError: (response) => {
@@ -90,6 +96,7 @@ export default function NotiModal({
     try {
       declineMutation.mutate(data.noti_id, {
         onSuccess: () => {
+          getNotificationByMe();
           //TODO - notify when success
         },
         onError: () => {

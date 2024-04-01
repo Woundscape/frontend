@@ -1,7 +1,10 @@
 export enum NotifyType {
-  SUCCESS = "success",
   UPLOAD = "upload",
   ADD_EQUIP = "add_equipment",
+  APPROVE = "approve_user",
+  UPDATE_TYPE = "updateType",
+  DEL_USER = "deleteuser",
+  EDIT_EQUIP = "edit_equipment",
   DEL_EQUIP = "del_equipment",
   EDIT_IMAGE = "edit_image",
   CHANGE_DOCTOR = "change_doctor",
@@ -27,11 +30,6 @@ export interface NotifyContent {
 }
 
 export const NotificationMessage: Record<NotifyType, NotifyContent> = {
-  [NotifyType.SUCCESS]: {
-    TYPE: ENUM_TYPE.SUCCESS,
-    TITLE: "Header",
-    CONTENT: "test",
-  },
   [NotifyType.UPLOAD]: {
     TYPE: ENUM_TYPE.SUCCESS,
     TITLE: "Add Image",
@@ -42,10 +40,30 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
     TITLE: "Signup",
     CONTENT: "Your account has been successfully created.",
   },
+  [NotifyType.APPROVE]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Approve User",
+    CONTENT: "User have been succesfully approved.",
+  },
+  [NotifyType.UPDATE_TYPE]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Update Role",
+    CONTENT: "User have been succesfully updated role.",
+  },
+  [NotifyType.DEL_USER]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Delete User",
+    CONTENT: "You have been deleted this account",
+  },
   [NotifyType.ADD_EQUIP]: {
     TYPE: ENUM_TYPE.SUCCESS,
     TITLE: "Add Equipment",
     CONTENT: "Equipment has been successfully added.",
+  },
+  [NotifyType.EDIT_EQUIP]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "Edit Equipment",
+    CONTENT: "Equipment has been successfully edited.",
   },
   [NotifyType.DEL_EQUIP]: {
     TYPE: ENUM_TYPE.SUCCESS,
@@ -60,12 +78,12 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
   [NotifyType.CONSULT]: {
     TYPE: ENUM_TYPE.SUCCESS,
     TITLE: "Consult",
-    CONTENT: "This message has been sent to doctor successfully.",
+    CONTENT: "Message has been sent to doctor successfully.",
   },
   [NotifyType.CHANGE_DOCTOR]: {
     TYPE: ENUM_TYPE.SUCCESS,
     TITLE: "Change Doctor",
-    CONTENT: "",
+    CONTENT: "Patient has been successfully updated",
   },
   [NotifyType.INFO]: {
     TYPE: ENUM_TYPE.INFO,
@@ -74,7 +92,7 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
   },
   [NotifyType.WARNING]: {
     TYPE: ENUM_TYPE.WARNING,
-    TITLE: "Warning Header",
+    TITLE: "Warning",
     CONTENT: "warning content",
   },
   [NotifyType.NOTFOUND]: {

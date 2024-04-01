@@ -61,6 +61,7 @@ export default function Compare() {
     setTissueData(updatedTissueData);
     setCompare((prev) => ({
       ...prev,
+      hn_id,
       case_id,
       compare_info: updatedTissueData,
       img_collect: imageList,

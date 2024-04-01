@@ -267,6 +267,7 @@ export const DefaultCreateCompare = {
   compare_info: DefaultTissue,
   img_collect: [],
   case_id: "",
+  hn_id: "",
 };
 
 export const DefaultCreateProgress = {

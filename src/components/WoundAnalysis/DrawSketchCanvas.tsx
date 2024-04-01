@@ -170,36 +170,18 @@ export default function DrawSketchCanvas({
   };
 
   async function handleCanvasEditor(value: string) {
-    console.log(
-      "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:173 ~ deleteProps:",
-      "color: #00bcd4;",
-      deleteProps
-    );
-    if (deleteProps.deletePaths.length > 0 && canvasRef.current) {
-      console.log("deleteProps");
-      await eraserTissue();
-      const delTemp: ICanvasPath[] = await canvasRef.current?.exportPaths();
-      const renderWithoutDeleteColor = await formatPath.filter(
-        (item) => item.strokeColor != deleteProps.color
-      );
-      canvasRef.current?.loadPaths(renderWithoutDeleteColor);
-      setFormatPath([...renderWithoutDeleteColor, ...delTemp]);
-    }
-    setDeleteProps((prev) => ({
-      ...DefaultDeleteProps,
-      strokeWidth: prev.strokeWidth,
-    }));
-    if (openSelectDelete) {
-      console.log("condition openselectdelete");
-
-      await onDelete(value);
-    } else {
-      const toolHandler = toolHandlers[value];
-      if (toolHandler) {
-        toolHandler();
+    const check = await checkDelete();
+    if (check) {
+      if (openSelectDelete) {
+        await onDelete(value);
       } else {
-        handleColorPaint(value);
-        canvasRef.current?.eraseMode(false);
+        const toolHandler = toolHandlers[value];
+        if (toolHandler) {
+          toolHandler();
+        } else {
+          handleColorPaint(value);
+          canvasRef.current?.eraseMode(false);
+        }
       }
     }
   }
@@ -220,8 +202,26 @@ export default function DrawSketchCanvas({
     setEditable(!editable);
   };
 
+  async function checkDelete() {
+    if (deleteProps.deletePaths.length > 0 && canvasRef.current) {
+      await eraserTissue();
+      const delTemp: ICanvasPath[] = await canvasRef.current?.exportPaths();
+      const renderWithoutDeleteColor = await formatPath.filter(
+        (item) => item.strokeColor != deleteProps.color
+      );
+      canvasRef.current?.loadPaths(renderWithoutDeleteColor);
+      setFormatPath([...renderWithoutDeleteColor, ...delTemp]);
+    }
+    setDeleteProps((prev) => ({
+      ...DefaultDeleteProps,
+      strokeWidth: prev.strokeWidth,
+    }));
+    return true;
+  }
+
   const onSubmit = async () => {
-    if (editable) {
+    const check = await checkDelete();
+    if (editable && check) {
       if (invisibleEye) {
         setInvisibleEye(false);
       }
@@ -236,6 +236,8 @@ export default function DrawSketchCanvas({
           },
         },
       };
+      console.log("bodyyyyyy");
+
       updateMutation.mutate(body, {
         onSuccess: () => {
           settingTissue(result);
@@ -294,7 +296,6 @@ export default function DrawSketchCanvas({
             let morethanY = positionPaths.y >= deletePosition.y - strokeDelete;
             let lessthanY = positionPaths.y <= deletePosition.y + strokeDelete;
             if (morethanX && lessthanX && morethanY && lessthanY) {
-              console.log("yed mae");
               status = true;
               break;
             }
@@ -326,6 +327,8 @@ export default function DrawSketchCanvas({
       };
       newRemain.push(mock1);
     }
+    console.log("delete done");
+
     return newRemain;
   }
 

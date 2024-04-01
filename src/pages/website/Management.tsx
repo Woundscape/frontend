@@ -103,10 +103,10 @@ export default function Management() {
       setIsModalOpen(true);
       if (action == ACTION_MANAGE.APPROVE) {
         setTitleModal("Approve User");
-        setDescription("Approve: Kid kom hai noew");
+        setDescription("Are you sure that you want to approve this user?");
       } else if (action == ACTION_MANAGE.REJECT) {
         setTitleModal("Reject User");
-        setDescription("Reject: Kid kom hai noew");
+        setDescription("Are you sure that you want to reject this user?");
       }
     },
     onToggleRowEdit: (action: string, rowIndex: number, record: IDoctor) => {
@@ -208,7 +208,7 @@ export default function Management() {
           onSuccess: () => {
             setIsModalOpen(false);
             setConfirmLoading(false);
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.APPROVE);
           },
         });
       } else if (approveState.action == ACTION_MANAGE.REJECT) {
@@ -220,7 +220,7 @@ export default function Management() {
           onSuccess: () => {
             setIsModalOpen(false);
             setConfirmLoading(false);
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.UPDATE_TYPE);
           },
         });
       } else if (approveState.action == ACTION_MANAGE.DELETE) {
@@ -228,7 +228,7 @@ export default function Management() {
           onSuccess: () => {
             setIsModalOpen(false);
             setConfirmLoading(false);
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.DEL_USER);
           },
         });
       }

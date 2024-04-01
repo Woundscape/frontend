@@ -111,7 +111,7 @@ export default function Equipment() {
             setIsUpdateOpen(false);
             setConfirmLoading(false);
             forms.resetFields();
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.EDIT_EQUIP);
           },
           onError: () => {
             setConfirmLoading(false);
@@ -128,7 +128,7 @@ export default function Equipment() {
           getEquipment();
           setIsDeleteOpen(false);
           setSubmitDelete(false);
-          displayNotification(NotifyType.SUCCESS);
+          displayNotification(NotifyType.DEL_EQUIP);
         },
       });
     }
