@@ -14,6 +14,8 @@ export enum NotifyType {
   NOTFOUND = "notfound",
   USED_EMAIL = "emailortel",
   SIGNUP = "signup",
+  ERROR = "error",
+  RESET = "reset",
 }
 
 export enum ENUM_TYPE {
@@ -104,5 +106,15 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
     TYPE: ENUM_TYPE.ERROR,
     TITLE: "Error",
     CONTENT: "Email or Tel already used",
+  },
+  [NotifyType.ERROR]: {
+    TYPE: ENUM_TYPE.ERROR,
+    TITLE: "Error",
+    CONTENT: "Something went wrong",
+  },
+  [NotifyType.RESET]: {
+    TYPE: ENUM_TYPE.SUCCESS,
+    TITLE: "ResetPassword",
+    CONTENT: "ResetPassword Successfully",
   },
 };
