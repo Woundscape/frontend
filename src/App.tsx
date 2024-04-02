@@ -40,7 +40,7 @@ function App() {
         <Route path="/line/*" element={<LineRoutes />} />
         <Route path="reset" element={<ResetPassword />} />
         <Route path="confirm" element={<ConfirmReset />} />
-        <Route path="newPassword" element={<NewPass />} />
+        <Route path="newPassword/:token" element={<NewPass />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="noApprove" element={<NoApprove />} />
         <Route path="/*" element={<AuthRoutes />} />

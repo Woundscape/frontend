@@ -104,6 +104,7 @@ export default function UploadModal({
         <span className="jura text-[#61708C]">{description}</span>
         <Upload.Dragger
           multiple
+          maxCount={7}
           listType="picture"
           action={httpAPI}
           accept="image/png, image/jpeg"

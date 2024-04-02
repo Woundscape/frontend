@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import logo_it from "@assets/it-logo.svg";
-import logo_line from "@assets/line_logo.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_wound from "@assets/logo/logo-wound.svg";
 import { UseMutationResult, useMutation } from "react-query";
@@ -36,6 +35,7 @@ function Signin() {
   const [formInputs, setFormInputs] = useState<IFormInputsLogin>({
     user_email: "",
     user_password: "",
+    uid: "",
     platform: PLATFORM.WEB_APP,
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

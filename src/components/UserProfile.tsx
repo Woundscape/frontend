@@ -31,7 +31,7 @@ export default function UserProfile() {
     {
       key: "2",
       label: (
-        <div onClick={logout} className="flex gap-1 items-center">
+        <div onClick={logout} className="w-full flex gap-1 items-center">
           <IoLogOutOutline size={18} color="#424241"/>
           <p className="jura text-[#424241] hover:text-[#424241]">Logout</p>
         </div>

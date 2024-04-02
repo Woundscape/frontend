@@ -5,7 +5,7 @@ import { getInstanceLocal } from "../api/apiClient";
 export interface IFormInputsLogin {
   user_email: string;
   user_password: string;
-  uid:string;
+  uid: string;
   platform: PLATFORM;
 }
 
@@ -19,6 +19,11 @@ export interface Credentials {
 export interface IMessage {
   hn_id: string;
   message: string;
+}
+
+export interface IResetPassword {
+  user_id: string;
+  password: string;
 }
 
 export async function login(request: IFormInputsLogin): Promise<Credentials> {
@@ -66,6 +71,29 @@ export async function sendMessage({ hn_id, message }: IMessage): Promise<any> {
     const { data } = await getInstanceLocal().post("/user/sendMessage", {
       hn_id,
       message,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function sendEmail(email: string) {
+  try {
+    const { data } = await getInstanceLocal().post("/user/sendResetPassword", {
+      email,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function resetPassword({ user_id, password }: IResetPassword) {
+  try {
+    const { data } = await getInstanceLocal().put("/user/resetPassword", {
+      user_id,
+      password,
     });
     return data;
   } catch (error) {

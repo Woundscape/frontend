@@ -1,7 +1,13 @@
 import logo_wound from "@assets/logo/logo-wound.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import logo_it from "@assets/it-logo.svg";
+import { useNavigate } from "react-router-dom";
 function ConfirmReset() {
+  const router = useNavigate();
+
+  const redirect = () => {
+    router("/");
+  };
   return (
     <div className="wound-background w-full bg-white h-screen">
       <div className="w-full h-full flex flex-row justify-between p-4 ">
@@ -15,13 +21,13 @@ function ConfirmReset() {
           </div>
 
           <div className="w-1/2 flex flex-row justify-center space-x-3">
-            <div className="text-[#9a9999] w-2/3 text-center text-base">
-            Please check your email. We have sent email to confirm 
-            for reset your password.
+            <div className="text-[#9a9999] w-full text-center text-base">
+              Please check your email. We have sent email to confirm for reset
+              your password.
             </div>
           </div>
 
-          <div className="w-80 flex px-4 py-1.5 justify-between btn-homepage cursor-pointer">
+          <div onClick={redirect} className="w-80 flex px-4 py-1.5 justify-between btn-homepage cursor-pointer">
             <button type="submit" className=" text-xl jura font-bold">
               BACK TO HOME
             </button>
