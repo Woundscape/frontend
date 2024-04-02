@@ -87,10 +87,6 @@ export const NotificationMessage: Record<NotifyType, NotifyContent> = {
     TITLE: "Change Doctor",
     CONTENT: "Patient has been successfully updated",
   },
-  [NotifyType.SUCCESS_UPLOAD]: {
-    TITLE: "Success",
-    CONTENT: "uploaded successfully",
-  },
   [NotifyType.INFO]: {
     TYPE: ENUM_TYPE.INFO,
     TITLE: "Info Header",

@@ -109,7 +109,6 @@ export default function UploadModal({
           action={httpAPI}
           accept="image/png, image/jpeg"
           fileList={files}
-          maxCount={7}
           beforeUpload={(_) => {
             return false;
           }}
