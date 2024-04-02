@@ -25,6 +25,7 @@ export default function PatientDetailCard({
         className="patient_img w-[15rem] h-40 flex items-end py-1 justify-center relative"
         style={{
           backgroundImage: `url("${formatImage(image.img_path)}")`,
+          backgroundPosition: "center",
         }}
       ></div>
       {stageSegmented.stage != SEGMENT_STATE.OVERVIEW && (

@@ -157,7 +157,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.APPROVE, record.doctor_id)
                     }
                   >
-                    <IoMdCheckboxOutline size={19} color="#949cb6" />
+                    <IoMdCheckboxOutline size={15} color="#949cb6" />
                     Approve
                   </Button>
                   <Button
@@ -166,7 +166,7 @@ export const getColumnManageUser = ({
                       onAprrove(ACTION_MANAGE.REJECT, record.doctor_id)
                     }
                   >
-                    <LiaUserLockSolid size={19} color="#949cb6" />
+                    <LiaUserLockSolid size={15} color="#949cb6" />
                     Reject
                   </Button>
                 </>

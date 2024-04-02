@@ -6,7 +6,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import {
   IFormattedErrorResponse,
   IPatient,
-  NotifyType,
+  ModalText,
   selectStage,
   selectStatus,
 } from "@constants";
@@ -43,6 +43,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
   const [editInputValue, setEditInputValue] = useState("");
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
+  const [textModal, setTextModal] = useState<string>("");
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -63,6 +64,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
     e.preventDefault();
     let disease = tags.filter((item) => item != value);
     setTag({ stage: "case_disease", value: disease });
+    setTextModal(ModalText.DEL_TAG);
     showModal();
   };
 
@@ -74,6 +76,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
     if (inputValue != "") {
       let disease = [...tags, inputValue];
       setTag({ stage: "case_disease", value: disease });
+      setTextModal(ModalText.ADD_TAG);
       showModal();
     } else {
       setInputVisible(false);
@@ -126,6 +129,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
           options={selectStatus}
           onChange={(value) => {
             setTag({ stage: "case_status", value: value });
+            setTextModal(ModalText.STATUS);
             showModal();
           }}
         />
@@ -138,12 +142,13 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
           onChange={(value) => {
             setTag({ stage: "case_stage", value: value });
             showModal();
+            setTextModal(ModalText.PROGRESSION_STAGE);
           }}
         />
         <Space size={[0, 8]} wrap>
           <ConfirmModal
             title="Are you sure ?"
-            description="Are you sure that the hospital number you entered is 9877069?"
+            description={textModal}
             isOpen={isModalOpen}
             confirmLoading={submitLoading}
             onCancel={onCancel}
@@ -173,12 +178,7 @@ export default function AdditionalData({ data }: IAdditionalDataProps) {
               <Tag
                 key={tag}
                 closable
-                style={{
-                  color: "#4C577C",
-                  fontFamily: "jura",
-                  userSelect: "none",
-                }}
-                color="#F4DEE7"
+                color={"pink"}
                 onClose={(e) => handleClose(e, tag)}
               >
                 <span>{isLongTag ? `${tag.slice(0, 20)}...` : tag}</span>

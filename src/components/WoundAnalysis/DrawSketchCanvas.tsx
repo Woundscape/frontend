@@ -13,7 +13,7 @@ import CanvasEraserIcon from "@assets/icons/canvas_icon_eraser.svg";
 // import CanvasSizeIcon from "@assets/icons/canvas_icon_size.svg";
 import CanvasUndoIcon from "@assets/icons/undo_icon.svg";
 import CanvasRedoIcon from "@assets/icons/redo_icon.svg";
-import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
+// import CanvasExportIcon from "@assets/icons/canvas_icon_export.svg";
 import {
   DefaultResolution,
   DefaultTissue,
@@ -41,7 +41,10 @@ interface DrawSketchCanvasProps {
   setEditable: (value: boolean) => void;
   setRef: (ref: any) => void;
   settingTissue: (data: TissueType[]) => void;
-  renderDeleteTissue: (strokeColor: string) => Promise<ICanvasPath[]>;
+  renderDeleteTissue: (
+    formatPath: ICanvasPath[],
+    strokeColor: string
+  ) => Promise<ICanvasPath[]>;
 }
 
 export default function DrawSketchCanvas({
@@ -119,10 +122,10 @@ export default function DrawSketchCanvas({
     }
   }, [pointer]);
 
-  async function handleCanvasExportImage() {
-    const a = await canvasRef.current?.exportImage("png");
-    console.log(a);
-  }
+  // async function handleCanvasExportImage() {
+  //   const a = await canvasRef.current?.exportImage("png");
+  //   console.log(a);
+  // }
 
   function handleOpenSelectPaint(newOpen: boolean) {
     setOpenSelectPaint(newOpen);
@@ -167,19 +170,18 @@ export default function DrawSketchCanvas({
   };
 
   async function handleCanvasEditor(value: string) {
-    if (deleteProps.deletePaths.length > 0) {
-      await eraserTissue();
-    }
-    setDeleteProps(DefaultDeleteProps);
-    if (openSelectDelete) {
-      await onDelete(formatPath, value);
-    } else {
-      const toolHandler = toolHandlers[value];
-      if (toolHandler) {
-        toolHandler();
+    const check = await checkDelete();
+    if (check) {
+      if (openSelectDelete) {
+        await onDelete(value);
       } else {
-        handleColorPaint(value);
-        canvasRef.current?.eraseMode(false);
+        const toolHandler = toolHandlers[value];
+        if (toolHandler) {
+          toolHandler();
+        } else {
+          handleColorPaint(value);
+          canvasRef.current?.eraseMode(false);
+        }
       }
     }
   }
@@ -200,8 +202,26 @@ export default function DrawSketchCanvas({
     setEditable(!editable);
   };
 
+  async function checkDelete() {
+    if (deleteProps.deletePaths.length > 0 && canvasRef.current) {
+      await eraserTissue();
+      const delTemp: ICanvasPath[] = await canvasRef.current?.exportPaths();
+      const renderWithoutDeleteColor = await formatPath.filter(
+        (item) => item.strokeColor != deleteProps.color
+      );
+      canvasRef.current?.loadPaths(renderWithoutDeleteColor);
+      setFormatPath([...renderWithoutDeleteColor, ...delTemp]);
+    }
+    setDeleteProps((prev) => ({
+      ...DefaultDeleteProps,
+      strokeWidth: prev.strokeWidth,
+    }));
+    return true;
+  }
+
   const onSubmit = async () => {
-    if (editable) {
+    const check = await checkDelete();
+    if (editable && check) {
       if (invisibleEye) {
         setInvisibleEye(false);
       }
@@ -216,6 +236,8 @@ export default function DrawSketchCanvas({
           },
         },
       };
+      console.log("bodyyyyyy");
+
       updateMutation.mutate(body, {
         onSuccess: () => {
           settingTissue(result);
@@ -227,17 +249,22 @@ export default function DrawSketchCanvas({
     setEditable(!editable);
   };
 
-  const onDelete = async (paths: any, color: string) => {
+  const onDelete = async (color: string) => {
     try {
       if (selectTools == CANVAS_TOOLS.ERASER) {
         canvasRef.current?.clearCanvas();
         await canvasRef.current?.loadPaths(original);
       }
+      console.log("ondelete wtf");
       handleEraser();
+      console.log(
+        "%c 🐬 ~ Log from file: DrawSketchCanvas.tsx:254 ~ formatPath:",
+        "color: #00bcd4;",
+        formatPath
+      );
+      const remainPaths = await renderDeleteTissue(formatPath, color);
       setOpenSelectDelete(false);
-      const remainPaths = await renderDeleteTissue(color);
       setDeleteProps((prev) => ({ ...prev, color, remainPaths }));
-      canvasRef.current?.eraseMode(true);
     } catch (error) {
       console.log("error ondelete");
     }
@@ -245,12 +272,9 @@ export default function DrawSketchCanvas({
 
   async function eraserTissue() {
     try {
-      console.log("before", deleteProps);
       const newRemain = await test();
-      console.log("after new", newRemain);
-      canvasRef.current?.clearCanvas()
+      canvasRef.current?.clearCanvas();
       canvasRef.current?.loadPaths(newRemain);
-      
     } catch (error) {
       console.log("error eraserTissue");
     }
@@ -272,7 +296,6 @@ export default function DrawSketchCanvas({
             let morethanY = positionPaths.y >= deletePosition.y - strokeDelete;
             let lessthanY = positionPaths.y <= deletePosition.y + strokeDelete;
             if (morethanX && lessthanX && morethanY && lessthanY) {
-              console.log("yed mae");
               status = true;
               break;
             }
@@ -304,6 +327,8 @@ export default function DrawSketchCanvas({
       };
       newRemain.push(mock1);
     }
+    console.log("delete done");
+
     return newRemain;
   }
 
@@ -447,11 +472,7 @@ export default function DrawSketchCanvas({
           </Typography>
           <div className="flex space-x-4">
             {!editable ? (
-              <img
-                src={CanvasExportIcon}
-                onClick={handleCanvasExportImage}
-                alt=""
-              />
+              <></>
             ) : (
               <DefaultButton
                 title="Cancel"
@@ -590,8 +611,8 @@ export default function DrawSketchCanvas({
               </div>
             ) : (
               <div className="h-full flex p-[5px] space-x-4">
-                <GoZoomIn size={20} />
-                <GoZoomOut size={20} />
+                {/* <GoZoomIn size={20} />
+                <GoZoomOut size={20} /> */}
                 {invisibleEye ? (
                   <EyeInvisibleOutlined
                     className="text-xl"

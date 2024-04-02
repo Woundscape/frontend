@@ -7,6 +7,13 @@ export interface IUpdateCase {
   body: any;
 }
 
+export interface IAcceptConsult {
+  noti_id: string;
+  case_id: string;
+  hn_id: string;
+  doctor_id: string;
+}
+
 export const getAllCase = async (): Promise<ICase[]> => {
   try {
     const { data } = await getInstanceLocal().get("/case");
@@ -106,6 +113,36 @@ export const updateDoctor = async ({
       ...body,
     });
     return data === "Successfully";
+  } catch (error) {
+    throw formattedError(error);
+  }
+};
+
+export const acceptConsult = async ({
+  noti_id,
+  case_id,
+  hn_id,
+  doctor_id,
+}: IAcceptConsult): Promise<any> => {
+  try {
+    const { data } = await getInstanceLocal().put(`/case/accept`, {
+      noti_id,
+      case_id,
+      hn_id,
+      doctor_id,
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+};
+
+export const declineConsult = async (noti_id: string): Promise<boolean> => {
+  try {
+    const { data } = await getInstanceLocal().put(`/case/decline`, {
+      noti_id,
+    });
+    return data;
   } catch (error) {
     throw formattedError(error);
   }

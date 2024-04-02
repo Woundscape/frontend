@@ -5,6 +5,7 @@ import { getInstanceLocal } from "../api/apiClient";
 export interface IFormInputsLogin {
   user_email: string;
   user_password: string;
+  uid:string;
   platform: PLATFORM;
 }
 
@@ -13,6 +14,11 @@ export interface Credentials {
   expiresIn: number;
   refreshToken: string;
   tokenType: string;
+}
+
+export interface IMessage {
+  hn_id: string;
+  message: string;
 }
 
 export async function login(request: IFormInputsLogin): Promise<Credentials> {
@@ -48,6 +54,18 @@ export async function getMe(token: string): Promise<IMe> {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    });
+    return data;
+  } catch (error) {
+    throw formattedError(error);
+  }
+}
+
+export async function sendMessage({ hn_id, message }: IMessage): Promise<any> {
+  try {
+    const { data } = await getInstanceLocal().post("/user/sendMessage", {
+      hn_id,
+      message,
     });
     return data;
   } catch (error) {

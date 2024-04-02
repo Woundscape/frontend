@@ -7,10 +7,10 @@ import footer_watermark from "@assets/footer_watermark.svg";
 import arrow_start from "@assets/arrow-start.svg";
 import line_icon from "@assets/icons/line_icon.svg";
 import {
+  login,
   LineCredential,
   lineLiffLogin,
   IFormInputsLogin,
-  login,
 } from "@api-caller";
 import {
   IFormattedErrorResponse,
@@ -20,8 +20,8 @@ import {
   UserType,
 } from "@constants";
 import { lineLiffID } from "@config";
-import { UseMutationResult, useMutation } from "react-query";
 import { displayNotification } from "@utils";
+import { UseMutationResult, useMutation } from "react-query";
 import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 export default function SignIn() {
@@ -35,6 +35,7 @@ export default function SignIn() {
   const [form, setForm] = useState<IFormInputsLogin>({
     user_email: "",
     user_password: "",
+    uid: "",
     platform: PLATFORM.LINE_APP,
   });
   const [forms] = Form.useForm();
@@ -68,7 +69,7 @@ export default function SignIn() {
         displayName: user.displayName,
         type: UserType.Patient,
       })
-        .then(() => {
+        .then((response) => {
           liff.closeWindow();
         })
         .catch((error) => {
@@ -92,15 +93,19 @@ export default function SignIn() {
     const values = await forms.validateFields();
     if (values) {
       setIsLoading(true);
-      loginMutation.mutate(form, {
+      const body: IFormInputsLogin = {
+        ...form,
+        uid: user?.userId ?? "",
+      };
+      loginMutation.mutate(body, {
         onSuccess: () => {
           liff.closeWindow();
         },
         onError: (e) => {
           setIsLoading(false);
-          if (e.message) {
+          if (e.message == "User not found") {
             setLoginFailed(e.message);
-            displayNotification(NotifyType.ERROR);
+            displayNotification(NotifyType.NOTFOUND);
           }
         },
       });

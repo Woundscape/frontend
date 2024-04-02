@@ -23,7 +23,7 @@ function Homepage() {
               <p className="text-5xl michroma font-blackbean">Woundscape</p>
             </div>
             <NavLink
-              to={"/signin"}
+              to={"/dashboard"}
               className="flex px-4 py-1.5 justify-between btn-homepage cursor-pointer"
             >
               <div className="text-xl jura font-bold">START</div>

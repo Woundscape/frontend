@@ -30,7 +30,7 @@ export default function Compare() {
   > = useMutation(addCompareNote);
   const location = useLocation();
   const router = useNavigate();
-  const { imageList, case_id } = location.state || [];
+  const { imageList, case_id, hn_id } = location.state || [];
   const [images, setImage] = useState<IImage[]>();
   const [equipment, setEquipment] = useState<IEquipment[]>();
   const [tissueData, setTissueData] = useState<TissueType[]>(DefaultTissue);
@@ -61,6 +61,7 @@ export default function Compare() {
     setTissueData(updatedTissueData);
     setCompare((prev) => ({
       ...prev,
+      hn_id,
       case_id,
       compare_info: updatedTissueData,
       img_collect: imageList,
@@ -81,16 +82,16 @@ export default function Compare() {
           <header className="flex justify-between px-6 border-b-2 pb-5 border-[#E9EBF5] ">
             <div className="flex items-center space-x-4">
               <LeftOutlined onClick={() => router(`/patient/${case_id}`)} />
-              <p className="jura text-xl">HN. 6643793</p>
+              <p className="jura text-xl">HN. {hn_id}</p>
             </div>
             <div className="w-[30rem]">
               <UserProfile />
             </div>
           </header>
           <Content className="px-6 pt-6 jura grow flex">
-            <div className="grow flex flex-row space-x-5">
-              <div className="grow flex flex-col overflow-y-auto space-y-5">
-                <div className="grow flex border-2 flex-col rounded">
+            <div className="w-full h-full flex flex-row space-x-5">
+              <div className="w-9/12 flex flex-col overflow-y-auto space-y-5">
+                <div className="w-full flex border-2 flex-col rounded">
                   <div className="border-b-2 p-3">
                     <p className="jura text-[#4C577C] text-lg text-center">
                       Comparative Imaging
@@ -112,7 +113,7 @@ export default function Compare() {
                   mutation={addCompareNoteMutation}
                 />
               </div>
-              <div id="result" className="flex flex-col w-[20rem] space-y-3">
+              <div id="result" className="flex flex-col w-3/12 space-y-3">
                 <div className="flex flex-row items-center justify-between py-2 bg-[#F2F2F2] text-[#868686] rounded-lg">
                   <div className="w-1/2 ">
                     <p className="text-center">Tissue</p>

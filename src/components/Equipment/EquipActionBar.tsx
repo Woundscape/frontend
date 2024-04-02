@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { UseMutationResult, useMutation } from "react-query";
 import SortBy from "@assets/icons/sortBy.svg";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import {
   DefaultEquipForm,
   ICreateEquip,
   IEquipType,
   IFormattedErrorResponse,
   NotifyType,
+  SearchField,
 } from "@constants";
 import { addEquipment } from "@api-caller";
 import {
@@ -18,11 +18,13 @@ import {
 } from "@utils";
 import EquipmentModal from "./EquipmentModal";
 import { MdMedicationLiquid } from "react-icons/md";
+import { IoSearchSharp } from "react-icons/io5";
+import { filterOptions } from "@config";
 
 interface IEquipActionBarProps {
   type: IEquipType[];
   placeholder?: string;
-  onFilter: (e: any) => void;
+  onFilter: (e: any, field: SearchField) => void;
   onRender: () => void;
 }
 export default function EquipActionBar({
@@ -67,7 +69,7 @@ export default function EquipActionBar({
             onRender();
             setIsModalOpen(false);
             setConfirmLoading(false);
-            displayNotification(NotifyType.SUCCESS);
+            displayNotification(NotifyType.ADD_EQUIP);
           },
           onError: () => {
             setConfirmLoading(false);
@@ -89,17 +91,21 @@ export default function EquipActionBar({
           size="middle"
           type="text"
           placeholder={placeholder}
-          prefix={<img className="pr-1" src={SearchIcon} />}
-          onChange={onFilter}
+          prefix={<IoSearchSharp color={"#BFBFBF"} />}
+          onChange={(e) => onFilter(e.target.value, SearchField.EQUIP_NAME)}
         />
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
           <p className="text-[#BFBFBF]">Type :</p>
           <Select
+            allowClear
             id="select__type"
             className="w-24 outline-none border-[white] text-[#868686] text-center"
             defaultValue="All"
+            placeholder="Select"
             bordered={false}
             options={formatOptionType(type)}
+            filterOption={filterOptions}
+            onChange={(value) => onFilter(value, SearchField.TYPE_ID)}
           />
         </div>
         <div className="flex items-center border jura rounded-lg px-3 space-x-1">
@@ -111,6 +117,8 @@ export default function EquipActionBar({
             defaultValue="All"
             bordered={false}
             options={optionImageSortBy}
+            filterOption={filterOptions}
+            onChange={(value) => onFilter(value, SearchField.ORDER_BY)}
           />
         </div>
         <Button

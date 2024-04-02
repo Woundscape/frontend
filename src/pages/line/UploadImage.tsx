@@ -5,7 +5,7 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { lineLiffID } from "@config";
 import Logo_Wound from "@assets/logo/logo-wound.svg";
 import Arrow_Start from "@assets/arrow-start.svg";
-import SearchUploadIcon from "@assets/icon-search-upload.svg";
+import SearchUploadIcon from "@assets/vuesax/linear/search-normal.svg";
 import AddUploadIcon from "@assets/icon-add-upload-file.svg";
 import CancelUploadIcon from "@assets/icons/cancel_upload_patient_icon.svg";
 import { UseMutationResult, useMutation } from "react-query";

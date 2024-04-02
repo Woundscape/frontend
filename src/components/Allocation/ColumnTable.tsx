@@ -102,7 +102,7 @@ export const getColumnsAllocation = ({
         {disease && disease.length > 0 ? (
           <>
             <Tag
-              color={disease[0].length > 5 ? "geekblue" : "green"}
+              color={"pink" }
               className="jura"
             >
               {disease[0]}

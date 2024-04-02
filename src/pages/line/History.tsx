@@ -62,7 +62,6 @@ export default function History() {
           dot: <div className="w-3 h-3 bg-[#61708C] rounded-full"></div>,
           label: (
             <>
-              <p className="text-[#626060] jura">2309.img</p>
               <p className="text-[#A7A6A5] prompt text-xs">{date}</p>
             </>
           ),
@@ -87,18 +86,17 @@ export default function History() {
                   <p>รูปภาพอุปกรณ์</p>
                   <div className="flex flex-wrap gap-1">
                     {images[date].map((image: IImage, index: number) => {
-                      if (image.img_equipPath == null) {
-                        return null;
+                      if (image.img_equipPath) {
+                        return (
+                          <Image
+                            key={index}
+                            width={30}
+                            height={30}
+                            src={formatImage(image.img_equipPath)}
+                            className="rounded-sm"
+                          />
+                        );
                       }
-                      return (
-                        <Image
-                          key={index}
-                          width={30}
-                          height={30}
-                          src={formatImage(image.img_equipPath)}
-                          className="rounded-sm"
-                        />
-                      );
                     })}
                   </div>
                 </div>
@@ -125,7 +123,7 @@ export default function History() {
             <div className="w-full py-3 prompt text-center border-b border-[#B4B4B4] border-dashed text-[#A3802D]">
               <p>ประวัติการอัปโหลดรูปภาพ</p>
             </div>
-            <div className="w-full px-2 relative">
+            <div className="w-full px-2 relative pr-10">
               <Timeline mode="left" items={renderTimelineItem()} />
             </div>
           </div>
@@ -138,7 +136,6 @@ export default function History() {
   );
 }
 
-// {
 //   dot: (
 //     <div className="w-3 h-3 bg-[#61708C] rounded-full"></div>
 //   ),

@@ -100,8 +100,8 @@ export default function CompareWithParam() {
           </header>
           <Content className="px-6 pt-6 jura grow flex">
             <div className="grow flex flex-row space-x-5">
-              <div className="grow flex flex-col overflow-y-auto">
-                <div className="grow flex border-2 flex-col rounded mb-5">
+              <div className="w-9/12 flex flex-col overflow-y-auto space-y-3">
+                <div className="w-full flex border-2 flex-col rounded">
                   <div className="border-b-2 p-3">
                     <p className="jura text-[#4C577C] text-lg text-center">
                       Comparative Imaging
@@ -123,7 +123,7 @@ export default function CompareWithParam() {
                   mutation={addCompareNoteMutation}
                 />
               </div>
-              <div id="result" className="flex flex-col w-[20rem] space-y-3">
+              <div id="result" className="flex flex-col w-3/12 space-y-3">
                 <div className="flex flex-row items-center justify-between py-2 bg-[#F2F2F2] text-[#868686] rounded-lg">
                   <div className="w-1/2 ">
                     <p className="text-center">Tissue</p>

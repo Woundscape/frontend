@@ -1,27 +1,27 @@
 import { useState } from "react";
 import { Button, DatePicker, Input, Select } from "antd";
-import { IFormattedErrorResponse, SearchField } from "@constants";
+import { IFormattedErrorResponse, IPatient, SearchField } from "@constants";
 import { UseMutationResult, useMutation } from "react-query";
 import { uploadImage } from "@api-caller";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import { LuImagePlus } from "react-icons/lu";
 import SortBy from "@assets/icons/sortBy.svg";
 import UploadModal from "./UploadModal";
 import Consult from "./ConsultModal";
 import { optionImageSortBy } from "@utils";
 import { filterOptions } from "@config";
+import { IoSearchSharp } from "react-icons/io5";
 
 const { RangePicker } = DatePicker;
 
 interface IImageActionBarProps {
-  case_id: string;
+  cases: IPatient;
   placeholder?: string;
   onFilter: (value: any, field: SearchField) => void;
   onRender: () => void;
 }
 
 export default function ImageActionBar({
-  case_id,
+  cases,
   placeholder,
   onFilter,
   onRender,
@@ -48,7 +48,7 @@ export default function ImageActionBar({
           size="middle"
           type="text"
           placeholder={placeholder}
-          prefix={<img className="pr-1" src={SearchIcon} />}
+          prefix={<IoSearchSharp color={"#BFBFBF"} />}
           onChange={(e) => onFilter(e.target.value, SearchField.IMAGE_ID)}
         />
         <RangePicker
@@ -72,7 +72,7 @@ export default function ImageActionBar({
             onChange={(value) => onFilter(value, SearchField.ORDER_BY)}
           />
         </div>
-        <Consult case_id={case_id} />
+        <Consult hn_id={cases.hn_id} case_id={cases.case_id} />
         <Button
           onClick={() => setIsModalOpen(true)}
           className="button_add"
@@ -83,7 +83,7 @@ export default function ImageActionBar({
         <UploadModal
           title="Add Image"
           description={
-            "If you change new doctor, it will disappear from current doctor and send this patient to new doctor"
+            "Drag and drop images or browse files on your computer"
           }
           isOpen={isModalOpen}
           confirmLoading={confirmLoading}

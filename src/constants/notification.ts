@@ -5,6 +5,8 @@ export interface INotification {
   noti_desc: string;
   noti_img?: any;
   approveStatus: boolean;
+  hn_id?: string;
+  case_id?: string;
   sender: any;
   recipient: any;
   created_at: any;

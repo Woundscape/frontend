@@ -133,7 +133,7 @@ export default function CompareCard({ image, equipment }: CompareCardProps) {
                   width={80}
                   height={80}
                   src={`${formatImage(image)}`}
-                  className="rounded-md"
+                  className="rounded-md object-cover"
                 />
               ))}
             </div>

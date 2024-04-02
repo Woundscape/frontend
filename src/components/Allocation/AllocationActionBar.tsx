@@ -1,9 +1,9 @@
 import { DatePicker, Input, Select } from "antd";
 import { SearchField } from "@constants";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { optionImageSortBy } from "@utils";
 import { filterOptions } from "@config";
+import { IoSearchSharp } from "react-icons/io5";
 
 const { RangePicker } = DatePicker;
 
@@ -25,8 +25,8 @@ export default function AllocationActionBar({
           size="middle"
           type="text"
           placeholder={placeholder}
-          prefix={<img className="pr-1" src={SearchIcon} />}
-          onChange={(e) => onFilter(e.target.value, SearchField.EQUIP_NAME)}
+          prefix={<IoSearchSharp color={"#BFBFBF"} />}
+          onChange={(e) => onFilter(e.target.value, SearchField.HN_ID)}
         />
         <RangePicker
           size="middle"

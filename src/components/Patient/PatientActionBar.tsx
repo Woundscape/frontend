@@ -2,10 +2,10 @@ import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
 import { FaUserPlus } from "react-icons/fa";
 import { Button, DatePicker, Input, Segmented, Select } from "antd";
 import { SegmentedValue } from "antd/es/segmented";
-import SearchIcon from "@assets/icon-search-upload.svg";
 import SortBy from "@assets/icons/sortBy.svg";
 import { optionPatientSortBy } from "@utils";
 import { SearchField } from "@constants";
+import { IoSearchSharp } from "react-icons/io5";
 
 const { RangePicker } = DatePicker;
 
@@ -33,7 +33,7 @@ export default function PatientActionBar({
           size="middle"
           type="text"
           placeholder={placeholder}
-          prefix={<img className="pr-1" src={SearchIcon} />}
+          prefix={<IoSearchSharp color={"#BFBFBF"} />}
           onChange={(e) => onFilter(e.target.value, SearchField.HN_ID)}
         />
         <RangePicker
@@ -49,7 +49,7 @@ export default function PatientActionBar({
           <Select
             id="select__sortBy"
             className="w-24 outline-none border-[white] text-[#868686]"
-            defaultValue="All"
+            defaultValue="Newest"
             bordered={false}
             placeholder="Sort by"
             options={optionPatientSortBy}

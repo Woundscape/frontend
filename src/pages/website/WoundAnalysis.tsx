@@ -150,12 +150,17 @@ export default function WoundAnalysis() {
   }
 
   async function renderDeleteTissue(
+    formatPath: ICanvasPath[],
     strokeColor: string
   ): Promise<ICanvasPath[]> {
-    if (canvasRef.current && image?.img_tissue.paths) {
-      let tempPaths = await canvasRef.current.exportPaths();
-      let tempTissue = tempPaths.filter(
+    if (canvasRef.current) {
+      let tempTissue = await formatPath.filter(
         (value: ICanvasPath) => value.strokeColor == strokeColor
+      );
+      console.log(
+        "%c 🐬 ~ Log from file: WoundAnalysis.tsx:163 ~ tempTissue:",
+        "color: #00bcd4;",
+        tempTissue
       );
       canvasRef.current.clearCanvas();
       canvasRef.current.loadPaths(tempTissue);
@@ -180,7 +185,7 @@ export default function WoundAnalysis() {
                     back
                   </Button>
                   <Button className="bg-[#E9EBF5] border-[#D2D7EB] border-2 flex justify-center items-center p-4 rounded-2xl jura text-[#61708C]">
-                    HN. 6643793
+                    HN. {image?.case.hn_id}
                   </Button>
                 </div>
                 {image && (
@@ -194,7 +199,7 @@ export default function WoundAnalysis() {
                   />
                 )}
               </div>
-              {equipment.length && (
+              {equipment.length > 0 && (
                 <div className="w-full pb-10">
                   <AddNote
                     id={img_id as string}
@@ -259,7 +264,7 @@ export default function WoundAnalysis() {
                           </div>
                         ))}
                         <List>
-                          <div className="flex justify-between">
+                          {/* <div className="flex justify-between">
                             <Typography className="jura">Opacity</Typography>
                             <InputNumber
                               min={0}
@@ -280,7 +285,7 @@ export default function WoundAnalysis() {
                                 handleOpacity(e.target.value);
                               }}
                             />
-                          </div>
+                          </div> */}
                           <div className="py-2.5 flex justify-center items-center rounded-lg jura text=[#424241] bg-[#EEE]">
                             Result
                           </div>

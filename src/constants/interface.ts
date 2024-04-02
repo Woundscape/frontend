@@ -68,7 +68,7 @@ export interface IPatient {
   case_id: string;
   admit_no: any;
   hn_id: string;
-  doctor_id: string;
+  doctor_id: string[] | string;
   status: string;
   stage: string;
   disease: string[];
@@ -101,6 +101,7 @@ export interface IImage {
   case_id: string;
   compareCompare_id?: any;
   progressionProg_id?: any;
+  case: ICase;
 }
 
 export interface ITissue {
@@ -146,6 +147,7 @@ export interface IPreCompare {
   case_id: string;
   img_collect: string[];
   compare_id?: string;
+  hn_id: string;
 }
 
 export interface ICreateCompare {
@@ -170,6 +172,7 @@ export interface IPreProgress {
   case_id: string;
   img_collect: string[];
   prog_id?: string;
+  hn_id: string;
 }
 
 export interface ICreateProgress {
@@ -206,6 +209,7 @@ export interface ICreateNotification {
   noti_title: string;
   noti_desc: string;
   noti_img?: any;
+  hn_id?: string;
   case_id?: string;
   approveStatus: boolean;
   sender_id: string | undefined;

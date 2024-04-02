@@ -68,7 +68,7 @@ export default function SignUp() {
           },
           onError: () => {
             setIsLoading(false);
-            displayNotification(NotifyType.ERROR);
+            displayNotification(NotifyType.USED_EMAIL);
           },
         });
       }

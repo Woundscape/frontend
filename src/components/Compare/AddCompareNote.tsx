@@ -24,21 +24,24 @@ import {
   INote,
   DefaultCompareForm,
   ICreateCompare,
+  IPreCompare,
 } from "@constants";
 import { httpAPI } from "@config";
 import { getCompareNoteById } from "@api-caller/noteApi";
 import { formatDate } from "@utils/formatDate";
 import { useAuth } from "../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 interface INoteProps {
   id: string;
-  compare: any;
+  compare: IPreCompare;
   mutation: UseMutationResult<boolean, IFormattedErrorResponse, any>;
 }
 const { Paragraph } = Typography;
 
 export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
   const { me } = useAuth();
+  const router = useNavigate();
   const [notes, setNotes] = useState<INote[]>();
   const [form, setForm] = useState<ICreateCompare>(DefaultCompareForm);
   const [forms] = Form.useForm();
@@ -61,6 +64,11 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
     if (id) {
       const data = await getCompareNoteById(id);
       setNotes(data);
+      console.log(
+        "%c 🐬 ~ Log from file: AddCompareNote.tsx:67 ~ data:",
+        "color: #00bcd4;",
+        data
+      );
     }
   }
 
@@ -73,7 +81,12 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
     if (values) {
       setConfirmLoading(true);
       mutation.mutate(form, {
-        onSuccess: () => {
+        onSuccess: (response: any) => {
+          if (!form.compare.compare_id) {
+            router(`/compare/${response.compare.compare_id}`, {
+              state: { hn_id: compare.hn_id },
+            });
+          }
           forms.resetFields();
           setOpenModal(false);
           setConfirmLoading(false);
@@ -95,7 +108,7 @@ export default function AddCompareNote({ id, compare, mutation }: INoteProps) {
           <p className="text-lg text-[#4C577C]">ADD NOTE</p>
         </div>
       </Button>
-      <Space direction="vertical" className="w-full pt-3">
+      <Space direction="vertical" className="w-full">
         {notes?.map((item, index) => (
           <Collapse key={index}>
             <Collapse.Panel

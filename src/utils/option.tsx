@@ -28,7 +28,6 @@ export const optionImageSortBy: IOption[] = [
 ];
 
 export const optionPatientSortBy: IOption[] = [
-  { value: "None", label: "None" },
   { value: "Oldest", label: "Oldest" },
   { value: "Newest", label: "Newest" },
 ];
